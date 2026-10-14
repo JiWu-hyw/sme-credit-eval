@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="A1LNzDuZ48bCkfyFrMRN9j">
+<head data-page-node-id="wabyN0g0DoUYZL5hQCPaIC">
+<meta charset="UTF-8" data-page-node-id="f5OPZHEdro3BmF7BnXYtqq" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="tYQ368Qry84bBUqyBOpOYt" />
+<title>中小科技企业信用智能评估 · Demo 可视化</title>
+<script src="./vendor/echarts.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1420;
+    --panel: #182032;
+    --panel-2: #1f293e;
+    --line: #2a3550;
+    --text: #e6ecf5;
+    --muted: #8b9bb4;
+    --accent: #4ea1ff;
+    --green: #2ecc71;
+    --red: #e74c3c;
+    --amber: #f1c40f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+  header {
+    padding: 18px 28px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  header h1 { font-size: 20px; margin: 0; letter-spacing: .5px; }
+  header .sub { color: var(--muted); font-size: 13px; }
+  .badge {
+    display: inline-block; padding: 2px 10px; border-radius: 12px;
+    font-size: 12px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted);
+  }
+  .badge.cuda { color: var(--green); border-color: #1d5b3a; }
+  .wrap { padding: 20px 28px 40px; max-width: 1400px; margin: 0 auto; }
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 22px; }
+  .kpi {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  }
+  .kpi .v { font-size: 26px; font-weight: 700; }
+  .kpi .l { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 8px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 6px; }
+  .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 10px; }
+  .chart { width: 100%; height: 420px; }
+  .chart.tall { height: 460px; }
+  .detail {
+    background: var(--panel-2); border: 1px dashed var(--line); border-radius: 10px;
+    padding: 12px 14px; margin-top: 12px; font-size: 13px; min-height: 64px;
+  }
+  .detail b { color: var(--accent); }
+  .tag { padding: 1px 8px; border-radius: 8px; font-size: 12px; }
+  .tag.ok { background: #163b2a; color: var(--green); }
+  .tag.bad { background: #3b1c1c; color: var(--red); }
+  .legend-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+  footer { color: var(--muted); font-size: 12px; padding: 0 28px 30px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 980px) { .kpis { grid-template-columns: repeat(2,1fr);} .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-page-node-id="dXePfypBcPwTt9AQ5UYCFK">
+<header data-page-node-id="nvddfXPbZedGqmPj04XFRZ">
+  <div data-page-node-id="6Tg0L6HJ64zL7aF72CfTl0">
+    <h1 data-page-node-id="r5mNMuxQdgcnVErgqa7SGX">中小科技企业信用智能评估 · 原型可视化</h1>
+    <div class="sub" data-page-node-id="VzFWHitU83MLimp7m1goRO">融合技术要素 + 成长轨迹的可解释 STGNN 模型 — <span id="gen" data-page-node-id="UJkhd8lduAGqtzJmG4FNgb">demo</span></div>
+  </div>
+  <div data-page-node-id="WLqWf4YmMgB87fTbBRa2HK"><span id="devbadge" class="badge" data-page-node-id="OxXEXzhh1GivKDquVo4lld">device: —</span></div>
+</header>
+
+<div class="wrap" data-page-node-id="I65aSVs4b3idncLs9NFXkX">
+  <div class="kpis" id="kpis" data-page-node-id="KvRnQhVYefZU4kvDujQTEk"></div>
+
+  <div class="grid" data-page-node-id="AZgCwTkaC1Qlxhdr6qoYQh">
+    <div class="card" data-page-node-id="4rDf2JQk1yt9Px0pxcHeZg">
+      <h2 data-page-node-id="3qfXarrVV64VTggzYlRxlb">① 企业信用评分排行</h2>
+      <p class="hint" data-page-node-id="cpXX096DDgRHZuFYvfKvho">按信用分降序（越高越安全）。<b style="color:var(--green)" data-page-node-id="vHqQiRSpasdfUMrD28rfDD">绿=低风险</b> / <b style="color:var(--red)" data-page-node-id="GXJP6mgly58I1rHR1F9iD1">红=高风险(PD 高)</b>。点击任意条查看详情。</p>
+      <div id="rank" class="chart tall" data-page-node-id="YkbDAmAYppUVDWkXLL8ooV"></div>
+      <div id="detail" class="detail" data-page-node-id="3SBCdD8eG1iXi2TNRsj1kc">点击上方任意企业查看其评分详情与全局关键影响因子。</div>
+      <div id="localExp" style="margin-top:14px; border-top:1px solid var(--line); padding-top:10px; display:none;">
+        <h3 style="font-size:14px;margin:0 0 8px;">局部解释 · 关键关联（边扰动归因）</h3>
+        <div id="localTable"></div>
+        <div id="localGraph" class="chart" style="height:300px;"></div>
+      </div>
+    </div>
+
+    <div class="card" data-page-node-id="uHhQGFHRUa3QaRLI3YiW9t">
+      <h2 data-page-node-id="1EoWUGlT44m4D5PPLkJr1H">② 全局特征重要性</h2>
+      <p class="hint" data-page-node-id="plMMqORJV54nLzuR4KtRBi">Permutation Importance（特征置乱后 AUC 下降量），对应《特征工程字典》指标。数值越大越关键。</p>
+      <div id="imp" class="chart tall" data-page-node-id="mnSisUihjd3w076yGn50YH"></div>
+      <div class="legend-note" data-page-node-id="eSEOb9xjqTG75kfhuFzQmo">注：demo 为合成数据，重要性仅用于演示算法可解释性输出结构。</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;" data-page-node-id="lowyrVqr2X2cvMXtVGc2sB">
+    <h2 data-page-node-id="2zoWUItuGTpTXBmEhKDTax">③ 企业时空演化图谱（样例 12 家企业 1 跳子图）</h2>
+    <p class="hint" data-page-node-id="OGCG5qw0K8mXG1ZCsiIGJm">六类实体（企业/专利/投资机构/核心人员/技术领域/产品）+ 语义边。企业节点颜色按风险（红高危/绿低危），大小按度中心性。</p>
+    <div id="graph" class="chart" style="height:520px;" data-page-node-id="pTzKAnsVHIwQFQ8RmxADpo"></div>
+    <div class="legend-note" data-page-node-id="t91SprOpF8qCBptAanXfb8">力导向布局；拖拽/缩放可探索。悬停节点查看类型与风险分。</div>
+  </div>
+</div>
+
+<footer data-page-node-id="ekhqynsflFWvzfKvLbgpCm">
+  Demo 用合成异质图数据验证 STGNN 端到端可训练、可收敛；非真实企业评估。生产版将接入真实多源数据与 FastAPI 双模式服务（批量评估 / 单企业深度诊断）。
+</footer>
+
+<script>
+const PALETTE = {
+  company: '#4ea1ff', patent: '#9b59b6', investor: '#f1c40f',
+  person: '#1abc9c', field: '#e67e22', product: '#7f8c8d'
+};
+const riskColor = pd => pd >= 0.5 ? '#e74c3c' : (pd >= 0.2 ? '#f1c40f' : '#2ecc71');
+
+async function load() {
+  let data;
+  try {
+    const r = await fetch('./dashboard_data.json', {cache:'no-store'});
+    data = await r.json();
+  } catch (e) {
+    document.getElementById('detail').textContent = '加载 dashboard_data.json 失败：' + e.message + '（请通过 run_web.py 启动本地服务后访问）';
+    return;
+  }
+  renderKPIs(data.meta);
+  renderRank(data.companies);
+  renderImportance(data.importance);
+  renderGraph(data.graph);
+  window.__EXP__ = data.explanations;
+}
+
+function renderKPIs(m) {
+  document.getElementById('gen').textContent = (m.note || '') + ' 生成于 ' + m.generated_at;
+  const badge = document.getElementById('devbadge');
+  badge.textContent = 'device: ' + m.device;
+  if (m.device === 'cuda') badge.classList.add('cuda');
+  const items = [
+    ['AUC-ROC', m.auc, '#4ea1ff'],
+    ['KS', m.ks, '#9b59b6'],
+    ['准确率', m.accuracy, '#2ecc71'],
+    ['评估企业', m.n_companies, '#f1c40f'],
+    ['样本违约率', m.default_ratio, '#e74c3c'],
+  ];
+  document.getElementById('kpis').innerHTML = items.map(([l,v,c]) =>
+    `<div class="kpi"><div class="v" style="color:${c}">${v}</div><div class="l">${l}</div></div>`).join('');
+}
+
+let COMPANIES = [];
+function renderRank(companies) {
+  COMPANIES = companies.slice().sort((a,b)=>b.score-a.score);
+  const names = COMPANIES.map(c => '企业' + c.id);
+  const scores = COMPANIES.map(c => ({value: c.score, itemStyle:{color: riskColor(c.pd)}}));
+  const chart = echarts.init(document.getElementById('rank'), 'dark');
+  chart.setOption({
+    backgroundColor: 'transparent',
+    grid: {left: 70, right: 40, top: 10, bottom: 20},
+    tooltip: { trigger: 'item', formatter: p => {
+        const c = COMPANIES[p.dataIndex];
+        return `企业${c.id}<br/>信用分 ${c.score}<br/>PD ${c.pd}<br/>真实 ${c.label?'违约':'正常'}`;
+      }},
+    xAxis: { type:'value', max:100, name:'信用分', axisLine:{lineStyle:{color:'#3a4a66'}} },
+    yAxis: { type:'category', data: names, inverse:true, axisLabel:{fontSize:11}, splitLine:{show:false} },
+    series: [{ type:'bar', data: scores, barWidth:'62%',
+      label:{ show:true, position:'right', formatter: p=>COMPANIES[p.dataIndex].score, color:'#cdd6e6', fontSize:10 } }]
+  });
+  chart.on('click', p => showDetail(COMPANIES[p.dataIndex]));
+  window.addEventListener('resize', ()=>chart.resize());
+}
+
+function showDetail(c) {
+  const verdict = c.label ? '违约' : '正常';
+  const pred = c.pd >= 0.5 ? '高危' : '安全';
+  const ok = c.correct ? '<span class="tag ok">模型判断正确</span>' : '<span class="tag bad">模型误判</span>';
+  const top = (window.__IMP__||[]).slice(0,5)
+    .map(d => `${d.name} (${d.value>0?'+':''}${d.value})`).join('、');
+  document.getElementById('detail').innerHTML =
+    `<b>企业 ${c.id}</b> &nbsp; 信用分 <b>${c.score}</b> &nbsp; PD <b>${c.pd}</b><br/>` +
+    `真实标签：${verdict} ｜ 模型预测：${pred} ${ok}<br/>` +
+    `<span style="color:var(--muted)">全局关键影响因子（Top5）：</span>${top || '—'}`;
+
+  // 局部解释：关键关联
+  const exp = (window.__EXP__||{})[String(c.id)];
+  const box = document.getElementById('localExp');
+  if (!exp) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  renderLocalTable(exp);
+  renderLocalGraph(c, exp);
+}
+
+function renderLocalTable(exp) {
+  const rows = exp.neighbors.slice(0,8).map(nb => {
+    const dir = nb.delta > 0 ? '推高风险' : (nb.delta < 0 ? '降低风险' : '—');
+    const col = nb.delta > 0 ? 'var(--red)' : (nb.delta < 0 ? 'var(--green)' : 'var(--muted)');
+    const w = Math.max(4, Math.min(100, Math.abs(nb.delta) * 150));
+    return `<tr>
+      <td>${nb.node_id}</td><td>${nb.rel}</td>
+      <td style="color:${col};text-align:right">${nb.delta>0?'+':''}${nb.delta.toFixed(4)} ${dir}</td>
+      <td style="width:90px"><div style="height:6px;width:${w}%;background:${col};border-radius:3px"></div></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('localTable').innerHTML =
+    `<table style="width:100%;font-size:12px;border-collapse:collapse;">
+      <tr style="color:var(--muted)"><th align="left">关联节点</th><th align="left">关系</th><th align="right">影响(ΔPD)</th><th></th></tr>
+      ${rows}
+    </table>
+    <div class="legend-note">ΔPD = 完整图评分 − 删除该关联后评分。正值=该关联推高风险（红），负值=降低风险（绿）；强度条按 |ΔPD| 比例。</div>`;
+}
+
+function renderLocalGraph(c, exp) {
+  const top = exp.neighbors.slice(0,8);
+  const cats = ['企业'];
+  const nodes = [{ id:'C'+c.id, name:'企业'+c.id, symbolSize:34, itemStyle:{color: riskColor(c.pd)}, category:0 }];
+  const links = [];
+  top.forEach(nb => {
+    const tname = (nb.type==='company'?'企业':nb.type==='patent'?'专利':nb.type==='investor'?'投资机构':nb.type==='person'?'核心人员':nb.type==='field'?'技术领域':'产品');
+    if (!cats.includes(tname)) cats.push(tname);
+    const ci = cats.indexOf(tname);
+    nodes.push({ id:nb.node_id, name:nb.node_id, symbolSize:15, category:ci, itemStyle:{color: PALETTE[nb.type] || '#888'} });
+    const col = nb.delta > 0 ? '#e74c3c' : (nb.delta < 0 ? '#2ecc71' : '#7f8c8d');
+    links.push({ source:'C'+c.id, target:nb.node_id,
+      lineStyle:{ color: col, width: nb.delta!==0 ? 2.5 : 1, opacity:0.85 },
+      label:{ show:true, formatter: nb.rel, fontSize:9, color:'#cdd6e0' } });
+  });
+  if (window.__lg__) { try { window.__lg__.dispose(); } catch(e){} }
+  const chart = echarts.init(document.getElementById('localGraph'), 'dark');
+  window.__lg__ = chart;
+  chart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{ formatter: p => p.dataType==='node' ? p.data.name : (p.data.rel||'') },
+    legend:[{ data:cats, textStyle:{color:'#cdd6e0'}, top:0, type:'scroll' }],
+    series:[{
+      type:'graph', layout:'force', roam:true,
+      categories: cats.map(n=>({name:n})),
+      data:nodes, links:links,
+      label:{ show:true, fontSize:10, color:'#dfe6f0' },
+      force:{ repulsion:130, edgeLength:62, gravity:0.1 },
+      lineStyle:{ opacity:0.7, curveness:0.1 },
+      emphasis:{ focus:'adjacency' }
+    }]
+  });
+  window.addEventListener('resize', ()=>chart.resize());
+}
+
+function renderImportance(imp) {
+  window.__IMP__ = imp;
+  const sorted = imp.slice().sort((a,b)=>a.value-b.value);
+  const names = sorted.map(d => d.name);
+  const vals = sorted.map(d => ({
+    value: +d.value.toFixed(4),
+    itemStyle:{ color: d.value>=0 ? '#4ea1ff' : '#7f8c8d' }
+  }));
+  const chart = echarts.init(document.getElementById('imp'), 'dark');
+  chart.setOption({
+    backgroundColor:'transparent',
+    grid:{left:120, right:50, top:10, bottom:20},
+    tooltip:{ trigger:'item', formatter: p=>`${sorted[p.dataIndex].name}<br/>重要性 ${sorted[p.dataIndex].value}` },
+    xAxis:{ type:'value', name:'AUC 下降量' },
+    yAxis:{ type:'category', data:names, axisLabel:{fontSize:11}, splitLine:{show:false} },
+    series:[{ type:'bar', data:vals, barWidth:'62%',
+      label:{show:true, position:'right', color:'#cdd6e6', fontSize:10} }]
+  });
+  window.addEventListener('resize', ()=>chart.resize());
+}
+
+function renderGraph(g) {
+  const catIndex = {};
+  g.categories.forEach((c,i)=>catIndex[c.name]=i);
+  const nodes = g.nodes.map(n => ({
+    id: n.id, name: n.name,
+    category: catIndex[ (n.category==='company'?'企业':n.category==='patent'?'专利':n.category==='investor'?'投资机构':n.category==='person'?'核心人员':n.category==='field'?'技术领域':'产品') ] ?? 0,
+    symbolSize: n.category==='company' ? 26 : 12,
+    itemStyle: n.category==='company' ? {color: riskColor(n.risk)} : undefined,
+    value: n.category==='company' ? ('风险 '+n.risk+' / 分 '+n.score) : n.name
+  }));
+  const links = g.links.map(l => ({ source: l.source, target: l.target,
+    lineStyle:{ color:'#3a4a66', opacity:0.35 } }));
+  const catNames = g.categories.map(c=>c.name);
+  const chart = echarts.init(document.getElementById('graph'), 'dark');
+  chart.setOption({
+    backgroundColor:'transparent',
+    tooltip:{ formatter: p => p.dataType==='node' ? `${p.data.name}<br/>${p.data.value||''}` : '' },
+    legend:[{ data: catNames, textStyle:{color:'#cdd6e6'}, top:0 }],
+    series:[{
+      type:'graph', layout:'force', roam:true,
+      categories: catNames.map(n=>({name:n})),
+      data: nodes, links: links,
+      label:{ show:true, fontSize:10, color:'#dfe6f0' },
+      force:{ repulsion: 140, edgeLength: 70, gravity: 0.08 },
+      lineStyle:{ color:'#3a4a66', opacity:0.4, curveness:0.05 },
+      emphasis:{ focus:'adjacency', lineStyle:{width:2} }
+    }]
+  });
+  window.addEventListener('resize', ()=>chart.resize());
+}
+
+load();
+</script>
+</body>
+</html>

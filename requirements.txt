@@ -1,0 +1,66 @@
+# =====================================================================
+# 融合技术要素与成长轨迹的中小科技企业信用智能评估方法构建
+# Python 依赖清单
+#
+# 【已验证环境】Windows 11 + Python 3.9.12 + RTX 4060 Laptop (CUDA 12.3 驱动)
+#   torch 2.5.1+cu121 / torchvision 0.20.1+cu121 / torch_geometric 2.6.1
+#   注：原计划 Python 3.11，因 3.11 安装器在本机受限环境反复写入失败、
+#       3.13 暂无 cu121 预编译 wheel，最终采用 3.9.12 并全量验证通过。
+#       3.10 / 3.12 理论上亦可（cu121 有对应 wheel），但未实测。
+#
+# 安装：pip install -r requirements.txt
+# 建议在独立虚拟环境中安装：python -m venv .venv
+# =====================================================================
+
+# ---- 基础数据处理 ----
+numpy>=1.26          # 已验证 2.0.2
+pandas>=2.1          # 已验证 2.3.3
+scipy>=1.11          # 已验证 1.13.1
+
+# ---- 深度学习 / 图神经网络 ----
+# 注意：PyTorch 需先按本机 CUDA 版本安装（CPU 版亦可，训练较慢）
+#   CPU 版：pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#   CUDA 12.1：pip install torch==2.5.1 torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu121
+#   （2.4GB wheel 建议断点续传下载后本地安装）
+torch>=2.1           # 已验证 2.5.1+cu121
+torchvision>=0.16    # 已验证 0.20.1+cu121
+# PyTorchGeometric 及其扩展需与 torch 版本严格匹配，用官方索引安装：
+#   pip install torch_geometric
+#   pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.5.1+cu121.html
+torch-geometric>=2.4 # 已验证 2.6.1
+networkx>=3.2        # 已验证 3.2.1
+
+# ---- 预训练语言模型（SciBERT 语义向量化）----
+# 注意：torch<2.6 时 transformers 拒绝加载 legacy .bin（CVE-2025-32434），
+#       项目内统一走 src/data/load_scibert.py 的 torch.load 加载方案。
+transformers>=4.40   # 已验证 4.57.6
+sentencepiece>=0.1.99 # 已验证 0.2.2
+tokenizers>=0.19     # 已验证 0.22.2
+
+# ---- 可解释性 ----
+shap>=0.44           # 已验证 0.49.1
+# GNNExplainer 由 torch_geometric.nn 提供；如需要 PGExplainer 可安装：
+#   pip install pgmpy  # PGExplainer 依赖
+scikit-learn>=1.4    # 已验证 1.6.1
+xgboost>=2.0         # 已验证 2.1.4
+
+# ---- 可视化 ----
+matplotlib>=3.8      # 已验证 3.9.4
+seaborn>=0.13        # 已验证 0.13.2
+
+# ---- 后端 API（原型系统）----
+fastapi>=0.110       # 已验证 0.128.8
+uvicorn[standard]>=0.29  # 已验证 0.39.0
+pydantic>=2.6        # 已验证 2.13.5
+python-multipart>=0.0.9  # 已验证 0.0.20
+
+# ---- 文档 / 数据读写（可选）----
+openpyxl>=3.1        # Excel 导入导出（批量评估）已验证 3.1.5
+python-docx>=1.1     # 报告/软著材料辅助生成，已验证 1.2.0
+
+# ---- 实验与开发 ----
+jupyter>=1.0
+notebook>=7.0        # 已验证 7.5.7
+tqdm>=4.66           # 已验证 4.70.1
+pyyaml>=6.0          # 已验证 6.0.3
+python-dotenv>=1.0

@@ -1,0 +1,117 @@
+# ============================================================
+# 中小科技企业信用智能评估 — .gitignore
+# 原则：代码/文档/配置入库；数据/权重/环境不入库
+# ============================================================
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ---- 虚拟环境 ----
+.venv/
+venv/
+env/
+ENV/
+.env
+.venv*/
+conda-meta/
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ---- 数据文件（大文件走 tdrive/共享盘，不进 Git）----
+*.parquet
+*.feather
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.csv
+*.xlsx
+*.xls
+*.tsv
+*.dta
+*.sav
+# data/ 目录下只保留 README.md（见仓库目录结构约定）
+
+# ---- 模型权重 / 检查点 ----
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.h5
+*.pb
+*.tflite
+checkpoints/
+runs/
+wandb/
+lightning_logs/
+
+# ---- 缓存 / 临时 ----
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- IDE / 编辑器 ----
+.idea/
+.vscode/
+*.code-workspace
+.spyderproject/
+.ropeproject/
+
+# ---- 测试 / 覆盖率 ----
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+
+# ---- 系统 / 密钥（严禁入库）----
+*.pem
+*.key
+secrets.*
+credentials.*
+*.local
+.env.*
+!.env.example
+
+# ---- 例外：模板文档需入库 ----
+# docs/模板/ 下是立项/结题申报模板（doc/docx/xls），属交付物，非数据文件，
+# 解除上方对 *.xls/*.xlsx 等数据类扩展名在模板目录下的忽略。
+!docs/模板/**
+
+# ---- 注意：以下为反例警示，勿提交 ----
+# data/raw/          真实面板 parquet（8MB+）→ tdrive「数据」目录
+# data/processed/    预处理产物 → 本地生成，可脚本复现
+# outputs/*.png      算法图表（可复现，必要时才提交小图）

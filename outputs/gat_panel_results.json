@@ -1,0 +1,84 @@
+{
+  "model": "HeteroGAT（GATConv×2 + 线性头，to_hetero）",
+  "graph": {
+    "node_types": {
+      "record": 3465,
+      "company": 1714,
+      "cluster": 10
+    },
+    "edge_types": [
+      "record-belongs_company-company",
+      "company-has_record-record",
+      "record-in_cluster-cluster",
+      "cluster-has_record_rec-record",
+      "record-sim_record-record",
+      "company-sim_company-company"
+    ],
+    "n_features": 40
+  },
+  "protocol": "与 baseline 同一 80/20 分组留出集、同一 top-k 特征；验证集从训练企业中按 userid 切 15%",
+  "train": {
+    "epochs_run": 41,
+    "best_epoch": 1,
+    "best_val_auc": 0.6722873315793669,
+    "pos_weight": 9.564024390243903
+  },
+  "test_metrics": {
+    "auc": 0.5721027287319423,
+    "ks": 0.18373461744248265,
+    "accuracy": 0.47564469914040114,
+    "precision": 0.13533834586466165,
+    "recall": 0.72,
+    "f1": 0.22784810126582278,
+    "threshold": 0.5,
+    "best_f1": 0.2309278350515464,
+    "best_f1_threshold": 0.364,
+    "n_samples": 698,
+    "n_pos": 75
+  },
+  "no_graph_control": {
+    "model": "无图 MLP 对照（同特征/同划分/同早停）",
+    "test_metrics": {
+      "auc": 0.5592081326912788,
+      "ks": 0.1365864098448368,
+      "accuracy": 0.47421203438395415,
+      "precision": 0.12755102040816327,
+      "recall": 0.6666666666666666,
+      "f1": 0.21413276231263384,
+      "threshold": 0.5,
+      "best_f1": 0.21851851851851853,
+      "best_f1_threshold": 0.459,
+      "n_samples": 698,
+      "n_pos": 75
+    },
+    "best_epoch": 1,
+    "best_val_auc": 0.6460176991150443
+  },
+  "history_tail": [
+    {
+      "epoch": 37,
+      "loss": 1.111203908920288,
+      "val_auc": 0.6098222115921231
+    },
+    {
+      "epoch": 38,
+      "loss": 1.1345126628875732,
+      "val_auc": 0.634696643546201
+    },
+    {
+      "epoch": 39,
+      "loss": 1.1044608354568481,
+      "val_auc": 0.6343777405724309
+    },
+    {
+      "epoch": 40,
+      "loss": 1.0980935096740723,
+      "val_auc": 0.6350155465199713
+    },
+    {
+      "epoch": 41,
+      "loss": 1.106797695159912,
+      "val_auc": 0.6350155465199713
+    }
+  ]
+}

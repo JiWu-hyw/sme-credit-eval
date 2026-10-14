@@ -1,0 +1,6021 @@
+{
+  "meta": {
+    "auc": 0.9636,
+    "ks": 0.9018,
+    "accuracy": 0.9625,
+    "n_companies": 80,
+    "default_ratio": 0.312,
+    "device": "cuda",
+    "generated_at": "2026-10-13 19:01",
+    "note": "demo 合成数据，非真实企业；指标名为映射展示。"
+  },
+  "companies": [
+    {
+      "id": 0,
+      "pd": 0.0916,
+      "score": 90.84,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 1,
+      "pd": 0.0573,
+      "score": 94.27,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 2,
+      "pd": 0.0355,
+      "score": 96.45,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 3,
+      "pd": 0.0551,
+      "score": 94.49,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 4,
+      "pd": 0.0476,
+      "score": 95.24,
+      "label": 1,
+      "correct": 0
+    },
+    {
+      "id": 5,
+      "pd": 0.0427,
+      "score": 95.73,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 6,
+      "pd": 0.0782,
+      "score": 92.18,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 7,
+      "pd": 0.0468,
+      "score": 95.32,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 8,
+      "pd": 0.1061,
+      "score": 89.39,
+      "label": 1,
+      "correct": 0
+    },
+    {
+      "id": 9,
+      "pd": 0.0772,
+      "score": 92.28,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 10,
+      "pd": 0.045,
+      "score": 95.5,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 11,
+      "pd": 0.0836,
+      "score": 91.64,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 12,
+      "pd": 0.1211,
+      "score": 87.89,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 13,
+      "pd": 0.0516,
+      "score": 94.84,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 14,
+      "pd": 0.0868,
+      "score": 91.32,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 15,
+      "pd": 0.6256,
+      "score": 37.44,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 16,
+      "pd": 0.0515,
+      "score": 94.85,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 17,
+      "pd": 0.7439,
+      "score": 25.61,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 18,
+      "pd": 0.09,
+      "score": 91.0,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 19,
+      "pd": 0.0507,
+      "score": 94.93,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 20,
+      "pd": 0.0888,
+      "score": 91.12,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 21,
+      "pd": 0.0656,
+      "score": 93.44,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 22,
+      "pd": 0.0527,
+      "score": 94.73,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 23,
+      "pd": 0.043,
+      "score": 95.7,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 24,
+      "pd": 0.0453,
+      "score": 95.47,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 25,
+      "pd": 0.8261,
+      "score": 17.39,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 26,
+      "pd": 0.0727,
+      "score": 92.73,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 27,
+      "pd": 0.6309,
+      "score": 36.91,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 28,
+      "pd": 0.6837,
+      "score": 31.63,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 29,
+      "pd": 0.0467,
+      "score": 95.33,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 30,
+      "pd": 0.0392,
+      "score": 96.08,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 31,
+      "pd": 0.0509,
+      "score": 94.91,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 32,
+      "pd": 0.8667,
+      "score": 13.33,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 33,
+      "pd": 0.0919,
+      "score": 90.81,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 34,
+      "pd": 0.1256,
+      "score": 87.44,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 35,
+      "pd": 0.8513,
+      "score": 14.87,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 36,
+      "pd": 0.8404,
+      "score": 15.96,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 37,
+      "pd": 0.0503,
+      "score": 94.97,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 38,
+      "pd": 0.8214,
+      "score": 17.86,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 39,
+      "pd": 0.091,
+      "score": 90.9,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 40,
+      "pd": 0.0472,
+      "score": 95.28,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 41,
+      "pd": 0.0607,
+      "score": 93.93,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 42,
+      "pd": 0.0571,
+      "score": 94.29,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 43,
+      "pd": 0.6722,
+      "score": 32.78,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 44,
+      "pd": 0.2349,
+      "score": 76.51,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 45,
+      "pd": 0.1138,
+      "score": 88.62,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 46,
+      "pd": 0.0997,
+      "score": 90.03,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 47,
+      "pd": 0.8095,
+      "score": 19.05,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 48,
+      "pd": 0.0513,
+      "score": 94.87,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 49,
+      "pd": 0.8682,
+      "score": 13.18,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 50,
+      "pd": 0.7298,
+      "score": 27.02,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 51,
+      "pd": 0.7243,
+      "score": 27.57,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 52,
+      "pd": 0.0523,
+      "score": 94.77,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 53,
+      "pd": 0.0568,
+      "score": 94.32,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 54,
+      "pd": 0.0575,
+      "score": 94.25,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 55,
+      "pd": 0.0552,
+      "score": 94.48,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 56,
+      "pd": 0.0331,
+      "score": 96.69,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 57,
+      "pd": 0.0798,
+      "score": 92.02,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 58,
+      "pd": 0.6881,
+      "score": 31.19,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 59,
+      "pd": 0.8248,
+      "score": 17.52,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 60,
+      "pd": 0.1791,
+      "score": 82.09,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 61,
+      "pd": 0.0541,
+      "score": 94.59,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 62,
+      "pd": 0.0392,
+      "score": 96.08,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 63,
+      "pd": 0.0304,
+      "score": 96.96,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 64,
+      "pd": 0.0489,
+      "score": 95.11,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 65,
+      "pd": 0.0681,
+      "score": 93.19,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 66,
+      "pd": 0.1235,
+      "score": 87.65,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 67,
+      "pd": 0.8594,
+      "score": 14.06,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 68,
+      "pd": 0.8625,
+      "score": 13.75,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 69,
+      "pd": 0.044,
+      "score": 95.6,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 70,
+      "pd": 0.8295,
+      "score": 17.05,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 71,
+      "pd": 0.0363,
+      "score": 96.37,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 72,
+      "pd": 0.0675,
+      "score": 93.25,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 73,
+      "pd": 0.7704,
+      "score": 22.96,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 74,
+      "pd": 0.2214,
+      "score": 77.86,
+      "label": 1,
+      "correct": 0
+    },
+    {
+      "id": 75,
+      "pd": 0.854,
+      "score": 14.6,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 76,
+      "pd": 0.7476,
+      "score": 25.24,
+      "label": 1,
+      "correct": 1
+    },
+    {
+      "id": 77,
+      "pd": 0.1233,
+      "score": 87.67,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 78,
+      "pd": 0.0737,
+      "score": 92.63,
+      "label": 0,
+      "correct": 1
+    },
+    {
+      "id": 79,
+      "pd": 0.1163,
+      "score": 88.37,
+      "label": 0,
+      "correct": 1
+    }
+  ],
+  "importance": [
+    {
+      "f": "f13",
+      "name": "技术转化效率",
+      "value": 0.0836
+    },
+    {
+      "f": "f1",
+      "name": "专利授权率",
+      "value": 0.04
+    },
+    {
+      "f": "f12",
+      "name": "投资机构知名度",
+      "value": 0.0262
+    },
+    {
+      "f": "f6",
+      "name": "研发投入强度",
+      "value": 0.0247
+    },
+    {
+      "f": "f0",
+      "name": "发明专利占比",
+      "value": 0.0175
+    },
+    {
+      "f": "f9",
+      "name": "专利复合增长率",
+      "value": 0.0153
+    },
+    {
+      "f": "f5",
+      "name": "核心人员稳定性",
+      "value": 0.0145
+    },
+    {
+      "f": "f8",
+      "name": "员工复合增长率",
+      "value": 0.0138
+    },
+    {
+      "f": "f4",
+      "name": "专利三值评分",
+      "value": 0.0116
+    },
+    {
+      "f": "f7",
+      "name": "营收复合增长率",
+      "value": 0.0116
+    },
+    {
+      "f": "f10",
+      "name": "新获融资额/上轮估值比",
+      "value": 0.0116
+    },
+    {
+      "f": "f14",
+      "name": "资本技术协同度",
+      "value": 0.0109
+    },
+    {
+      "f": "f11",
+      "name": "里程碑虚拟变量",
+      "value": 0.0095
+    },
+    {
+      "f": "f15",
+      "name": "综合嵌入(fused)",
+      "value": 0.0073
+    },
+    {
+      "f": "f3",
+      "name": "技术广度",
+      "value": 0.0065
+    },
+    {
+      "f": "f2",
+      "name": "专利被引次数",
+      "value": 0.0029
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "company_0",
+        "name": "企业0",
+        "category": "company",
+        "risk": 0.092,
+        "score": 90.8
+      },
+      {
+        "id": "company_1",
+        "name": "企业1",
+        "category": "company",
+        "risk": 0.057,
+        "score": 94.3
+      },
+      {
+        "id": "company_2",
+        "name": "企业2",
+        "category": "company",
+        "risk": 0.036,
+        "score": 96.4
+      },
+      {
+        "id": "company_3",
+        "name": "企业3",
+        "category": "company",
+        "risk": 0.055,
+        "score": 94.5
+      },
+      {
+        "id": "company_4",
+        "name": "企业4",
+        "category": "company",
+        "risk": 0.048,
+        "score": 95.2
+      },
+      {
+        "id": "company_5",
+        "name": "企业5",
+        "category": "company",
+        "risk": 0.043,
+        "score": 95.7
+      },
+      {
+        "id": "company_6",
+        "name": "企业6",
+        "category": "company",
+        "risk": 0.078,
+        "score": 92.2
+      },
+      {
+        "id": "company_7",
+        "name": "企业7",
+        "category": "company",
+        "risk": 0.047,
+        "score": 95.3
+      },
+      {
+        "id": "company_8",
+        "name": "企业8",
+        "category": "company",
+        "risk": 0.106,
+        "score": 89.4
+      },
+      {
+        "id": "company_9",
+        "name": "企业9",
+        "category": "company",
+        "risk": 0.077,
+        "score": 92.3
+      },
+      {
+        "id": "company_10",
+        "name": "企业10",
+        "category": "company",
+        "risk": 0.045,
+        "score": 95.5
+      },
+      {
+        "id": "company_11",
+        "name": "企业11",
+        "category": "company",
+        "risk": 0.084,
+        "score": 91.6
+      },
+      {
+        "id": "person_19",
+        "name": "核心人员19",
+        "category": "person"
+      },
+      {
+        "id": "product_98",
+        "name": "产品98",
+        "category": "product"
+      },
+      {
+        "id": "person_202",
+        "name": "核心人员202",
+        "category": "person"
+      },
+      {
+        "id": "person_28",
+        "name": "核心人员28",
+        "category": "person"
+      },
+      {
+        "id": "person_37",
+        "name": "核心人员37",
+        "category": "person"
+      },
+      {
+        "id": "investor_42",
+        "name": "投资机构42",
+        "category": "investor"
+      },
+      {
+        "id": "patent_57",
+        "name": "专利57",
+        "category": "patent"
+      },
+      {
+        "id": "patent_130",
+        "name": "专利130",
+        "category": "patent"
+      },
+      {
+        "id": "person_149",
+        "name": "核心人员149",
+        "category": "person"
+      },
+      {
+        "id": "person_158",
+        "name": "核心人员158",
+        "category": "person"
+      },
+      {
+        "id": "patent_29",
+        "name": "专利29",
+        "category": "patent"
+      },
+      {
+        "id": "investor_35",
+        "name": "投资机构35",
+        "category": "investor"
+      },
+      {
+        "id": "person_5",
+        "name": "核心人员5",
+        "category": "person"
+      },
+      {
+        "id": "product_84",
+        "name": "产品84",
+        "category": "product"
+      },
+      {
+        "id": "product_29",
+        "name": "产品29",
+        "category": "product"
+      },
+      {
+        "id": "person_23",
+        "name": "核心人员23",
+        "category": "person"
+      },
+      {
+        "id": "patent_68",
+        "name": "专利68",
+        "category": "patent"
+      },
+      {
+        "id": "product_102",
+        "name": "产品102",
+        "category": "product"
+      },
+      {
+        "id": "field_5",
+        "name": "技术领域5",
+        "category": "field"
+      },
+      {
+        "id": "person_53",
+        "name": "核心人员53",
+        "category": "person"
+      },
+      {
+        "id": "investor_37",
+        "name": "投资机构37",
+        "category": "investor"
+      },
+      {
+        "id": "person_117",
+        "name": "核心人员117",
+        "category": "person"
+      },
+      {
+        "id": "product_22",
+        "name": "产品22",
+        "category": "product"
+      },
+      {
+        "id": "patent_6",
+        "name": "专利6",
+        "category": "patent"
+      },
+      {
+        "id": "person_199",
+        "name": "核心人员199",
+        "category": "person"
+      },
+      {
+        "id": "product_95",
+        "name": "产品95",
+        "category": "product"
+      },
+      {
+        "id": "person_89",
+        "name": "核心人员89",
+        "category": "person"
+      },
+      {
+        "id": "product_104",
+        "name": "产品104",
+        "category": "product"
+      },
+      {
+        "id": "person_153",
+        "name": "核心人员153",
+        "category": "person"
+      },
+      {
+        "id": "patent_24",
+        "name": "专利24",
+        "category": "patent"
+      },
+      {
+        "id": "field_7",
+        "name": "技术领域7",
+        "category": "field"
+      },
+      {
+        "id": "person_55",
+        "name": "核心人员55",
+        "category": "person"
+      },
+      {
+        "id": "investor_39",
+        "name": "投资机构39",
+        "category": "investor"
+      },
+      {
+        "id": "patent_109",
+        "name": "专利109",
+        "category": "patent"
+      },
+      {
+        "id": "product_24",
+        "name": "产品24",
+        "category": "product"
+      },
+      {
+        "id": "person_18",
+        "name": "核心人员18",
+        "category": "person"
+      },
+      {
+        "id": "patent_63",
+        "name": "专利63",
+        "category": "patent"
+      },
+      {
+        "id": "patent_127",
+        "name": "专利127",
+        "category": "patent"
+      },
+      {
+        "id": "patent_136",
+        "name": "专利136",
+        "category": "patent"
+      },
+      {
+        "id": "field_0",
+        "name": "技术领域0",
+        "category": "field"
+      },
+      {
+        "id": "investor_41",
+        "name": "投资机构41",
+        "category": "investor"
+      },
+      {
+        "id": "person_176",
+        "name": "核心人员176",
+        "category": "person"
+      },
+      {
+        "id": "product_17",
+        "name": "产品17",
+        "category": "product"
+      },
+      {
+        "id": "product_90",
+        "name": "产品90",
+        "category": "product"
+      },
+      {
+        "id": "person_194",
+        "name": "核心人员194",
+        "category": "person"
+      },
+      {
+        "id": "patent_138",
+        "name": "专利138",
+        "category": "patent"
+      },
+      {
+        "id": "field_2",
+        "name": "技术领域2",
+        "category": "field"
+      },
+      {
+        "id": "investor_34",
+        "name": "投资机构34",
+        "category": "investor"
+      },
+      {
+        "id": "field_11",
+        "name": "技术领域11",
+        "category": "field"
+      },
+      {
+        "id": "product_10",
+        "name": "产品10",
+        "category": "product"
+      },
+      {
+        "id": "patent_104",
+        "name": "专利104",
+        "category": "patent"
+      },
+      {
+        "id": "person_123",
+        "name": "核心人员123",
+        "category": "person"
+      },
+      {
+        "id": "product_92",
+        "name": "产品92",
+        "category": "product"
+      },
+      {
+        "id": "patent_131",
+        "name": "专利131",
+        "category": "patent"
+      },
+      {
+        "id": "patent_76",
+        "name": "专利76",
+        "category": "patent"
+      },
+      {
+        "id": "investor_9",
+        "name": "投资机构9",
+        "category": "investor"
+      },
+      {
+        "id": "person_34",
+        "name": "核心人员34",
+        "category": "person"
+      },
+      {
+        "id": "person_189",
+        "name": "核心人员189",
+        "category": "person"
+      },
+      {
+        "id": "investor_2",
+        "name": "投资机构2",
+        "category": "investor"
+      },
+      {
+        "id": "investor_20",
+        "name": "投资机构20",
+        "category": "investor"
+      },
+      {
+        "id": "person_219",
+        "name": "核心人员219",
+        "category": "person"
+      },
+      {
+        "id": "product_60",
+        "name": "产品60",
+        "category": "product"
+      },
+      {
+        "id": "field_6",
+        "name": "技术领域6",
+        "category": "field"
+      },
+      {
+        "id": "product_5",
+        "name": "产品5",
+        "category": "product"
+      },
+      {
+        "id": "product_78",
+        "name": "产品78",
+        "category": "product"
+      },
+      {
+        "id": "patent_108",
+        "name": "专利108",
+        "category": "patent"
+      },
+      {
+        "id": "product_108",
+        "name": "产品108",
+        "category": "product"
+      },
+      {
+        "id": "patent_83",
+        "name": "专利83",
+        "category": "patent"
+      },
+      {
+        "id": "person_102",
+        "name": "核心人员102",
+        "category": "person"
+      },
+      {
+        "id": "product_117",
+        "name": "产品117",
+        "category": "product"
+      },
+      {
+        "id": "person_47",
+        "name": "核心人员47",
+        "category": "person"
+      },
+      {
+        "id": "person_166",
+        "name": "核心人员166",
+        "category": "person"
+      },
+      {
+        "id": "field_8",
+        "name": "技术领域8",
+        "category": "field"
+      },
+      {
+        "id": "person_111",
+        "name": "核心人员111",
+        "category": "person"
+      },
+      {
+        "id": "patent_101",
+        "name": "专利101",
+        "category": "patent"
+      },
+      {
+        "id": "person_120",
+        "name": "核心人员120",
+        "category": "person"
+      },
+      {
+        "id": "person_239",
+        "name": "核心人员239",
+        "category": "person"
+      },
+      {
+        "id": "person_13",
+        "name": "核心人员13",
+        "category": "person"
+      },
+      {
+        "id": "patent_12",
+        "name": "专利12",
+        "category": "patent"
+      },
+      {
+        "id": "product_110",
+        "name": "产品110",
+        "category": "product"
+      },
+      {
+        "id": "field_1",
+        "name": "技术领域1",
+        "category": "field"
+      },
+      {
+        "id": "product_0",
+        "name": "产品0",
+        "category": "product"
+      },
+      {
+        "id": "patent_30",
+        "name": "专利30",
+        "category": "patent"
+      },
+      {
+        "id": "patent_149",
+        "name": "专利149",
+        "category": "patent"
+      },
+      {
+        "id": "patent_39",
+        "name": "专利39",
+        "category": "patent"
+      },
+      {
+        "id": "patent_158",
+        "name": "专利158",
+        "category": "patent"
+      },
+      {
+        "id": "person_79",
+        "name": "核心人员79",
+        "category": "person"
+      },
+      {
+        "id": "person_33",
+        "name": "核心人员33",
+        "category": "person"
+      },
+      {
+        "id": "person_97",
+        "name": "核心人员97",
+        "category": "person"
+      },
+      {
+        "id": "product_57",
+        "name": "产品57",
+        "category": "product"
+      },
+      {
+        "id": "person_51",
+        "name": "核心人员51",
+        "category": "person"
+      },
+      {
+        "id": "person_170",
+        "name": "核心人员170",
+        "category": "person"
+      },
+      {
+        "id": "person_179",
+        "name": "核心人员179",
+        "category": "person"
+      },
+      {
+        "id": "person_26",
+        "name": "核心人员26",
+        "category": "person"
+      },
+      {
+        "id": "investor_10",
+        "name": "投资机构10",
+        "category": "investor"
+      },
+      {
+        "id": "patent_80",
+        "name": "专利80",
+        "category": "patent"
+      },
+      {
+        "id": "investor_31",
+        "name": "投资机构31",
+        "category": "investor"
+      },
+      {
+        "id": "person_1",
+        "name": "核心人员1",
+        "category": "person"
+      },
+      {
+        "id": "person_65",
+        "name": "核心人员65",
+        "category": "person"
+      },
+      {
+        "id": "person_74",
+        "name": "核心人员74",
+        "category": "person"
+      }
+    ],
+    "links": [
+      {
+        "source": "company_1",
+        "target": "patent_6",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_1",
+        "target": "patent_12",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_5",
+        "target": "patent_24",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_11",
+        "target": "patent_29",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_2",
+        "target": "patent_30",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_0",
+        "target": "patent_39",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_10",
+        "target": "patent_57",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_0",
+        "target": "patent_63",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_2",
+        "target": "patent_68",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_4",
+        "target": "patent_76",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_7",
+        "target": "patent_80",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_7",
+        "target": "patent_83",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_2",
+        "target": "patent_101",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_2",
+        "target": "patent_104",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_8",
+        "target": "patent_108",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_6",
+        "target": "patent_109",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_8",
+        "target": "patent_127",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_2",
+        "target": "patent_130",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_5",
+        "target": "patent_131",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_7",
+        "target": "patent_136",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_4",
+        "target": "patent_138",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_3",
+        "target": "patent_149",
+        "rel": "申请专利"
+      },
+      {
+        "source": "company_8",
+        "target": "patent_158",
+        "rel": "申请专利"
+      },
+      {
+        "source": "investor_37",
+        "target": "company_0",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_41",
+        "target": "company_1",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_41",
+        "target": "company_2",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_42",
+        "target": "company_3",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_39",
+        "target": "company_4",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_31",
+        "target": "company_5",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_2",
+        "target": "company_6",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_20",
+        "target": "company_7",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_10",
+        "target": "company_8",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_9",
+        "target": "company_9",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_35",
+        "target": "company_10",
+        "rel": "投资"
+      },
+      {
+        "source": "investor_34",
+        "target": "company_11",
+        "rel": "投资"
+      },
+      {
+        "source": "company_8",
+        "target": "person_1",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_5",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_2",
+        "target": "person_13",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_1",
+        "target": "person_18",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_1",
+        "target": "person_19",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_23",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_26",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_28",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_0",
+        "target": "person_33",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_34",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_7",
+        "target": "person_37",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_1",
+        "target": "person_47",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_8",
+        "target": "person_51",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_10",
+        "target": "person_53",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_55",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_7",
+        "target": "person_65",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_74",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_79",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_4",
+        "target": "person_89",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_97",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_102",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_2",
+        "target": "person_111",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_0",
+        "target": "person_117",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_120",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_4",
+        "target": "person_123",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_6",
+        "target": "person_149",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_0",
+        "target": "person_153",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_10",
+        "target": "person_158",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_10",
+        "target": "person_166",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_1",
+        "target": "person_170",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_7",
+        "target": "person_176",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_179",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_0",
+        "target": "person_189",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_11",
+        "target": "person_194",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_8",
+        "target": "person_199",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_9",
+        "target": "person_202",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_10",
+        "target": "person_219",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_7",
+        "target": "person_239",
+        "rel": "雇佣"
+      },
+      {
+        "source": "company_0",
+        "target": "field_8",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_1",
+        "target": "field_7",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_2",
+        "target": "field_2",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_3",
+        "target": "field_0",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_4",
+        "target": "field_8",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_5",
+        "target": "field_2",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_6",
+        "target": "field_5",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_7",
+        "target": "field_0",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_8",
+        "target": "field_11",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_9",
+        "target": "field_6",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_10",
+        "target": "field_11",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_11",
+        "target": "field_1",
+        "rel": "所属领域"
+      },
+      {
+        "source": "company_9",
+        "target": "product_0",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_11",
+        "target": "product_5",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_0",
+        "target": "product_10",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_5",
+        "target": "product_17",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_11",
+        "target": "product_22",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_10",
+        "target": "product_24",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_0",
+        "target": "product_29",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_7",
+        "target": "product_57",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_2",
+        "target": "product_60",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_11",
+        "target": "product_78",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_5",
+        "target": "product_84",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_11",
+        "target": "product_90",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_5",
+        "target": "product_92",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_1",
+        "target": "product_95",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_5",
+        "target": "product_98",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_7",
+        "target": "product_102",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_0",
+        "target": "product_104",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_0",
+        "target": "product_108",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_6",
+        "target": "product_110",
+        "rel": "生产产品"
+      },
+      {
+        "source": "company_9",
+        "target": "product_117",
+        "rel": "生产产品"
+      }
+    ],
+    "categories": [
+      {
+        "name": "企业"
+      },
+      {
+        "name": "技术领域"
+      },
+      {
+        "name": "投资机构"
+      },
+      {
+        "name": "专利"
+      },
+      {
+        "name": "核心人员"
+      },
+      {
+        "name": "产品"
+      }
+    ]
+  },
+  "explanations": {
+    "0": {
+      "baseline_pd": 0.7601,
+      "neighbors": [
+        {
+          "node_id": "investor_67",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0565
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0453
+        },
+        {
+          "node_id": "patent_91",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_112",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_268",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_147",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_350",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_403",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "1": {
+      "baseline_pd": 0.1032,
+      "neighbors": [
+        {
+          "node_id": "investor_64",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0587
+        },
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0564
+        },
+        {
+          "node_id": "patent_1",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_16",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_157",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_25",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_137",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_195",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "2": {
+      "baseline_pd": 0.1239,
+      "neighbors": [
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0471
+        },
+        {
+          "node_id": "investor_29",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0012
+        },
+        {
+          "node_id": "patent_103",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_244",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_5",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_141",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_239",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_250",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "3": {
+      "baseline_pd": 0.1333,
+      "neighbors": [
+        {
+          "node_id": "investor_38",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0102
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0049
+        },
+        {
+          "node_id": "patent_17",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_190",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_211",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_227",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_269",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_95",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "4": {
+      "baseline_pd": 0.0993,
+      "neighbors": [
+        {
+          "node_id": "investor_58",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0129
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0032
+        },
+        {
+          "node_id": "patent_29",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_44",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_68",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_79",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_151",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_252",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "5": {
+      "baseline_pd": 0.0842,
+      "neighbors": [
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0335
+        },
+        {
+          "node_id": "investor_48",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0255
+        },
+        {
+          "node_id": "patent_35",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_56",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_67",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_126",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_167",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_192",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "6": {
+      "baseline_pd": 0.121,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0909
+        },
+        {
+          "node_id": "investor_9",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0063
+        },
+        {
+          "node_id": "patent_4",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_70",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_136",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_144",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_193",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_215",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "7": {
+      "baseline_pd": 0.1027,
+      "neighbors": [
+        {
+          "node_id": "investor_69",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0712
+        },
+        {
+          "node_id": "field_1",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0006
+        },
+        {
+          "node_id": "patent_0",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_240",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_0",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_33",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_152",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_209",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "8": {
+      "baseline_pd": 0.3282,
+      "neighbors": [
+        {
+          "node_id": "investor_55",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1219
+        },
+        {
+          "node_id": "product_21",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.1054
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.068
+        },
+        {
+          "node_id": "patent_54",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_55",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_77",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_120",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_173",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "9": {
+      "baseline_pd": 0.1553,
+      "neighbors": [
+        {
+          "node_id": "investor_49",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2821
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1811
+        },
+        {
+          "node_id": "patent_180",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0151
+        },
+        {
+          "node_id": "person_41",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_119",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_127",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_221",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_0",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "10": {
+      "baseline_pd": 0.085,
+      "neighbors": [
+        {
+          "node_id": "investor_72",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0197
+        },
+        {
+          "node_id": "product_208",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0106
+        },
+        {
+          "node_id": "field_2",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0039
+        },
+        {
+          "node_id": "patent_57",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_202",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_168",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_311",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_341",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "11": {
+      "baseline_pd": 0.1126,
+      "neighbors": [
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0938
+        },
+        {
+          "node_id": "investor_12",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0379
+        },
+        {
+          "node_id": "product_36",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0254
+        },
+        {
+          "node_id": "patent_237",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_254",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_86",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_133",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_191",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "12": {
+      "baseline_pd": 0.2665,
+      "neighbors": [
+        {
+          "node_id": "investor_64",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2605
+        },
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.2101
+        },
+        {
+          "node_id": "product_157",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.1306
+        },
+        {
+          "node_id": "patent_146",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_184",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_197",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_125",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_223",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "13": {
+      "baseline_pd": 0.3139,
+      "neighbors": [
+        {
+          "node_id": "investor_23",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1618
+        },
+        {
+          "node_id": "field_0",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0023
+        },
+        {
+          "node_id": "patent_11",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_116",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_217",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_245",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_276",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_36",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "14": {
+      "baseline_pd": 0.2267,
+      "neighbors": [
+        {
+          "node_id": "investor_59",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.3598
+        },
+        {
+          "node_id": "field_4",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.069
+        },
+        {
+          "node_id": "product_95",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0238
+        },
+        {
+          "node_id": "patent_127",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_156",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_59",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_67",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_80",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "15": {
+      "baseline_pd": 0.6362,
+      "neighbors": [
+        {
+          "node_id": "investor_5",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1176
+        },
+        {
+          "node_id": "product_91",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.117
+        },
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0304
+        },
+        {
+          "node_id": "patent_75",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_85",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_118",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_121",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_223",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "16": {
+      "baseline_pd": 0.0773,
+      "neighbors": [
+        {
+          "node_id": "investor_40",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.6164
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0243
+        },
+        {
+          "node_id": "patent_279",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.002
+        },
+        {
+          "node_id": "person_71",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_111",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_164",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_196",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_336",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "17": {
+      "baseline_pd": 0.6879,
+      "neighbors": [
+        {
+          "node_id": "investor_8",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1126
+        },
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0134
+        },
+        {
+          "node_id": "person_18",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0114
+        },
+        {
+          "node_id": "patent_40",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_63",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_164",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_200",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_234",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "18": {
+      "baseline_pd": 0.1539,
+      "neighbors": [
+        {
+          "node_id": "investor_69",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2385
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0231
+        },
+        {
+          "node_id": "patent_45",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_80",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_128",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_132",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_187",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_199",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "19": {
+      "baseline_pd": 0.1018,
+      "neighbors": [
+        {
+          "node_id": "investor_35",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0614
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0402
+        },
+        {
+          "node_id": "patent_32",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_87",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_111",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_124",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_153",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_186",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "20": {
+      "baseline_pd": 0.1567,
+      "neighbors": [
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0874
+        },
+        {
+          "node_id": "investor_62",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0555
+        },
+        {
+          "node_id": "patent_9",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_212",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_213",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_9",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_156",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_169",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "21": {
+      "baseline_pd": 0.3177,
+      "neighbors": [
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1462
+        },
+        {
+          "node_id": "investor_53",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0771
+        },
+        {
+          "node_id": "patent_21",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_113",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_208",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_29",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_205",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_219",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "22": {
+      "baseline_pd": 0.1739,
+      "neighbors": [
+        {
+          "node_id": "investor_35",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2102
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1384
+        },
+        {
+          "node_id": "patent_13",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0379
+        },
+        {
+          "node_id": "person_24",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_96",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_271",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_280",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_38",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "23": {
+      "baseline_pd": 0.1598,
+      "neighbors": [
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.2008
+        },
+        {
+          "node_id": "investor_13",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0367
+        },
+        {
+          "node_id": "product_10",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0137
+        },
+        {
+          "node_id": "patent_69",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_196",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_261",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_104",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_106",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "24": {
+      "baseline_pd": 0.0976,
+      "neighbors": [
+        {
+          "node_id": "investor_34",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.039
+        },
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.025
+        },
+        {
+          "node_id": "person_15",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0006
+        },
+        {
+          "node_id": "patent_162",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_174",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_26",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_127",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_209",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "25": {
+      "baseline_pd": 0.7531,
+      "neighbors": [
+        {
+          "node_id": "investor_23",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0583
+        },
+        {
+          "node_id": "field_1",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0033
+        },
+        {
+          "node_id": "patent_89",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_97",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_247",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_112",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_276",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_301",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "26": {
+      "baseline_pd": 0.3229,
+      "neighbors": [
+        {
+          "node_id": "investor_18",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0592
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0509
+        },
+        {
+          "node_id": "patent_7",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_8",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_12",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_25",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_46",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_58",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "27": {
+      "baseline_pd": 0.7089,
+      "neighbors": [
+        {
+          "node_id": "investor_24",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.2039
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0577
+        },
+        {
+          "node_id": "patent_27",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_94",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_100",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_115",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_150",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_179",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "28": {
+      "baseline_pd": 0.5851,
+      "neighbors": [
+        {
+          "node_id": "investor_16",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0561
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0305
+        },
+        {
+          "node_id": "patent_131",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_201",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_209",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_256",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_179",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_237",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "29": {
+      "baseline_pd": 0.1617,
+      "neighbors": [
+        {
+          "node_id": "product_75",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.149
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0487
+        },
+        {
+          "node_id": "investor_61",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0078
+        },
+        {
+          "node_id": "patent_14",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_71",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_181",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_31",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_94",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "30": {
+      "baseline_pd": 0.0708,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0246
+        },
+        {
+          "node_id": "investor_66",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.009
+        },
+        {
+          "node_id": "patent_210",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_248",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_8",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_28",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_77",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_289",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "31": {
+      "baseline_pd": 0.3637,
+      "neighbors": [
+        {
+          "node_id": "investor_13",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0879
+        },
+        {
+          "node_id": "patent_72",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.082
+        },
+        {
+          "node_id": "field_2",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0376
+        },
+        {
+          "node_id": "patent_2",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_131",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_153",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_234",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_263",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "32": {
+      "baseline_pd": 0.815,
+      "neighbors": [
+        {
+          "node_id": "product_52",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0471
+        },
+        {
+          "node_id": "investor_15",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.019
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0014
+        },
+        {
+          "node_id": "patent_18",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_52",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_134",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_204",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_231",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "33": {
+      "baseline_pd": 0.238,
+      "neighbors": [
+        {
+          "node_id": "investor_2",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.4221
+        },
+        {
+          "node_id": "field_2",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0425
+        },
+        {
+          "node_id": "patent_59",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_242",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_255",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_40",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_85",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_255",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "34": {
+      "baseline_pd": 0.6551,
+      "neighbors": [
+        {
+          "node_id": "investor_30",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0741
+        },
+        {
+          "node_id": "field_0",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0474
+        },
+        {
+          "node_id": "patent_28",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_152",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_189",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_195",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_205",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_74",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "35": {
+      "baseline_pd": 0.7848,
+      "neighbors": [
+        {
+          "node_id": "product_190",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0622
+        },
+        {
+          "node_id": "investor_45",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0186
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0111
+        },
+        {
+          "node_id": "patent_102",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_139",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_198",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_187",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_355",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "36": {
+      "baseline_pd": 0.6505,
+      "neighbors": [
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1162
+        },
+        {
+          "node_id": "investor_19",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0656
+        },
+        {
+          "node_id": "patent_19",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_41",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_251",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_64",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_82",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_166",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "37": {
+      "baseline_pd": 0.4169,
+      "neighbors": [
+        {
+          "node_id": "investor_38",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1362
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.095
+        },
+        {
+          "node_id": "patent_117",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_250",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_26",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_48",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_241",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_321",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "38": {
+      "baseline_pd": 0.7924,
+      "neighbors": [
+        {
+          "node_id": "investor_24",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1176
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0074
+        },
+        {
+          "node_id": "patent_65",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_175",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_182",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_144",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_197",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_228",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "39": {
+      "baseline_pd": 0.2679,
+      "neighbors": [
+        {
+          "node_id": "investor_0",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.3599
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0779
+        },
+        {
+          "node_id": "patent_108",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_203",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_216",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_232",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_270",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_52",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "40": {
+      "baseline_pd": 0.2448,
+      "neighbors": [
+        {
+          "node_id": "field_4",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0634
+        },
+        {
+          "node_id": "investor_17",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0024
+        },
+        {
+          "node_id": "patent_129",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_130",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_143",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_219",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_226",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_50",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "41": {
+      "baseline_pd": 0.1789,
+      "neighbors": [
+        {
+          "node_id": "investor_55",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.054
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0154
+        },
+        {
+          "node_id": "patent_33",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_51",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_81",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_83",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_159",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_191",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "42": {
+      "baseline_pd": 0.2822,
+      "neighbors": [
+        {
+          "node_id": "investor_64",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2584
+        },
+        {
+          "node_id": "product_161",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0389
+        },
+        {
+          "node_id": "field_2",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0156
+        },
+        {
+          "node_id": "patent_64",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_96",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_37",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_87",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_92",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "43": {
+      "baseline_pd": 0.3656,
+      "neighbors": [
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1353
+        },
+        {
+          "node_id": "investor_30",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1349
+        },
+        {
+          "node_id": "patent_53",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_106",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_199",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_249",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_305",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_356",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "44": {
+      "baseline_pd": 0.6186,
+      "neighbors": [
+        {
+          "node_id": "patent_22",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.1277
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0458
+        },
+        {
+          "node_id": "investor_42",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0009
+        },
+        {
+          "node_id": "person_55",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_113",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_135",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_181",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_295",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "45": {
+      "baseline_pd": 0.3847,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1927
+        },
+        {
+          "node_id": "investor_39",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0689
+        },
+        {
+          "node_id": "patent_99",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0413
+        },
+        {
+          "node_id": "person_58",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_76",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_143",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_309",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_331",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "46": {
+      "baseline_pd": 0.303,
+      "neighbors": [
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.2059
+        },
+        {
+          "node_id": "investor_22",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0755
+        },
+        {
+          "node_id": "patent_98",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_104",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_65",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_161",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_186",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_368",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "47": {
+      "baseline_pd": 0.7365,
+      "neighbors": [
+        {
+          "node_id": "investor_48",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0369
+        },
+        {
+          "node_id": "field_2",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0114
+        },
+        {
+          "node_id": "patent_76",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_105",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_241",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_27",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_308",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_392",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "48": {
+      "baseline_pd": 0.2476,
+      "neighbors": [
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.149
+        },
+        {
+          "node_id": "investor_29",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0303
+        },
+        {
+          "node_id": "patent_133",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_161",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_178",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_73",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_189",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_35",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "49": {
+      "baseline_pd": 0.792,
+      "neighbors": [
+        {
+          "node_id": "patent_260",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0765
+        },
+        {
+          "node_id": "investor_3",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0282
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0054
+        },
+        {
+          "node_id": "person_140",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_145",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_224",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_253",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_291",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "50": {
+      "baseline_pd": 0.738,
+      "neighbors": [
+        {
+          "node_id": "investor_28",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0374
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.017
+        },
+        {
+          "node_id": "patent_42",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_66",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_235",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_253",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_273",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_54",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "51": {
+      "baseline_pd": 0.3789,
+      "neighbors": [
+        {
+          "node_id": "person_175",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.199
+        },
+        {
+          "node_id": "investor_12",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1538
+        },
+        {
+          "node_id": "field_7",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0523
+        },
+        {
+          "node_id": "patent_38",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_50",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_177",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_222",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_259",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "52": {
+      "baseline_pd": 0.1954,
+      "neighbors": [
+        {
+          "node_id": "investor_34",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2094
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0262
+        },
+        {
+          "node_id": "person_12",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_107",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_307",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_138",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_198",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "53": {
+      "baseline_pd": 0.1107,
+      "neighbors": [
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.043
+        },
+        {
+          "node_id": "investor_33",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0388
+        },
+        {
+          "node_id": "patent_36",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_236",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_257",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_278",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_105",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_247",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "54": {
+      "baseline_pd": 0.124,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0656
+        },
+        {
+          "node_id": "investor_34",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0594
+        },
+        {
+          "node_id": "patent_74",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_82",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_90",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_169",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_258",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_277",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "55": {
+      "baseline_pd": 0.208,
+      "neighbors": [
+        {
+          "node_id": "investor_12",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1835
+        },
+        {
+          "node_id": "field_4",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1372
+        },
+        {
+          "node_id": "product_22",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0516
+        },
+        {
+          "node_id": "patent_23",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_24",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_140",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_100",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_183",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "56": {
+      "baseline_pd": 0.062,
+      "neighbors": [
+        {
+          "node_id": "investor_69",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0197
+        },
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0172
+        },
+        {
+          "node_id": "product_53",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0035
+        },
+        {
+          "node_id": "patent_3",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_10",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_123",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_149",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_224",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "57": {
+      "baseline_pd": 0.4316,
+      "neighbors": [
+        {
+          "node_id": "investor_8",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.2065
+        },
+        {
+          "node_id": "field_9",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.165
+        },
+        {
+          "node_id": "person_232",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.1086
+        },
+        {
+          "node_id": "patent_6",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_92",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_107",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_114",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_271",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "58": {
+      "baseline_pd": 0.6642,
+      "neighbors": [
+        {
+          "node_id": "investor_21",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.062
+        },
+        {
+          "node_id": "field_0",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.013
+        },
+        {
+          "node_id": "patent_88",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_160",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_225",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_265",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_274",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_16",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "59": {
+      "baseline_pd": 0.7956,
+      "neighbors": [
+        {
+          "node_id": "investor_23",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.2252
+        },
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0355
+        },
+        {
+          "node_id": "patent_228",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_243",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_35",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_38",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_114",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_136",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "60": {
+      "baseline_pd": 0.2281,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.1213
+        },
+        {
+          "node_id": "investor_33",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0503
+        },
+        {
+          "node_id": "product_197",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0356
+        },
+        {
+          "node_id": "patent_5",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_37",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_119",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_141",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_7",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "61": {
+      "baseline_pd": 0.1565,
+      "neighbors": [
+        {
+          "node_id": "product_116",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": -0.0712
+        },
+        {
+          "node_id": "investor_31",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0325
+        },
+        {
+          "node_id": "field_5",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.032
+        },
+        {
+          "node_id": "patent_48",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_62",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_95",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_145",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_170",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "62": {
+      "baseline_pd": 0.0874,
+      "neighbors": [
+        {
+          "node_id": "investor_72",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0654
+        },
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0517
+        },
+        {
+          "node_id": "patent_39",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_122",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_155",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_168",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_206",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_2",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "63": {
+      "baseline_pd": 0.0767,
+      "neighbors": [
+        {
+          "node_id": "patent_171",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.0532
+        },
+        {
+          "node_id": "investor_62",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0216
+        },
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0205
+        },
+        {
+          "node_id": "person_39",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_213",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_262",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_285",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_286",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "64": {
+      "baseline_pd": 0.31,
+      "neighbors": [
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.2347
+        },
+        {
+          "node_id": "investor_4",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1688
+        },
+        {
+          "node_id": "patent_110",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_165",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_239",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_79",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_158",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_41",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "65": {
+      "baseline_pd": 0.1302,
+      "neighbors": [
+        {
+          "node_id": "investor_43",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.4694
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0402
+        },
+        {
+          "node_id": "patent_93",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_138",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_148",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_163",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_246",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_13",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "66": {
+      "baseline_pd": 0.4916,
+      "neighbors": [
+        {
+          "node_id": "investor_37",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.2536
+        },
+        {
+          "node_id": "patent_34",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.2291
+        },
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.2031
+        },
+        {
+          "node_id": "person_30",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_56",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_146",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_163",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_198",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "67": {
+      "baseline_pd": 0.7872,
+      "neighbors": [
+        {
+          "node_id": "investor_67",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0253
+        },
+        {
+          "node_id": "field_3",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0054
+        },
+        {
+          "node_id": "patent_47",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_49",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_116",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_162",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_254",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_258",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "68": {
+      "baseline_pd": 0.8349,
+      "neighbors": [
+        {
+          "node_id": "investor_24",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0394
+        },
+        {
+          "node_id": "patent_26",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0066
+        },
+        {
+          "node_id": "product_79",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0016
+        },
+        {
+          "node_id": "field_0",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0001
+        },
+        {
+          "node_id": "person_14",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_46",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_84",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_128",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "69": {
+      "baseline_pd": 0.1251,
+      "neighbors": [
+        {
+          "node_id": "investor_33",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.0444
+        },
+        {
+          "node_id": "patent_266",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.022
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0099
+        },
+        {
+          "node_id": "person_34",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_215",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_413",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_105",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_159",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "70": {
+      "baseline_pd": 0.76,
+      "neighbors": [
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0265
+        },
+        {
+          "node_id": "investor_67",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0091
+        },
+        {
+          "node_id": "patent_135",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_137",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_142",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_147",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_176",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_263",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        }
+      ]
+    },
+    "71": {
+      "baseline_pd": 0.1142,
+      "neighbors": [
+        {
+          "node_id": "investor_34",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.168
+        },
+        {
+          "node_id": "field_6",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0506
+        },
+        {
+          "node_id": "person_11",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_108",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_182",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_207",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_264",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_71",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "72": {
+      "baseline_pd": 0.1704,
+      "neighbors": [
+        {
+          "node_id": "investor_44",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.2835
+        },
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0317
+        },
+        {
+          "node_id": "patent_31",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": -0.019
+        },
+        {
+          "node_id": "person_115",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_178",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_208",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_248",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_328",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "73": {
+      "baseline_pd": 0.6823,
+      "neighbors": [
+        {
+          "node_id": "investor_22",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0233
+        },
+        {
+          "node_id": "field_4",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0067
+        },
+        {
+          "node_id": "patent_15",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_61",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_158",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_214",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_275",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_130",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "74": {
+      "baseline_pd": 0.1801,
+      "neighbors": [
+        {
+          "node_id": "investor_57",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1187
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0312
+        },
+        {
+          "node_id": "patent_172",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_221",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_6",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_23",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_98",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_185",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "75": {
+      "baseline_pd": 0.8008,
+      "neighbors": [
+        {
+          "node_id": "field_10",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.029
+        },
+        {
+          "node_id": "product_37",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0252
+        },
+        {
+          "node_id": "patent_84",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0201
+        },
+        {
+          "node_id": "investor_5",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.003
+        },
+        {
+          "node_id": "person_151",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_266",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_361",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "76": {
+      "baseline_pd": 0.6563,
+      "neighbors": [
+        {
+          "node_id": "product_73",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.1389
+        },
+        {
+          "node_id": "investor_71",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1145
+        },
+        {
+          "node_id": "patent_272",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0525
+        },
+        {
+          "node_id": "field_8",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0429
+        },
+        {
+          "node_id": "person_47",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_61",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_155",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_180",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "77": {
+      "baseline_pd": 0.4564,
+      "neighbors": [
+        {
+          "node_id": "investor_12",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": -0.1488
+        },
+        {
+          "node_id": "field_1",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0153
+        },
+        {
+          "node_id": "patent_73",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_78",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_125",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_154",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_166",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_81",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    },
+    "78": {
+      "baseline_pd": 0.1272,
+      "neighbors": [
+        {
+          "node_id": "field_11",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": -0.0939
+        },
+        {
+          "node_id": "person_373",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": -0.069
+        },
+        {
+          "node_id": "investor_42",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.0001
+        },
+        {
+          "node_id": "patent_43",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_194",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_218",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_58",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        },
+        {
+          "node_id": "product_113",
+          "type": "product",
+          "rel": "生产产品",
+          "delta": 0.0
+        }
+      ]
+    },
+    "79": {
+      "baseline_pd": 0.589,
+      "neighbors": [
+        {
+          "node_id": "investor_4",
+          "type": "investor",
+          "rel": "获投资",
+          "delta": 0.1668
+        },
+        {
+          "node_id": "field_0",
+          "type": "field",
+          "rel": "所属技术领域",
+          "delta": 0.0282
+        },
+        {
+          "node_id": "patent_20",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_30",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_60",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "patent_86",
+          "type": "patent",
+          "rel": "申请专利",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_19",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        },
+        {
+          "node_id": "person_43",
+          "type": "person",
+          "rel": "雇佣核心人员",
+          "delta": 0.0
+        }
+      ]
+    }
+  }
+}
