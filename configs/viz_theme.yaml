@@ -1,0 +1,128 @@
+# =====================================================================
+# configs/viz_theme.yaml
+# 全站可视化主题令牌 —— 前端 / ECharts 图表 / 论文配图的「唯一颜色来源」
+# 依据：《前端页面与交互原型说明》v1.0 §7.2、《可视化清单与图表数据契约》v1.0
+# 用法：由 scripts/build_viz_theme.py 读取本文件生成 frontend/src/styles/theme.css
+#       （CSS 变量 + JS 颜色映射常量）
+# 工程口径（2026-10-15 裁决）：新前端工程 = frontend/（Vue3+Vite，《前端页面与交互原型说明》§八）；
+#       旧静态 demo = web/（保留不动，不再作为前端主工程）。
+# ⚠️ 硬性约定：组件 / 图表内「禁止写死色值」，一切颜色从本文件派生。
+# 版本：v1.1（2026-10-16）—— 色值零变更；仅新增 §build/§naming 生成与命名规范，
+#       并把生成器归属正式钉在本契约（根治「生成器不存在 / 键名三套写法」两处悬空）。
+# =====================================================================
+meta:
+  name: zjtech-viz-theme
+  version: v1.1
+  owner: 吕键                 # 契约类，事件驱动更新
+  frozen_at: '2026-10-16'
+  applies_to:
+    - 前端样式（frontend/src/styles/）
+    - ECharts 图表配色
+    - 论文 / 报告配图
+  note: 与 risk_band 口径同源；色值变更走「改本文件 → 升 version → 通知前端/算法」。
+
+# ---------------------------------------------------------------------
+# 主题主色（图表主题蓝，前端与论文配图共用同一份）
+# ---------------------------------------------------------------------
+brand:
+  primary:      '#4EA1FF'     # 图表主题蓝
+  primary_dark: '#2F7FE0'
+  bg_dark:      '#0F1420'
+  panel:        '#182032'
+  panel_2:      '#1F293E'
+  line:         '#2A3550'
+  text:         '#E6ECF5'
+  text_muted:   '#8B9BB4'
+
+# ---------------------------------------------------------------------
+# 信用风险五档色带
+# 来源：《前端页面与交互原型说明》v1.0 §7.2
+#   「深绿（优良）、浅绿（较好）、浅黄（关注）、橙（预警）、红（高风险）」
+# 规则：v1.0 用分位法定档（与模型校准无关）；模型校准后切 calibrated_pd。
+# ⚠️ 合规：颜色不得作为唯一信息通道 —— 每档必须同时渲染文字 label。
+# ---------------------------------------------------------------------
+risk_band:
+  version: v1.0
+  rule: quantile              # quantile | calibrated_pd | overdue_override
+  items:
+    - band: 1
+      code: excellent
+      label: 优良
+      reg_class: 正常类
+      color: '#1E8E3E'        # 深绿
+      color_bg: '#0E3B24'     # 徽标底色（暗色主题）
+    - band: 2
+      code: good
+      label: 较好
+      reg_class: 关注类
+      color: '#7BC96F'        # 浅绿
+      color_bg: '#1C3B22'
+    - band: 3
+      code: watch
+      label: 关注
+      reg_class: 次级类
+      color: '#F2C94C'        # 浅黄
+      color_bg: '#3B3410'
+    - band: 4
+      code: warning
+      label: 预警
+      reg_class: 可疑类
+      color: '#F2994A'        # 橙
+      color_bg: '#3B2410'
+    - band: 5
+      code: high_risk
+      label: 高风险
+      reg_class: 损失类
+      color: '#E74C3C'        # 红
+      color_bg: '#3B1C1C'
+
+# ---------------------------------------------------------------------
+# 六类实体颜色固定映射（与算法侧共用，禁止前端另行定义）
+# 来源：现有 web/index.html 已用色，此处收口为唯一来源
+# ---------------------------------------------------------------------
+entity_category:
+  company:  '#4EA1FF'         # 企业
+  patent:   '#9B59B6'         # 专利
+  investor: '#F1C40F'         # 投资机构
+  person:   '#1ABC9C'         # 核心人员
+  field:    '#E67E22'         # 技术领域
+  product:  '#7F8C8D'         # 产品
+
+# ---------------------------------------------------------------------
+# 合规声明（必须随风险分级展示与报告出现）
+# ---------------------------------------------------------------------
+compliance:
+  disclaimer: >-
+    当前版本 PD 未经校准，真实面板区分度弱（AUC≈0.59 / 噪声地板 0.48），
+    仅用于原型系统演示与教学研究，不得用于真实授信决策。
+
+# ---------------------------------------------------------------------
+# §build 生成器归属（冻结）—— 本契约的唯一下游生成器，由后端持有
+# 依据：《可视化清单与图表数据契约》§6.6「统一管理」+ 本文件头注释
+# ---------------------------------------------------------------------
+build:
+  generator: scripts/build_viz_theme.py        # 唯一生成器（后端 / 数据管道持有）
+  run: python scripts/build_viz_theme.py       # 生成；--check 供 CI 校验漂移
+  ci_check: python scripts/build_viz_theme.py --check
+  outputs:
+    - frontend/src/styles/theme.css            # CSS 自定义属性（--xxx）
+    - frontend/src/styles/theme.ts             # TS 颜色映射常量
+  artifact_policy: 产物「禁止手工编辑」，一切改动先改本文件再重新生成。
+
+# ---------------------------------------------------------------------
+# §naming 键名规范（唯一权威 = 本文件）
+# 目的：杜绝「同一实体在论文图与系统界面取不到同一颜色」的三套写法。
+# ---------------------------------------------------------------------
+naming:
+  authority: configs/viz_theme.yaml            # 键名唯一权威，任何组件/脚本不得自造
+  js_keys: as-is            # TS/JS 对象键名 = 本文件键名「原样 snake_case」，不转写
+  css_vars: underscore_to_hyphen               # CSS 变量名 = 键名把 _ 转 -
+  examples:
+    - 'risk_band.code=high_risk  ->  --risk-high-risk'
+    - 'entity_category.field     ->  --entity-field'
+    - 'brand.text_muted          ->  --color-text-muted'
+  forbidden_aliases:                           # 曾出现的错误写法，一律禁用
+    - { section: risk_band, wrong: high,        right: high_risk }
+    - { section: risk_band, wrong: high-risk,   right: high_risk }
+    - { section: entity_category, wrong: tech_domain, right: field }
+    - { section: entity_category, wrong: techField,   right: field }
