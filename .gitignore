@@ -54,6 +54,10 @@ conda-meta/
 *.tsv
 *.dta
 *.sav
+# 本仓库 SQLite 数据库：灌库产物（zjtech_credit.db），走 tdrive 共享盘，不进 Git
+data/db/
+# 原始申报名单 PDF（源数据，走 tdrive「数据/raw」目录，不进 Git）
+data/raw/
 # data/ 目录下只保留 README.md（见仓库目录结构约定）
 
 # ---- 模型权重 / 检查点 ----
