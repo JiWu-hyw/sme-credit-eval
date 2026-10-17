@@ -17,9 +17,11 @@
 
 输出结构（供前端直接消费）：
     {
-      "<company_id>": {
-        "baseline_pd": float,
-        "neighbors": [ {node_id, type, rel, delta}, ... ]  # 已按 |delta| 降序、截断 top_k
+      "company_<id>": {                     # id 统一 string（契约 §四 问题4）
+        "status": "ready",                  # neighbors 已就绪
+        "baseline_pd": float,               # 原始 float（契约 §四 问题6）
+        "neighbors": [ {node_id, type, rel, delta}, ... ],  # 已按 |delta| 降序、截断 top_k
+        "feature_shap": null | {...},       # 特征级 SHAP（契约 §三）；未就绪为 null
       }, ...
     }
 
@@ -124,9 +126,13 @@ def compute_local_explanations(model, snaps, top_k=8):
                 })
 
         nbrs.sort(key=lambda x: abs(x["delta"]), reverse=True)
-        explanations[str(c)] = {
-            "baseline_pd": round(float(base_pd[c]), 4),
+        explanations[f"company_{c}"] = {
+            "status": "ready",                 # neighbors 已就绪
+            "baseline_pd": float(base_pd[c]),  # 原始 float（契约 §四 问题6）
             "neighbors": nbrs[:top_k],
+            # 特征级 SHAP（契约 §三）：真实特征归因依赖 src/explain 尚未实现，先置 null，
+            # 前端据此渲染「局部解释生成中」占位，不用全局 importance 顶替。
+            "feature_shap": None,
         }
 
     return explanations

@@ -1,0 +1,46 @@
+{
+  "version": "v1.0",
+  "meta": {
+    "source": "configs/enums.yaml",
+    "source_sha256": "c0c05935b5f67ecb67aa220de99cbbae278d1cb79543600e10b5f3d976ac25c9",
+    "generated_at": "2026-10-17T16:36:24"
+  },
+  "entity_types": [
+    {
+      "type": "company",
+      "cn": "企业",
+      "order": 1,
+      "theme_var": "--entity-company"
+    },
+    {
+      "type": "patent",
+      "cn": "专利",
+      "order": 2,
+      "theme_var": "--entity-patent"
+    },
+    {
+      "type": "investor",
+      "cn": "投资机构",
+      "order": 3,
+      "theme_var": "--entity-investor"
+    },
+    {
+      "type": "person",
+      "cn": "核心人员",
+      "order": 4,
+      "theme_var": "--entity-person"
+    },
+    {
+      "type": "field",
+      "cn": "技术领域",
+      "order": 5,
+      "theme_var": "--entity-field"
+    },
+    {
+      "type": "product",
+      "cn": "产品",
+      "order": 6,
+      "theme_var": "--entity-product"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+# =====================================================================
+# configs/enums.yaml
+# 实体类型枚举「唯一权威源」—— type（英文，逻辑用）与 type_cn（中文，展示用）
+# 依据：《后端契约三问题-刘钰泉确认回执》v1.0 §2.3（方案 B+）；《后端契约三问题-复核裁决》v1.0 §二
+# 用法：由 scripts/build_enums.py 读取本文件生成 configs/enums.json（机器可读，前端直接 import）
+# 工程口径（2026-10-17 裁决）：
+#   - type 供前端逻辑分支（节点形状 / 颜色 / 图标 / 图例筛选），措辞一变即失效，故逻辑必须挂在英文 type 上；
+#   - type_cn 仅用于展示文案，前端不得自造中文；
+#   - theme_var 指向 viz_theme.yaml §entity_category 已生成的 CSS 变量（--entity-*），
+#     类型→颜色映射收归权威源，前端不再自定色，与 viz_theme.yaml 裁决口径一致。
+# ⚠️ 硬性约定：前端 entity.ts 只允许读本文件派生出的 enums.json，禁止在组件内硬编码「英文→中文/颜色」映射。
+# 版本：v1.0（2026-10-17）—— 首版六类实体。
+# =====================================================================
+meta:
+  name: zjtech-entity-enums
+  version: v1.0
+  owner: 吕键                 # 契约类，事件驱动更新
+  frozen_at: '2026-10-17'
+  applies_to:
+    - 前端 entity.ts（entityLabel / entityColor）
+    - 接口 payload 的 type / type_cn 双下发
+    - 图例顺序与主题变量引用
+  note: 与 viz_theme.yaml §entity_category 同源；新增实体类型须同步 viz_theme.yaml 补色并升本文件版本。
+
+# ---------------------------------------------------------------------
+# 六类实体（顺序即图例顺序，order 从 1 起连续）
+# theme_var 必须与 viz_theme.yaml §entity_category 的键一一对应（--entity-<type>）
+# ---------------------------------------------------------------------
+entity_types:
+  - type: company
+    cn: 企业
+    order: 1
+    theme_var: --entity-company
+  - type: patent
+    cn: 专利
+    order: 2
+    theme_var: --entity-patent
+  - type: investor
+    cn: 投资机构
+    order: 3
+    theme_var: --entity-investor
+  - type: person
+    cn: 核心人员
+    order: 4
+    theme_var: --entity-person
+  - type: field
+    cn: 技术领域
+    order: 5
+    theme_var: --entity-field
+  - type: product
+    cn: 产品
+    order: 6
+    theme_var: --entity-product

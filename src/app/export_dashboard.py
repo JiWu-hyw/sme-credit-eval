@@ -36,6 +36,8 @@ FEATURE_NAMES = [
     "投资机构知名度", "技术转化效率", "资本技术协同度", "综合嵌入(fused)",
 ]
 
+# 边关系中文映射（注意：这是「关系类型」枚举，非「实体类型」枚举；
+# 实体类型中文已改由 configs/enums.json 唯一权威源提供，见 load_entity_cn()）
 REL_CN = {
     ("company", "applies", "patent"): "申请专利",
     ("investor", "invests", "company"): "投资",
@@ -45,10 +47,11 @@ REL_CN = {
     ("company", "makes", "product"): "生产产品",
 }
 
-NODE_CN = {
-    "company": "企业", "patent": "专利", "investor": "投资机构",
-    "person": "核心人员", "field": "技术领域", "product": "产品",
-}
+def load_entity_cn():
+    """实体类型中文：从 configs/enums.json 读（契约 §二 方案 B+ 唯一权威源），禁止硬编码。"""
+    with open(os.path.join(ROOT, "configs", "enums.json"), encoding="utf-8") as f:
+        enums = json.load(f)
+    return {t["type"]: t["cn"] for t in enums["entity_types"]}
 
 
 def main():
@@ -72,12 +75,18 @@ def main():
 
     companies = []
     for i in range(len(prob)):
-        pd = float(prob[i])
-        pred = int(pd >= 0.5)
+        pd_val = float(prob[i])
+        pred = int(pd_val >= 0.5)
         companies.append({
-            "id": i,
-            "pd": round(pd, 4),
-            "score": round(float(100 - pd * 100), 2),
+            "id": f"company_{i}",
+            # 企业身份字段（契约 §一）：P0-1 映射键到位前 demo 版恒 null，前端走降级
+            "name": None,
+            "credit_code": None,
+            "region_code": None,
+            "region_name": None,
+            "mapping_conflict": False,
+            "pd": pd_val,                                   # 原始 float，不四舍五入
+            "score": int(round(100 - pd_val * 100)),       # 整数 0–100
             "label": int(y_np[i]),
             "correct": int(pred == y_np[i]),
         })
@@ -90,6 +99,9 @@ def main():
         for i in range(len(FEATURE_NAMES))
     ]
     importance.sort(key=lambda d: d["value"], reverse=True)
+
+    # 实体类型中文（契约 §二 方案 B+：唯一权威源 enums.json，禁止硬编码）
+    entity_cn = load_entity_cn()
 
     # 12 家企业 1 跳子图
     snap = ds[0]
@@ -118,17 +130,23 @@ def main():
     nodes = []
     for c in sample_companies:
         risk = float(prob[c])
+        cn = entity_cn.get("company", "company")
         nodes.append({
-            "id": f"company_{c}", "name": f"企业{c}", "category": "company",
+            "id": f"company_{c}", "name": f"{cn}{c}", "category": "company", "type_cn": cn,
             "risk": round(risk, 3), "score": round(float(100 - risk * 100), 1),
         })
     for (t, idx) in keep_other:
-        nodes.append({"id": f"{t}_{idx}", "name": f"{NODE_CN.get(t, t)}{idx}", "category": t})
+        cn = entity_cn.get(t, t)
+        nodes.append({"id": f"{t}_{idx}", "name": f"{cn}{idx}", "category": t, "type_cn": cn})
 
-    categories = [{"name": NODE_CN.get(t, t)} for t in sorted(cat_set)]
+    categories = [{"name": entity_cn.get(t, t), "type": t} for t in sorted(cat_set)]
 
     data = {
         "meta": {
+            # 契约版本锚点（契约 §四 问题5）
+            "contract_ver": "v2.0",
+            "enums_version": "v1.0",
+            "schema_version": "v1.0",
             "auc": round(float(metrics["AUC"]), 4),
             "ks": round(float(metrics["KS"]), 4),
             "accuracy": round(float(metrics["Accuracy"]), 4),
