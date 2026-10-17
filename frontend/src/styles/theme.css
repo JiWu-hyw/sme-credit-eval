@@ -1,0 +1,49 @@
+/* =====================================================================
+ * 由 scripts/build_viz_theme.py 自动生成 —— 禁止手工编辑。
+ * 唯一来源：configs/viz_theme.yaml（version v1.2，sha256 21cdf449571b6d80…）
+ * 命名转写规则（_ → -）：yaml 的 snake_case 键 → CSS 变量名时下划线转连字符；
+ *   TS/JS 键名一律以 yaml 为准（原样 snake_case，不转写）。
+ * 重新生成：python scripts/build_viz_theme.py
+ */
+
+
+:root {
+  /* ---- brand（主题主色） ---- */
+  --color-primary: #4EA1FF;
+  --color-primary-dark: #2F7FE0;
+  --color-bg-dark: #0F1420;
+  --color-panel: #182032;
+  --color-panel-2: #1F293E;
+  --color-line: #2A3550;
+  --color-text: #E6ECF5;
+  --color-text-muted: #8B9BB4;
+
+  /* ---- risk band（信用风险五档色带） ---- */
+  --risk-excellent: #1E8E3E;
+  --risk-excellent-bg: #0E3B24;
+  --risk-good: #7BC96F;
+  --risk-good-bg: #1C3B22;
+  --risk-watch: #F2C94C;
+  --risk-watch-bg: #3B3410;
+  --risk-warning: #F2994A;
+  --risk-warning-bg: #3B2410;
+  --risk-high-risk: #E74C3C;
+  --risk-high-risk-bg: #3B1C1C;
+
+  /* ---- entity category（六类实体固定映射） ---- */
+  --entity-company: #4EA1FF;
+  --entity-patent: #9B59B6;
+  --entity-investor: #F1C40F;
+  --entity-person: #1ABC9C;
+  --entity-field: #E67E22;
+  --entity-product: #7F8C8D;
+
+  /* ---- market（涨跌色：A 股惯例 涨红跌绿） ---- */
+  --market-up: #E74C3C;
+  --market-down: #1E8E3E;
+  --market-flat: #8B9BB4;
+
+  /* ---- meta / compliance ---- */
+  --viz-theme-version: "v1.2";
+  --compliance-disclaimer: "当前版本 PD 未经校准，真实面板区分度弱（行级 AUC≈0.59）。噪声地板 （置换对照 AUC，行级，来源 outputs/baseline_results.json.cv_row_shuffled_label） ＝ LR 0.492 / XGB 0.477，契约 meta.noise_floor 统一取 0.477。 仅用于原型系统演示与教学研究，不得用于真实授信决策。";
+}

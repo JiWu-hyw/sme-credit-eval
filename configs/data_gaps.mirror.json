@@ -2,36 +2,35 @@
   "meta": {
     "source": "configs\\data_gaps.yaml",
     "probe": "configs\\data_gaps_probe.yaml",
-    "source_sha256": "783690aa058fbdb9",
-    "generated_at": "2026-10-17T14:41:17+08:00",
+    "source_sha256": "84c283cb3d194428",
+    "generated_at": "2026-10-17T15:28:17+08:00",
     "as_of": "2026-10-17",
     "age_days": 0,
     "max_age_days": 7,
     "stale": false,
-    "run_tag": "20261017-144117"
+    "run_tag": "20261017-152817"
   },
   "gap_summary": {
     "total": 5,
-    "not_started": 0,
-    "in_progress": 3,
-    "blocked": 2,
-    "done": 0,
+    "missing": 3,
+    "in_progress": 2,
+    "ready": 0,
     "stale": false,
     "issue_count": 0
   },
   "gaps": [
     {
       "id": "P0-1",
-      "name": "企业映射键（userid ↔ 统一社会信用代码/企业名）",
-      "status": "blocked",
-      "status_label": "受阻",
+      "name": "userid → 统一社会信用代码/企业名映射键",
+      "status": "missing",
+      "status_label": "未到位",
       "owner": "袁雪茹",
-      "source": "数据提供方（大赛方 / 指导教师）索要，袁雪茹归口",
-      "why": "外部专利/融资/工商数据关联的唯一前提；缺失则真实企业名与外部数据都无法回填面板",
+      "source": "信贷数据提供方",
+      "why": "无映射键则面板观测无法挂接企业实体，图谱与外源特征无法对齐",
       "blocks": [
-        "外部数据关联",
-        "企业画像",
-        "图谱实体对齐"
+        "图谱对齐",
+        "特征融合",
+        "P7单企业诊断"
       ],
       "tables": [
         "ext_msme_sample"
@@ -50,16 +49,16 @@
     },
     {
       "id": "P0-2",
-      "name": "x1–x200 字段语义字典（x21–x200 缺失）",
-      "status": "in_progress",
-      "status_label": "推进中",
+      "name": "x21–x200 字段字典",
+      "status": "missing",
+      "status_label": "未到位",
       "owner": "袁雪茹",
-      "source": "数据提供方索要；x1–x20 已由 xlsx 附录确认为信用卡行为类字段",
-      "why": "可解释层只能停在算法级（\"x37 影响大\"），业务叙事与 SHAP 报告无法落地",
+      "source": "数据提供方字段说明文档",
+      "why": "SHAP 99% 贡献落在语义未知字段，业务解读与指标体系设计均被阻塞",
       "blocks": [
-        "特征业务命名",
-        "可解释性报告",
-        "特征工程字典定稿"
+        "指标体系",
+        "业务解读",
+        "可解释性叙事"
       ],
       "tables": [],
       "rows": {},
@@ -75,16 +74,15 @@
     },
     {
       "id": "P0-3",
-      "name": "label=1 标签口径（逾期天数 / 观察窗）",
-      "status": "blocked",
-      "status_label": "受阻",
+      "name": "label 标签口径定义",
+      "status": "missing",
+      "status_label": "未到位",
       "owner": "袁雪茹",
-      "source": "数据提供方确认 + 自撰《代理标签定义说明书》",
-      "why": "正负例口径未定，msme_default / sba_default / survival_risk 三类标签无法落地，AUC 不可横向比较",
+      "source": "数据提供方 / 指导教师确认",
+      "why": "违约/经营异常判定口径未确认，评估结论无法对外表述",
       "blocks": [
-        "标签体系",
-        "评估指标可比性",
-        "五档风险映射"
+        "模型评估口径",
+        "前瞻预测"
       ],
       "tables": [
         "ads_label"

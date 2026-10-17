@@ -55,7 +55,7 @@ def load_and_validate(path: str) -> dict:
     errs = []
     if not isinstance(data, dict):
         errs.append("顶层必须是 mapping")
-    for key in ("meta", "brand", "risk_band", "entity_category"):
+    for key in ("meta", "brand", "risk_band", "entity_category", "market"):
         if key not in data:
             errs.append(f"缺少必需段: {key}")
     if errs:
@@ -73,7 +73,7 @@ def load_and_validate(path: str) -> dict:
         raise ValueError("risk_band.items 必须恰好 5 档")
     seen_band, seen_code = set(), set()
     for it in items:
-        for f in ("band", "code", "label", "color", "color_bg"):
+        for f in ("band", "code", "label", "reg_class", "color", "color_bg"):
             if f not in it:
                 raise ValueError(f"risk_band item 缺字段 {f}: {it}")
         if it["band"] in seen_band:
@@ -92,6 +92,11 @@ def load_and_validate(path: str) -> dict:
     for k, v in data["entity_category"].items():
         if not (isinstance(v, str) and HEX_RE.match(v)):
             raise ValueError(f"entity_category.{k} 不是合法颜色: {v!r}")
+
+    # market 校验（涨跌色：涨红跌绿）
+    for k, v in data["market"].items():
+        if not (isinstance(v, str) and HEX_RE.match(v)):
+            raise ValueError(f"market.{k} 不是合法 #RRGGBB 颜色: {v!r}")
 
     return data, raw
 
@@ -132,6 +137,11 @@ def build_css(data: dict, source_rel: str, sha: str) -> str:
     L.append("  /* ---- entity category（六类实体固定映射） ---- */")
     for k, v in data["entity_category"].items():
         L.append(f"  --entity-{css_var(k)}: {v};")
+
+    L.append("")
+    L.append("  /* ---- market（涨跌色：A 股惯例 涨红跌绿） ---- */")
+    for k, v in data["market"].items():
+        L.append(f"  --market-{css_var(k)}: {v};")
 
     L.append("")
     L.append("  /* ---- meta / compliance ---- */")
@@ -197,6 +207,13 @@ def build_ts(data: dict, source_rel: str, sha: str) -> str:
 
     L.append("export const ENTITY_COLORS = {")
     for k, v in data["entity_category"].items():
+        L.append(f"  {k}: {_ts_val(v)},")
+    L.append("} as const;")
+    L.append("")
+
+    L.append("// 涨跌色：A 股惯例 涨红跌绿（与 risk_band 属不同语义域）")
+    L.append("export const MARKET_COLORS = {")
+    for k, v in data["market"].items():
         L.append(f"  {k}: {_ts_val(v)},")
     L.append("} as const;")
     L.append("")

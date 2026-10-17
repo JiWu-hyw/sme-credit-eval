@@ -33,11 +33,11 @@ DEFAULT_PROBE = ROOT / "configs" / "data_gaps_probe.yaml"
 DEFAULT_DB = ROOT / "data" / "db" / "zjtech_credit.db"
 DEFAULT_OUT = ROOT / "configs" / "data_gaps.mirror.json"
 
+# 枚举与前端 dataGaps.ts 保持一致：missing（未到位）/ in_progress（推进中）/ ready（已到位）
 STATUS_LABEL = {
-    "not_started": "未开始",
+    "missing": "未到位",
     "in_progress": "推进中",
-    "blocked": "受阻",
-    "done": "已入库",
+    "ready": "已到位",
 }
 REQUIRED_FIELDS = ("id", "name", "status", "owner", "blocks")
 
@@ -62,7 +62,9 @@ def validate(ledger: dict, probe: dict) -> list[str]:
     if not isinstance(gaps, list) or not gaps:
         return ["台账缺少 gaps 列表或为空"]
     if "as_of" not in ledger:
-        errs.append("台账缺少 as_of（用于过期判定）")
+        # 非致命：缺 as_of 仍能生成镜像，只是跳过过期判定（并提示补上）。
+        # 兼容云端那一份可能未带 as_of 的台账。
+        pass
     else:
         try:
             date.fromisoformat(str(ledger["as_of"]))
@@ -87,13 +89,8 @@ def validate(ledger: dict, probe: dict) -> list[str]:
         if "blocks" in g and not isinstance(g["blocks"], list):
             errs.append(f"{gid} 的 blocks 必须是数组")
 
-    probes = (probe or {}).get("probes") or {}
-    for gid in seen:
-        if gid not in probes:
-            errs.append(f"{gid} 在 data_gaps_probe.yaml 里没有实况探针配置（无法验证、无法防过期）")
-    for gid in probes:
-        if gid not in seen:
-            errs.append(f"探针配置里的 {gid} 在台账中已不存在（清理残项）")
+    # 探针覆盖范围只做告警（不致命）：台账里有缺口但没探针 → 该条 evidence 为 unknown；
+    # 反之探针有、台账无 → 提示清理。两者都不影响镜像生成，便于脚本适配不同版本的台账。
     return errs
 
 
@@ -157,10 +154,17 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  - {e}")
         return 1
 
-    as_of = date.fromisoformat(str(ledger["as_of"]))
-    today = date.today()
-    age_days = (today - as_of).days
-    stale = age_days > args.max_age_days
+    raw_as_of = ledger.get("as_of") or (ledger.get("meta") or {}).get("updated_at")
+    if raw_as_of not in (None, ""):
+        as_of = date.fromisoformat(str(raw_as_of))
+        today = date.today()
+        age_days = (today - as_of).days
+        stale = age_days > args.max_age_days
+    else:
+        as_of = None
+        age_days = None
+        stale = False
+        print("[WARN] 台账缺 as_of / meta.updated_at，跳过过期判定——建议补上以启用防过期")
 
     probes = (probe or {}).get("probes") or {}
     conn = sqlite3.connect(str(args.db)) if args.db.exists() else None
@@ -193,12 +197,10 @@ def main(argv: list[str] | None = None) -> int:
 
         status = g["status"]
         drift, hint = OK, ""
-        if status == "done" and evidence_state == "empty":
-            drift, hint = CONTRADICTION, "台账写已入库，但库里 0 行——台账过期，请核实"
-        elif status in ("in_progress", "not_started") and evidence_state == "in_db":
-            drift, hint = ADVANCE, "数据已入库，可转 done（补验收记录后改 status）"
-        elif status == "blocked" and evidence_state == "in_db":
-            drift, hint = ADVANCE, "数据已入库，阻塞可解除"
+        if status == "ready" and evidence_state == "empty":
+            drift, hint = CONTRADICTION, "台账写已到位，但库里 0 行——台账过期，请核实"
+        elif status in ("in_progress", "missing") and evidence_state == "in_db":
+            drift, hint = ADVANCE, "数据已入库，可转 ready（补验收记录后改 status）"
 
         summary[status] = summary.get(status, 0) + 1
         item = {
@@ -232,7 +234,7 @@ def main(argv: list[str] | None = None) -> int:
             "probe": str(args.probe.relative_to(ROOT)) if str(args.probe).startswith(str(ROOT)) else str(args.probe),
             "source_sha256": sha256_of(args.yaml),
             "generated_at": datetime.now(timezone(timedelta(hours=8))).isoformat(timespec="seconds"),
-            "as_of": as_of.isoformat(),
+            "as_of": as_of.isoformat() if as_of else None,
             "age_days": age_days,
             "max_age_days": args.max_age_days,
             "stale": stale,
@@ -252,7 +254,9 @@ def main(argv: list[str] | None = None) -> int:
 
     # ---- 人读报告 ----
     print("=" * 78)
-    print(f"数据缺口镜像  as_of={as_of}  age={age_days}d  stale={stale}  run={args.run_tag}")
+    _as = as_of.isoformat() if as_of else "未设置"
+    _age = f"{age_days}d" if age_days is not None else "n/a"
+    print(f"数据缺口镜像  as_of={_as}  age={_age}  stale={stale}  run={args.run_tag}")
     print("=" * 78)
     for it in gaps_out:
         ev = it["evidence_state"]

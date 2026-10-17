@@ -1,44 +1,48 @@
-# 数据缺口台账（P0-1 ~ P0-5）
-# ---------------------------------------------------------------------------
-# 单一来源：业务口径（status / owner / why / blocks）以此文件为准。
-# 后端镜像由 scripts/sync_data_gaps.py 从本文件 + 数据库实况生成，
-# 生成物 configs/data_gaps.mirror.json 请勿手改。
-# 任何变更后请更新时间戳 as_of，否则镜像会标记为 stale（默认容忍 7 天）。
+# =============================================================================
+# configs/data_gaps.yaml — P0 数据缺口台账 v1.0（FE-10）
 #
-# status 枚举（镜像会转成中文 status_label）：
-#   not_started 未开始 / in_progress 推进中 / blocked 受阻 / done 已入库
+# 用途：P1 概览页「数据缺口状态」区块的数据源。口径与项目内部进度快照
+#       （2026-10-13）及负责人催办清单一致；状态变化须先改这里，再同步前端镜像。
+# 消费方式：前端不直接读 yaml，消费其类型化镜像 src/config/dataGaps.ts
+#       （与 styles/theme.ts ← configs/viz_theme.yaml 的生成机制同构，生成器后补）。
+# 状态枚举：missing（未到位）/ in_progress（推进中）/ ready（已到位）
 #
-# 溯源：P0-4 / P0-5 与云端台账（tdrive:IPEdKxleyrcF）逐字一致；
-#       P0-1 / P0-2 / P0-3 的 name/why 按 docs/计划/中期进度盘点与数据缺口分析.md
-#       §三 P0 表复刻——原文件 2026-10-17 下载报 InvalidAccessKeyId 无法直接比对，
-#       字段结构与语义一致，措辞可能略有出入，下次拿到原件时再校一次。
-# ---------------------------------------------------------------------------
-version: 1
-as_of: 2026-10-17
+# 防过期机制（2026-10-17 增补）：本文件为业务口径单一来源；首屏数字由
+#   scripts/sync_data_gaps.py 依据本文件 + 库内实况生成 configs/data_gaps.mirror.json，
+#   再由生成器刷新 src/config/dataGaps.ts。改完本文件请同步 meta.updated_at，
+#   并跑 `python scripts/sync_data_gaps.py --check`（CI）防止状态漂移 / 台账过期。
+#   探针映射见 configs/data_gaps_probe.yaml。
+# =============================================================================
+
+meta:
+  version: "1.0"
+  updated_at: "2026-10-17"
+  maintainer: 袁雪茹（负责人/金融统筹）
+
 gaps:
   - id: P0-1
-    name: 企业映射键（userid ↔ 统一社会信用代码/企业名）
-    status: blocked
-    why: 外部专利/融资/工商数据关联的唯一前提；缺失则真实企业名与外部数据都无法回填面板
-    source: 数据提供方（大赛方 / 指导教师）索要，袁雪茹归口
+    name: userid → 统一社会信用代码/企业名映射键
+    status: missing
+    why: 无映射键则面板观测无法挂接企业实体，图谱与外源特征无法对齐
+    source: 信贷数据提供方
     owner: 袁雪茹
-    blocks: [外部数据关联, 企业画像, 图谱实体对齐]
+    blocks: [图谱对齐, 特征融合, P7单企业诊断]
 
   - id: P0-2
-    name: x1–x200 字段语义字典（x21–x200 缺失）
-    status: in_progress
-    why: 可解释层只能停在算法级（"x37 影响大"），业务叙事与 SHAP 报告无法落地
-    source: 数据提供方索要；x1–x20 已由 xlsx 附录确认为信用卡行为类字段
+    name: x21–x200 字段字典
+    status: missing
+    why: SHAP 99% 贡献落在语义未知字段，业务解读与指标体系设计均被阻塞
+    source: 数据提供方字段说明文档
     owner: 袁雪茹
-    blocks: [特征业务命名, 可解释性报告, 特征工程字典定稿]
+    blocks: [指标体系, 业务解读, 可解释性叙事]
 
   - id: P0-3
-    name: label=1 标签口径（逾期天数 / 观察窗）
-    status: blocked
-    why: 正负例口径未定，msme_default / sba_default / survival_risk 三类标签无法落地，AUC 不可横向比较
-    source: 数据提供方确认 + 自撰《代理标签定义说明书》
+    name: label 标签口径定义
+    status: missing
+    why: 违约/经营异常判定口径未确认，评估结论无法对外表述
+    source: 数据提供方 / 指导教师确认
     owner: 袁雪茹
-    blocks: [标签体系, 评估指标可比性, 五档风险映射]
+    blocks: [模型评估口径, 前瞻预测]
 
   - id: P0-4
     name: 企业专利数据（技术要素）
