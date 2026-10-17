@@ -164,8 +164,16 @@ def main() -> int:
 
     exact, by_first, aliases = build_enterprise_index(con)
 
-    where = "" if args.force else " WHERE enterprise_id IS NULL"
-    cur.execute(f"SELECT patent_id, assignee_raw, raw_id FROM ods_patent_raw{where}")
+    # 幂等：只处理未匹配专利（fact_patent.enterprise_id IS NULL 或尚未建 fact 行）。
+    # ods_patent_raw 无 enterprise_id 列，专利主键为 pub_no；fact_patent.patent_id=pub_no
+    join_sql = (
+        " FROM ods_patent_raw o"
+        " LEFT JOIN fact_patent f ON f.patent_id = o.pub_no"
+    )
+    where = "" if args.force else " WHERE f.enterprise_id IS NULL"
+    cur.execute(
+        f"SELECT o.pub_no AS patent_id, o.assignee_raw, o.raw_id{join_sql}{where}"
+    )
     rows = cur.fetchall()
 
     matched = pending = unmatched = 0
@@ -183,8 +191,8 @@ def main() -> int:
                     """INSERT INTO log_match
                            (stage, patent_id, raw_id, raw_name, candidate_ent,
                             method, score, decision, created_at)
-                       VALUES ('patent_assignee',?,?,?,NULL,'none',0.0,'pending',?)""",
-                    (patent_id, raw_id, assignee_raw, now_iso()),
+                       VALUES ('patent_assignee',?,NULL,?,NULL,'none',0.0,'pending',?)""",
+                    (patent_id, assignee_raw, now_iso()),
                 )
             continue
 
@@ -196,27 +204,37 @@ def main() -> int:
             pending += 1
 
         if not args.dry_run:
+            # 先确保 fact_patent 行存在，并从 ods_patent_raw 带过专利元数据
+            # （app_date/legal_status/ipc/title 等；patent_type/is_granted 不在
+            #  ods 落地表，留 NULL，属已知 schema 缺口，待扩展 ods 或采集映射补齐）
+            log_cur.execute(
+                """INSERT OR IGNORE INTO fact_patent
+                       (patent_id, app_no, title, abstract, app_date, app_year,
+                        pub_date, grant_date, assignee_raw, assignee_addr_raw,
+                        ipc_main, legal_status, country_code,
+                        enterprise_id, match_method, match_confidence,
+                        source_id, raw_id)
+                   SELECT pub_no, app_no, title, abstract, app_date,
+                          CAST(substr(app_date,1,4) AS INTEGER), pub_date,
+                          grant_date, assignee_raw, assignee_addr_raw,
+                          ipc_raw, legal_status_raw, country_code,
+                          ?, ?, ?, source_id, raw_id
+                   FROM ods_patent_raw WHERE raw_id = ?""",
+                (ent_id, method, conf, raw_id),
+            )
+            # 再 UPDATE 刷新匹配字段（--force 重匹配时幂等覆盖）
             log_cur.execute(
                 """UPDATE fact_patent
                       SET enterprise_id=?, match_method=?, match_confidence=?
                     WHERE patent_id=?""",
                 (ent_id, method, conf, patent_id),
             )
-            # 确保 fact_patent 行存在（从 raw 提升）
-            log_cur.execute(
-                """INSERT OR IGNORE INTO fact_patent
-                       (patent_id, assignee_raw, match_method, match_confidence,
-                        country_code, source_id, raw_id)
-                   VALUES (?,?,?,?,'CN',
-                       (SELECT source_id FROM ods_patent_raw WHERE raw_id=?),?)""",
-                (patent_id, assignee_raw, method, conf, raw_id, raw_id),
-            )
             log_cur.execute(
                 """INSERT INTO log_match
                        (stage, patent_id, raw_id, raw_name, candidate_ent,
                         method, score, decision, created_at)
-                   VALUES ('patent_assignee',?,?,?,?,?,?,?,?)""",
-                (patent_id, raw_id, assignee_raw, ent_id, method, conf,
+                   VALUES ('patent_assignee',?,NULL,?,?,?,?,?,?)""",
+                (patent_id, assignee_raw, ent_id, method, conf,
                  decision, now_iso()),
             )
 
