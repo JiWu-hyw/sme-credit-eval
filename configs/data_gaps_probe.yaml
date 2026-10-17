@@ -1,0 +1,33 @@
+# 数据缺口「实况探针」——把台账里的每一条缺口，映射到可验证的库内证据。
+# 由 scripts/sync_data_gaps.py 读取，用来生成 /api/data/pipeline 的 gaps 段，
+# 并做「台账状态 vs 库内实况」的漂移校验。
+#
+# tables: 逐表统计行数；任一张有数据即视为「数据已入库」的证据
+# where:  可选，按表给过滤条件——用来区分「表里有别的数据」和「本条缺口要的那部分数据」
+#         （例如 P0-3 只认 msme_default / sba_default / survival_risk 三类标签，
+#           ads_label 里现有的 qual_survival 10056 行不算 P0-3 已解决）
+# docs:   非数据类进展（文档/方案），仅做展示，不参与漂移判定
+# next_action: 当前卡点的下一步动作，直接展示在概览页缺口的 tooltip
+probes:
+  P0-1:
+    tables: [ext_msme_sample]
+    docs: [docs/真实数据摸底报告.md]
+    next_action: 映射键到手后灌 ext_msme_sample，再跑 match_patents / 工商匹配建立 enterprise_id
+  P0-2:
+    tables: []
+    docs: [docs/真实数据摸底报告.md, docs/特征工程字典.md]
+    next_action: x1–x20 已破译，等 x21–x200 词典；到货后补 docs/特征工程字典.md 业务名
+  P0-3:
+    tables: [ads_label]
+    where:
+      ads_label: "label_task IN ('msme_default','sba_default','survival_risk')"
+    docs: [P0-3风险五档语义标签-后端口径答复-v1.0.md]
+    next_action: 逾期天数/观察窗口径确认后才能落 msme_default / sba_default / survival_risk
+  P0-4:
+    tables: [ods_patent_raw, fact_patent, dws_tech_feature]
+    docs: [scripts/cnipa.py, scripts/build_tech_features.py]
+    next_action: 采集器已就绪（cnipa.py --demo/--csv）；等真实批次样本或 CNIPA 在线导出即灌库
+  P0-5:
+    tables: [fact_funding_event]
+    docs: []
+    next_action: 企查查 API 预算报批（¥3,000 内）→ 开通后灌 fact_funding_event

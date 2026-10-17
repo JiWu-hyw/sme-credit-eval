@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "source": "configs\\data_gaps.yaml",
+    "probe": "configs\\data_gaps_probe.yaml",
+    "source_sha256": "783690aa058fbdb9",
+    "generated_at": "2026-10-17T14:41:17+08:00",
+    "as_of": "2026-10-17",
+    "age_days": 0,
+    "max_age_days": 7,
+    "stale": false,
+    "run_tag": "20261017-144117"
+  },
+  "gap_summary": {
+    "total": 5,
+    "not_started": 0,
+    "in_progress": 3,
+    "blocked": 2,
+    "done": 0,
+    "stale": false,
+    "issue_count": 0
+  },
+  "gaps": [
+    {
+      "id": "P0-1",
+      "name": "企业映射键（userid ↔ 统一社会信用代码/企业名）",
+      "status": "blocked",
+      "status_label": "受阻",
+      "owner": "袁雪茹",
+      "source": "数据提供方（大赛方 / 指导教师）索要，袁雪茹归口",
+      "why": "外部专利/融资/工商数据关联的唯一前提；缺失则真实企业名与外部数据都无法回填面板",
+      "blocks": [
+        "外部数据关联",
+        "企业画像",
+        "图谱实体对齐"
+      ],
+      "tables": [
+        "ext_msme_sample"
+      ],
+      "rows": {
+        "ext_msme_sample": 0
+      },
+      "notes": {},
+      "evidence_state": "empty",
+      "docs": [
+        "docs/真实数据摸底报告.md"
+      ],
+      "next_action": "映射键到手后灌 ext_msme_sample，再跑 match_patents / 工商匹配建立 enterprise_id",
+      "drift": "ok",
+      "drift_hint": ""
+    },
+    {
+      "id": "P0-2",
+      "name": "x1–x200 字段语义字典（x21–x200 缺失）",
+      "status": "in_progress",
+      "status_label": "推进中",
+      "owner": "袁雪茹",
+      "source": "数据提供方索要；x1–x20 已由 xlsx 附录确认为信用卡行为类字段",
+      "why": "可解释层只能停在算法级（\"x37 影响大\"），业务叙事与 SHAP 报告无法落地",
+      "blocks": [
+        "特征业务命名",
+        "可解释性报告",
+        "特征工程字典定稿"
+      ],
+      "tables": [],
+      "rows": {},
+      "notes": {},
+      "evidence_state": "doc_only",
+      "docs": [
+        "docs/真实数据摸底报告.md",
+        "docs/特征工程字典.md"
+      ],
+      "next_action": "x1–x20 已破译，等 x21–x200 词典；到货后补 docs/特征工程字典.md 业务名",
+      "drift": "ok",
+      "drift_hint": ""
+    },
+    {
+      "id": "P0-3",
+      "name": "label=1 标签口径（逾期天数 / 观察窗）",
+      "status": "blocked",
+      "status_label": "受阻",
+      "owner": "袁雪茹",
+      "source": "数据提供方确认 + 自撰《代理标签定义说明书》",
+      "why": "正负例口径未定，msme_default / sba_default / survival_risk 三类标签无法落地，AUC 不可横向比较",
+      "blocks": [
+        "标签体系",
+        "评估指标可比性",
+        "五档风险映射"
+      ],
+      "tables": [
+        "ads_label"
+      ],
+      "rows": {
+        "ads_label": 0
+      },
+      "notes": {
+        "ads_label": "过滤条件：label_task IN ('msme_default','sba_default','survival_risk')"
+      },
+      "evidence_state": "empty",
+      "docs": [
+        "P0-3风险五档语义标签-后端口径答复-v1.0.md"
+      ],
+      "next_action": "逾期天数/观察窗口径确认后才能落 msme_default / sba_default / survival_risk",
+      "drift": "ok",
+      "drift_hint": ""
+    },
+    {
+      "id": "P0-4",
+      "name": "企业专利数据（技术要素）",
+      "status": "in_progress",
+      "status_label": "推进中",
+      "owner": "吕键",
+      "source": "CNIPA / 图书馆 Incopat（免费渠道已确认）",
+      "why": "技术要素维度完全缺失，是真实面板区分度弱（行级 AUC≈0.59）的主因之一",
+      "blocks": [
+        "技术要素特征",
+        "技术相似网络"
+      ],
+      "tables": [
+        "ods_patent_raw",
+        "fact_patent",
+        "dws_tech_feature"
+      ],
+      "rows": {
+        "ods_patent_raw": 0,
+        "fact_patent": 0,
+        "dws_tech_feature": 0
+      },
+      "notes": {},
+      "evidence_state": "empty",
+      "docs": [
+        "scripts/cnipa.py",
+        "scripts/build_tech_features.py"
+      ],
+      "next_action": "采集器已就绪（cnipa.py --demo/--csv）；等真实批次样本或 CNIPA 在线导出即灌库",
+      "drift": "ok",
+      "drift_hint": ""
+    },
+    {
+      "id": "P0-5",
+      "name": "融资与投资机构数据（成长轨迹）",
+      "status": "in_progress",
+      "status_label": "推进中",
+      "owner": "吕键",
+      "source": "企查查/天眼查 API（预算 ¥3,000 内）",
+      "why": "成长轨迹维度完全缺失；融资力预测与估值区间依赖外部事件数据",
+      "blocks": [
+        "成长轨迹特征",
+        "融资力预测"
+      ],
+      "tables": [
+        "fact_funding_event"
+      ],
+      "rows": {
+        "fact_funding_event": 0
+      },
+      "notes": {},
+      "evidence_state": "empty",
+      "docs": [],
+      "next_action": "企查查 API 预算报批（¥3,000 内）→ 开通后灌 fact_funding_event",
+      "drift": "ok",
+      "drift_hint": ""
+    }
+  ]
+}

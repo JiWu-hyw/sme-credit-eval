@@ -1,0 +1,57 @@
+# 数据缺口台账（P0-1 ~ P0-5）
+# ---------------------------------------------------------------------------
+# 单一来源：业务口径（status / owner / why / blocks）以此文件为准。
+# 后端镜像由 scripts/sync_data_gaps.py 从本文件 + 数据库实况生成，
+# 生成物 configs/data_gaps.mirror.json 请勿手改。
+# 任何变更后请更新时间戳 as_of，否则镜像会标记为 stale（默认容忍 7 天）。
+#
+# status 枚举（镜像会转成中文 status_label）：
+#   not_started 未开始 / in_progress 推进中 / blocked 受阻 / done 已入库
+#
+# 溯源：P0-4 / P0-5 与云端台账（tdrive:IPEdKxleyrcF）逐字一致；
+#       P0-1 / P0-2 / P0-3 的 name/why 按 docs/计划/中期进度盘点与数据缺口分析.md
+#       §三 P0 表复刻——原文件 2026-10-17 下载报 InvalidAccessKeyId 无法直接比对，
+#       字段结构与语义一致，措辞可能略有出入，下次拿到原件时再校一次。
+# ---------------------------------------------------------------------------
+version: 1
+as_of: 2026-10-17
+gaps:
+  - id: P0-1
+    name: 企业映射键（userid ↔ 统一社会信用代码/企业名）
+    status: blocked
+    why: 外部专利/融资/工商数据关联的唯一前提；缺失则真实企业名与外部数据都无法回填面板
+    source: 数据提供方（大赛方 / 指导教师）索要，袁雪茹归口
+    owner: 袁雪茹
+    blocks: [外部数据关联, 企业画像, 图谱实体对齐]
+
+  - id: P0-2
+    name: x1–x200 字段语义字典（x21–x200 缺失）
+    status: in_progress
+    why: 可解释层只能停在算法级（"x37 影响大"），业务叙事与 SHAP 报告无法落地
+    source: 数据提供方索要；x1–x20 已由 xlsx 附录确认为信用卡行为类字段
+    owner: 袁雪茹
+    blocks: [特征业务命名, 可解释性报告, 特征工程字典定稿]
+
+  - id: P0-3
+    name: label=1 标签口径（逾期天数 / 观察窗）
+    status: blocked
+    why: 正负例口径未定，msme_default / sba_default / survival_risk 三类标签无法落地，AUC 不可横向比较
+    source: 数据提供方确认 + 自撰《代理标签定义说明书》
+    owner: 袁雪茹
+    blocks: [标签体系, 评估指标可比性, 五档风险映射]
+
+  - id: P0-4
+    name: 企业专利数据（技术要素）
+    status: in_progress
+    why: 技术要素维度完全缺失，是真实面板区分度弱（行级 AUC≈0.59）的主因之一
+    source: CNIPA / 图书馆 Incopat（免费渠道已确认）
+    owner: 吕键
+    blocks: [技术要素特征, 技术相似网络]
+
+  - id: P0-5
+    name: 融资与投资机构数据（成长轨迹）
+    status: in_progress
+    why: 成长轨迹维度完全缺失；融资力预测与估值区间依赖外部事件数据
+    source: 企查查/天眼查 API（预算 ¥3,000 内）
+    owner: 吕键
+    blocks: [成长轨迹特征, 融资力预测]
