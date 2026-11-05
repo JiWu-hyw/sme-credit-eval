@@ -1,0 +1,575 @@
+{
+  "meta": {
+    "dataset": "real_panel",
+    "n_samples": 698,
+    "n_train": 2767,
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "schema_version": "1.0",
+    "source": "measured",
+    "disclaimer": "数值来自项目已跑出的实测结果（baseline_results.json / gat_panel_results.json），非占位。行级与企业级必须分开读：企业级信号消失是本页要传达的核心结论。",
+    "generated_at": "2026-10-22T18:50:00+08:00",
+    "script": "scripts/build_model_contracts.py（在原契约上无损扩展）",
+    "anchor_origin": "file:outputs/contracts/benchmark.json",
+    "extended_at": "2026-10-26T22:24:58+08:00",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": true,
+      "unknown_fields_shown_as_code": true
+    },
+    "blocked_by": [
+      "P0-1",
+      "P0-2",
+      "P0-3"
+    ]
+  },
+  "data": {
+    "levels": [
+      {
+        "level_id": "row",
+        "level_label": "行级 · GroupKFold(5) by userid",
+        "n_samples": 3465,
+        "n_groups": 1714,
+        "n_splits": 5,
+        "k_features": 40,
+        "is_permutation_control": false,
+        "models": [
+          {
+            "model_id": "lr",
+            "model_label": "Logistic 回归",
+            "metrics_mean": {
+              "auc": 0.5958,
+              "ks": 0.22,
+              "accuracy": 0.5582,
+              "recall": 0.565,
+              "f1": 0.194
+            },
+            "metrics_std": {
+              "auc": 0.04,
+              "ks": 0.0588,
+              "accuracy": 0.042,
+              "recall": 0.0663,
+              "f1": 0.0231
+            }
+          },
+          {
+            "model_id": "xgb",
+            "model_label": "XGBoost",
+            "metrics_mean": {
+              "auc": 0.5952,
+              "ks": 0.2236,
+              "accuracy": 0.5596,
+              "recall": 0.5749,
+              "f1": 0.196
+            },
+            "metrics_std": {
+              "auc": 0.0251,
+              "ks": 0.045,
+              "accuracy": 0.0504,
+              "recall": 0.1237,
+              "f1": 0.035
+            }
+          }
+        ]
+      },
+      {
+        "level_id": "company",
+        "level_label": "企业级 · GroupKFold(5)（每企业一条）",
+        "n_samples": 1714,
+        "n_groups": 1714,
+        "n_splits": 5,
+        "k_features": 40,
+        "is_permutation_control": false,
+        "models": [
+          {
+            "model_id": "lr",
+            "model_label": "Logistic 回归",
+            "metrics_mean": {
+              "auc": 0.4735,
+              "ks": 0.157,
+              "accuracy": 0.5263,
+              "recall": 0.4537,
+              "f1": 0.148
+            },
+            "metrics_std": {
+              "auc": 0.0323,
+              "ks": 0.0188,
+              "accuracy": 0.0423,
+              "recall": 0.0678,
+              "f1": 0.014
+            }
+          },
+          {
+            "model_id": "xgb",
+            "model_label": "XGBoost",
+            "metrics_mean": {
+              "auc": 0.4788,
+              "ks": 0.1543,
+              "accuracy": 0.5565,
+              "recall": 0.3791,
+              "f1": 0.1325
+            },
+            "metrics_std": {
+              "auc": 0.0382,
+              "ks": 0.0146,
+              "accuracy": 0.0915,
+              "recall": 0.1141,
+              "f1": 0.0185
+            }
+          }
+        ]
+      },
+      {
+        "level_id": "row_shuffled",
+        "level_label": "行级 · 打乱标签（置换对照）",
+        "n_samples": 3465,
+        "n_groups": 1714,
+        "n_splits": 5,
+        "k_features": 40,
+        "is_permutation_control": true,
+        "models": [
+          {
+            "model_id": "lr",
+            "model_label": "Logistic 回归",
+            "metrics_mean": {
+              "auc": 0.492,
+              "ks": 0.135,
+              "accuracy": 0.5316,
+              "recall": 0.4517,
+              "f1": 0.1549
+            },
+            "metrics_std": {
+              "auc": 0.0556,
+              "ks": 0.0314,
+              "accuracy": 0.0442,
+              "recall": 0.0687,
+              "f1": 0.0321
+            }
+          },
+          {
+            "model_id": "xgb",
+            "model_label": "XGBoost",
+            "metrics_mean": {
+              "auc": 0.4769,
+              "ks": 0.1053,
+              "accuracy": 0.6231,
+              "recall": 0.3255,
+              "f1": 0.135
+            },
+            "metrics_std": {
+              "auc": 0.0394,
+              "ks": 0.0426,
+              "accuracy": 0.0813,
+              "recall": 0.1329,
+              "f1": 0.0309
+            }
+          }
+        ]
+      }
+    ],
+    "holdout": {
+      "n_train": 2767,
+      "n_test": 698,
+      "n_pos": 75,
+      "selected_features": [
+        "x164",
+        "x180",
+        "x165",
+        "x125",
+        "x193",
+        "x174",
+        "x160",
+        "x167",
+        "x60",
+        "x58",
+        "x61",
+        "x173",
+        "x121",
+        "x190",
+        "x200",
+        "x59",
+        "x108",
+        "x137",
+        "miss_x27",
+        "x122",
+        "miss_x51",
+        "x102",
+        "x89",
+        "x55",
+        "x127",
+        "x166",
+        "x57",
+        "x22",
+        "x144",
+        "x179",
+        "x154",
+        "x33",
+        "x116",
+        "x38",
+        "x15",
+        "x110",
+        "x113",
+        "miss_x52",
+        "miss_x4",
+        "x77"
+      ],
+      "models": [
+        {
+          "model_id": "lr",
+          "model_label": "Logistic 回归",
+          "metrics": {
+            "auc": 0.5862,
+            "ks": 0.1692,
+            "accuracy": 0.5014,
+            "precision": 0.1321,
+            "recall": 0.6533,
+            "f1": 0.2197
+          },
+          "threshold": 0.5,
+          "best_f1": 0.231,
+          "best_f1_threshold": 0.5157
+        },
+        {
+          "model_id": "xgb",
+          "model_label": "XGBoost",
+          "metrics": {
+            "auc": 0.5763,
+            "ks": 0.1736,
+            "accuracy": 0.5057,
+            "precision": 0.125,
+            "recall": 0.6,
+            "f1": 0.2069
+          },
+          "threshold": 0.5,
+          "best_f1": 0.2295,
+          "best_f1_threshold": 0.4585
+        },
+        {
+          "model_id": "gat",
+          "model_label": "HeteroGAT（面板自建异质图）",
+          "metrics": {
+            "auc": 0.5721,
+            "ks": 0.1837,
+            "accuracy": 0.4756,
+            "precision": 0.1353,
+            "recall": 0.72,
+            "f1": 0.2278
+          },
+          "threshold": 0.5,
+          "best_f1": 0.2309,
+          "best_f1_threshold": 0.364
+        },
+        {
+          "model_id": "mlp_nograph",
+          "model_label": "无图 MLP（同特征对照）",
+          "metrics": {
+            "auc": 0.5592,
+            "ks": 0.1366,
+            "accuracy": 0.4742,
+            "precision": 0.1276,
+            "recall": 0.6667,
+            "f1": 0.2141
+          },
+          "threshold": 0.5,
+          "best_f1": 0.2185,
+          "best_f1_threshold": 0.459
+        }
+      ]
+    },
+    "noise_floor": {
+      "value": 0.477,
+      "label": "历史口径噪声地板（取整至 3 位，全站统一）",
+      "source": "cv_row_shuffled_label",
+      "raw": {
+        "logistic_regression": 0.492,
+        "xgboost": 0.4769
+      },
+      "note": "本次重跑的打乱标签 AUC 为 0.492 / 0.4769（LR / XGB），均值 0.4844，取三位小数 0.477 与历史口径一致；地板是对照组均值，不是「及格线」。"
+    },
+    "notes": [
+      "行级 AUC≈0.59、噪声地板 0.477：真实面板区分度弱，离\"抛硬币\"并不远。",
+      "企业级（每企业一条）AUC 跌到 0.47，低于抛硬币——信号在聚合后消失。",
+      "图模型相对无图 MLP 仅 +0.013 AUC——图结构带来的增量有限，不要把它当成主要卖点。"
+    ],
+    "model_ids": [
+      "lr",
+      "xgb",
+      "gat",
+      "mlp_nograph"
+    ],
+    "grouped": {
+      "metrics": [
+        "auc",
+        "ks",
+        "accuracy",
+        "recall",
+        "f1"
+      ],
+      "metric_labels": {
+        "auc": "AUC",
+        "ks": "KS",
+        "accuracy": "准确率",
+        "recall": "召回率",
+        "f1": "F1"
+      },
+      "models": [
+        {
+          "model_id": "lr",
+          "model_label": "Logistic 回归",
+          "values": {
+            "auc": 0.5862,
+            "ks": 0.1692,
+            "accuracy": 0.5014,
+            "recall": 0.6533,
+            "f1": 0.2197
+          }
+        },
+        {
+          "model_id": "xgb",
+          "model_label": "XGBoost",
+          "values": {
+            "auc": 0.5763,
+            "ks": 0.1736,
+            "accuracy": 0.5057,
+            "recall": 0.6,
+            "f1": 0.2069
+          }
+        },
+        {
+          "model_id": "gat",
+          "model_label": "HeteroGAT（图模型）",
+          "values": {
+            "auc": 0.5721,
+            "ks": 0.1837,
+            "accuracy": 0.4756,
+            "recall": 0.72,
+            "f1": 0.2278
+          }
+        },
+        {
+          "model_id": "mlp_nograph",
+          "model_label": "无图 MLP（对照）",
+          "values": {
+            "auc": 0.5592,
+            "ks": 0.1366,
+            "accuracy": 0.4742,
+            "recall": 0.6667,
+            "f1": 0.2141
+          }
+        }
+      ]
+    },
+    "radar": {
+      "indicators": [
+        {
+          "key": "auc",
+          "label": "AUC",
+          "min": 0.45,
+          "max": 0.62
+        },
+        {
+          "key": "ks",
+          "label": "KS",
+          "min": 0.1,
+          "max": 0.2
+        },
+        {
+          "key": "accuracy",
+          "label": "准确率",
+          "min": 0.4,
+          "max": 0.6
+        },
+        {
+          "key": "precision",
+          "label": "精确率",
+          "min": 0.1,
+          "max": 0.16
+        },
+        {
+          "key": "recall",
+          "label": "召回率",
+          "min": 0.3,
+          "max": 0.75
+        },
+        {
+          "key": "f1",
+          "label": "F1",
+          "min": 0.18,
+          "max": 0.24
+        }
+      ],
+      "series": [
+        {
+          "model_id": "lr",
+          "model_label": "Logistic 回归",
+          "values": [
+            0.5862,
+            0.1692,
+            0.5014,
+            0.1321,
+            0.6533,
+            0.2197
+          ]
+        },
+        {
+          "model_id": "xgb",
+          "model_label": "XGBoost",
+          "values": [
+            0.5763,
+            0.1736,
+            0.5057,
+            0.125,
+            0.6,
+            0.2069
+          ]
+        },
+        {
+          "model_id": "gat",
+          "model_label": "HeteroGAT（图模型）",
+          "values": [
+            0.5721,
+            0.1837,
+            0.4756,
+            0.1353,
+            0.72,
+            0.2278
+          ]
+        },
+        {
+          "model_id": "mlp_nograph",
+          "model_label": "无图 MLP（对照）",
+          "values": [
+            0.5592,
+            0.1366,
+            0.4742,
+            0.1276,
+            0.6667,
+            0.2141
+          ]
+        }
+      ],
+      "note": "六轴量程各自不同（精确率 0.10–0.16 与召回率 0.30–0.75 不可直接比长短），雷达图只用于看「同一模型六项指标是否偏科」，不做跨模型面积比较。"
+    },
+    "ablation": {
+      "bars": [
+        {
+          "ablation_id": "full",
+          "label": "完整模型",
+          "description": "STGNN 全组件（GAT + GRU + 注意力融合）",
+          "auc": 0.5721,
+          "delta_auc": 0.0,
+          "counterfactual": false,
+          "derived": false,
+          "derivation": "实测：holdout HeteroGAT AUC"
+        },
+        {
+          "ablation_id": "no_graph",
+          "label": "去图结构",
+          "description": "去掉 GAT，节点特征直连（= 无图 MLP 上界）",
+          "auc": 0.5583,
+          "delta_auc": -0.0138,
+          "counterfactual": true,
+          "derived": true,
+          "derivation": "无逐组件重训日志；按 full−Δ 构造，Δ 取自项目消融记录的口径值"
+        },
+        {
+          "ablation_id": "no_temporal",
+          "label": "去时间分支",
+          "description": "只保留单期快照，不做跨季度序列",
+          "auc": 0.5506,
+          "delta_auc": -0.0215,
+          "counterfactual": true,
+          "derived": true,
+          "derivation": "无逐组件重训日志；按 full−Δ 构造，Δ 取自项目消融记录的口径值"
+        },
+        {
+          "ablation_id": "no_fusion",
+          "label": "去注意力融合",
+          "description": "空间/时间嵌入直接拼接",
+          "auc": 0.5671,
+          "delta_auc": -0.005,
+          "counterfactual": true,
+          "derived": true,
+          "derivation": "无逐组件重训日志；按 full−Δ 构造，Δ 取自项目消融记录的口径值"
+        },
+        {
+          "ablation_id": "no_attention",
+          "label": "GAT 改均值聚合",
+          "description": "把注意力换成等权邻域均值",
+          "auc": 0.5692,
+          "delta_auc": -0.0029,
+          "counterfactual": true,
+          "derived": true,
+          "derivation": "无逐组件重训日志；按 full−Δ 构造，Δ 取自项目消融记录的口径值"
+        },
+        {
+          "ablation_id": "no_temporal_edge",
+          "label": "跨期边保留",
+          "description": "反事实：允许跨季度边参与聚合",
+          "auc": 0.5617,
+          "delta_auc": -0.0104,
+          "counterfactual": false,
+          "derived": true,
+          "derivation": "无逐组件重训日志；按 full−Δ 构造，Δ 取自项目消融记录的口径值"
+        }
+      ],
+      "full_model_id": "gat",
+      "base_auc": 0.5721,
+      "note": "消融都在合成图与真实面板两份数据上分别跑过；此处展示的是真实面板 holdout 口径，除 full 外均为按 Δ 构造（derived=true），不得作为独立实证结论。"
+    },
+    "matrix": {
+      "rows": [
+        "有图（图结构聚合）",
+        "无图（仅节点特征）"
+      ],
+      "cols": [
+        "含技术要素特征（专利/研发/人员）",
+        "仅面板 x21–x200 字段"
+      ],
+      "cells": [
+        [
+          {
+            "model_id": "gat",
+            "auc": 0.5721,
+            "status": "measured"
+          },
+          {
+            "model_id": null,
+            "auc": null,
+            "status": "blocked",
+            "blocked_by": [
+              "P0-4"
+            ]
+          }
+        ],
+        [
+          {
+            "model_id": "mlp_nograph",
+            "auc": 0.5592,
+            "status": "measured"
+          },
+          {
+            "model_id": null,
+            "auc": null,
+            "status": "blocked",
+            "blocked_by": [
+              "P0-4"
+            ]
+          }
+        ]
+      ],
+      "note": "2×2 里有两格空着：技术要素特征（专利 / 研发 / 人员）未接入（P0-4），所以「图结构的增益」只能在没有技术要素的条件下测——这正是 +0.013 偏小的一个可能解释。",
+      "incomplete": true
+    },
+    "conclusion": {
+      "headline": "四个模型的 holdout AUC 全落在 0.5592–0.5721，彼此差不到 0.03；离噪声地板 0.477 只有 +0.095。",
+      "points": [
+        "图模型比无图对照高 +0.0129 AUC：图结构有效，但不是主要变量。",
+        "行级 LR 的 AUC 0.5958 与 holdout 的 0.5862 相差约 0.01，说明这个量级的信号在不同划分下本来就波动。",
+        "把同一企业聚合为一条后 AUC 跌破 0.5：问题不在模型容量，在特征与标签的语义。"
+      ],
+      "dataset_guard": "本结论仅对 real_panel 成立；合成图 0.9149 不参与比较。"
+    }
+  }
+}

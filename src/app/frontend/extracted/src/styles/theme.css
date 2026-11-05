@@ -1,0 +1,27 @@
+/**
+ * 数据编码色（由 configs/viz_theme.yaml v1.2 派生的 CSS 变量镜像）
+ * 禁止手工编辑以外的方式覆盖；组件内禁止写死色值。
+ */
+:root {
+  --risk-excellent: #1f7a4d;
+  --risk-excellent-bg: #e8f4ee;
+  --risk-good: #4c9a5c;
+  --risk-good-bg: #eef7f0;
+  --risk-watch: #c98a12;
+  --risk-watch-bg: #fdf5e2;
+  --risk-warning: #d0622a;
+  --risk-warning-bg: #fdeee6;
+  --risk-high-risk: #b3312c;
+  --risk-high-risk-bg: #fbe9e8;
+
+  --entity-company: #2f5d8a;
+  --entity-patent: #7a5fa8;
+  --entity-investor: #c08a1e;
+  --entity-person: #3f8f7a;
+  --entity-field: #8a6d3b;
+  --entity-product: #a0506e;
+
+  --market-up: #b3312c;
+  --market-down: #1f7a4d;
+  --market-flat: #7a7a7a;
+}

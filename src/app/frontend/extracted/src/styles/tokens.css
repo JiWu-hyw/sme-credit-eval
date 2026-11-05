@@ -1,0 +1,49 @@
+/**
+ * 结构令牌（FE-01 最小实现）
+ *
+ * 只放「与数据无关」的东西：字体、间距、圆角、阴影、布局尺寸、命中区。
+ * 数据编码色（风险五档 / 六类实体 / 涨跌）在 theme.css，由 viz_theme.yaml 派生。
+ *
+ * 尺寸类令牌是**验收项**（最宽 1440 / 最窄 1024 / 命中区 44 / 图表 320·640），
+ * 同时被 utils/layout.ts 与图表高度规范引用，改动请两处同步。
+ */
+
+:root {
+  /* 字体 */
+  --font-sans: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+
+  /* 间距（4 的倍数） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* 圆角 / 阴影 */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+
+  /* 布局 */
+  --layout-max-width: 1440px;
+  --layout-min-width: 1024px;
+  --hit-target-min: 44px;
+
+  /* 图表高度规范（折线/柱状 320、力导向 640、热力图自适应） */
+  --chart-height-line: 320px;
+  --chart-height-force: 640px;
+
+  /* 中性界面色（取自 viz_theme.yaml › brand） */
+  --color-bg: #f6f7f9;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f0f2f5;
+  --color-border: #dde1e7;
+  --color-border-strong: #b9c0c9;
+  --color-text: #1f2933;
+  --color-text-muted: #5b6673;
+  --color-text-subtle: #8a939e;
+  --color-accent: #2f5d8a;
+  --color-accent-soft: #e7eef6;
+}

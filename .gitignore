@@ -1,8 +1,3 @@
-# ============================================================
-# 中小科技企业信用智能评估 — .gitignore
-# 原则：代码/文档/配置入库；数据/权重/环境不入库
-# ============================================================
-
 # ---- Python ----
 __pycache__/
 *.py[cod]
@@ -15,8 +10,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+lib60/
 parts/
 sdist/
 var/
@@ -26,96 +20,97 @@ wheels/
 *.egg
 MANIFEST
 
-# ---- 虚拟环境 ----
+# 虚拟环境
 .venv/
 venv/
-env/
 ENV/
-.env
-.venv*/
-conda-meta/
+env/
+.python-version
 
-# ---- Jupyter ----
-.ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# ---- 数据文件（大文件走 tdrive/共享盘，不进 Git）----
-*.parquet
-*.feather
-*.h5
-*.hdf5
-*.pkl
-*.pickle
-*.npy
-*.npz
-*.csv
-*.xlsx
-*.xls
-*.tsv
-*.dta
-*.sav
-# 本仓库 SQLite 数据库：灌库产物（zjtech_credit.db），走 tdrive 共享盘，不进 Git
-data/db/
-# 原始申报名单 PDF（源数据，走 tdrive「数据/raw」目录，不进 Git）
-data/raw/
-# data/ 目录下只保留 README.md（见仓库目录结构约定）
-
-# ---- 模型权重 / 检查点 ----
-*.pt
-*.pth
-*.ckpt
-*.onnx
-*.h5
-*.pb
-*.tflite
-checkpoints/
-runs/
-wandb/
-lightning_logs/
-
-# ---- 缓存 / 临时 ----
-*.log
-*.tmp
-*.temp
-*.bak
-*.swp
-*~
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# ---- IDE / 编辑器 ----
-.idea/
-.vscode/
-*.code-workspace
-.spyderproject/
-.ropeproject/
-
-# ---- 测试 / 覆盖率 ----
+# 测试与覆盖率
 .pytest_cache/
 .coverage
 .coverage.*
 htmlcov/
 .tox/
-.mypy_cache/
-.ruff_cache/
-.dmypy.json
+.nox/
+coverage.xml
+*.cover
 
-# ---- 系统 / 密钥（严禁入库）----
-*.pem
-*.key
-secrets.*
-credentials.*
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ---- Node / 前端 ----
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+dist/
+dist-ssr/
 *.local
+.vite/
+
+# 日志
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# 编辑器 / 操作系统
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 项目数据 ----
+# 原始数据体积大且含敏感信息，不纳入版本库（按需向资产库获取）
+data/raw/*
+!data/raw/.gitkeep
+
+# 数据库产物
+data/db/*.db
+data/db/*.db-journal
+data/db/*.sqlite
+data/db/*.sqlite3
+
+# 中间产物与模型权重
+data/processed/*.parquet
+data/processed/*.tmp
+*.h5
+*.hdf5
+*.pth
+*.pt
+*.ckpt
+*.onnx
+*.pkl
+*.joblib
+
+# 输出产物（可由脚本重跑生成）
+outputs/*.png
+outputs/*.pdf
+outputs/_tmp/
+
+# 环境变量与密钥
+.env
 .env.*
 !.env.example
+*.pem
+*.key
+secrets.yaml
+secrets.yml
 
-# ---- 例外：模板文档需入库 ----
-# docs/模板/ 下是立项/结题申报模板（doc/docx/xls），属交付物，非数据文件，
-# 解除上方对 *.xls/*.xlsx 等数据类扩展名在模板目录下的忽略。
-!docs/模板/**
+# 构建与预览产物
+src/app/frontend/dist/
+src/app/frontend/docs/preview/
 
-# ---- 注意：以下为反例警示，勿提交 ----
-# data/raw/          真实面板 parquet（8MB+）→ tdrive「数据」目录
-# data/processed/    预处理产物 → 本地生成，可脚本复现
-# outputs/*.png      算法图表（可复现，必要时才提交小图）
+# 归档区：不建议提交，但保留在资产库中
+_archive/

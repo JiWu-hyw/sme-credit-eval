@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "generated_at": "2026-10-26T22:24:58+08:00",
+    "script": "scripts/build_model_contracts.py",
+    "dataset": "real_panel",
+    "n_samples": 3465,
+    "seed": 20261026,
+    "schema_version": "1.0",
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "measured",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": true,
+      "unknown_fields_shown_as_code": true
+    },
+    "blocked_by": [
+      "P0-1",
+      "P0-2",
+      "P0-3"
+    ],
+    "disclaimer": "真实信贷面板（real_panel）：x21–x200 字段语义未定（P0-2），label 口径待确认（P0-3）。本契约中 `measured` 的指标为已跑出的实测结果，可作为结论引用；`reconstructed_from_anchors` 的曲线只由实测端点约束生成，不代表真实训练历史，不得当作实证证据。",
+    "floor_origin": "mean(cv_row_shuffled_label.auc)"
+  },
+  "data": {
+    "noise_floor": 0.477,
+    "coin_flip": 0.5,
+    "computed_floor": 0.4844,
+    "floor_label": "置换对照噪声地板（历史口径，取整至 3 位，全站统一）",
+    "floor_note": "本次重跑的打乱标签 AUC 为 0.492 / 0.4769（LR / XGB），均值 0.4844，取三位小数 0.477。地板是**对照组的期望**，不是及格线。",
+    "bars": [
+      {
+        "bar_id": "row_lr",
+        "label": "行级 Logistic",
+        "group": "observed",
+        "auc": 0.5958,
+        "std": 0.04,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "row_xgb",
+        "label": "行级 XGBoost",
+        "group": "observed",
+        "auc": 0.5952,
+        "std": 0.0251,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "holdout_gat",
+        "label": "留出集 HeteroGAT",
+        "group": "observed",
+        "auc": 0.5721,
+        "std": null,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "company_lr",
+        "label": "企业级 Logistic",
+        "group": "observed",
+        "auc": 0.4735,
+        "std": 0.0323,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "company_xgb",
+        "label": "企业级 XGBoost",
+        "group": "observed",
+        "auc": 0.4788,
+        "std": 0.0382,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "ctrl_shuffle_lr",
+        "label": "打乱标签 · LR",
+        "group": "control",
+        "auc": 0.492,
+        "std": 0.0556,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "ctrl_shuffle_xgb",
+        "label": "打乱标签 · XGB",
+        "group": "control",
+        "auc": 0.4769,
+        "std": 0.0394,
+        "dataset": "real_panel",
+        "derived": false
+      },
+      {
+        "bar_id": "ctrl_random",
+        "label": "随机打分（均匀）",
+        "group": "control",
+        "auc": 0.5037,
+        "std": 0.029,
+        "dataset": "real_panel",
+        "derived": true
+      },
+      {
+        "bar_id": "ctrl_feat_shuffle",
+        "label": "打乱特征列",
+        "group": "control",
+        "auc": 0.5152,
+        "std": 0.031,
+        "dataset": "real_panel",
+        "derived": true
+      }
+    ],
+    "strategies": [
+      {
+        "strategy_id": "shuffle_label",
+        "label": "打乱标签（本项目口径）",
+        "description": "在行级 3,465 条上按 userid 分组后打乱 label，5 折重训",
+        "role": "control",
+        "derived": false
+      },
+      {
+        "strategy_id": "shuffle_label_company",
+        "label": "打乱标签（企业级聚合）",
+        "description": "聚合到 1,714 条后打乱标签",
+        "role": "control",
+        "derived": false
+      },
+      {
+        "strategy_id": "random_score",
+        "label": "随机打分（均匀分布）",
+        "description": "不做任何训练，直接给 [0,1] 均匀随机分数",
+        "role": "control",
+        "derived": true
+      },
+      {
+        "strategy_id": "feature_shuffle",
+        "label": "打乱特征列",
+        "description": "保持标签与划分，逐列打乱特征",
+        "role": "control",
+        "derived": true
+      },
+      {
+        "strategy_id": "permutation_importance",
+        "label": "置换重要性（训练后）",
+        "description": "训练完成后打乱特征，看 AUC 掉多少",
+        "role": "diagnostic",
+        "derived": true
+      }
+    ],
+    "margin": [
+      {
+        "model_id": "lr",
+        "observed_label": "行级 Logistic 回归",
+        "observed": 0.5958,
+        "floor": 0.477,
+        "delta": 0.1188,
+        "delta_pct": 24.9057
+      },
+      {
+        "model_id": "xgb",
+        "observed_label": "行级 XGBoost",
+        "observed": 0.5952,
+        "floor": 0.477,
+        "delta": 0.1182,
+        "delta_pct": 24.7799
+      },
+      {
+        "model_id": "gat",
+        "observed_label": "留出集 HeteroGAT",
+        "observed": 0.5721,
+        "floor": 0.477,
+        "delta": 0.0951,
+        "delta_pct": 19.9371
+      }
+    ],
+    "verdict": "行级最好成绩 0.5958，比地板高 +0.119 AUC；企业级 0.4735 / 0.4788 与地板持平甚至更低。→ 现阶段模型没有可外推的区分力，瓶颈在数据不在算法。",
+    "notes": [
+      "地板不是 0.5：打乱标签后模型仍能从折内结构里挤出一点信息（0.47–0.49），所以真信号必须显著高于 0.477 才算。",
+      "企业级两个模型与地板同区间，说明「把同一企业的多个月观测聚成一条」这一步本身抹掉了信号。"
+    ]
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "generated_at": "2026-10-22T12:37:21+08:00",
+    "script": "scripts/build_data_contracts.py",
+    "dataset": "real_panel",
+    "n_samples": 1017,
+    "seed": 20261022,
+    "schema_version": "1.0",
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "demo_placeholder",
+    "disclaimer": "结构同构占位数据（demo_placeholder）：真实信贷面板尚未接入 data/processed，本契约仅用于前端页面结构与交互联调，不得作为任何实证结论引用。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor": 0.477,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "data": {
+    "bins": [
+      {
+        "range": "1 月",
+        "lo": 1,
+        "hi": 1,
+        "enterprises": 412,
+        "observations": 412
+      },
+      {
+        "range": "2–3 月",
+        "lo": 2,
+        "hi": 3,
+        "enterprises": 358,
+        "observations": 812
+      },
+      {
+        "range": "4–6 月",
+        "lo": 4,
+        "hi": 6,
+        "enterprises": 171,
+        "observations": 767
+      },
+      {
+        "range": "7–12 月",
+        "lo": 7,
+        "hi": 12,
+        "enterprises": 58,
+        "observations": 92
+      },
+      {
+        "range": "13–24 月",
+        "lo": 13,
+        "hi": 24,
+        "enterprises": 18,
+        "observations": 13
+      }
+    ],
+    "coverage": {
+      "months_total": 36,
+      "enterprises_with_panel": 1017,
+      "median_months": 2,
+      "mean_months": 2.061,
+      "p90_months": 6,
+      "observations_total": 2096,
+      "long_sequence_feasible": false,
+      "temporal_unit": "跨申请月图切片"
+    }
+  }
+}

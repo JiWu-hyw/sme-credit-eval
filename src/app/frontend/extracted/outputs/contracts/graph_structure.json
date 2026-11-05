@@ -1,0 +1,3566 @@
+{
+  "meta": {
+    "generated_at": "2026-10-22T19:39:37+08:00",
+    "script": "scripts/build_graph_contracts.py",
+    "dataset": "synthetic_graph",
+    "n_samples": 878,
+    "seed": 20261022,
+    "schema_version": "1.0",
+    "noise_floor": null,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "synthetic_graph",
+    "disclaimer": "六类实体合成图（synthetic_graph）：真实实体数据尚未接入（数据缺口 P0-1 映射键、P0-4 专利、P0-5 融资），本契约仅用于验证「图谱 → 模型 → 解释」链路与页面交互，不得作为浙江中小科技企业的实证结论引用。",
+    "blocked_by": [
+      "P0-1",
+      "P0-4",
+      "P0-5"
+    ],
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": false,
+      "unknown_fields_shown_as_code": true
+    },
+    "n_nodes_full": 878,
+    "n_edges_full": 1764,
+    "sampled": true,
+    "sample_cap": 150,
+    "synthetic_auc": 0.9149,
+    "real_panel_row_auc": 0.59,
+    "note": "synthetic_auc=0.9149 是六类实体合成图上 STGNN 架构验证的结果，与真实面板 0.596 不是一个数据集、不能同图比较（红线一）。"
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "F01",
+        "kind": "field",
+        "label": "新一代信息技术",
+        "ipc_prefix": "G06",
+        "size_hint": 1.0,
+        "degree": 101
+      },
+      {
+        "id": "F02",
+        "kind": "field",
+        "label": "高端装备制造",
+        "ipc_prefix": "B23",
+        "size_hint": 1.0,
+        "degree": 98
+      },
+      {
+        "id": "F03",
+        "kind": "field",
+        "label": "生物医药",
+        "ipc_prefix": "C12",
+        "size_hint": 1.0,
+        "degree": 97
+      },
+      {
+        "id": "F04",
+        "kind": "field",
+        "label": "新材料",
+        "ipc_prefix": "C08",
+        "size_hint": 1.0,
+        "degree": 105
+      },
+      {
+        "id": "F05",
+        "kind": "field",
+        "label": "新能源",
+        "ipc_prefix": "H01",
+        "size_hint": 1.0,
+        "degree": 118
+      },
+      {
+        "id": "F06",
+        "kind": "field",
+        "label": "节能环保",
+        "ipc_prefix": "C02",
+        "size_hint": 1.0,
+        "degree": 111
+      },
+      {
+        "id": "R01",
+        "kind": "product",
+        "label": "工业软件",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "R02",
+        "kind": "product",
+        "label": "智能传感模组",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "R03",
+        "kind": "product",
+        "label": "检测试剂",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "R04",
+        "kind": "product",
+        "label": "电池材料",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "R05",
+        "kind": "product",
+        "label": "工业机器人",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "R06",
+        "kind": "product",
+        "label": "环保装备",
+        "size_hint": 1.0,
+        "degree": 15
+      },
+      {
+        "id": "C0001",
+        "kind": "company",
+        "label": "企业 0001",
+        "city": "杭州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#001（杭州）",
+        "size_hint": 1.0,
+        "degree": 5
+      },
+      {
+        "id": "C0002",
+        "kind": "company",
+        "label": "企业 0002",
+        "city": "宁波",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#002（宁波）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0003",
+        "kind": "company",
+        "label": "企业 0003",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#003（温州）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0004",
+        "kind": "company",
+        "label": "企业 0004",
+        "city": "嘉兴",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#004（嘉兴）",
+        "size_hint": 1.54,
+        "degree": 6
+      },
+      {
+        "id": "C0005",
+        "kind": "company",
+        "label": "企业 0005",
+        "city": "绍兴",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#005（绍兴）",
+        "size_hint": 1.72,
+        "degree": 4
+      },
+      {
+        "id": "C0006",
+        "kind": "company",
+        "label": "企业 0006",
+        "city": "湖州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#006（湖州）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0007",
+        "kind": "company",
+        "label": "企业 0007",
+        "city": "金华",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#007（金华）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0008",
+        "kind": "company",
+        "label": "企业 0008",
+        "city": "台州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#008（台州）",
+        "size_hint": 1.36,
+        "degree": 6
+      },
+      {
+        "id": "C0009",
+        "kind": "company",
+        "label": "企业 0009",
+        "city": "杭州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#009（杭州）",
+        "size_hint": 1.54,
+        "degree": 5
+      },
+      {
+        "id": "C0010",
+        "kind": "company",
+        "label": "企业 0010",
+        "city": "宁波",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#010（宁波）",
+        "size_hint": 1.72,
+        "degree": 7
+      },
+      {
+        "id": "C0011",
+        "kind": "company",
+        "label": "企业 0011",
+        "city": "温州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#011（温州）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0012",
+        "kind": "company",
+        "label": "企业 0012",
+        "city": "嘉兴",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#012（嘉兴）",
+        "size_hint": 1.18,
+        "degree": 6
+      },
+      {
+        "id": "C0022",
+        "kind": "company",
+        "label": "企业 0022",
+        "city": "湖州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#022（湖州）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0023",
+        "kind": "company",
+        "label": "企业 0023",
+        "city": "金华",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#023（金华）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0024",
+        "kind": "company",
+        "label": "企业 0024",
+        "city": "台州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#024（台州）",
+        "size_hint": 1.54,
+        "degree": 6
+      },
+      {
+        "id": "C0026",
+        "kind": "company",
+        "label": "企业 0026",
+        "city": "宁波",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#026（宁波）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0027",
+        "kind": "company",
+        "label": "企业 0027",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#027（温州）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0028",
+        "kind": "company",
+        "label": "企业 0028",
+        "city": "嘉兴",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#028（嘉兴）",
+        "size_hint": 1.36,
+        "degree": 6
+      },
+      {
+        "id": "C0031",
+        "kind": "company",
+        "label": "企业 0031",
+        "city": "金华",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#031（金华）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0032",
+        "kind": "company",
+        "label": "企业 0032",
+        "city": "台州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#032（台州）",
+        "size_hint": 1.18,
+        "degree": 6
+      },
+      {
+        "id": "C0042",
+        "kind": "company",
+        "label": "企业 0042",
+        "city": "宁波",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#042（宁波）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0043",
+        "kind": "company",
+        "label": "企业 0043",
+        "city": "温州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#043（温州）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0044",
+        "kind": "company",
+        "label": "企业 0044",
+        "city": "嘉兴",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#044（嘉兴）",
+        "size_hint": 1.54,
+        "degree": 6
+      },
+      {
+        "id": "C0046",
+        "kind": "company",
+        "label": "企业 0046",
+        "city": "湖州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#046（湖州）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0047",
+        "kind": "company",
+        "label": "企业 0047",
+        "city": "金华",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#047（金华）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0048",
+        "kind": "company",
+        "label": "企业 0048",
+        "city": "台州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#048（台州）",
+        "size_hint": 1.36,
+        "degree": 6
+      },
+      {
+        "id": "C0051",
+        "kind": "company",
+        "label": "企业 0051",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#051（温州）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0052",
+        "kind": "company",
+        "label": "企业 0052",
+        "city": "嘉兴",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#052（嘉兴）",
+        "size_hint": 1.18,
+        "degree": 6
+      },
+      {
+        "id": "C0062",
+        "kind": "company",
+        "label": "企业 0062",
+        "city": "湖州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#062（湖州）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0063",
+        "kind": "company",
+        "label": "企业 0063",
+        "city": "金华",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#063（金华）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0064",
+        "kind": "company",
+        "label": "企业 0064",
+        "city": "台州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#064（台州）",
+        "size_hint": 1.54,
+        "degree": 6
+      },
+      {
+        "id": "C0066",
+        "kind": "company",
+        "label": "企业 0066",
+        "city": "宁波",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#066（宁波）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0067",
+        "kind": "company",
+        "label": "企业 0067",
+        "city": "温州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#067（温州）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0068",
+        "kind": "company",
+        "label": "企业 0068",
+        "city": "嘉兴",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#068（嘉兴）",
+        "size_hint": 1.36,
+        "degree": 6
+      },
+      {
+        "id": "C0071",
+        "kind": "company",
+        "label": "企业 0071",
+        "city": "金华",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#071（金华）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0072",
+        "kind": "company",
+        "label": "企业 0072",
+        "city": "台州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#072（台州）",
+        "size_hint": 1.18,
+        "degree": 6
+      },
+      {
+        "id": "C0082",
+        "kind": "company",
+        "label": "企业 0082",
+        "city": "宁波",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#082（宁波）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0083",
+        "kind": "company",
+        "label": "企业 0083",
+        "city": "温州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#083（温州）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0084",
+        "kind": "company",
+        "label": "企业 0084",
+        "city": "嘉兴",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#084（嘉兴）",
+        "size_hint": 1.54,
+        "degree": 6
+      },
+      {
+        "id": "C0086",
+        "kind": "company",
+        "label": "企业 0086",
+        "city": "湖州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#086（湖州）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0087",
+        "kind": "company",
+        "label": "企业 0087",
+        "city": "金华",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#087（金华）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0091",
+        "kind": "company",
+        "label": "企业 0091",
+        "city": "温州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#091（温州）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0102",
+        "kind": "company",
+        "label": "企业 0102",
+        "city": "湖州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#102（湖州）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0103",
+        "kind": "company",
+        "label": "企业 0103",
+        "city": "金华",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#103（金华）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0106",
+        "kind": "company",
+        "label": "企业 0106",
+        "city": "宁波",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#106（宁波）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0107",
+        "kind": "company",
+        "label": "企业 0107",
+        "city": "温州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#107（温州）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0111",
+        "kind": "company",
+        "label": "企业 0111",
+        "city": "金华",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#111（金华）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0122",
+        "kind": "company",
+        "label": "企业 0122",
+        "city": "宁波",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#122（宁波）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0123",
+        "kind": "company",
+        "label": "企业 0123",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#123（温州）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0126",
+        "kind": "company",
+        "label": "企业 0126",
+        "city": "湖州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#126（湖州）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0127",
+        "kind": "company",
+        "label": "企业 0127",
+        "city": "金华",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#127（金华）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0131",
+        "kind": "company",
+        "label": "企业 0131",
+        "city": "温州",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#131（温州）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0142",
+        "kind": "company",
+        "label": "企业 0142",
+        "city": "湖州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#142（湖州）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0143",
+        "kind": "company",
+        "label": "企业 0143",
+        "city": "金华",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#143（金华）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0146",
+        "kind": "company",
+        "label": "企业 0146",
+        "city": "宁波",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2024Q2",
+        "alias": "合成企业#146（宁波）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0147",
+        "kind": "company",
+        "label": "企业 0147",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#147（温州）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0151",
+        "kind": "company",
+        "label": "企业 0151",
+        "city": "金华",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#151（金华）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "C0162",
+        "kind": "company",
+        "label": "企业 0162",
+        "city": "宁波",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2025Q2",
+        "alias": "合成企业#162（宁波）",
+        "size_hint": 1.18,
+        "degree": 8
+      },
+      {
+        "id": "C0163",
+        "kind": "company",
+        "label": "企业 0163",
+        "city": "温州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q1",
+        "alias": "合成企业#163（温州）",
+        "size_hint": 1.36,
+        "degree": 7
+      },
+      {
+        "id": "C0166",
+        "kind": "company",
+        "label": "企业 0166",
+        "city": "湖州",
+        "stage": "初创",
+        "risk_label": "正常",
+        "entered_at": "2024Q4",
+        "alias": "合成企业#166（湖州）",
+        "size_hint": 1.0,
+        "degree": 8
+      },
+      {
+        "id": "C0167",
+        "kind": "company",
+        "label": "企业 0167",
+        "city": "金华",
+        "stage": "成长",
+        "risk_label": "关注",
+        "entered_at": "2025Q1",
+        "alias": "合成企业#167（金华）",
+        "size_hint": 1.18,
+        "degree": 7
+      },
+      {
+        "id": "C0171",
+        "kind": "company",
+        "label": "企业 0171",
+        "city": "温州",
+        "stage": "成熟",
+        "risk_label": "预警",
+        "entered_at": "2024Q3",
+        "alias": "合成企业#171（温州）",
+        "size_hint": 1.0,
+        "degree": 7
+      },
+      {
+        "id": "I001",
+        "kind": "investor",
+        "label": "机构 001",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.2,
+        "degree": 10
+      },
+      {
+        "id": "I002",
+        "kind": "investor",
+        "label": "机构 002",
+        "tier": "腰部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.35,
+        "degree": 9
+      },
+      {
+        "id": "I003",
+        "kind": "investor",
+        "label": "机构 003",
+        "tier": "早期",
+        "entered_at": "2024Q1",
+        "size_hint": 1.5,
+        "degree": 9
+      },
+      {
+        "id": "I004",
+        "kind": "investor",
+        "label": "机构 004",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.65,
+        "degree": 10
+      },
+      {
+        "id": "I005",
+        "kind": "investor",
+        "label": "机构 005",
+        "tier": "腰部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.2,
+        "degree": 9
+      },
+      {
+        "id": "I006",
+        "kind": "investor",
+        "label": "机构 006",
+        "tier": "早期",
+        "entered_at": "2024Q1",
+        "size_hint": 1.35,
+        "degree": 9
+      },
+      {
+        "id": "I007",
+        "kind": "investor",
+        "label": "机构 007",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.5,
+        "degree": 10
+      },
+      {
+        "id": "I008",
+        "kind": "investor",
+        "label": "机构 008",
+        "tier": "腰部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.65,
+        "degree": 9
+      },
+      {
+        "id": "I009",
+        "kind": "investor",
+        "label": "机构 009",
+        "tier": "早期",
+        "entered_at": "2024Q1",
+        "size_hint": 1.2,
+        "degree": 9
+      },
+      {
+        "id": "I010",
+        "kind": "investor",
+        "label": "机构 010",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.35,
+        "degree": 9
+      },
+      {
+        "id": "I011",
+        "kind": "investor",
+        "label": "机构 011",
+        "tier": "腰部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.5,
+        "degree": 8
+      },
+      {
+        "id": "I012",
+        "kind": "investor",
+        "label": "机构 012",
+        "tier": "早期",
+        "entered_at": "2024Q1",
+        "size_hint": 1.65,
+        "degree": 8
+      },
+      {
+        "id": "I013",
+        "kind": "investor",
+        "label": "机构 013",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.2,
+        "degree": 8
+      },
+      {
+        "id": "I014",
+        "kind": "investor",
+        "label": "机构 014",
+        "tier": "腰部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.35,
+        "degree": 9
+      },
+      {
+        "id": "I015",
+        "kind": "investor",
+        "label": "机构 015",
+        "tier": "早期",
+        "entered_at": "2024Q1",
+        "size_hint": 1.5,
+        "degree": 9
+      },
+      {
+        "id": "I016",
+        "kind": "investor",
+        "label": "机构 016",
+        "tier": "头部",
+        "entered_at": "2024Q1",
+        "size_hint": 1.65,
+        "degree": 9
+      },
+      {
+        "id": "P001",
+        "kind": "person",
+        "label": "人员 001",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P003",
+        "kind": "person",
+        "label": "人员 003",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P004",
+        "kind": "person",
+        "label": "人员 004",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P005",
+        "kind": "person",
+        "label": "人员 005",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P007",
+        "kind": "person",
+        "label": "人员 007",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P008",
+        "kind": "person",
+        "label": "人员 008",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P009",
+        "kind": "person",
+        "label": "人员 009",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P011",
+        "kind": "person",
+        "label": "人员 011",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P012",
+        "kind": "person",
+        "label": "人员 012",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P013",
+        "kind": "person",
+        "label": "人员 013",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P015",
+        "kind": "person",
+        "label": "人员 015",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P016",
+        "kind": "person",
+        "label": "人员 016",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P017",
+        "kind": "person",
+        "label": "人员 017",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P019",
+        "kind": "person",
+        "label": "人员 019",
+        "role": "创始人",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P020",
+        "kind": "person",
+        "label": "人员 020",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P021",
+        "kind": "person",
+        "label": "人员 021",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P023",
+        "kind": "person",
+        "label": "人员 023",
+        "role": "CTO",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "P024",
+        "kind": "person",
+        "label": "人员 024",
+        "role": "研发骨干",
+        "entered_at": "2024Q1",
+        "size_hint": 0.8,
+        "degree": 9
+      },
+      {
+        "id": "T0001",
+        "kind": "patent",
+        "label": "专利 0001",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 1,
+        "entered_at": "2024Q1",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0002",
+        "kind": "patent",
+        "label": "专利 0002",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 7,
+        "entered_at": "2024Q2",
+        "size_hint": 1.0,
+        "degree": 2
+      },
+      {
+        "id": "T0003",
+        "kind": "patent",
+        "label": "专利 0003",
+        "granted": false,
+        "ipc_prefix": "C02",
+        "citations": 7,
+        "entered_at": "2024Q2",
+        "size_hint": 1.0,
+        "degree": 2
+      },
+      {
+        "id": "T0004",
+        "kind": "patent",
+        "label": "专利 0004",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 35,
+        "entered_at": "2024Q3",
+        "size_hint": 1.0,
+        "degree": 2
+      },
+      {
+        "id": "T0005",
+        "kind": "patent",
+        "label": "专利 0005",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 35,
+        "entered_at": "2024Q4",
+        "size_hint": 1.18,
+        "degree": 2
+      },
+      {
+        "id": "T0006",
+        "kind": "patent",
+        "label": "专利 0006",
+        "granted": false,
+        "ipc_prefix": "H01",
+        "citations": 32,
+        "entered_at": "2025Q1",
+        "size_hint": 0.94,
+        "degree": 2
+      },
+      {
+        "id": "T0007",
+        "kind": "patent",
+        "label": "专利 0007",
+        "granted": true,
+        "ipc_prefix": "C12",
+        "citations": 6,
+        "entered_at": "2025Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0008",
+        "kind": "patent",
+        "label": "专利 0008",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 3,
+        "entered_at": "2024Q3",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0009",
+        "kind": "patent",
+        "label": "专利 0009",
+        "granted": false,
+        "ipc_prefix": "H01",
+        "citations": 24,
+        "entered_at": "2024Q4",
+        "size_hint": 0.76,
+        "degree": 2
+      },
+      {
+        "id": "T0010",
+        "kind": "patent",
+        "label": "专利 0010",
+        "granted": true,
+        "ipc_prefix": "H01",
+        "citations": 20,
+        "entered_at": "2025Q1",
+        "size_hint": 0.76,
+        "degree": 2
+      },
+      {
+        "id": "T0011",
+        "kind": "patent",
+        "label": "专利 0011",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 12,
+        "entered_at": "2025Q2",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0012",
+        "kind": "patent",
+        "label": "专利 0012",
+        "granted": false,
+        "ipc_prefix": "H01",
+        "citations": 10,
+        "entered_at": "2024Q4",
+        "size_hint": 0.94,
+        "degree": 2
+      },
+      {
+        "id": "T0013",
+        "kind": "patent",
+        "label": "专利 0013",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 27,
+        "entered_at": "2025Q1",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0014",
+        "kind": "patent",
+        "label": "专利 0014",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 20,
+        "entered_at": "2025Q2",
+        "size_hint": 0.88,
+        "degree": 2
+      },
+      {
+        "id": "T0015",
+        "kind": "patent",
+        "label": "专利 0015",
+        "granted": false,
+        "ipc_prefix": "C08",
+        "citations": 25,
+        "entered_at": "2025Q1",
+        "size_hint": 0.88,
+        "degree": 2
+      },
+      {
+        "id": "T0016",
+        "kind": "patent",
+        "label": "专利 0016",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 30,
+        "entered_at": "2025Q2",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0017",
+        "kind": "patent",
+        "label": "专利 0017",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 39,
+        "entered_at": "2025Q2",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0018",
+        "kind": "patent",
+        "label": "专利 0018",
+        "granted": false,
+        "ipc_prefix": "G06",
+        "citations": 2,
+        "entered_at": "2025Q2",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0019",
+        "kind": "patent",
+        "label": "专利 0019",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 33,
+        "entered_at": "2025Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0020",
+        "kind": "patent",
+        "label": "专利 0020",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 37,
+        "entered_at": "2025Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0021",
+        "kind": "patent",
+        "label": "专利 0021",
+        "granted": false,
+        "ipc_prefix": "G06",
+        "citations": 22,
+        "entered_at": "2025Q2",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0022",
+        "kind": "patent",
+        "label": "专利 0022",
+        "granted": true,
+        "ipc_prefix": "B23",
+        "citations": 39,
+        "entered_at": "2024Q1",
+        "size_hint": 0.94,
+        "degree": 2
+      },
+      {
+        "id": "T0023",
+        "kind": "patent",
+        "label": "专利 0023",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 5,
+        "entered_at": "2024Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0024",
+        "kind": "patent",
+        "label": "专利 0024",
+        "granted": false,
+        "ipc_prefix": "C02",
+        "citations": 29,
+        "entered_at": "2024Q3",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0025",
+        "kind": "patent",
+        "label": "专利 0025",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 12,
+        "entered_at": "2024Q4",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0026",
+        "kind": "patent",
+        "label": "专利 0026",
+        "granted": true,
+        "ipc_prefix": "C12",
+        "citations": 2,
+        "entered_at": "2024Q2",
+        "size_hint": 1.18,
+        "degree": 2
+      },
+      {
+        "id": "T0027",
+        "kind": "patent",
+        "label": "专利 0027",
+        "granted": false,
+        "ipc_prefix": "G06",
+        "citations": 36,
+        "entered_at": "2024Q3",
+        "size_hint": 0.88,
+        "degree": 2
+      },
+      {
+        "id": "T0028",
+        "kind": "patent",
+        "label": "专利 0028",
+        "granted": true,
+        "ipc_prefix": "H01",
+        "citations": 22,
+        "entered_at": "2024Q4",
+        "size_hint": 1.12,
+        "degree": 2
+      },
+      {
+        "id": "T0029",
+        "kind": "patent",
+        "label": "专利 0029",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 5,
+        "entered_at": "2024Q3",
+        "size_hint": 0.88,
+        "degree": 2
+      },
+      {
+        "id": "T0030",
+        "kind": "patent",
+        "label": "专利 0030",
+        "granted": false,
+        "ipc_prefix": "C02",
+        "citations": 5,
+        "entered_at": "2024Q4",
+        "size_hint": 1.0,
+        "degree": 2
+      },
+      {
+        "id": "T0031",
+        "kind": "patent",
+        "label": "专利 0031",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 26,
+        "entered_at": "2024Q4",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0032",
+        "kind": "patent",
+        "label": "专利 0032",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 23,
+        "entered_at": "2025Q1",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0033",
+        "kind": "patent",
+        "label": "专利 0033",
+        "granted": false,
+        "ipc_prefix": "G06",
+        "citations": 32,
+        "entered_at": "2025Q2",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0034",
+        "kind": "patent",
+        "label": "专利 0034",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 29,
+        "entered_at": "2025Q2",
+        "size_hint": 0.7,
+        "degree": 2
+      },
+      {
+        "id": "T0035",
+        "kind": "patent",
+        "label": "专利 0035",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 15,
+        "entered_at": "2025Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0036",
+        "kind": "patent",
+        "label": "专利 0036",
+        "granted": false,
+        "ipc_prefix": "H01",
+        "citations": 6,
+        "entered_at": "2025Q1",
+        "size_hint": 0.76,
+        "degree": 2
+      },
+      {
+        "id": "T0037",
+        "kind": "patent",
+        "label": "专利 0037",
+        "granted": true,
+        "ipc_prefix": "C08",
+        "citations": 5,
+        "entered_at": "2025Q2",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0038",
+        "kind": "patent",
+        "label": "专利 0038",
+        "granted": true,
+        "ipc_prefix": "G06",
+        "citations": 4,
+        "entered_at": "2025Q2",
+        "size_hint": 1.06,
+        "degree": 2
+      },
+      {
+        "id": "T0039",
+        "kind": "patent",
+        "label": "专利 0039",
+        "granted": false,
+        "ipc_prefix": "C12",
+        "citations": 2,
+        "entered_at": "2025Q2",
+        "size_hint": 0.82,
+        "degree": 2
+      },
+      {
+        "id": "T0040",
+        "kind": "patent",
+        "label": "专利 0040",
+        "granted": true,
+        "ipc_prefix": "C02",
+        "citations": 17,
+        "entered_at": "2025Q2",
+        "size_hint": 1.0,
+        "degree": 2
+      },
+      {
+        "id": "T0041",
+        "kind": "patent",
+        "label": "专利 0041",
+        "granted": true,
+        "ipc_prefix": "B23",
+        "citations": 19,
+        "entered_at": "2025Q2",
+        "size_hint": 0.76,
+        "degree": 2
+      },
+      {
+        "id": "T0042",
+        "kind": "patent",
+        "label": "专利 0042",
+        "granted": false,
+        "ipc_prefix": "C12",
+        "citations": 20,
+        "entered_at": "2025Q2",
+        "size_hint": 1.0,
+        "degree": 2
+      }
+    ],
+    "edges": [
+      {
+        "source": "C0001",
+        "target": "T0001",
+        "kind": "grant",
+        "quarter": "2024Q1",
+        "id": "C0001-T0001-grant"
+      },
+      {
+        "source": "T0001",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q1",
+        "id": "T0001-F06-field_of"
+      },
+      {
+        "source": "C0001",
+        "target": "T0002",
+        "kind": "grant",
+        "quarter": "2024Q2",
+        "id": "C0001-T0002-grant"
+      },
+      {
+        "source": "T0002",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q2",
+        "id": "T0002-F06-field_of"
+      },
+      {
+        "source": "C0001",
+        "target": "R01",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0001-R01-produce"
+      },
+      {
+        "source": "P001",
+        "target": "C0001",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P001-C0001-employ"
+      },
+      {
+        "source": "I001",
+        "target": "C0001",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I001-C0001-invest"
+      },
+      {
+        "source": "C0002",
+        "target": "T0003",
+        "kind": "apply",
+        "quarter": "2024Q2",
+        "id": "C0002-T0003-apply"
+      },
+      {
+        "source": "T0003",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q2",
+        "id": "T0003-F06-field_of"
+      },
+      {
+        "source": "C0002",
+        "target": "T0004",
+        "kind": "grant",
+        "quarter": "2024Q3",
+        "id": "C0002-T0004-grant"
+      },
+      {
+        "source": "T0004",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q3",
+        "id": "T0004-F06-field_of"
+      },
+      {
+        "source": "C0002",
+        "target": "T0005",
+        "kind": "grant",
+        "quarter": "2024Q4",
+        "id": "C0002-T0005-grant"
+      },
+      {
+        "source": "T0005",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0005-F06-field_of"
+      },
+      {
+        "source": "C0002",
+        "target": "T0006",
+        "kind": "apply",
+        "quarter": "2025Q1",
+        "id": "C0002-T0006-apply"
+      },
+      {
+        "source": "T0006",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0006-F05-field_of"
+      },
+      {
+        "source": "C0002",
+        "target": "T0007",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0002-T0007-grant"
+      },
+      {
+        "source": "T0007",
+        "target": "F03",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0007-F03-field_of"
+      },
+      {
+        "source": "P003",
+        "target": "C0002",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P003-C0002-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0002",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P004-C0002-employ"
+      },
+      {
+        "source": "I004",
+        "target": "C0002",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I004-C0002-invest"
+      },
+      {
+        "source": "C0003",
+        "target": "T0008",
+        "kind": "grant",
+        "quarter": "2024Q3",
+        "id": "C0003-T0008-grant"
+      },
+      {
+        "source": "T0008",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q3",
+        "id": "T0008-F06-field_of"
+      },
+      {
+        "source": "C0003",
+        "target": "T0009",
+        "kind": "apply",
+        "quarter": "2024Q4",
+        "id": "C0003-T0009-apply"
+      },
+      {
+        "source": "T0009",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0009-F05-field_of"
+      },
+      {
+        "source": "C0003",
+        "target": "T0010",
+        "kind": "grant",
+        "quarter": "2025Q1",
+        "id": "C0003-T0010-grant"
+      },
+      {
+        "source": "T0010",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0010-F05-field_of"
+      },
+      {
+        "source": "C0003",
+        "target": "T0011",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0003-T0011-grant"
+      },
+      {
+        "source": "T0011",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0011-F01-field_of"
+      },
+      {
+        "source": "C0003",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0003-R02-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0003",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P005-C0003-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0003",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I007-C0003-invest"
+      },
+      {
+        "source": "C0004",
+        "target": "T0012",
+        "kind": "apply",
+        "quarter": "2024Q4",
+        "id": "C0004-T0012-apply"
+      },
+      {
+        "source": "T0012",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0012-F05-field_of"
+      },
+      {
+        "source": "C0004",
+        "target": "T0013",
+        "kind": "grant",
+        "quarter": "2025Q1",
+        "id": "C0004-T0013-grant"
+      },
+      {
+        "source": "T0013",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0013-F04-field_of"
+      },
+      {
+        "source": "C0004",
+        "target": "T0014",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0004-T0014-grant"
+      },
+      {
+        "source": "T0014",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0014-F01-field_of"
+      },
+      {
+        "source": "P007",
+        "target": "C0004",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P007-C0004-employ"
+      },
+      {
+        "source": "P008",
+        "target": "C0004",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P008-C0004-employ"
+      },
+      {
+        "source": "I010",
+        "target": "C0004",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I010-C0004-invest"
+      },
+      {
+        "source": "C0005",
+        "target": "T0015",
+        "kind": "apply",
+        "quarter": "2025Q1",
+        "id": "C0005-T0015-apply"
+      },
+      {
+        "source": "T0015",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0015-F04-field_of"
+      },
+      {
+        "source": "C0005",
+        "target": "T0016",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0005-T0016-grant"
+      },
+      {
+        "source": "T0016",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0016-F01-field_of"
+      },
+      {
+        "source": "C0005",
+        "target": "R03",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0005-R03-produce"
+      },
+      {
+        "source": "P009",
+        "target": "C0005",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P009-C0005-employ"
+      },
+      {
+        "source": "C0006",
+        "target": "T0017",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0006-T0017-grant"
+      },
+      {
+        "source": "T0017",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0017-F04-field_of"
+      },
+      {
+        "source": "C0006",
+        "target": "T0018",
+        "kind": "apply",
+        "quarter": "2025Q2",
+        "id": "C0006-T0018-apply"
+      },
+      {
+        "source": "T0018",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0018-F01-field_of"
+      },
+      {
+        "source": "C0006",
+        "target": "T0019",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0006-T0019-grant"
+      },
+      {
+        "source": "T0019",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0019-F06-field_of"
+      },
+      {
+        "source": "C0006",
+        "target": "T0020",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0006-T0020-grant"
+      },
+      {
+        "source": "T0020",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0020-F06-field_of"
+      },
+      {
+        "source": "C0006",
+        "target": "T0021",
+        "kind": "apply",
+        "quarter": "2025Q2",
+        "id": "C0006-T0021-apply"
+      },
+      {
+        "source": "T0021",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0021-F01-field_of"
+      },
+      {
+        "source": "P011",
+        "target": "C0006",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P011-C0006-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0006",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P012-C0006-employ"
+      },
+      {
+        "source": "I016",
+        "target": "C0006",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I016-C0006-invest"
+      },
+      {
+        "source": "C0007",
+        "target": "T0022",
+        "kind": "grant",
+        "quarter": "2024Q1",
+        "id": "C0007-T0022-grant"
+      },
+      {
+        "source": "T0022",
+        "target": "F02",
+        "kind": "field_of",
+        "quarter": "2024Q1",
+        "id": "T0022-F02-field_of"
+      },
+      {
+        "source": "C0007",
+        "target": "T0023",
+        "kind": "grant",
+        "quarter": "2024Q2",
+        "id": "C0007-T0023-grant"
+      },
+      {
+        "source": "T0023",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q2",
+        "id": "T0023-F06-field_of"
+      },
+      {
+        "source": "C0007",
+        "target": "T0024",
+        "kind": "apply",
+        "quarter": "2024Q3",
+        "id": "C0007-T0024-apply"
+      },
+      {
+        "source": "T0024",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q3",
+        "id": "T0024-F06-field_of"
+      },
+      {
+        "source": "C0007",
+        "target": "T0025",
+        "kind": "grant",
+        "quarter": "2024Q4",
+        "id": "C0007-T0025-grant"
+      },
+      {
+        "source": "T0025",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0025-F01-field_of"
+      },
+      {
+        "source": "C0007",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0007-R04-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0007",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P013-C0007-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0007",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I003-C0007-invest"
+      },
+      {
+        "source": "C0008",
+        "target": "T0026",
+        "kind": "grant",
+        "quarter": "2024Q2",
+        "id": "C0008-T0026-grant"
+      },
+      {
+        "source": "T0026",
+        "target": "F03",
+        "kind": "field_of",
+        "quarter": "2024Q2",
+        "id": "T0026-F03-field_of"
+      },
+      {
+        "source": "C0008",
+        "target": "T0027",
+        "kind": "apply",
+        "quarter": "2024Q3",
+        "id": "C0008-T0027-apply"
+      },
+      {
+        "source": "T0027",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2024Q3",
+        "id": "T0027-F01-field_of"
+      },
+      {
+        "source": "C0008",
+        "target": "T0028",
+        "kind": "grant",
+        "quarter": "2024Q4",
+        "id": "C0008-T0028-grant"
+      },
+      {
+        "source": "T0028",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0028-F05-field_of"
+      },
+      {
+        "source": "P015",
+        "target": "C0008",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P015-C0008-employ"
+      },
+      {
+        "source": "P016",
+        "target": "C0008",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P016-C0008-employ"
+      },
+      {
+        "source": "I006",
+        "target": "C0008",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I006-C0008-invest"
+      },
+      {
+        "source": "C0009",
+        "target": "T0029",
+        "kind": "grant",
+        "quarter": "2024Q3",
+        "id": "C0009-T0029-grant"
+      },
+      {
+        "source": "T0029",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2024Q3",
+        "id": "T0029-F04-field_of"
+      },
+      {
+        "source": "C0009",
+        "target": "T0030",
+        "kind": "apply",
+        "quarter": "2024Q4",
+        "id": "C0009-T0030-apply"
+      },
+      {
+        "source": "T0030",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0030-F06-field_of"
+      },
+      {
+        "source": "C0009",
+        "target": "R05",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0009-R05-produce"
+      },
+      {
+        "source": "P017",
+        "target": "C0009",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P017-C0009-employ"
+      },
+      {
+        "source": "I009",
+        "target": "C0009",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I009-C0009-invest"
+      },
+      {
+        "source": "C0010",
+        "target": "T0031",
+        "kind": "grant",
+        "quarter": "2024Q4",
+        "id": "C0010-T0031-grant"
+      },
+      {
+        "source": "T0031",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2024Q4",
+        "id": "T0031-F01-field_of"
+      },
+      {
+        "source": "C0010",
+        "target": "T0032",
+        "kind": "grant",
+        "quarter": "2025Q1",
+        "id": "C0010-T0032-grant"
+      },
+      {
+        "source": "T0032",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0032-F04-field_of"
+      },
+      {
+        "source": "C0010",
+        "target": "T0033",
+        "kind": "apply",
+        "quarter": "2025Q2",
+        "id": "C0010-T0033-apply"
+      },
+      {
+        "source": "T0033",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0033-F01-field_of"
+      },
+      {
+        "source": "C0010",
+        "target": "T0034",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0010-T0034-grant"
+      },
+      {
+        "source": "T0034",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0034-F04-field_of"
+      },
+      {
+        "source": "C0010",
+        "target": "T0035",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0010-T0035-grant"
+      },
+      {
+        "source": "T0035",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0035-F06-field_of"
+      },
+      {
+        "source": "P019",
+        "target": "C0010",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P019-C0010-employ"
+      },
+      {
+        "source": "P020",
+        "target": "C0010",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P020-C0010-employ"
+      },
+      {
+        "source": "C0011",
+        "target": "T0036",
+        "kind": "apply",
+        "quarter": "2025Q1",
+        "id": "C0011-T0036-apply"
+      },
+      {
+        "source": "T0036",
+        "target": "F05",
+        "kind": "field_of",
+        "quarter": "2025Q1",
+        "id": "T0036-F05-field_of"
+      },
+      {
+        "source": "C0011",
+        "target": "T0037",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0011-T0037-grant"
+      },
+      {
+        "source": "T0037",
+        "target": "F04",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0037-F04-field_of"
+      },
+      {
+        "source": "C0011",
+        "target": "T0038",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0011-T0038-grant"
+      },
+      {
+        "source": "T0038",
+        "target": "F01",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0038-F01-field_of"
+      },
+      {
+        "source": "C0011",
+        "target": "T0039",
+        "kind": "apply",
+        "quarter": "2025Q2",
+        "id": "C0011-T0039-apply"
+      },
+      {
+        "source": "T0039",
+        "target": "F03",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0039-F03-field_of"
+      },
+      {
+        "source": "C0011",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0011-R06-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0011",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P021-C0011-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0011",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I015-C0011-invest"
+      },
+      {
+        "source": "C0012",
+        "target": "T0040",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0012-T0040-grant"
+      },
+      {
+        "source": "T0040",
+        "target": "F06",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0040-F06-field_of"
+      },
+      {
+        "source": "C0012",
+        "target": "T0041",
+        "kind": "grant",
+        "quarter": "2025Q2",
+        "id": "C0012-T0041-grant"
+      },
+      {
+        "source": "T0041",
+        "target": "F02",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0041-F02-field_of"
+      },
+      {
+        "source": "C0012",
+        "target": "T0042",
+        "kind": "apply",
+        "quarter": "2025Q2",
+        "id": "C0012-T0042-apply"
+      },
+      {
+        "source": "T0042",
+        "target": "F03",
+        "kind": "field_of",
+        "quarter": "2025Q2",
+        "id": "T0042-F03-field_of"
+      },
+      {
+        "source": "P023",
+        "target": "C0012",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P023-C0012-employ"
+      },
+      {
+        "source": "P024",
+        "target": "C0012",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P024-C0012-employ"
+      },
+      {
+        "source": "I002",
+        "target": "C0012",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I002-C0012-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0022",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P003-C0022-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0022",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P004-C0022-employ"
+      },
+      {
+        "source": "I016",
+        "target": "C0022",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I016-C0022-invest"
+      },
+      {
+        "source": "C0023",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0023-R06-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0023",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P005-C0023-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0023",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I003-C0023-invest"
+      },
+      {
+        "source": "P007",
+        "target": "C0024",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P007-C0024-employ"
+      },
+      {
+        "source": "P008",
+        "target": "C0024",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P008-C0024-employ"
+      },
+      {
+        "source": "I006",
+        "target": "C0024",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I006-C0024-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0026",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P011-C0026-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0026",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P012-C0026-employ"
+      },
+      {
+        "source": "I012",
+        "target": "C0026",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I012-C0026-invest"
+      },
+      {
+        "source": "C0027",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0027-R02-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0027",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P013-C0027-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0027",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I015-C0027-invest"
+      },
+      {
+        "source": "P015",
+        "target": "C0028",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P015-C0028-employ"
+      },
+      {
+        "source": "P016",
+        "target": "C0028",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P016-C0028-employ"
+      },
+      {
+        "source": "I002",
+        "target": "C0028",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I002-C0028-invest"
+      },
+      {
+        "source": "C0031",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0031-R04-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0031",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P021-C0031-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0031",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I011-C0031-invest"
+      },
+      {
+        "source": "P023",
+        "target": "C0032",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P023-C0032-employ"
+      },
+      {
+        "source": "P024",
+        "target": "C0032",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P024-C0032-employ"
+      },
+      {
+        "source": "I014",
+        "target": "C0032",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I014-C0032-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0042",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P003-C0042-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0042",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P004-C0042-employ"
+      },
+      {
+        "source": "I012",
+        "target": "C0042",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I012-C0042-invest"
+      },
+      {
+        "source": "C0043",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0043-R04-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0043",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P005-C0043-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0043",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I015-C0043-invest"
+      },
+      {
+        "source": "P007",
+        "target": "C0044",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P007-C0044-employ"
+      },
+      {
+        "source": "P008",
+        "target": "C0044",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P008-C0044-employ"
+      },
+      {
+        "source": "I002",
+        "target": "C0044",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I002-C0044-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0046",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P011-C0046-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0046",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P012-C0046-employ"
+      },
+      {
+        "source": "I008",
+        "target": "C0046",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I008-C0046-invest"
+      },
+      {
+        "source": "C0047",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0047-R06-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0047",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P013-C0047-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0047",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I011-C0047-invest"
+      },
+      {
+        "source": "P015",
+        "target": "C0048",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P015-C0048-employ"
+      },
+      {
+        "source": "P016",
+        "target": "C0048",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P016-C0048-employ"
+      },
+      {
+        "source": "I014",
+        "target": "C0048",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I014-C0048-invest"
+      },
+      {
+        "source": "C0051",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0051-R02-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0051",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P021-C0051-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0051",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I007-C0051-invest"
+      },
+      {
+        "source": "P023",
+        "target": "C0052",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P023-C0052-employ"
+      },
+      {
+        "source": "P024",
+        "target": "C0052",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P024-C0052-employ"
+      },
+      {
+        "source": "I010",
+        "target": "C0052",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I010-C0052-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0062",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P003-C0062-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0062",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P004-C0062-employ"
+      },
+      {
+        "source": "I008",
+        "target": "C0062",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I008-C0062-invest"
+      },
+      {
+        "source": "C0063",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0063-R02-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0063",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P005-C0063-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0063",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I011-C0063-invest"
+      },
+      {
+        "source": "P007",
+        "target": "C0064",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P007-C0064-employ"
+      },
+      {
+        "source": "P008",
+        "target": "C0064",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P008-C0064-employ"
+      },
+      {
+        "source": "I014",
+        "target": "C0064",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I014-C0064-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0066",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P011-C0066-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0066",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P012-C0066-employ"
+      },
+      {
+        "source": "I004",
+        "target": "C0066",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I004-C0066-invest"
+      },
+      {
+        "source": "C0067",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0067-R04-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0067",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P013-C0067-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0067",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I007-C0067-invest"
+      },
+      {
+        "source": "P015",
+        "target": "C0068",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P015-C0068-employ"
+      },
+      {
+        "source": "P016",
+        "target": "C0068",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P016-C0068-employ"
+      },
+      {
+        "source": "I010",
+        "target": "C0068",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I010-C0068-invest"
+      },
+      {
+        "source": "C0071",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0071-R06-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0071",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P021-C0071-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0071",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I003-C0071-invest"
+      },
+      {
+        "source": "P023",
+        "target": "C0072",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P023-C0072-employ"
+      },
+      {
+        "source": "P024",
+        "target": "C0072",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P024-C0072-employ"
+      },
+      {
+        "source": "I006",
+        "target": "C0072",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I006-C0072-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0082",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P003-C0082-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0082",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P004-C0082-employ"
+      },
+      {
+        "source": "I004",
+        "target": "C0082",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I004-C0082-invest"
+      },
+      {
+        "source": "C0083",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0083-R06-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0083",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P005-C0083-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0083",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I007-C0083-invest"
+      },
+      {
+        "source": "P007",
+        "target": "C0084",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P007-C0084-employ"
+      },
+      {
+        "source": "P008",
+        "target": "C0084",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P008-C0084-employ"
+      },
+      {
+        "source": "I010",
+        "target": "C0084",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I010-C0084-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0086",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P011-C0086-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0086",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P012-C0086-employ"
+      },
+      {
+        "source": "I016",
+        "target": "C0086",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I016-C0086-invest"
+      },
+      {
+        "source": "C0087",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0087-R02-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0087",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P013-C0087-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0087",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I003-C0087-invest"
+      },
+      {
+        "source": "C0091",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0091-R04-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0091",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P021-C0091-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0091",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I015-C0091-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0102",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P003-C0102-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0102",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P004-C0102-employ"
+      },
+      {
+        "source": "I016",
+        "target": "C0102",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I016-C0102-invest"
+      },
+      {
+        "source": "C0103",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0103-R04-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0103",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P005-C0103-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0103",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I003-C0103-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0106",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P011-C0106-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0106",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P012-C0106-employ"
+      },
+      {
+        "source": "I012",
+        "target": "C0106",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I012-C0106-invest"
+      },
+      {
+        "source": "C0107",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0107-R06-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0107",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P013-C0107-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0107",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I015-C0107-invest"
+      },
+      {
+        "source": "C0111",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0111-R02-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0111",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P021-C0111-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0111",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I011-C0111-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0122",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P003-C0122-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0122",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P004-C0122-employ"
+      },
+      {
+        "source": "I012",
+        "target": "C0122",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I012-C0122-invest"
+      },
+      {
+        "source": "C0123",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0123-R02-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0123",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P005-C0123-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0123",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I015-C0123-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0126",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P011-C0126-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0126",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P012-C0126-employ"
+      },
+      {
+        "source": "I008",
+        "target": "C0126",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I008-C0126-invest"
+      },
+      {
+        "source": "C0127",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0127-R04-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0127",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P013-C0127-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0127",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I011-C0127-invest"
+      },
+      {
+        "source": "C0131",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0131-R06-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0131",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P021-C0131-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0131",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I007-C0131-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0142",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P003-C0142-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0142",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P004-C0142-employ"
+      },
+      {
+        "source": "I008",
+        "target": "C0142",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I008-C0142-invest"
+      },
+      {
+        "source": "C0143",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0143-R06-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0143",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P005-C0143-employ"
+      },
+      {
+        "source": "I011",
+        "target": "C0143",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I011-C0143-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0146",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P011-C0146-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0146",
+        "kind": "employ",
+        "quarter": "2024Q2",
+        "id": "P012-C0146-employ"
+      },
+      {
+        "source": "I004",
+        "target": "C0146",
+        "kind": "invest",
+        "quarter": "2024Q3",
+        "id": "I004-C0146-invest"
+      },
+      {
+        "source": "C0147",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0147-R02-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0147",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P013-C0147-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0147",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I007-C0147-invest"
+      },
+      {
+        "source": "C0151",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0151-R04-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0151",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P021-C0151-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0151",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I003-C0151-invest"
+      },
+      {
+        "source": "P003",
+        "target": "C0162",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P003-C0162-employ"
+      },
+      {
+        "source": "P004",
+        "target": "C0162",
+        "kind": "employ",
+        "quarter": "2025Q2",
+        "id": "P004-C0162-employ"
+      },
+      {
+        "source": "I004",
+        "target": "C0162",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I004-C0162-invest"
+      },
+      {
+        "source": "C0163",
+        "target": "R04",
+        "kind": "produce",
+        "quarter": "2024Q1",
+        "id": "C0163-R04-produce"
+      },
+      {
+        "source": "P005",
+        "target": "C0163",
+        "kind": "employ",
+        "quarter": "2024Q1",
+        "id": "P005-C0163-employ"
+      },
+      {
+        "source": "I007",
+        "target": "C0163",
+        "kind": "invest",
+        "quarter": "2024Q2",
+        "id": "I007-C0163-invest"
+      },
+      {
+        "source": "P011",
+        "target": "C0166",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P011-C0166-employ"
+      },
+      {
+        "source": "P012",
+        "target": "C0166",
+        "kind": "employ",
+        "quarter": "2024Q4",
+        "id": "P012-C0166-employ"
+      },
+      {
+        "source": "I016",
+        "target": "C0166",
+        "kind": "invest",
+        "quarter": "2025Q1",
+        "id": "I016-C0166-invest"
+      },
+      {
+        "source": "C0167",
+        "target": "R06",
+        "kind": "produce",
+        "quarter": "2025Q1",
+        "id": "C0167-R06-produce"
+      },
+      {
+        "source": "P013",
+        "target": "C0167",
+        "kind": "employ",
+        "quarter": "2025Q1",
+        "id": "P013-C0167-employ"
+      },
+      {
+        "source": "I003",
+        "target": "C0167",
+        "kind": "invest",
+        "quarter": "2025Q2",
+        "id": "I003-C0167-invest"
+      },
+      {
+        "source": "C0171",
+        "target": "R02",
+        "kind": "produce",
+        "quarter": "2024Q3",
+        "id": "C0171-R02-produce"
+      },
+      {
+        "source": "P021",
+        "target": "C0171",
+        "kind": "employ",
+        "quarter": "2024Q3",
+        "id": "P021-C0171-employ"
+      },
+      {
+        "source": "I015",
+        "target": "C0171",
+        "kind": "invest",
+        "quarter": "2024Q4",
+        "id": "I015-C0171-invest"
+      }
+    ],
+    "quarters": [
+      "2024Q1",
+      "2024Q2",
+      "2024Q3",
+      "2024Q4",
+      "2025Q1",
+      "2025Q2"
+    ],
+    "stats": {
+      "node_kinds": {
+        "company": 180,
+        "patent": 630,
+        "investor": 16,
+        "person": 40,
+        "field": 6,
+        "product": 6
+      },
+      "edge_kinds": {
+        "apply": 210,
+        "grant": 420,
+        "invest": 144,
+        "employ": 270,
+        "field_of": 630,
+        "produce": 90
+      },
+      "n_nodes": 878,
+      "n_edges": 1764,
+      "n_nodes_shown": 150,
+      "n_edges_shown": 268,
+      "density": 0.0046,
+      "avg_degree": 4.0182,
+      "isolated": 10,
+      "dropped_isolated": 10
+    },
+    "entity_kinds": [
+      "company",
+      "patent",
+      "investor",
+      "person",
+      "field",
+      "product"
+    ],
+    "edge_kinds": [
+      "apply",
+      "grant",
+      "invest",
+      "employ",
+      "field_of",
+      "produce"
+    ]
+  }
+}

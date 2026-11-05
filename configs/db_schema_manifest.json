@@ -1,0 +1,3105 @@
+{
+  "schema_version": "v1.0",
+  "db_path": "data/db/zjtech_credit.db",
+  "generated_at": "2026-10-14 23:08:18",
+  "indicators": {
+    "3.1 inv_patent_ratio": {
+      "table": "dws_tech_feature",
+      "field": "inv_patent_ratio",
+      "note": "发明专利申请量 / 专利申请总量；数据来源 CNIPA/Google Patents"
+    },
+    "3.2 grant_rate": {
+      "table": "dws_tech_feature",
+      "field": "grant_rate",
+      "note": "按申请年对齐的授权率，剔除未决项（legal_status='pending'）"
+    },
+    "3.3 patent_citation": {
+      "table": "dws_tech_feature",
+      "field": "patent_citation",
+      "note": "近 5 年被引总数；稀疏需零值/对数处理，原始计数见 n_patent_cited"
+    },
+    "3.4 tech_breadth": {
+      "table": "dws_tech_feature",
+      "field": "tech_breadth_ipc_class + tech_breadth_entropy",
+      "note": "IPC 小类覆盖数 + Shannon 熵（双口径，字典允许 int/float）"
+    },
+    "3.5 patent_triple_score": {
+      "table": "dws_tech_feature",
+      "field": "patent_triple_score",
+      "note": "SciBERT 向量 + 被引/同族/权利要求数 的轻量打分均值"
+    },
+    "3.6 core_staff_stability": {
+      "table": "dws_tech_feature",
+      "field": "core_staff_stability",
+      "note": "以发明人为核心人员界定：1 - 年流失率"
+    },
+    "3.7 rd_intensity": {
+      "table": "dws_tech_feature",
+      "field": "rd_intensity",
+      "note": "替代口径=研发人员占比；口径标注见 rd_intensity_flag，校验组做敏感性"
+    },
+    "4.1 rev_cagr": {
+      "table": "dws_growth_feature",
+      "field": "rev_cagr",
+      "note": "3 年营收 CAGR；中小企业披露不全，口径标注 rev_cagr_flag"
+    },
+    "4.2 emp_cagr": {
+      "table": "dws_growth_feature",
+      "field": "emp_cagr",
+      "note": "3 年员工数 CAGR"
+    },
+    "4.3 patent_cagr": {
+      "table": "dws_growth_feature",
+      "field": "patent_cagr",
+      "note": "3 年专利申请 CAGR；数据来源专利表逐年计数"
+    },
+    "4.4 funding_to_last_val": {
+      "table": "dws_growth_feature",
+      "field": "funding_to_last_val",
+      "note": "本轮融资额/上轮投后估值；非上市缺失 → 用 qual_rank_delta 代理"
+    },
+    "4.5 milestone_flags": {
+      "table": "dws_growth_feature",
+      "field": "m_funding / m_team / m_cert / m_cite",
+      "note": "四类里程碑虚拟变量；m_cert 由资质名单差分直接产出（免费可得）"
+    },
+    "4.6 investor_prestige": {
+      "table": "dws_growth_feature",
+      "field": "investor_prestige",
+      "note": "投资机构知名度等级；来源 fact_funding_event.prestige_rank"
+    },
+    "5.1 tech_conversion": {
+      "table": "dws_fusion_feature",
+      "field": "tech_conversion",
+      "note": "营收 CAGR / 专利 CAGR，或 授权专利数/研发人员数"
+    },
+    "5.2 cap_tech_synergy": {
+      "table": "dws_fusion_feature",
+      "field": "cap_tech_synergy",
+      "note": "融资后 N 季专利产出增速提升值；P2，先不做"
+    },
+    "A1 资质晋级序列": {
+      "table": "dws_growth_feature",
+      "field": "qual_rank / qual_rank_delta / qual_upgrade_cum",
+      "note": "公开数据替代融资信号：科技型→高新→专精特新→小巨人 的层级与时点"
+    },
+    "A2 资质存续标签": {
+      "table": "ads_label",
+      "field": "label_value",
+      "note": "主任务标签：cohort_year 认定→观察期复核，未通过=1"
+    }
+  },
+  "tables": {
+    "ads_graph_edge": {
+      "columns": [
+        {
+          "name": "src_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "src_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "dst_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "dst_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "edge_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "time_slice",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "weight",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 7,
+      "n_rows": 0
+    },
+    "ads_graph_node": {
+      "columns": [
+        {
+          "name": "node_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "node_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "time_slice",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "display_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 4,
+      "n_rows": 0
+    },
+    "ads_label": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "label_task",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "cohort_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "label_value",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "label_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "observation_start",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "observation_end",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "definition_ver",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_events",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "note",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 10,
+      "n_rows": 0
+    },
+    "ads_model_dataset": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "dataset_ver",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "label_task",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "cohort_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "name_display",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "label",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "inv_patent_ratio",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "grant_rate",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_citation",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_breadth_ipc_class",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_breadth_entropy",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_triple_score",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "core_staff_stability",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rd_intensity",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_app",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_grant",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_invention",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_inventor",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_ipc_subclass",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_collab",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rev_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "emp_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "funding_to_last_val",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_funding",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_team",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_cert",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_cite",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "investor_prestige",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_rank",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_rank_delta",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_upgrade_cum",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_conversion",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "cap_tech_synergy",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_growth_inter",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "split",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "split_protocol",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "built_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 39,
+      "n_rows": 0
+    },
+    "bridge_patent_inventor": {
+      "columns": [
+        {
+          "name": "patent_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "inventor_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "seq",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "name": "is_first",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        }
+      ],
+      "n_cols": 4,
+      "n_rows": 0
+    },
+    "bridge_patent_ipc": {
+      "columns": [
+        {
+          "name": "patent_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "ipc_code",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "ipc_subclass",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_main",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "name": "seq",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        }
+      ],
+      "n_cols": 5,
+      "n_rows": 0
+    },
+    "dim_enterprise": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "name_display",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "name_norm",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "credit_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "enterprise_type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "first_qual_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "last_qual_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "max_qual_rank",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_listed",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "name": "stock_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_cnt",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "updated_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 15,
+      "n_rows": 0
+    },
+    "dim_enterprise_alias": {
+      "columns": [
+        {
+          "name": "alias_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "alias_name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "alias_norm",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "confidence",
+          "type": "REAL",
+          "notnull": true,
+          "default": "1.0",
+          "pk": false
+        },
+        {
+          "name": "evidence",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 8,
+      "n_rows": 0
+    },
+    "dim_inventor": {
+      "columns": [
+        {
+          "name": "inventor_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "name_display",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "name_norm",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "addr_hash",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "first_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "last_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_cnt",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 7,
+      "n_rows": 0
+    },
+    "dim_ipc": {
+      "columns": [
+        {
+          "name": "ipc_code",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "ipc_level",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ipc_section",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ipc_class",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ipc_subclass",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "parent_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 7,
+      "n_rows": 8
+    },
+    "dim_qual_type": {
+      "columns": [
+        {
+          "name": "qual_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "qual_name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "level_rank",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "valid_years",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "issuer",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_gradable",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        },
+        {
+          "name": "note",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 7,
+      "n_rows": 4
+    },
+    "dws_fusion_feature": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "stat_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "tech_conversion",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "cap_tech_synergy",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_growth_inter",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "computed_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 6,
+      "n_rows": 0
+    },
+    "dws_growth_feature": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "stat_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "rev_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "emp_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_cagr",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "funding_to_last_val",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_funding",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_team",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_cert",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_cite",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "investor_prestige",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rev_cagr_flag",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_rank",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_rank_delta",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_upgrade_cum",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ever_fail_review",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "computed_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 17,
+      "n_rows": 0
+    },
+    "dws_tech_feature": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "stat_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "inv_patent_ratio",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "grant_rate",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_citation",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_breadth_ipc_class",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "tech_breadth_entropy",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_triple_score",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "core_staff_stability",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rd_intensity",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rd_intensity_flag",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_app",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_grant",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_invention",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_utility",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_design",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_cited",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_inventor",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_ipc_subclass",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_patent_collab",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "first_app_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "computed_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 22,
+      "n_rows": 0
+    },
+    "ext_msme_sample": {
+      "columns": [
+        {
+          "name": "sample_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "label",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "label_task",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'msme_default'",
+          "pk": false
+        },
+        {
+          "name": "f01",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f02",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f03",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f04",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f05",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f06",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f07",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f08",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f09",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f10",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f11",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f12",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f13",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f14",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f15",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f16",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f17",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f18",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f19",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f20",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f21",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f22",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f23",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f24",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f25",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f26",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f27",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f28",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f29",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f30",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f31",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f32",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f33",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f34",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f35",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f36",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f37",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f38",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f39",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f40",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f41",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f42",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f43",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f44",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f45",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f46",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f47",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f48",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f49",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f50",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f51",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f52",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f53",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f54",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f55",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f56",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f57",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f58",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f59",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f60",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f61",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f62",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f63",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f64",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f65",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f66",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f67",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f68",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f69",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f70",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f71",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f72",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f73",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f74",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f75",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f76",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f77",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f78",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f79",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f80",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f81",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f82",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f83",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f84",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f85",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f86",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "f87",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "name_map",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 92,
+      "n_rows": 0
+    },
+    "fact_funding_event": {
+      "columns": [
+        {
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_date",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "amount_cny",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "round_label",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "post_valuation",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "investor_names",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "prestige_rank",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_public_co",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        }
+      ],
+      "n_cols": 12,
+      "n_rows": 0
+    },
+    "fact_patent": {
+      "columns": [
+        {
+          "name": "patent_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "app_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "abstract",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "app_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "app_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "pub_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "grant_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "grant_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_type",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "legal_status",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_granted",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "name": "country_code",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'CN'",
+          "pk": false
+        },
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "assignee_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "assignee_addr_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "match_confidence",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "match_method",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_claims",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_cite_fwd",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_cite_bwd",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "family_size",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ipc_main",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 25,
+      "n_rows": 0
+    },
+    "fact_patent_citation": {
+      "columns": [
+        {
+          "name": "citing_patent_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "cited_patent_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "citing_ent_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "cited_ent_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "cite_year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 5,
+      "n_rows": 0
+    },
+    "fact_qualification": {
+      "columns": [
+        {
+          "name": "qual_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "qual_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "batch_no",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "publish_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'announced'",
+          "pk": false
+        },
+        {
+          "name": "is_renewal",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "name": "valid_until",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "notice_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "match_score",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 13,
+      "n_rows": 0
+    },
+    "fact_qualification_event": {
+      "columns": [
+        {
+          "name": "event_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_date",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "event_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "from_qual",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "to_qual",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rank_delta",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "evidence_qual_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "note",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 10,
+      "n_rows": 0
+    },
+    "log_match": {
+      "columns": [
+        {
+          "name": "match_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "stage",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "patent_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "candidate_ent",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "method",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "score",
+          "type": "REAL",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "decision",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'pending'",
+          "pk": false
+        },
+        {
+          "name": "reviewed_by",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "created_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 12,
+      "n_rows": 0
+    },
+    "meta_data_source": {
+      "columns": [
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "source_name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "url",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "license",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "fetch_mode",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "cost_cny",
+          "type": "REAL",
+          "notnull": true,
+          "default": "0",
+          "pk": false
+        },
+        {
+          "name": "quota_note",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "owner",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "coverage",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "first_fetch",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "last_fetch",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "is_active",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": "1",
+          "pk": false
+        }
+      ],
+      "n_cols": 13,
+      "n_rows": 10
+    },
+    "meta_ingest_log": {
+      "columns": [
+        {
+          "name": "log_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "stage",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "target_table",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "file_path",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "file_sha256",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rows_in",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rows_ok",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "rows_bad",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "started_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "finished_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "notnull": true,
+          "default": "'ok'",
+          "pk": false
+        },
+        {
+          "name": "message",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 13,
+      "n_rows": 0
+    },
+    "meta_schema_version": {
+      "columns": [
+        {
+          "name": "version",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "applied_at",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "author",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "note",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 4,
+      "n_rows": 1
+    },
+    "ods_patent_raw": {
+      "columns": [
+        {
+          "name": "raw_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "pub_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "app_no",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "title",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "abstract",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "app_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "pub_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "grant_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "assignee_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "assignee_addr_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "inventor_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ipc_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "legal_status_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "country_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "file_path",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "row_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ingested_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 18,
+      "n_rows": 0
+    },
+    "ods_qual_company_raw": {
+      "columns": [
+        {
+          "name": "raw_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "notice_id",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "seq_no",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "company_name",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_raw",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_payload",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "ingested_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 7,
+      "n_rows": 0
+    },
+    "ods_qual_notice": {
+      "columns": [
+        {
+          "name": "notice_id",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "qual_type",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "batch_no",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "publish_date",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "year",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_code",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "region_name",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "issuer",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_url",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "source_id",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "file_path",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "raw_payload",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "fetched_at",
+          "type": "TEXT",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 13,
+      "n_rows": 0
+    }
+  },
+  "views": {
+    "v_data_coverage": [
+      "obj",
+      "n"
+    ],
+    "v_enterprise_profile": [
+      "enterprise_id",
+      "name_display",
+      "region_name",
+      "enterprise_type",
+      "first_qual_year",
+      "last_qual_year",
+      "max_qual_rank",
+      "n_patent",
+      "n_invention"
+    ],
+    "v_model_dataset_flat": [
+      "enterprise_id",
+      "dataset_ver",
+      "label_task",
+      "cohort_year",
+      "name_display",
+      "region_code",
+      "label",
+      "inv_patent_ratio",
+      "grant_rate",
+      "patent_citation",
+      "tech_breadth_ipc_class",
+      "tech_breadth_entropy",
+      "patent_triple_score",
+      "core_staff_stability",
+      "rd_intensity",
+      "n_patent_app",
+      "n_patent_grant",
+      "n_patent_invention",
+      "n_inventor",
+      "n_ipc_subclass",
+      "n_patent_collab",
+      "rev_cagr",
+      "emp_cagr",
+      "patent_cagr",
+      "funding_to_last_val",
+      "m_funding",
+      "m_team",
+      "m_cert",
+      "m_cite",
+      "investor_prestige",
+      "qual_rank",
+      "qual_rank_delta",
+      "qual_upgrade_cum",
+      "tech_conversion",
+      "cap_tech_synergy",
+      "tech_growth_inter",
+      "split",
+      "split_protocol",
+      "built_at",
+      "label_name",
+      "label_value"
+    ],
+    "v_patent_yearly": [
+      "enterprise_id",
+      "stat_year",
+      "n_app",
+      "n_grant",
+      "n_inv",
+      "n_uty",
+      "n_des",
+      "n_ipc"
+    ],
+    "v_qual_history": [
+      "enterprise_id",
+      "name_display",
+      "year",
+      "qual_type",
+      "qual_name",
+      "level_rank",
+      "status",
+      "is_renewal",
+      "valid_until"
+    ]
+  },
+  "total_tables": 27,
+  "total_views": 5,
+  "total_columns": 395
+}

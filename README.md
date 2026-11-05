@@ -1,110 +1,178 @@
 # 融合技术要素与成长轨迹的中小科技企业信用智能评估方法构建
 
-> 国家级大学生创新创业训练计划（创新训练项目）
-> 所属学科：金融学（经济学）｜单位：浙大城市学院 商学院 / 计算机与计算科学学院
-> 负责人：袁雪茹｜指导教师：谢文武（教授）、喻甫祥（特聘研究员）
-> 申报年月：2026 年 4 月｜项目经费：¥15,000
+国家级大学生创新创业训练计划项目 · 项目资产库
+
+> 面向浙江省中小科技企业，构建「技术要素 + 成长轨迹」双驱动的信用智能评估方法。
+> 技术路线：数据采集与预处理 → 时空演化图谱 → STGNN / DSTGNN 建模 → SHAP 可解释性 → 可视化原型系统。
 
 ---
 
-## 一、项目简介
-
-本项目以浙江省中小科技企业为样本，突破传统财务指标难以量化"技术潜力"与"成长价值"的局限，提出 **"技术要素 + 成长轨迹"双维驱动** 的信用智能评估方法。完整逻辑闭环为：
-
-**数据 → 图谱 → 模型 → 解释 → 预测**
-
-- **数据**：整合专利 / 研发 / 团队等技术要素，与融资 / 市场 / 政策等成长轨迹数据；
-- **图谱**：构建企业时空演化图谱（六类实体 + 语义边 + 时间序列里程碑）；
-- **模型**：研发可解释时空图神经网络（STGNN / DSTGNN），输出 0–100 信用分或违约概率 PD；
-- **解释**：内嵌 SHAP、GNNExplainer 等，生成"阶段-因子-权重"动态决策图谱；
-- **预测**：前瞻预测企业生存力与融资力，支撑"贷前-贷中-贷后"全周期决策。
-
-## 二、三大核心目标
-
-1. **突破多源异构数据融合壁垒**：构建覆盖企业全生命周期的多维度指标体系，从"静态截面评估"转向"动态过程评价"。
-2. **创新时空图神经网络建模**：图注意力（GAT）聚合技术生态空间信息，GRU/TCN 捕捉成长轨迹时间模式，实现动态精准评估。
-3. **提升可解释性与决策价值**：多维可解释工具 + 动态决策图谱，把算法结果转化为可理解、可落地的业务指引。
-
-## 三、五大研究模块
-
-| 模块 | 名称 | 核心产出 | 主责 |
-|---|---|---|---|
-| 一 | 多源异构数据采集 | 标准化企业级特征表 | 吕键 / 张丽晶 |
-| 二 | 企业时空演化图谱构建 | 动态异质时空演化图谱 | 施汶邑 |
-| 三 | 可解释 STGNN 信用评估模型 | DSTGNN 模型 + 基准对比 | 施汶邑 |
-| 四 | 多维可解释性与动态决策图谱 | SHAP / GNNExplainer 解释 JSON | 施汶邑 / 刘钰泉 |
-| 五 | 生存力与融资力前瞻预测 | 生存/融资预测模块 | 施汶邑 |
-
-> 分工口径（2026-10-13 调整）：施汶邑＝算法（图谱/模型/解释/预测）、吕键＝后端（数据管道/系统/工程）、刘钰泉＝前端、袁雪茹＝金融统筹与交付、张丽晶＝业务校验与政策。
-
-## 四、技术栈
-
-- **语言 / 框架**：Python 3.11、PyTorch + PyTorchGeometric、HuggingFace Transformers（SciBERT）
-- **可解释**：SHAP、GNNExplainer / PGExplainer、Permutation Importance
-- **后端**：FastAPI / Flask（批量评估 + 单企业深度诊断两种模式）
-- **前端**：React 或 Vue + ECharts（数据导入 / 评分展示 / 因子可视化）
-- **图与可视化**：NetworkX、Matplotlib、ECharts 力导向图
-
-## 五、目录结构
+## 一、目录结构
 
 ```
 .
-├── README.md                 # 本文件
-├── requirements.txt          # Python 依赖
-├── .gitignore
-├── data/
-│   ├── raw/                 # 原始采集数据（企查查/知识产权局/竞赛授权数据集等）
-│   └── processed/           # 清洗、标准化后的特征表
-├── src/
-│   ├── data/                # 模块一：采集与预处理管道
-│   ├── graph/               # 模块二：时空演化图谱构建
-│   ├── model/               # 模块三 + 五：STGNN / DSTGNN / 预测
-│   ├── explain/             # 模块四：可解释性分析
-│   └── app/                 # 原型系统
-│       ├── backend/         # 后端 API
-│       └── frontend/        # 前端可视化
-├── notebooks/               # 探索性分析与实验记录
+├── README.md                 本文件
+├── requirements.txt          Python 依赖
+├── gitignore.txt             .gitignore 内容（下载后重命名为 .gitignore 使用）
+│
+├── data/                     数据资产
+│   ├── raw/                  原始采集数据（企查查/知识产权局/竞赛授权数据集）
+│   │                         浙江2021高新认定第一批公示名单.pdf 等 3 份
+│   ├── processed/            清洗、标准化后的特征表
+│   │                         2021_first_batch.csv / 2021_recognized_pool.csv
+│   │                         2021_supplementary.csv / 2024_recheck.csv
+│   ├── db/                   SQLite 数据库（zjtech_credit.db / _v2.db）
+│   └── 浙江省500家专精特新中小企业/    500 家样本名单（xlsx，外部授权）
+│
+├── src/                      代码
+│   ├── data/                 模块一：采集与预处理管道
+│   │                         collect_pool.py / preprocess.py / db.py
+│   │                         schema.sql / load_scibert.py
+│   ├── graph/                模块二：时空演化图谱构建
+│   │                         panel_graph.py / synthetic.py
+│   ├── model/                模块三 + 五：STGNN / DSTGNN / 预测
+│   │                         stgnn.py / gat_panel.py / train_demo.py
+│   │                         baseline.py / metrics.py
+│   ├── explain/              模块四：可解释性分析
+│   │                         global_shap.py
+│   └── app/                  原型系统
+│       ├── backend/          后端 API：api.py / run_api.py
+│       │                     export_dashboard.py / local_explain.py
+│       └── frontend/         前端可视化（Vue 3 + Vite + TS）
+│           └── frontend-source-2026-10-28.zip   ← 合并后的完整源码
+│
+├── scripts/                  模块一的实操采集脚本（独立于 src/data 的库代码）
+│                             collect_pool.py / cnipa.py / match_patents.py
+│                             pdf_to_csv.py / build_tech_features.py
+│                             build_enums.py / build_viz_theme.py
+│
+├── outputs/                  实验结果与图表产物（模块三/四的证据链）
+│                             baseline_results.json / gat_panel_results.json
+│                             shap_global.json / shap_top_features.csv
+│                             shap_global_summary.png
+│
+├── notebooks/                探索性分析与实验记录（当前待补充）
+│
 ├── docs/
-│   ├── 论文/                # 学术论文
-│   ├── 软著/                # 软件著作权材料
-│   ├── 政策建议/            # 政策建议摘要
-│   ├── 周报/                # 每周进展简报
-│   └── 计划/                # 任务看板、甘特图、环境配置、待确认问题
-├── tests/                   # 单元测试 / 集成测试
-└── configs/                 # 配置文件（数据源、模型超参、路径）
+│   ├── 论文/                 方法与实验文档（7 份）
+│   │                         数据管道架构设计 / 数据字典-标准数据库
+│   │                         特征工程字典 / 实验结果报告-基线SHAP与GAT 等
+│   ├── 软著/                 软件著作权材料
+│   │                         可视化清单与图表数据契约.docx
+│   │                         前端页面与交互原型说明.docx
+│   │                         交付档案/  ← FE-04 ~ FE-20 共 8 版交付包及说明
+│   ├── 政策建议/             政策建议摘要（待补充）
+│   ├── 周报/                 每周进展简报（待补充）
+│   ├── 计划/                 任务看板、甘特图、环境配置、待确认问题（13 份）
+│   ├── 中期检查/             中期检查材料
+│   └── 模板/                 立项/结题申报模板
+│
+├── tests/                    单元测试 / 集成测试
+│                             test_schema.py / test_collect_pool.py / selfcheck.py
+│
+├── configs/                  配置文件
+│                             enums.json（代码运行时权威源，load_entity_cn 直读）
+│                             enums.yaml（人读审阅版，带注释与 meta）
+│                             viz_theme.yaml / data_gaps.yaml / db_schema_manifest.json
+│
+└── _archive/                 归档区（不删除策略）
+    ├── 2026-10-22/           第一批：根目录散落文件、旧版WebDemo、重复残件
+    └── 2026-10-28/           第二批：前端旧目录、旧版答复文档
 ```
 
-## 六、任务看板与里程碑
+---
 
-- 任务看板：`docs/计划/任务看板.md`
-- 12 个月甘特图：`docs/计划/里程碑甘特图.md`
-- 环境配置：`docs/计划/环境配置指南.md`
-- 待向指导教师确认的问题：`docs/计划/向指导教师确认的问题清单.md`
+## 二、模块与目录对照
 
-## 七、交付物（结题清单）
+项目分五个研究模块，代码分散在 `src/`、`scripts/`、`outputs/` 三处，对应关系如下：
 
-1. **研究报告**：结题报告 1 份
-2. **学术成果**：高水平论文 ≥ 1 篇（《中国软科学》/《计算机研究与发展》专刊，或 ICAIF / FinTech 会议扩展版）
-3. **技术与知识产权**：轻量化原型系统 1 套（批量评估 + 单企业深度诊断）+ 软件著作权 1 项
-4. **社会效益**：《利用智能技术优化科技初创企业信用评估》政策建议摘要 1 份
-5. **团队培养**：跨学科合作案例报告 1 份
+| 模块 | 内容 | 代码位置 | 产出位置 |
+|---|---|---|---|
+| 一 | 采集与预处理管道 | `src/data/`（库）<br>`scripts/`（执行脚本） | `data/raw/` → `data/processed/` |
+| 二 | 时空演化图谱构建 | `src/graph/` | — |
+| 三 | STGNN / DSTGNN 建模 | `src/model/` | `outputs/*_results.json` |
+| 四 | 可解释性分析（SHAP） | `src/explain/` | `outputs/shap_*` |
+| 五 | 预测与原型系统 | `src/model/`<br>`src/app/backend/`<br>`src/app/frontend/` | `src/app/frontend/dist/` |
 
-## 八、经费预算（合计 ¥15,000）
+> **为什么 `scripts/` 和 `outputs/` 不在 src 下？**
+> `scripts/` 里的 7 个脚本是**实际跑数据**的命令行工具（下载公示名单 PDF、调 CNIPA 接口、匹配专利），与 `src/data/` 里可被 import 的库代码职责不同，混放会让人分不清「哪些能 import、哪些要 `python 跑`」。
+> `outputs/` 里的 JSON/CSV/PNG 是**可复现性证据**，不属于源码，也不属于文档。
 
-| 科目 | 金额 | 用途 |
+---
+
+## 三、环境与依赖
+
+```bash
+# Python 端
+pip install -r requirements.txt
+
+# 前端（解压后）
+cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
+  && npm install && npm run dev
+```
+
+**关键配置**
+
+- Python 版本：见 `requirements.txt`
+- 前端栈：Vue 3.5 + Vite 6 + TypeScript(strict) + Pinia + Vue Router + ECharts
+- 路径别名：`@ → ./src`，已在 `vite.config.ts`（`resolve.alias`）与 `tsconfig.json`（`paths`）**双处配置**
+- 后端启动：`python src/app/backend/run_api.py`
+
+---
+
+## 四、前端源码说明
+
+`src/app/frontend/frontend-source-2026-10-28.zip` 是**合并后的唯一权威源码包**（175 个文件，784 KB）。
+
+**合并来源**：FE-15（全量，P6）打底 → FE-20（全量最新，P8）覆盖 → 补 3 个本地独有文件（`eslint.config.js` / `CONTRIBUTING.md` / `DOTFILES.md`）。
+
+**已排除**（属构建产物，不重复入库）：`dist/`、`docs/preview/` 截图、`node_modules/`。
+
+**历史交付包**：FE-04 / FE-11 / FE-12 / FE-13 / FE-14 / FE-15 / FE-16 / FE-20 及其交付说明，全部保留在 `docs/软著/交付档案/`，作为迭代过程证据。
+
+---
+
+## 五、数据层约定
+
+| 层级 | 内容 | 是否入库 |
 |---|---|---|
-| 论文出版费 | ¥7,000 | 发表论文 + 申请软著 |
-| 仪器设备购置费 | ¥3,000 | 研究相关 API（企查查/天眼查等） |
-| 材料费 | ¥3,000 | 购买数据 |
-| 差旅费 | ¥2,000 | 实地调研、数据采集、学术交流 |
-| **合计** | **¥15,000** | |
+| `data/raw/` | 官方公示名单 PDF 原件，只读不改 | 不入库（体积大，含敏感信息） |
+| `data/processed/` | 解析后的 CSV，可重复生成 | 视情况 |
+| `data/db/` | SQLite 全文库 | 不入库 |
 
-## 九、贡献规范（团队协同）
+**字段口径与枚举取值**采用双版本：`configs/enums.json` 是代码运行时权威源，`export_dashboard.py` 的 `load_entity_cn()` 直接读取它，缺失会导致脚本无法运行；`configs/enums.yaml` 是人读审阅版，带注释与 meta，供人工核对。**两者需同步修改**，改一处必须改另一处。
+**数据缺口登记**见 `configs/data_gaps.yaml`。
 
-- **代码托管**：Gitee 或 GitHub 私有仓库，统一用本 README 约定目录结构。
-- **分支约定**：`main`（稳定）/ `dev`（集成）/ 成员个人分支 `feat/<姓名拼音>-<模块>`。
-- **Commit 约定**：`<type>(<scope>): <subject>`，type ∈ {feat, data, model, fix, docs, refactor, test, chore}。
-- **接口契约**：模块间通过 `data/processed/` 下的标准化特征表与 `explain/` 输出的 JSON 结构衔接；每完成一个模块须输出一份接口说明再交接。
-- **知识产权**：核心代码与文档及时归档，软著材料从第一天起按规范整理。
+---
 
-> 注：本仓库由 AI 项目助理依据《创新训练项目申报表》初始化生成骨架与计划，具体实现由各成员按分工推进。
+## 六、归档规则
+
+**原则：归档不删除。** 所有被取代的文件移入 `_archive/<日期>/`，并在同批次目录下留 `RESTORE.md` 记录：
+
+- 每个文件的 `file_id` 与原始父目录
+- 归档理由（被谁取代 / 重复 / 误判修正）
+- 回滚操作步骤
+
+当前批次：
+
+| 批次 | 账本 | 主要内容 |
+|---|---|---|
+| 2026-10-22 | `_archive/2026-10-22/RESTORE.md` | 根目录散落文件、注意事项、旧版WebDemo、重复残件 |
+| 2026-10-28 | `_archive/2026-10-28/RESTORE.md` | 前端旧目录、旧版答复文档 v1.0/v1.1（另见该台账 §十 的纠错记录） |
+
+---
+
+## 七、协作分工
+
+分工口径以 `docs/计划/项目指令更新-成员角色提示词.md` 为准。
+`README` 旧版中的分工表存在两个互相矛盾的版本，已统一到 2026-10-13 调整后的口径。
+
+---
+
+## 八、待办
+
+- [x] ~~前端第二批迁移：`dist/` 构建产物 + 70 张预览截图~~ → 已完成，实际 **66 张**（8 个增量包，p1–p8，包间无重名，取并集）
+- [x] ~~核对 `src/app/backend/` 中 `export_dashboard.py`、`local_explain.py` 是否需合入归档的 `(1)` 版本逻辑~~ → 已完成：`(1)` 版为**后续修订版**（非残件），已覆盖正式文件；`enums.json` 同步回迁 `configs/`
+- [ ] 补齐 `docs/周报/`、`docs/政策建议/` 内容
+- [ ] `notebooks/` 补入探索性分析记录
+- [ ] `src/app/frontend/` 空目录待定：源码在 zip 内未展开，若需网盘内直接浏览单文件需拆包上传

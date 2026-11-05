@@ -1,0 +1,46 @@
+{
+  "meta": {
+    "generated_at": "2026-10-28T16:20:00+08:00",
+    "script": "scripts/build_enterprise_contracts.py",
+    "dataset": "real_panel",
+    "source": "measured",
+    "schema_version": "1.0",
+    "n_samples": 12,
+    "seed": 20261087,
+    "semantic_known": false,
+    "label_ref": null,
+    "noise_floor": 0.477,
+    "contract_status": "label_pending",
+    "blocked_by": [
+      "P0-2",
+      "P0-3"
+    ],
+    "disclaimer": "标签口径（P0-3）未定：局部归因的分母（违约概率）此刻没有定义，所以不产出瀑布。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": false,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "data": {
+    "chart": "P7",
+    "status": "label_pending",
+    "status_note": "部分企业在真实面板中有观测，但 label 口径未定（P0-3），逐特征归因暂不产出。",
+    "top_k": 12,
+    "entries": [],
+    "method": {},
+    "unlock": {
+      "blocked_by": [
+        "P0-2",
+        "P0-3"
+      ],
+      "requires": [
+        "P0-2 字段字典",
+        "P0-3 label 口径（违约 / 经营异常，观测窗内还是窗外）"
+      ],
+      "after": "口径确认后由 backend 直出 /api/explain/local/{userid}。"
+    },
+    "derived": false,
+    "derivation": "稀疏降级态：不产出任何归因数值，避免用占位值冒充实测解释。"
+  }
+}

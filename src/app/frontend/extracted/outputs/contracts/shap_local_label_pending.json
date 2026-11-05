@@ -1,0 +1,38 @@
+{
+  "meta": {
+    "generated_at": "2026-10-28T16:20:00+08:00",
+    "script": "scripts/build_enterprise_contracts.py",
+    "dataset": "real_panel",
+    "source": "contract_spec",
+    "schema_version": "1.0",
+    "noise_floor": null,
+    "semantic_known": false,
+    "contract_status": "label_pending",
+    "blocked_by": [
+      "P0-1",
+      "P0-3"
+    ],
+    "disclaimer": "后端在映射键与标签口径未到位时的真实返回：不产分数、不产解释。"
+  },
+  "data": {
+    "chart": "P7",
+    "status": "LABEL_PENDING",
+    "status_note": "同上：标签口径未定，不产出逐特征归因。",
+    "top_k": 12,
+    "entries": [],
+    "method": {},
+    "unlock": {
+      "blocked_by": [
+        "P0-1",
+        "P0-3"
+      ],
+      "requires": [
+        "P0-1 映射键",
+        "P0-3 label 口径"
+      ],
+      "after": "补齐后返回 enterprise_detail.json 的完整结构（本文件即形状规格）。"
+    },
+    "derived": false,
+    "derivation": "阻塞态：无数据。"
+  }
+}

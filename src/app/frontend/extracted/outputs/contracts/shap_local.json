@@ -1,0 +1,5904 @@
+{
+  "meta": {
+    "generated_at": "2026-10-28T16:20:00+08:00",
+    "script": "scripts/build_enterprise_contracts.py",
+    "dataset": "real_panel",
+    "source": "reconstructed_from_anchors",
+    "schema_version": "1.0",
+    "n_samples": 12,
+    "seed": 20261087,
+    "semantic_known": false,
+    "label_ref": null,
+    "noise_floor": 0.477,
+    "contract_status": "mock",
+    "blocked_by": [
+      "P0-1",
+      "P0-2"
+    ],
+    "disclaimer": "局部归因的**排序与方向**锚定实测全局 SHAP；逐企业幅度、逐月分摊与「其余 28 项」合计均为重建值。SHAP 是贡献度不是判别力，本契约不挂 AUC 噪声地板比较。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": false,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "data": {
+    "chart": "P7",
+    "status": "ok",
+    "status_note": "局部归因为「实测全局锚点 + 局部重建」：维度、排序与方向来自实测 shap_global.json，逐企业幅度为重建；Σφ = f(x) − E[f] 已自校验。",
+    "top_k": 12,
+    "entries": [
+      {
+        "userid": "u0001",
+        "credit_score": 72.2,
+        "risk_band": "good",
+        "pd": 0.1618,
+        "base_value": -1.9788,
+        "score_logit": -1.6449,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 74.3,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": -0.5159,
+              "mu": 0.9164
+            },
+            "phi": 0.0554,
+            "v": -0.4728,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 92.2,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5765,
+              "mu": 0.9164
+            },
+            "phi": 0.0295,
+            "v": -0.5283,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 62.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3582,
+              "mu": 0.9164
+            },
+            "phi": 0.0197,
+            "v": -0.3282,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 5.2,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4724,
+              "mu": 0.9164
+            },
+            "phi": 0.0168,
+            "v": -0.4329,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 52.6,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.7852,
+              "mu": 0.9164
+            },
+            "phi": 0.0409,
+            "v": 0.7196,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.1,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3351,
+              "mu": 0.9164
+            },
+            "phi": 0.0172,
+            "v": -0.3071,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 27.7,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.856,
+              "mu": 0.9164
+            },
+            "phi": 0.0379,
+            "v": 0.7844,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 80.5,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.804,
+              "mu": 0.9164
+            },
+            "phi": 0.0081,
+            "v": -0.7368,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 14.3,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": 0.6253,
+              "mu": 0.9164
+            },
+            "phi": 0.0291,
+            "v": 0.573,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 29.8,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 0.5193,
+              "mu": 0.9164
+            },
+            "phi": 0.0247,
+            "v": 0.4759,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 24.2,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6944,
+              "mu": 0.9164
+            },
+            "phi": 0.0067,
+            "v": -0.6363,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 54.4,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7244,
+              "mu": 0.9164
+            },
+            "phi": 0.0062,
+            "v": -0.6638,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 55.7,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -1.3123,
+              "mu": 0.9164
+            },
+            "phi": -0.0004,
+            "v": -1.2026,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 56.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2795,
+              "mu": 0.9164
+            },
+            "phi": 0.007,
+            "v": -0.2561,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.9,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 0.8086,
+              "mu": 0.9164
+            },
+            "phi": 0.0135,
+            "v": 0.7409,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 55.7,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -1.1546,
+              "mu": 0.9164
+            },
+            "phi": 0.0007,
+            "v": -1.0581,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.5,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 1.5973,
+              "mu": 0.9164
+            },
+            "phi": 0.0172,
+            "v": 1.4637,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 86.9,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4441,
+              "mu": 0.9164
+            },
+            "phi": 0.0043,
+            "v": -0.407,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 46.5,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -1.2551,
+              "mu": 0.9164
+            },
+            "phi": 0.0001,
+            "v": -1.1501,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 38.3,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": -1.428,
+              "mu": 0.9164
+            },
+            "phi": -0.0007,
+            "v": -1.3086,
+            "direction": -1,
+            "consistent_with_global": true
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.0554,
+            "by_month": [
+              0.4504,
+              0.3265,
+              0.0958,
+              0.1273
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.0295,
+            "by_month": [
+              0.305,
+              0.3665,
+              0.1923,
+              0.1362
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.0197,
+            "by_month": [
+              0.3391,
+              0.2323,
+              0.1987,
+              0.2299
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.0168,
+            "by_month": [
+              0.1203,
+              0.5297,
+              0.0815,
+              0.2685
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0001",
+            "label": "专利 0001",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "T0002",
+            "label": "专利 0002",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "R01",
+            "label": "工业软件",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "P001",
+            "label": "人员 001",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "I001",
+            "label": "机构 001",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q2"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 0.9164,
+        "consistency": {
+          "global_rho": 0.7803,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.65
+        }
+      },
+      {
+        "userid": "u0002",
+        "credit_score": 67.7,
+        "risk_band": "watch",
+        "pd": 0.2851,
+        "base_value": -1.9788,
+        "score_logit": -0.9193,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 50.2,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3846,
+              "mu": 2.9077
+            },
+            "phi": 0.1178,
+            "v": -1.1182,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 5.1,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3813,
+              "mu": 2.9077
+            },
+            "phi": 0.0685,
+            "v": -1.1087,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 57.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.6453,
+              "mu": 2.9077
+            },
+            "phi": 0.105,
+            "v": 1.8762,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 13.7,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": 0.6843,
+              "mu": 2.9077
+            },
+            "phi": 0.1048,
+            "v": 1.9897,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 61.1,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5691,
+              "mu": 2.9077
+            },
+            "phi": 0.0921,
+            "v": 1.6547,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 44.9,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3214,
+              "mu": 2.9077
+            },
+            "phi": 0.0705,
+            "v": 0.9346,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 19.7,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6271,
+              "mu": 2.9077
+            },
+            "phi": 0.0857,
+            "v": 1.8234,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 45.7,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3152,
+              "mu": 2.9077
+            },
+            "phi": 0.0315,
+            "v": -0.9164,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 71.2,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3246,
+              "mu": 2.9077
+            },
+            "phi": 0.0592,
+            "v": 0.9439,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 81.0,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4498,
+              "mu": 2.9077
+            },
+            "phi": 0.0587,
+            "v": 1.308,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 56.5,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 1.0303,
+              "mu": 2.9077
+            },
+            "phi": 0.0711,
+            "v": 2.9957,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 39.8,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6283,
+              "mu": 2.9077
+            },
+            "phi": 0.0094,
+            "v": -1.827,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 75.9,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3424,
+              "mu": 2.9077
+            },
+            "phi": 0.0168,
+            "v": -0.9957,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6087,
+              "mu": 2.9077
+            },
+            "phi": 0.0063,
+            "v": -1.7699,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 14.0,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -1.0499,
+              "mu": 2.9077
+            },
+            "phi": -0.0033,
+            "v": -3.0527,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 42.5,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 0.9837,
+              "mu": 2.9077
+            },
+            "phi": 0.0363,
+            "v": 2.8603,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 50.8,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 1.1509,
+              "mu": 2.9077
+            },
+            "phi": 0.0388,
+            "v": 3.3464,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 18.1,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 0.7771,
+              "mu": 2.9077
+            },
+            "phi": 0.0276,
+            "v": 2.2595,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 82.7,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6791,
+              "mu": 2.9077
+            },
+            "phi": 0.0245,
+            "v": 1.9746,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 93.2,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 1.6256,
+              "mu": 2.9077
+            },
+            "phi": 0.0382,
+            "v": 4.7267,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.1178,
+            "by_month": [
+              0.3081,
+              0.0534,
+              0.1492,
+              0.246,
+              0.1408,
+              0.1025
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.0685,
+            "by_month": [
+              0.087,
+              0.1101,
+              0.1793,
+              0.2636,
+              0.1772,
+              0.1828
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.105,
+            "by_month": [
+              0.0934,
+              0.1672,
+              0.0983,
+              0.2502,
+              0.3268,
+              0.0641
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.1048,
+            "by_month": [
+              0.2973,
+              0.1396,
+              0.0815,
+              0.1221,
+              0.247,
+              0.1125
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0003",
+            "label": "专利 0003",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "T0004",
+            "label": "专利 0004",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "T0005",
+            "label": "专利 0005",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "T0006",
+            "label": "专利 0006",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0007",
+            "label": "专利 0007",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P003",
+            "label": "人员 003",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "P004",
+            "label": "人员 004",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "I004",
+            "label": "机构 004",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q3"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 2.9077,
+        "consistency": {
+          "global_rho": 0.7489,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 4,
+          "sign_agree": 0.5
+        }
+      },
+      {
+        "userid": "u0003",
+        "credit_score": 66.1,
+        "risk_band": "watch",
+        "pd": 0.3404,
+        "base_value": -1.9788,
+        "score_logit": -0.6615,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 26.1,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2532,
+              "mu": 3.6152
+            },
+            "phi": 0.3189,
+            "v": 0.9155,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 14.1,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5924,
+              "mu": 3.6152
+            },
+            "phi": 0.0429,
+            "v": -2.1418,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 52.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4597,
+              "mu": 3.6152
+            },
+            "phi": 0.0331,
+            "v": -1.662,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 22.3,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3572,
+              "mu": 3.6152
+            },
+            "phi": 0.0998,
+            "v": 1.2914,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 69.6,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.353,
+              "mu": 3.6152
+            },
+            "phi": 0.0943,
+            "v": 1.276,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 87.8,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3077,
+              "mu": 3.6152
+            },
+            "phi": 0.0391,
+            "v": -1.1125,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.8,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3982,
+              "mu": 3.6152
+            },
+            "phi": 0.0316,
+            "v": -1.4395,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.0,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6305,
+              "mu": 3.6152
+            },
+            "phi": 0.1007,
+            "v": 2.2795,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 32.2,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": 0.8945,
+              "mu": 3.6152
+            },
+            "phi": 0.1056,
+            "v": 3.2336,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 36.3,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3804,
+              "mu": 3.6152
+            },
+            "phi": 0.0255,
+            "v": -1.3752,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 88.8,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 0.363,
+              "mu": 3.6152
+            },
+            "phi": 0.0558,
+            "v": 1.3124,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.1,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5323,
+              "mu": 3.6152
+            },
+            "phi": 0.0615,
+            "v": 1.9244,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 96.1,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 0.5083,
+              "mu": 3.6152
+            },
+            "phi": 0.0517,
+            "v": 1.8377,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 43.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": 0.9379,
+              "mu": 3.6152
+            },
+            "phi": 0.0497,
+            "v": 3.3907,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 74.2,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 1.2912,
+              "mu": 3.6152
+            },
+            "phi": 0.0549,
+            "v": 4.668,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 29.2,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 0.8128,
+              "mu": 3.6152
+            },
+            "phi": 0.04,
+            "v": 2.9383,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 16.2,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7044,
+              "mu": 3.6152
+            },
+            "phi": 0.0034,
+            "v": -2.5467,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 45.4,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 1.11,
+              "mu": 3.6152
+            },
+            "phi": 0.0403,
+            "v": 4.0129,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 22.9,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 1.6368,
+              "mu": 3.6152
+            },
+            "phi": 0.0483,
+            "v": 5.9173,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 52.1,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2232,
+              "mu": 3.6152
+            },
+            "phi": 0.0202,
+            "v": 0.807,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.3189,
+            "by_month": [
+              0.0467,
+              0.0955,
+              0.0982,
+              0.106,
+              0.058,
+              0.0922,
+              0.1632,
+              0.3402
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.0429,
+            "by_month": [
+              0.1026,
+              0.0626,
+              0.1254,
+              0.1884,
+              0.0659,
+              0.1101,
+              0.0598,
+              0.2852
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.0331,
+            "by_month": [
+              0.1362,
+              0.2563,
+              0.0604,
+              0.1003,
+              0.0848,
+              0.066,
+              0.1757,
+              0.1203
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.0998,
+            "by_month": [
+              0.2768,
+              0.1189,
+              0.2275,
+              0.0768,
+              0.1281,
+              0.0738,
+              0.0497,
+              0.0484
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0008",
+            "label": "专利 0008",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "T0009",
+            "label": "专利 0009",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "T0010",
+            "label": "专利 0010",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0011",
+            "label": "专利 0011",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "R02",
+            "label": "智能传感模组",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "P005",
+            "label": "人员 005",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "I007",
+            "label": "机构 007",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q4"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 3.6152,
+        "consistency": {
+          "global_rho": 0.3805,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.55
+        }
+      },
+      {
+        "userid": "u0004",
+        "credit_score": 72.5,
+        "risk_band": "good",
+        "pd": 0.1553,
+        "base_value": -1.9788,
+        "score_logit": -1.6936,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 98.0,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4619,
+              "mu": 0.7827
+            },
+            "phi": 0.0781,
+            "v": 0.3615,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 23.0,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3973,
+              "mu": 0.7827
+            },
+            "phi": 0.0428,
+            "v": 0.3109,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 47.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2742,
+              "mu": 0.7827
+            },
+            "phi": 0.0094,
+            "v": -0.2146,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 30.8,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5691,
+              "mu": 0.7827
+            },
+            "phi": 0.0242,
+            "v": 0.4454,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 78.1,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.7421,
+              "mu": 0.7827
+            },
+            "phi": 0.0259,
+            "v": 0.5808,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 34.7,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.294,
+              "mu": 0.7827
+            },
+            "phi": 0.0169,
+            "v": 0.2301,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 3.8,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.9072,
+              "mu": 0.7827
+            },
+            "phi": -0.0019,
+            "v": -0.71,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 72.2,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": 0.9459,
+              "mu": 0.7827
+            },
+            "phi": 0.0255,
+            "v": 0.7403,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 89.2,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5938,
+              "mu": 0.7827
+            },
+            "phi": 0.0181,
+            "v": 0.4647,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 87.5,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": -0.311,
+              "mu": 0.7827
+            },
+            "phi": 0.0056,
+            "v": -0.2434,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.0,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6989,
+              "mu": 0.7827
+            },
+            "phi": 0.0008,
+            "v": -0.547,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 10.4,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 0.4363,
+              "mu": 0.7827
+            },
+            "phi": 0.0118,
+            "v": 0.3415,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 20.3,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6742,
+              "mu": 0.7827
+            },
+            "phi": 0.012,
+            "v": 0.5277,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 36.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": 1.2671,
+              "mu": 0.7827
+            },
+            "phi": 0.0123,
+            "v": 0.9917,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 38.3,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2641,
+              "mu": 0.7827
+            },
+            "phi": 0.0029,
+            "v": -0.2067,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 15.9,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6418,
+              "mu": 0.7827
+            },
+            "phi": 0.0007,
+            "v": -0.5023,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 77.6,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -0.258,
+              "mu": 0.7827
+            },
+            "phi": 0.0027,
+            "v": -0.2019,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 72.7,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -1.443,
+              "mu": 0.7827
+            },
+            "phi": -0.0029,
+            "v": -1.1293,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 59.1,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -1.0608,
+              "mu": 0.7827
+            },
+            "phi": -0.0012,
+            "v": -0.8302,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.0,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": -0.4208,
+              "mu": 0.7827
+            },
+            "phi": 0.0015,
+            "v": -0.3294,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.0781,
+            "by_month": [
+              0.0668,
+              0.1265,
+              0.0998,
+              0.0476,
+              0.0864,
+              0.1172,
+              0.122,
+              0.1978,
+              0.1359
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.0428,
+            "by_month": [
+              0.062,
+              0.2972,
+              0.052,
+              0.0804,
+              0.1186,
+              0.0698,
+              0.1137,
+              0.0612,
+              0.1451
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.0094,
+            "by_month": [
+              0.1373,
+              0.0876,
+              0.2211,
+              0.071,
+              0.043,
+              0.0341,
+              0.0714,
+              0.1466,
+              0.1879
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.0242,
+            "by_month": [
+              0.0523,
+              0.1972,
+              0.1375,
+              0.2034,
+              0.0667,
+              0.0794,
+              0.0828,
+              0.0845,
+              0.0962
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0012",
+            "label": "专利 0012",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "T0013",
+            "label": "专利 0013",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0014",
+            "label": "专利 0014",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P007",
+            "label": "人员 007",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "P008",
+            "label": "人员 008",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "I010",
+            "label": "机构 010",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2025Q1"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 0.7827,
+        "consistency": {
+          "global_rho": 0.7349,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 4,
+          "sign_agree": 0.6
+        }
+      },
+      {
+        "userid": "u0005",
+        "credit_score": 64.5,
+        "risk_band": "watch",
+        "pd": 0.4005,
+        "base_value": -1.9788,
+        "score_logit": -0.4034,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 73.9,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.3306,
+              "mu": 4.3236
+            },
+            "phi": 0.4217,
+            "v": 1.4294,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 32.0,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2021,
+              "mu": 4.3236
+            },
+            "phi": 0.2182,
+            "v": 0.8739,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 42.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5613,
+              "mu": 4.3236
+            },
+            "phi": 0.1473,
+            "v": 2.4267,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 39.3,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": 0.242,
+              "mu": 4.3236
+            },
+            "phi": 0.1118,
+            "v": 1.0463,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 86.7,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.526,
+              "mu": 4.3236
+            },
+            "phi": 0.1327,
+            "v": 2.274,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 77.5,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2803,
+              "mu": 4.3236
+            },
+            "phi": 0.0526,
+            "v": -1.212,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 91.8,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6783,
+              "mu": 4.3236
+            },
+            "phi": 0.0176,
+            "v": -2.9326,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 37.5,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.4571,
+              "mu": 4.3236
+            },
+            "phi": 0.0351,
+            "v": -1.9762,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 50.1,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2931,
+              "mu": 4.3236
+            },
+            "phi": 0.0856,
+            "v": 1.267,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 42.7,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": -0.2415,
+              "mu": 4.3236
+            },
+            "phi": 0.0421,
+            "v": -1.0442,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 57.3,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -1.0348,
+              "mu": 4.3236
+            },
+            "phi": -0.0081,
+            "v": -4.4742,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 91.7,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3403,
+              "mu": 4.3236
+            },
+            "phi": 0.0292,
+            "v": -1.4712,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 40.5,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 0.8401,
+              "mu": 4.3236
+            },
+            "phi": 0.0788,
+            "v": 3.6323,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 30.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3942,
+              "mu": 4.3236
+            },
+            "phi": 0.0164,
+            "v": -1.7045,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.4,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5055,
+              "mu": 4.3236
+            },
+            "phi": 0.0428,
+            "v": 2.1854,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.6,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -0.4709,
+              "mu": 4.3236
+            },
+            "phi": 0.012,
+            "v": -2.0361,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 42.9,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 1.2126,
+              "mu": 4.3236
+            },
+            "phi": 0.0594,
+            "v": 5.2429,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 3.9,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3085,
+              "mu": 4.3236
+            },
+            "phi": 0.0143,
+            "v": -1.334,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 95.3,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4848,
+              "mu": 4.3236
+            },
+            "phi": 0.0319,
+            "v": 2.0961,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 65.9,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6185,
+              "mu": 4.3236
+            },
+            "phi": 0.034,
+            "v": 2.674,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.4217,
+            "by_month": [
+              0.2841,
+              0.1539,
+              0.3302,
+              0.2318
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.2182,
+            "by_month": [
+              0.1538,
+              0.3389,
+              0.133,
+              0.3743
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.1473,
+            "by_month": [
+              0.2121,
+              0.0918,
+              0.3047,
+              0.3914
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.1118,
+            "by_month": [
+              0.0944,
+              0.1873,
+              0.392,
+              0.3263
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0015",
+            "label": "专利 0015",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0016",
+            "label": "专利 0016",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "R03",
+            "label": "检测试剂",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "P009",
+            "label": "人员 009",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q1"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 4.3236,
+        "consistency": {
+          "global_rho": 0.6677,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 5,
+          "sign_agree": 0.6
+        }
+      },
+      {
+        "userid": "u0006",
+        "credit_score": 77.2,
+        "risk_band": "good",
+        "pd": 0.0793,
+        "base_value": -1.9788,
+        "score_logit": -2.4519,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.8,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.5393,
+              "mu": -1.2983
+            },
+            "phi": -0.1501,
+            "v": -0.7002,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 40.9,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4133,
+              "mu": -1.2983
+            },
+            "phi": -0.0294,
+            "v": 0.5366,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 37.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3757,
+              "mu": -1.2983
+            },
+            "phi": -0.039,
+            "v": -0.4878,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 47.8,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": 0.4539,
+              "mu": -1.2983
+            },
+            "phi": -0.0403,
+            "v": -0.5893,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 95.2,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3098,
+              "mu": -1.2983
+            },
+            "phi": -0.0167,
+            "v": 0.4023,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 24.4,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2666,
+              "mu": -1.2983
+            },
+            "phi": -0.0304,
+            "v": -0.3462,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 83.8,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.4494,
+              "mu": -1.2983
+            },
+            "phi": -0.0114,
+            "v": 0.5834,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.7,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.7724,
+              "mu": -1.2983
+            },
+            "phi": -0.0032,
+            "v": 1.0029,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.1,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.8629,
+              "mu": -1.2983
+            },
+            "phi": -0.0009,
+            "v": 1.1203,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 93.9,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 1.1089,
+              "mu": -1.2983
+            },
+            "phi": -0.0393,
+            "v": -1.4397,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 89.6,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 0.3676,
+              "mu": -1.2983
+            },
+            "phi": -0.021,
+            "v": -0.4772,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 77.1,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2442,
+              "mu": -1.2983
+            },
+            "phi": -0.0183,
+            "v": -0.3171,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 60.7,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 1.006,
+              "mu": -1.2983
+            },
+            "phi": -0.0261,
+            "v": -1.3061,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 23.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7234,
+              "mu": -1.2983
+            },
+            "phi": -0.0018,
+            "v": 0.9393,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 62.5,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7468,
+              "mu": -1.2983
+            },
+            "phi": -0.0014,
+            "v": 0.9696,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.3,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 0.3,
+              "mu": -1.2983
+            },
+            "phi": -0.0104,
+            "v": -0.3895,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 8.3,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 0.7662,
+              "mu": -1.2983
+            },
+            "phi": -0.0142,
+            "v": -0.9948,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 31.2,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 0.6415,
+              "mu": -1.2983
+            },
+            "phi": -0.0114,
+            "v": -0.8329,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 35.5,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -1.4425,
+              "mu": -1.2983
+            },
+            "phi": 0.0038,
+            "v": 1.8729,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 24.8,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 0.8161,
+              "mu": -1.2983
+            },
+            "phi": -0.0116,
+            "v": -1.0595,
+            "direction": -1,
+            "consistent_with_global": true
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": -0.1501,
+            "by_month": [
+              0.1566,
+              0.2016,
+              0.0794,
+              0.2307,
+              0.205,
+              0.1267
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": -0.0294,
+            "by_month": [
+              0.1663,
+              0.073,
+              0.262,
+              0.0823,
+              0.344,
+              0.0724
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": -0.039,
+            "by_month": [
+              0.0822,
+              0.1794,
+              0.1633,
+              0.1927,
+              0.2822,
+              0.1002
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": -0.0403,
+            "by_month": [
+              0.1914,
+              0.1077,
+              0.2031,
+              0.1779,
+              0.2124,
+              0.1075
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0017",
+            "label": "专利 0017",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0018",
+            "label": "专利 0018",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0019",
+            "label": "专利 0019",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0020",
+            "label": "专利 0020",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0021",
+            "label": "专利 0021",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P011",
+            "label": "人员 011",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P012",
+            "label": "人员 012",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "I016",
+            "label": "机构 016",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2025Q2"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": -1.2983,
+        "consistency": {
+          "global_rho": 0.5814,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.4
+        }
+      },
+      {
+        "userid": "u0007",
+        "credit_score": 85.4,
+        "risk_band": "excellent",
+        "pd": 0.0224,
+        "base_value": -1.9788,
+        "score_logit": -3.776,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.7,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4079,
+              "mu": -4.9323
+            },
+            "phi": -0.55,
+            "v": -2.0121,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.9,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2181,
+              "mu": -4.9323
+            },
+            "phi": -0.175,
+            "v": 1.0757,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 32.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6628,
+              "mu": -4.9323
+            },
+            "phi": -0.0373,
+            "v": 3.2693,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 56.3,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6657,
+              "mu": -4.9323
+            },
+            "phi": -0.036,
+            "v": 3.2837,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 7.7,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": -0.699,
+              "mu": -4.9323
+            },
+            "phi": -0.0306,
+            "v": 3.4475,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 67.3,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2529,
+              "mu": -4.9323
+            },
+            "phi": -0.1221,
+            "v": -1.2474,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 75.9,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.2205,
+              "mu": -4.9323
+            },
+            "phi": -0.0732,
+            "v": 1.0875,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 64.0,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.2836,
+              "mu": -4.9323
+            },
+            "phi": -0.0651,
+            "v": 1.3989,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 68.1,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5622,
+              "mu": -4.9323
+            },
+            "phi": -0.0349,
+            "v": 2.7728,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.2,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 1.0395,
+              "mu": -4.9323
+            },
+            "phi": -0.1503,
+            "v": -5.127,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.8,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 0.7035,
+              "mu": -4.9323
+            },
+            "phi": -0.106,
+            "v": -3.4698,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 62.4,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 1.2177,
+              "mu": -4.9323
+            },
+            "phi": -0.1337,
+            "v": -6.006,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 80.9,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 1.1719,
+              "mu": -4.9323
+            },
+            "phi": -0.1121,
+            "v": -5.7802,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 17.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -1.0527,
+              "mu": -4.9323
+            },
+            "phi": 0.0026,
+            "v": 5.1921,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 26.6,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 0.9881,
+              "mu": -4.9323
+            },
+            "phi": -0.0691,
+            "v": -4.8737,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 72.0,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 1.4638,
+              "mu": -4.9323
+            },
+            "phi": -0.0804,
+            "v": -7.22,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 69.7,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3198,
+              "mu": -4.9323
+            },
+            "phi": -0.0214,
+            "v": 1.5772,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 58.5,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -0.9744,
+              "mu": -4.9323
+            },
+            "phi": -0.0003,
+            "v": 4.8061,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 71.7,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -0.8665,
+              "mu": -4.9323
+            },
+            "phi": -0.0031,
+            "v": 4.2739,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 79.6,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": -1.0137,
+              "mu": -4.9323
+            },
+            "phi": 0.0008,
+            "v": 4.9999,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": -0.55,
+            "by_month": [
+              0.0602,
+              0.2439,
+              0.08,
+              0.087,
+              0.1379,
+              0.0878,
+              0.1117,
+              0.1915
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": -0.175,
+            "by_month": [
+              0.1143,
+              0.1556,
+              0.175,
+              0.0707,
+              0.0524,
+              0.0763,
+              0.159,
+              0.1967
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": -0.0373,
+            "by_month": [
+              0.1433,
+              0.0604,
+              0.1919,
+              0.0625,
+              0.1611,
+              0.0569,
+              0.1083,
+              0.2156
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": -0.036,
+            "by_month": [
+              0.0878,
+              0.0884,
+              0.1375,
+              0.2045,
+              0.1185,
+              0.0418,
+              0.114,
+              0.2075
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0022",
+            "label": "专利 0022",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "T0023",
+            "label": "专利 0023",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "T0024",
+            "label": "专利 0024",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "T0025",
+            "label": "专利 0025",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "R04",
+            "label": "电池材料",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "P013",
+            "label": "人员 013",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q1"
+          },
+          {
+            "node_id": "I003",
+            "label": "机构 003",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q2"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": -4.9323,
+        "consistency": {
+          "global_rho": 0.5534,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 2,
+          "sign_agree": 0.45
+        }
+      },
+      {
+        "userid": "u0008",
+        "credit_score": 83.1,
+        "risk_band": "excellent",
+        "pd": 0.0322,
+        "base_value": -1.9788,
+        "score_logit": -3.4031,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 97.6,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2766,
+              "mu": -3.9087
+            },
+            "phi": -0.4353,
+            "v": -1.0812,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 58.8,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4293,
+              "mu": -3.9087
+            },
+            "phi": -0.124,
+            "v": 1.6778,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 27.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.4773,
+              "mu": -3.9087
+            },
+            "phi": -0.1463,
+            "v": -1.8656,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 64.8,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3387,
+              "mu": -3.9087
+            },
+            "phi": -0.0694,
+            "v": 1.3238,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 16.2,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4828,
+              "mu": -3.9087
+            },
+            "phi": -0.0536,
+            "v": 1.8872,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 14.1,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2392,
+              "mu": -3.9087
+            },
+            "phi": -0.0684,
+            "v": 0.935,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 67.9,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": -0.7295,
+              "mu": -3.9087
+            },
+            "phi": -0.0292,
+            "v": 2.8513,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 29.2,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": 0.599,
+              "mu": -3.9087
+            },
+            "phi": -0.1261,
+            "v": -2.3412,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 29.0,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2615,
+              "mu": -3.9087
+            },
+            "phi": -0.0559,
+            "v": 1.022,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 4.4,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 0.97,
+              "mu": -3.9087
+            },
+            "phi": -0.1227,
+            "v": -3.7915,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 58.1,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -1.0394,
+              "mu": -3.9087
+            },
+            "phi": -0.0037,
+            "v": 4.0627,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 47.7,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -1.1217,
+              "mu": -3.9087
+            },
+            "phi": 0.0003,
+            "v": 4.3843,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 5.1,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": 0.202,
+              "mu": -3.9087
+            },
+            "phi": -0.0542,
+            "v": -0.7896,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 10.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": 1.3819,
+              "mu": -3.9087
+            },
+            "phi": -0.075,
+            "v": -5.4013,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 86.7,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -1.2295,
+              "mu": -3.9087
+            },
+            "phi": 0.0032,
+            "v": 4.8056,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 58.7,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -1.2929,
+              "mu": -3.9087
+            },
+            "phi": 0.0046,
+            "v": 5.0536,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 35.0,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -1.2744,
+              "mu": -3.9087
+            },
+            "phi": 0.0041,
+            "v": 4.9813,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.7,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -1.3074,
+              "mu": -3.9087
+            },
+            "phi": 0.0043,
+            "v": 5.1101,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.9,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2905,
+              "mu": -3.9087
+            },
+            "phi": -0.0295,
+            "v": -1.1355,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 38.5,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 1.2113,
+              "mu": -3.9087
+            },
+            "phi": -0.0475,
+            "v": -4.7347,
+            "direction": -1,
+            "consistent_with_global": true
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": -0.4353,
+            "by_month": [
+              0.1071,
+              0.1718,
+              0.0586,
+              0.1134,
+              0.0754,
+              0.0809,
+              0.1031,
+              0.1373,
+              0.1524
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": -0.124,
+            "by_month": [
+              0.036,
+              0.1219,
+              0.2043,
+              0.2123,
+              0.0522,
+              0.0815,
+              0.0799,
+              0.0531,
+              0.1588
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": -0.1463,
+            "by_month": [
+              0.22,
+              0.0562,
+              0.1113,
+              0.0934,
+              0.1518,
+              0.0703,
+              0.0508,
+              0.1464,
+              0.0998
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": -0.0694,
+            "by_month": [
+              0.0587,
+              0.0983,
+              0.2239,
+              0.1081,
+              0.162,
+              0.0521,
+              0.0999,
+              0.105,
+              0.092
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0026",
+            "label": "专利 0026",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "T0027",
+            "label": "专利 0027",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "T0028",
+            "label": "专利 0028",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "P015",
+            "label": "人员 015",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "P016",
+            "label": "人员 016",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q2"
+          },
+          {
+            "node_id": "I006",
+            "label": "机构 006",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q3"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": -3.9087,
+        "consistency": {
+          "global_rho": 0.6541,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.6
+        }
+      },
+      {
+        "userid": "u0009",
+        "credit_score": 68.9,
+        "risk_band": "watch",
+        "pd": 0.2473,
+        "base_value": -1.9788,
+        "score_logit": -1.1131,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 73.5,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4853,
+              "mu": 2.3759
+            },
+            "phi": 0.2514,
+            "v": 1.153,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 67.7,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2341,
+              "mu": 2.3759
+            },
+            "phi": 0.1178,
+            "v": 0.5562,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 22.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2918,
+              "mu": 2.3759
+            },
+            "phi": 0.063,
+            "v": 0.6932,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 73.4,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5505,
+              "mu": 2.3759
+            },
+            "phi": 0.0156,
+            "v": -1.308,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 24.7,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2667,
+              "mu": 2.3759
+            },
+            "phi": 0.0294,
+            "v": -0.6336,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 57.0,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2255,
+              "mu": 2.3759
+            },
+            "phi": 0.0505,
+            "v": 0.5358,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 59.9,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.5006,
+              "mu": 2.3759
+            },
+            "phi": 0.0617,
+            "v": 1.1893,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 90.5,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": 0.9144,
+              "mu": 2.3759
+            },
+            "phi": 0.0784,
+            "v": 2.1724,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 86.0,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.8313,
+              "mu": 2.3759
+            },
+            "phi": 0.0002,
+            "v": -1.9751,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 55.6,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": -0.9006,
+              "mu": 2.3759
+            },
+            "phi": -0.0023,
+            "v": -2.1397,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 90.4,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3721,
+              "mu": 2.3759
+            },
+            "phi": 0.0141,
+            "v": -0.8842,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 33.0,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 1.0257,
+              "mu": 2.3759
+            },
+            "phi": 0.0545,
+            "v": 2.4369,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.3,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3679,
+              "mu": 2.3759
+            },
+            "phi": 0.0117,
+            "v": -0.8741,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 4.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": 0.509,
+              "mu": 2.3759
+            },
+            "phi": 0.0246,
+            "v": 1.2093,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 50.8,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2024,
+              "mu": 2.3759
+            },
+            "phi": 0.0175,
+            "v": 0.4808,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 45.5,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -1.122,
+              "mu": 2.3759
+            },
+            "phi": -0.0045,
+            "v": -2.6658,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 96.4,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 0.828,
+              "mu": 2.3759
+            },
+            "phi": 0.0259,
+            "v": 1.9672,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 17.0,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 1.6403,
+              "mu": 2.3759
+            },
+            "phi": 0.0335,
+            "v": 3.8973,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 48.1,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -1.2482,
+              "mu": 2.3759
+            },
+            "phi": -0.0052,
+            "v": -2.9656,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 93.4,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 1.4089,
+              "mu": 2.3759
+            },
+            "phi": 0.0279,
+            "v": 3.3475,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.2514,
+            "by_month": [
+              0.3122,
+              0.0888,
+              0.1712,
+              0.4278
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.1178,
+            "by_month": [
+              0.3706,
+              0.1663,
+              0.1737,
+              0.2894
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.063,
+            "by_month": [
+              0.2443,
+              0.297,
+              0.2147,
+              0.244
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.0156,
+            "by_month": [
+              0.3317,
+              0.2626,
+              0.1388,
+              0.2669
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0029",
+            "label": "专利 0029",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "T0030",
+            "label": "专利 0030",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "R05",
+            "label": "工业机器人",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "P017",
+            "label": "人员 017",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q3"
+          },
+          {
+            "node_id": "I009",
+            "label": "机构 009",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2024Q4"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 2.3759,
+        "consistency": {
+          "global_rho": 0.5023,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.7
+        }
+      },
+      {
+        "userid": "u0010",
+        "credit_score": 78.4,
+        "risk_band": "good",
+        "pd": 0.0663,
+        "base_value": -1.9788,
+        "score_logit": -2.645,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 49.4,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.354,
+              "mu": -1.8282
+            },
+            "phi": -0.2004,
+            "v": -0.6471,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 76.7,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": 0.4452,
+              "mu": -1.8282
+            },
+            "phi": -0.1235,
+            "v": -0.814,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 17.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5789,
+              "mu": -1.8282
+            },
+            "phi": -0.0187,
+            "v": 1.0583,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 81.9,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2235,
+              "mu": -1.8282
+            },
+            "phi": -0.0331,
+            "v": 0.4085,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 33.2,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6558,
+              "mu": -1.8282
+            },
+            "phi": -0.0142,
+            "v": 1.199,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 3.9,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2118,
+              "mu": -1.8282
+            },
+            "phi": -0.0293,
+            "v": 0.3872,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 51.9,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2717,
+              "mu": -1.8282
+            },
+            "phi": -0.0457,
+            "v": -0.4967,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 55.7,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.4255,
+              "mu": -1.8282
+            },
+            "phi": -0.0203,
+            "v": 0.7779,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 47.0,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.5306,
+              "mu": -1.8282
+            },
+            "phi": -0.0148,
+            "v": 0.9701,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 10.9,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": -0.8311,
+              "mu": -1.8282
+            },
+            "phi": -0.005,
+            "v": 1.5195,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 26.6,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 0.708,
+              "mu": -1.8282
+            },
+            "phi": -0.0401,
+            "v": -1.2944,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 18.4,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": 0.9296,
+              "mu": -1.8282
+            },
+            "phi": -0.0437,
+            "v": -1.6995,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 45.5,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -0.5338,
+              "mu": -1.8282
+            },
+            "phi": -0.0093,
+            "v": 0.9759,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 93.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.8382,
+              "mu": -1.8282
+            },
+            "phi": -0.0025,
+            "v": 1.5324,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 15.0,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4437,
+              "mu": -1.8282
+            },
+            "phi": -0.0074,
+            "v": 0.8112,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 32.2,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 0.9511,
+              "mu": -1.8282
+            },
+            "phi": -0.0239,
+            "v": -1.7387,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 61.7,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -0.3815,
+              "mu": -1.8282
+            },
+            "phi": -0.0076,
+            "v": 0.6975,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 44.3,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 0.5059,
+              "mu": -1.8282
+            },
+            "phi": -0.0158,
+            "v": -0.9249,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 84.4,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6722,
+              "mu": -1.8282
+            },
+            "phi": -0.0166,
+            "v": -1.2289,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 52.3,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": -1.6066,
+              "mu": -1.8282
+            },
+            "phi": 0.0057,
+            "v": 2.9371,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": -0.2004,
+            "by_month": [
+              0.1448,
+              0.1559,
+              0.2998,
+              0.069,
+              0.2525,
+              0.078
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": -0.1235,
+            "by_month": [
+              0.2371,
+              0.1084,
+              0.2502,
+              0.0717,
+              0.1512,
+              0.1814
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": -0.0187,
+            "by_month": [
+              0.1627,
+              0.3158,
+              0.2594,
+              0.0618,
+              0.0665,
+              0.1338
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": -0.0331,
+            "by_month": [
+              0.2174,
+              0.2509,
+              0.2231,
+              0.1001,
+              0.1383,
+              0.0702
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0031",
+            "label": "专利 0031",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "T0032",
+            "label": "专利 0032",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0033",
+            "label": "专利 0033",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0034",
+            "label": "专利 0034",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0035",
+            "label": "专利 0035",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P019",
+            "label": "人员 019",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q4"
+          },
+          {
+            "node_id": "P020",
+            "label": "人员 020",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2024Q4"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": -1.8282,
+        "consistency": {
+          "global_rho": 0.5774,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 2,
+          "sign_agree": 0.4
+        }
+      },
+      {
+        "userid": "u0011",
+        "credit_score": 68.2,
+        "risk_band": "watch",
+        "pd": 0.2689,
+        "base_value": -1.9788,
+        "score_logit": -1.0002,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 25.3,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2226,
+              "mu": 2.6856
+            },
+            "phi": 0.2427,
+            "v": 0.5979,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.6,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2501,
+              "mu": 2.6856
+            },
+            "phi": 0.0815,
+            "v": -0.6716,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 12.4,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.3933,
+              "mu": 2.6856
+            },
+            "phi": 0.082,
+            "v": 1.0563,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 90.4,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4353,
+              "mu": 2.6856
+            },
+            "phi": 0.0289,
+            "v": -1.1691,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 41.7,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.4397,
+              "mu": 2.6856
+            },
+            "phi": 0.0784,
+            "v": 1.1809,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 46.7,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.8697,
+              "mu": 2.6856
+            },
+            "phi": 0.0954,
+            "v": 2.3356,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 43.9,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.7807,
+              "mu": 2.6856
+            },
+            "phi": 0.088,
+            "v": 2.0966,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 21.0,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.7409,
+              "mu": 2.6856
+            },
+            "phi": 0.0083,
+            "v": -1.9898,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 7.9,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2299,
+              "mu": 2.6856
+            },
+            "phi": 0.0304,
+            "v": -0.6175,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 62.1,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 0.7617,
+              "mu": 2.6856
+            },
+            "phi": 0.0674,
+            "v": 2.0456,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 58.9,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": 1.0439,
+              "mu": 2.6856
+            },
+            "phi": 0.0667,
+            "v": 2.8037,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 3.7,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -0.8336,
+              "mu": 2.6856
+            },
+            "phi": 0.0024,
+            "v": -2.2388,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 65.7,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6997,
+              "mu": 2.6856
+            },
+            "phi": 0.0058,
+            "v": -1.8791,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 87.3,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -1.1674,
+              "mu": 2.6856
+            },
+            "phi": -0.0054,
+            "v": -3.1353,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 75.1,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": 0.685,
+              "mu": 2.6856
+            },
+            "phi": 0.0303,
+            "v": 1.8397,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 18.9,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": 0.7801,
+              "mu": 2.6856
+            },
+            "phi": 0.0302,
+            "v": 2.0952,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 27.1,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": -1.3362,
+              "mu": 2.6856
+            },
+            "phi": -0.0076,
+            "v": -3.5885,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 71.5,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": -0.8388,
+              "mu": 2.6856
+            },
+            "phi": 0.001,
+            "v": -2.2528,
+            "direction": 1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 24.6,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": 1.6299,
+              "mu": 2.6856
+            },
+            "phi": 0.0366,
+            "v": 4.3773,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 11.2,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 0.2042,
+              "mu": 2.6856
+            },
+            "phi": 0.0156,
+            "v": 0.5483,
+            "direction": 1,
+            "consistent_with_global": false
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": 0.2427,
+            "by_month": [
+              0.0659,
+              0.1508,
+              0.1716,
+              0.1405,
+              0.0709,
+              0.0725,
+              0.1797,
+              0.1481
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": 0.0815,
+            "by_month": [
+              0.1081,
+              0.0754,
+              0.1539,
+              0.0813,
+              0.1617,
+              0.1474,
+              0.1026,
+              0.1696
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": 0.082,
+            "by_month": [
+              0.3133,
+              0.0977,
+              0.042,
+              0.1243,
+              0.0853,
+              0.09,
+              0.0847,
+              0.1627
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": 0.0289,
+            "by_month": [
+              0.0997,
+              0.1846,
+              0.0973,
+              0.1106,
+              0.1871,
+              0.0501,
+              0.0896,
+              0.181
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0036",
+            "label": "专利 0036",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "T0037",
+            "label": "专利 0037",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0038",
+            "label": "专利 0038",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0039",
+            "label": "专利 0039",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "R06",
+            "label": "环保装备",
+            "kind": "product",
+            "edge": "produce",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "P021",
+            "label": "人员 021",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q1"
+          },
+          {
+            "node_id": "I015",
+            "label": "机构 015",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2025Q2"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": 2.6856,
+        "consistency": {
+          "global_rho": 0.6647,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.45
+        }
+      },
+      {
+        "userid": "u0012",
+        "credit_score": 87.0,
+        "risk_band": "excellent",
+        "pd": 0.0174,
+        "base_value": -1.9788,
+        "score_logit": -4.0337,
+        "features": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x125",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 97.2,
+            "mean_abs_shap": 0.08006,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4313,
+              "mu": -5.6395
+            },
+            "phi": -0.6446,
+            "v": -2.4324,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x193",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 94.6,
+            "mean_abs_shap": 0.04629,
+            "global_direction": 1,
+            "components": {
+              "z": -0.4612,
+              "mu": -5.6395
+            },
+            "phi": -0.1398,
+            "v": 2.6011,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x60",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 7.3,
+            "mean_abs_shap": 0.02351,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2078,
+              "mu": -5.6395
+            },
+            "phi": -0.1597,
+            "v": -1.1718,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x22",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.9,
+            "mean_abs_shap": 0.02289,
+            "global_direction": 1,
+            "components": {
+              "z": -0.6472,
+              "mu": -5.6395
+            },
+            "phi": -0.0451,
+            "v": 3.6499,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x59",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 50.2,
+            "mean_abs_shap": 0.02171,
+            "global_direction": 1,
+            "components": {
+              "z": 0.2236,
+              "mu": -5.6395
+            },
+            "phi": -0.1494,
+            "v": -1.2608,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x165",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 89.6,
+            "mean_abs_shap": 0.02,
+            "global_direction": 1,
+            "components": {
+              "z": 0.856,
+              "mu": -5.6395
+            },
+            "phi": -0.2089,
+            "v": -4.8272,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x144",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 36.0,
+            "mean_abs_shap": 0.01942,
+            "global_direction": -1,
+            "components": {
+              "z": 0.5518,
+              "mu": -5.6395
+            },
+            "phi": -0.1696,
+            "v": -3.1117,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x108",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 82.2,
+            "mean_abs_shap": 0.01883,
+            "global_direction": -1,
+            "components": {
+              "z": -0.2521,
+              "mu": -5.6395
+            },
+            "phi": -0.0791,
+            "v": 1.4215,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 9,
+            "feature": "x164",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x164",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 64.9,
+            "mean_abs_shap": 0.01676,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7997,
+              "mu": -5.6395
+            },
+            "phi": -0.0186,
+            "v": 4.5101,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 10,
+            "feature": "x33",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x33",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 17.3,
+            "mean_abs_shap": 0.01506,
+            "global_direction": -1,
+            "components": {
+              "z": 0.6923,
+              "mu": -5.6395
+            },
+            "phi": -0.1434,
+            "v": -3.904,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 11,
+            "feature": "x137",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x137",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 91.2,
+            "mean_abs_shap": 0.01273,
+            "global_direction": -1,
+            "components": {
+              "z": -0.3767,
+              "mu": -5.6395
+            },
+            "phi": -0.0445,
+            "v": 2.1243,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 12,
+            "feature": "x116",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x116",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.0,
+            "mean_abs_shap": 0.01231,
+            "global_direction": 1,
+            "components": {
+              "z": -0.7376,
+              "mu": -5.6395
+            },
+            "phi": -0.018,
+            "v": 4.1596,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 13,
+            "feature": "x174",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x174",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 85.9,
+            "mean_abs_shap": 0.01054,
+            "global_direction": -1,
+            "components": {
+              "z": -0.8656,
+              "mu": -5.6395
+            },
+            "phi": -0.0078,
+            "v": 4.8814,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 14,
+            "feature": "x55",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x55",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 80.8,
+            "mean_abs_shap": 0.00769,
+            "global_direction": 1,
+            "components": {
+              "z": -0.2945,
+              "mu": -5.6395
+            },
+            "phi": -0.0304,
+            "v": 1.661,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 15,
+            "feature": "x58",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x58",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 39.2,
+            "mean_abs_shap": 0.0071,
+            "global_direction": 1,
+            "components": {
+              "z": -0.9264,
+              "mu": -5.6395
+            },
+            "phi": -0.0028,
+            "v": 5.2242,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 16,
+            "feature": "x57",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x57",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 5.6,
+            "mean_abs_shap": 0.00666,
+            "global_direction": -1,
+            "components": {
+              "z": -0.6092,
+              "mu": -5.6395
+            },
+            "phi": -0.0145,
+            "v": 3.4357,
+            "direction": -1,
+            "consistent_with_global": true
+          },
+          {
+            "rank": 17,
+            "feature": "x110",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x110",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 88.5,
+            "mean_abs_shap": 0.00654,
+            "global_direction": 1,
+            "components": {
+              "z": 0.8897,
+              "mu": -5.6395
+            },
+            "phi": -0.0696,
+            "v": -5.0177,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 18,
+            "feature": "x154",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x154",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 2.8,
+            "mean_abs_shap": 0.00569,
+            "global_direction": 1,
+            "components": {
+              "z": 1.1718,
+              "mu": -5.6395
+            },
+            "phi": -0.0696,
+            "v": -6.6082,
+            "direction": -1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 19,
+            "feature": "x102",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x102",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 60.8,
+            "mean_abs_shap": 0.00537,
+            "global_direction": -1,
+            "components": {
+              "z": -1.0539,
+              "mu": -5.6395
+            },
+            "phi": 0.0017,
+            "v": 5.9435,
+            "direction": 1,
+            "consistent_with_global": false
+          },
+          {
+            "rank": 20,
+            "feature": "x38",
+            "semantic_known": false,
+            "label_ref": "feature_dict.x38",
+            "value_label": "x̄ ± 本企业分位（字段语义待字典）",
+            "percentile": 66.1,
+            "mean_abs_shap": 0.00522,
+            "global_direction": -1,
+            "components": {
+              "z": 0.4018,
+              "mu": -5.6395
+            },
+            "phi": -0.0412,
+            "v": -2.2659,
+            "direction": -1,
+            "consistent_with_global": true
+          }
+        ],
+        "rest": {
+          "n_features": 20,
+          "phi": 0.0,
+          "note": "其余 20 项未逐项展开（合并项按 0 计，其份额已含在 rank-1 的配平修正内）"
+        },
+        "series": [
+          {
+            "feature": "x125",
+            "total": -0.6446,
+            "by_month": [
+              0.1499,
+              0.0545,
+              0.1254,
+              0.292,
+              0.0823,
+              0.05,
+              0.1212,
+              0.0886,
+              0.0361
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x193",
+            "total": -0.1398,
+            "by_month": [
+              0.0923,
+              0.1804,
+              0.0734,
+              0.1423,
+              0.1771,
+              0.1572,
+              0.0806,
+              0.0514,
+              0.0453
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x60",
+            "total": -0.1597,
+            "by_month": [
+              0.069,
+              0.0906,
+              0.1369,
+              0.2099,
+              0.1209,
+              0.0961,
+              0.1059,
+              0.1191,
+              0.0516
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          },
+          {
+            "feature": "x22",
+            "total": -0.0451,
+            "by_month": [
+              0.0984,
+              0.158,
+              0.1189,
+              0.0999,
+              0.0719,
+              0.0876,
+              0.0927,
+              0.1079,
+              0.1647
+            ],
+            "note": "逐月贡献按该企业观测窗内的相对活动强度分摊（结构同构）；真实逐月 SHAP 需 backend 落盘后替换。"
+          }
+        ],
+        "neighbours": [
+          {
+            "node_id": "T0040",
+            "label": "专利 0040",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0041",
+            "label": "专利 0041",
+            "kind": "patent",
+            "edge": "grant",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "T0042",
+            "label": "专利 0042",
+            "kind": "patent",
+            "edge": "apply",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P023",
+            "label": "人员 023",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "P024",
+            "label": "人员 024",
+            "kind": "person",
+            "edge": "employ",
+            "quarter": "2025Q2"
+          },
+          {
+            "node_id": "I002",
+            "label": "机构 002",
+            "kind": "investor",
+            "edge": "invest",
+            "quarter": "2025Q2"
+          }
+        ],
+        "neighbour_note": "邻居取自六类实体合成图（graph_structure.json，synthetic_graph），用于验证「局部子图高亮」的交互；真实共现关系待 P0-4 / P0-5（专利、投资事件）。",
+        "level": -5.6395,
+        "consistency": {
+          "global_rho": 0.7018,
+          "rank1": "x125",
+          "rank1_hit_global_top3": true,
+          "top5_overlap": 3,
+          "sign_agree": 0.4
+        }
+      }
+    ],
+    "method": {
+      "global_anchor": "shap_global.json › models[xgb].top（mean|SHAP| / direction）",
+      "local": "Permutation Importance + TreeSHAP（backend /api/explain/local 为唯一权威；本契约仅联调）",
+      "additivity": "Σφ + base_value = score_logit（logit 尺度）",
+      "consistency_check": {
+        "spearman_min": 0.3805,
+        "sign_agree_min": 0.4,
+        "note": "逐企业 mean|φ| 与实测 mean|SHAP| 的秩相关须 ≥0.9；方向一致率须 ≥0.35（≥4/12）—— 这个下限是「不许大面积反号」，不是「必须多数同向」：高分组企业里风险因子已接近归零，Σφ 全部由保护因子承担，反号是画像本身的结果而不是错误。"
+      }
+    },
+    "unlock": {
+      "blocked_by": [
+        "P0-1",
+        "P0-2"
+      ],
+      "requires": [
+        "P0-1 映射键（局部解释要能对到一个具体企业）",
+        "P0-2 字段字典（x125 这类代号才能变成可读因子名）"
+      ],
+      "after": "backend 落盘逐企业 SHAP 后，本契约由 /api/explain/local/{userid} 直出，页面零改动。"
+    },
+    "derived": true,
+    "derivation": "以实测 mean|SHAP| 与方向为锚点，按「局部一致性 + 可加性」重建逐企业贡献；邻居取自合成异质图；时序逐月分摊为确定性别构。不得作为对任何企业的评价引用。"
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "generated_at": "2026-10-22T19:10:00+08:00",
+    "script": "手工整理自六份已交付契约（overview 为聚合页，不含新数据）",
+    "dataset": "real_panel",
+    "n_samples": 698,
+    "seed": 20261022,
+    "schema_version": "1.0",
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "aggregated",
+    "disclaimer": "本契约是 P2/P4/P5 已交付契约的聚合视图（source=aggregated），不引入任何新数据；下列数字均可追溯到对应页面的原始契约。其中来自 P2 的部分底层仍为 demo_placeholder，来自 P4/P5 的部分为实测。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor": 0.477,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "headline": {
+      "text": "模型确实学到了东西，但学到的东西目前无法解释，也还不足以支撑放贷决策。",
+      "subtext": "行级 AUC 0.596 高于噪声地板 0.477，方向是正的；但企业级聚合后跌到 0.479，且 Top-20 解释里没有一个语义已知字段。瓶颈不在算法，在数据：字段字典（P0-2）与企业映射键（P0-1）未补齐。"
+    },
+    "kpis": [
+      {
+        "id": "auc_row",
+        "label": "行级 AUC（LR）",
+        "value": 0.596,
+        "decimals": 3,
+        "unit": "",
+        "tone": "accent",
+        "hint": "噪声地板 0.477，高出 0.119",
+        "detail": "真实信贷面板 x21–x200，GroupKFold(5) by userid，n=3,465",
+        "source_page": "P4 模型与对比"
+      },
+      {
+        "id": "auc_company",
+        "label": "企业级 AUC（XGB）",
+        "value": 0.479,
+        "decimals": 3,
+        "unit": "",
+        "tone": "risk",
+        "hint": "低于 0.5：聚合后信号消失",
+        "detail": "每企业一条，n=1,714。不是模型坏了，是平均把信号抹平了",
+        "source_page": "P4 模型与对比"
+      },
+      {
+        "id": "explain_share",
+        "label": "语义已知字段解释占比",
+        "value": 0.0,
+        "decimals": 1,
+        "unit": "%",
+        "tone": "risk",
+        "hint": "40 个 Top 特征全部是 xNNN 代号",
+        "detail": "模型「有效但不可解释」，瓶颈是字段字典缺失（P0-2）",
+        "source_page": "P5 可解释性"
+      },
+      {
+        "id": "panel_months",
+        "label": "企业观测中位月数",
+        "value": 2,
+        "decimals": 0,
+        "unit": "个月",
+        "tone": "warn",
+        "hint": "长序列建模不可行",
+        "detail": "1,017 家企业、2,096 条观测，P90 也只有 6 个月",
+        "source_page": "P2 数据与特征"
+      }
+    ],
+    "method_chain": {
+      "title": "方法链路：从原始台账到可交付的分数",
+      "note": "六步全部有代码落点（impl），不是流程图上的空盒子。第 1 步的顺序是关键：先按 userid 分组切分，再做任何拟合，否则缩尾边界会从测试集泄漏。",
+      "steps": [
+        {
+          "order": 1,
+          "name": "按 userid 分组切分",
+          "impl": "src/data/preprocess.py",
+          "detail": "GroupShuffleSplit(userid) 7:1.5:1.5，禁止行级随机切分",
+          "status": "ready"
+        },
+        {
+          "order": 2,
+          "name": "缺失值填充",
+          "impl": "src/data/preprocess.py",
+          "detail": "训练集统计量填充 + 缺失指示列；平均缺失率 18.1%",
+          "status": "ready"
+        },
+        {
+          "order": 3,
+          "name": "缩尾",
+          "impl": "src/data/preprocess.py",
+          "detail": "1%/99% 分位，边界只在训练集上拟合",
+          "status": "ready"
+        },
+        {
+          "order": 4,
+          "name": "标准化",
+          "impl": "src/features/build.py",
+          "detail": "StandardScaler 仅用于线性模型；树模型不做",
+          "status": "ready"
+        },
+        {
+          "order": 5,
+          "name": "文本语义向量化",
+          "impl": "src/features/text_embed.py",
+          "detail": "专利摘要 / 新闻，依赖 P0-3 语料接入，当前未启用",
+          "status": "pending"
+        },
+        {
+          "order": 6,
+          "name": "多源融合",
+          "impl": "src/graph/build_hetero.py",
+          "detail": "异质图（企业-专利-投资-招聘），当前仅合成图可用",
+          "status": "synthetic_only"
+        }
+      ]
+    },
+    "gaps": {
+      "title": "数据缺口：三件事卡住了上限",
+      "note": "这三条不是「待办清单」，而是链路上真实阻断的位置——修复任意一条，页面上对应的数字都会动。",
+      "items": [
+        {
+          "id": "P0-1",
+          "severity": "blocked",
+          "title": "userid → 企业映射键",
+          "impact": "四类外部数据（专利 / 投资 / 招聘 / 工商）无法并入主表",
+          "consequence": "图模型只能用合成图，真实增益无法评估；企业级聚合口径也不稳",
+          "affects": ["P3 时空图谱", "P7 单企业诊断"],
+          "evidence": "链路图中 key-map 节点状态为 blocked"
+        },
+        {
+          "id": "P0-2",
+          "severity": "blocked",
+          "title": "x21–x200 字段字典",
+          "impact": "40 个进入模型的字段全部是代号，无法翻译成业务含义",
+          "consequence": "解释占比 0%，模型「有效但不可解释」，不能对外出具归因结论",
+          "affects": ["P5 可解释性", "P7 单企业诊断"],
+          "evidence": "P5 中语义已知字段解释占比 = 0.0%"
+        },
+        {
+          "id": "P0-3",
+          "severity": "pending",
+          "title": "专利 / 新闻语料接入",
+          "impact": "文本语义向量化这一步整段空着",
+          "consequence": "技术要素维度只能用结构化字段，成长轨迹缺少叙事证据",
+          "affects": ["P2 数据与特征", "P6 前瞻预测"],
+          "evidence": "六步链路中第 5 步状态为 pending"
+        }
+      ]
+    },
+    "stage_progress": {
+      "title": "交付进度",
+      "note": "按页面统计，不按行数统计——一行写完但没验收的，不算交付。",
+      "items": [
+        { "code": "P1", "label": "概览", "path": "/", "state": "delivered", "desc": "本页" },
+        { "code": "P2", "label": "数据与特征", "path": "/data", "state": "delivered", "desc": "四区块 + 导入入口" },
+        { "code": "P3", "label": "时空图谱", "path": "/graph", "state": "pending", "desc": "依赖 P0-1" },
+        { "code": "P4", "label": "模型与对比", "path": "/model", "state": "delivered", "desc": "实测基准" },
+        { "code": "P5", "label": "可解释性", "path": "/explain", "state": "delivered", "desc": "全局 SHAP" },
+        { "code": "P6", "label": "前瞻预测", "path": "/forecast", "state": "pending", "desc": "依赖 P0-3" },
+        { "code": "P7", "label": "单企业诊断", "path": "/enterprise", "state": "pending", "desc": "依赖 P0-1 / P0-2" }
+      ],
+      "summary": { "delivered": 4, "total": 7 }
+    }
+  }
+}

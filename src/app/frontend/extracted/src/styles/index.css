@@ -1,0 +1,98 @@
+@import './tokens.css';
+@import './theme.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p,
+dl,
+dd,
+figure {
+  margin: 0;
+}
+
+button {
+  font-family: inherit;
+}
+
+/**
+ * 通用按钮（FE-20 新增）
+ *
+ * 为什么现在才加：P1–P7 全是"读"的页面，唯一的交互是切换器与重试按钮，
+ * 各自用了 scoped 样式就够了。P8 批量页有提交 / 导出 / 对比 / 筛选一整套动作，
+ * 再各写一遍会很快漂移成五六种高度和圆角。
+ *
+ * 尺寸令牌沿用 tokens.css 的 --hit-target-min（44px）：命中区是验收项，不是审美。
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: var(--hit-target-min);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background 0.12s ease,
+    border-color 0.12s ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--color-surface-muted);
+  border-color: var(--color-accent);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 86%, #000);
+  border-color: color-mix(in srgb, var(--color-accent) 86%, #000);
+}
+
+.btn--lg {
+  padding: 0 var(--space-5);
+  font-size: 14px;
+}
+
+.btn--sm {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  font-size: 12px;
+}

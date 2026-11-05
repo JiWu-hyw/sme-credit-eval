@@ -1,0 +1,470 @@
+{
+  "meta": {
+    "generated_at": "2026-10-28T15:10:00+08:00",
+    "script": "scripts/build_explain_contracts.py",
+    "dataset": "real_panel",
+    "source": "demo_placeholder",
+    "schema_version": "1.1",
+    "n_samples": 698,
+    "seed": 20261028,
+    "semantic_known": false,
+    "label_ref": null,
+    "noise_floor": 0.477,
+    "contract_status": "mock",
+    "blocked_by": [
+      "P0-2",
+      "P0-5"
+    ],
+    "disclaimer": "A15 真实契约未产出（P0-2 字段字典未补齐、P0-5 融资事件未到位）。本文件为结构同构占位：阶段划分、维度权重、阶段内字段权重均为占位值；字段排序与 mean|SHAP| 取自实测 shap_global.json。不得作为实证结论引用。"
+  },
+  "data": {
+    "status": "mock",
+    "status_note": "结构同构占位（demo_placeholder）：可演示交互与版式，数值不可对外引用。",
+    "chart": "A15",
+    "n_features_used": 40,
+    "stage_axis": {
+      "label": "生命周期阶段",
+      "source": "draft",
+      "definition": "按成立年限 + 融资里程碑划分（草案口径，待 P0-1 / P0-5 数据核实）"
+    },
+    "stages": [
+      {
+        "stage_id": "s0",
+        "stage_label": "种子期",
+        "age_range": "成立 ≤ 2 年",
+        "funding_marker": "无外部融资记录",
+        "company_share": 0.31,
+        "definition_source": "draft"
+      },
+      {
+        "stage_id": "s1",
+        "stage_label": "初创期",
+        "age_range": "2–4 年",
+        "funding_marker": "天使轮 / Pre-A",
+        "company_share": 0.34,
+        "definition_source": "draft"
+      },
+      {
+        "stage_id": "s2",
+        "stage_label": "成长期",
+        "age_range": "4–7 年",
+        "funding_marker": "A 轮 / B 轮",
+        "company_share": 0.24,
+        "definition_source": "draft"
+      },
+      {
+        "stage_id": "s3",
+        "stage_label": "扩张期",
+        "age_range": "> 7 年",
+        "funding_marker": "B 轮以后 / 已盈利",
+        "company_share": 0.11,
+        "definition_source": "draft"
+      }
+    ],
+    "factors": [
+      {
+        "factor_id": "tech",
+        "factor_label": "技术要素",
+        "label_kind": "dimension",
+        "semantic_known": false,
+        "label_ref": "feature_dict.dimension.tech",
+        "definition": "专利 / 研发投入 / 团队稳定性一类指标（本项目自建三维护口径之一）",
+        "note": "维度归属为占位：成员字段语义未确认，维度名不代表字段真实含义。"
+      },
+      {
+        "factor_id": "growth",
+        "factor_label": "成长轨迹",
+        "label_kind": "dimension",
+        "semantic_known": false,
+        "label_ref": "feature_dict.dimension.growth",
+        "definition": "营收 / 员工 / 融资 / 里程碑一类指标（本项目自建三维护口径之一）",
+        "note": "维度归属为占位：成员字段语义未确认，维度名不代表字段真实含义。"
+      },
+      {
+        "factor_id": "fusion",
+        "factor_label": "融合特征",
+        "label_kind": "dimension",
+        "semantic_known": false,
+        "label_ref": "feature_dict.dimension.fusion",
+        "definition": "技术转化效率 / 资本技术协同度一类交叉指标（本项目自建三维护口径之一）",
+        "note": "维度归属为占位：成员字段语义未确认，维度名不代表字段真实含义。"
+      }
+    ],
+    "weights": [
+      {
+        "stage_id": "s0",
+        "factor_id": "tech",
+        "weight": 0.42
+      },
+      {
+        "stage_id": "s0",
+        "factor_id": "growth",
+        "weight": 0.3
+      },
+      {
+        "stage_id": "s0",
+        "factor_id": "fusion",
+        "weight": 0.28
+      },
+      {
+        "stage_id": "s1",
+        "factor_id": "tech",
+        "weight": 0.36
+      },
+      {
+        "stage_id": "s1",
+        "factor_id": "growth",
+        "weight": 0.36
+      },
+      {
+        "stage_id": "s1",
+        "factor_id": "fusion",
+        "weight": 0.28
+      },
+      {
+        "stage_id": "s2",
+        "factor_id": "tech",
+        "weight": 0.28
+      },
+      {
+        "stage_id": "s2",
+        "factor_id": "growth",
+        "weight": 0.42
+      },
+      {
+        "stage_id": "s2",
+        "factor_id": "fusion",
+        "weight": 0.3
+      },
+      {
+        "stage_id": "s3",
+        "factor_id": "tech",
+        "weight": 0.22
+      },
+      {
+        "stage_id": "s3",
+        "factor_id": "growth",
+        "weight": 0.45
+      },
+      {
+        "stage_id": "s3",
+        "factor_id": "fusion",
+        "weight": 0.33
+      }
+    ],
+    "stage_fields": [
+      {
+        "stage_id": "s0",
+        "fields": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "mean_abs_shap": 0.08006,
+            "direction": -1,
+            "stage_weight": 0.3136
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "mean_abs_shap": 0.04629,
+            "direction": 1,
+            "stage_weight": 0.2057
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02351,
+            "direction": 1,
+            "stage_weight": 0.1126
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02289,
+            "direction": 1,
+            "stage_weight": 0.068
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02171,
+            "direction": 1,
+            "stage_weight": 0.1024
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02,
+            "direction": 1,
+            "stage_weight": 0.0785
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01942,
+            "direction": -1,
+            "stage_weight": 0.0556
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01883,
+            "direction": -1,
+            "stage_weight": 0.0637
+          }
+        ]
+      },
+      {
+        "stage_id": "s1",
+        "fields": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "mean_abs_shap": 0.08006,
+            "direction": -1,
+            "stage_weight": 0.2777
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "mean_abs_shap": 0.04629,
+            "direction": 1,
+            "stage_weight": 0.2064
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02351,
+            "direction": 1,
+            "stage_weight": 0.0845
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02289,
+            "direction": 1,
+            "stage_weight": 0.0775
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02171,
+            "direction": 1,
+            "stage_weight": 0.1158
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02,
+            "direction": 1,
+            "stage_weight": 0.0774
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01942,
+            "direction": -1,
+            "stage_weight": 0.101
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01883,
+            "direction": -1,
+            "stage_weight": 0.0597
+          }
+        ]
+      },
+      {
+        "stage_id": "s2",
+        "fields": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "mean_abs_shap": 0.08006,
+            "direction": -1,
+            "stage_weight": 0.2936
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "mean_abs_shap": 0.04629,
+            "direction": 1,
+            "stage_weight": 0.2118
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02351,
+            "direction": 1,
+            "stage_weight": 0.0997
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02289,
+            "direction": 1,
+            "stage_weight": 0.0841
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02171,
+            "direction": 1,
+            "stage_weight": 0.0972
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02,
+            "direction": 1,
+            "stage_weight": 0.0694
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01942,
+            "direction": -1,
+            "stage_weight": 0.0759
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01883,
+            "direction": -1,
+            "stage_weight": 0.0684
+          }
+        ]
+      },
+      {
+        "stage_id": "s3",
+        "fields": [
+          {
+            "rank": 1,
+            "feature": "x125",
+            "semantic_known": false,
+            "mean_abs_shap": 0.08006,
+            "direction": -1,
+            "stage_weight": 0.2778
+          },
+          {
+            "rank": 2,
+            "feature": "x193",
+            "semantic_known": false,
+            "mean_abs_shap": 0.04629,
+            "direction": 1,
+            "stage_weight": 0.1953
+          },
+          {
+            "rank": 3,
+            "feature": "x60",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02351,
+            "direction": 1,
+            "stage_weight": 0.1045
+          },
+          {
+            "rank": 4,
+            "feature": "x22",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02289,
+            "direction": 1,
+            "stage_weight": 0.0793
+          },
+          {
+            "rank": 5,
+            "feature": "x59",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02171,
+            "direction": 1,
+            "stage_weight": 0.0793
+          },
+          {
+            "rank": 6,
+            "feature": "x165",
+            "semantic_known": false,
+            "mean_abs_shap": 0.02,
+            "direction": 1,
+            "stage_weight": 0.0965
+          },
+          {
+            "rank": 7,
+            "feature": "x144",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01942,
+            "direction": -1,
+            "stage_weight": 0.071
+          },
+          {
+            "rank": 8,
+            "feature": "x108",
+            "semantic_known": false,
+            "mean_abs_shap": 0.01883,
+            "direction": -1,
+            "stage_weight": 0.0962
+          }
+        ]
+      }
+    ],
+    "decision_notes": [
+      {
+        "stage_id": "s0",
+        "headline": "权重集中在「技术要素」（占位 42%）",
+        "text": "字段层面首位 x125 占该阶段 31.4%（占位），前 3 位合计 63.2%；其 mean|SHAP| 0.0801 为实测。字段语义未确认，此处只做算法层陈述，不指向任何业务含义。"
+      },
+      {
+        "stage_id": "s1",
+        "headline": "权重集中在「技术要素」（占位 36%）",
+        "text": "字段层面首位 x125 占该阶段 27.8%（占位），前 3 位合计 56.9%；其 mean|SHAP| 0.0801 为实测。字段语义未确认，此处只做算法层陈述，不指向任何业务含义。"
+      },
+      {
+        "stage_id": "s2",
+        "headline": "权重集中在「成长轨迹」（占位 42%）",
+        "text": "字段层面首位 x125 占该阶段 29.4%（占位），前 3 位合计 60.5%；其 mean|SHAP| 0.0801 为实测。字段语义未确认，此处只做算法层陈述，不指向任何业务含义。"
+      },
+      {
+        "stage_id": "s3",
+        "headline": "权重集中在「成长轨迹」（占位 45%）",
+        "text": "字段层面首位 x125 占该阶段 27.8%（占位），前 3 位合计 57.8%；其 mean|SHAP| 0.0801 为实测。字段语义未确认，此处只做算法层陈述，不指向任何业务含义。"
+      }
+    ],
+    "unlock": {
+      "blocked_by": [
+        "P0-2",
+        "P0-5"
+      ],
+      "requires": [
+        "x21–x200 字段字典（维度归属才能由字典推导，而不是由原型图拼）",
+        "融资事件表（阶段划分需要真实的轮次与时间点，不能只靠成立年限）"
+      ],
+      "after": "字段字典到位后，weights 由字典推导的分组重算，stage_fields 换成真实分组归因；前端零改动。",
+      "owner": "施汶邑（算法）· 袁雪茹（对外索取字典）"
+    },
+    "derived": true,
+    "derivation": "阶段与权重为人工设定的占位（4 阶段 × 3 维度，每阶段合计 1.0）；阶段内字段权重以实测 share 为底叠加确定性扰动（seed 固定）后归一；字段的 mean|SHAP| 与方向原样取自实测 shap_global.json。"
+  }
+}

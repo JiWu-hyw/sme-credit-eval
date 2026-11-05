@@ -1,0 +1,54 @@
+{
+  "chart": "A21",
+  "data": {
+    "job_id": "job_2d9a4c33",
+    "status": "done",
+    "as_of": "2026-10-28",
+    "filename": "浙江省专精特新中小企业名单_2026Q3.xlsx",
+    "rows_total": 100,
+    "rows_accepted": 100,
+    "field_validate": {
+      "ok": true,
+      "template_columns": [
+        "序号",
+        "企业名称",
+        "证书编号",
+        "来源年份",
+        "批次",
+        "发证日期"
+      ],
+      "cert_pattern": "^GR\\d{12}$",
+      "ignored_extra_columns": [],
+      "message": "6 列齐备，编码 UTF-8（BOM），大小 18.4 KB，序号 1–100 连续"
+    },
+    "estimated_seconds": 6,
+    "accepted_at": "2026-10-28T16:40:00+08:00"
+  },
+  "meta": {
+    "generated_at": "2026-10-28T16:40:00+08:00",
+    "script": "scripts/build_batch_contracts.py",
+    "dataset": "real_panel",
+    "source": "contract_spec",
+    "schema_version": "1.0",
+    "n_samples": 100,
+    "seed": 20261088,
+    "semantic_known": false,
+    "label_ref": null,
+    "noise_floor": 0.477,
+    "contract_status": "mock",
+    "blocked_by": [
+      "P0-1",
+      "P0-2",
+      "P0-3"
+    ],
+    "disclaimer": "批量受理响应：job_id / 受理条数 / 字段校验口径为真实后端字段；演示名单由脱敏示例企业构成，不代表任何真实企业。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor_applicable": true,
+      "unknown_fields_shown_as_code": true,
+      "score_not_transformed": true,
+      "every_row_traceable": true,
+      "cross_batch_not_comparable": true
+    }
+  }
+}

@@ -1,0 +1,234 @@
+{
+  "meta": {
+    "generated_at": "2026-10-28T15:20:00+08:00",
+    "script": "scripts/build_forecast_contracts.py",
+    "dataset": "real_panel",
+    "schema_version": "1.0",
+    "n_samples": 1017,
+    "seed": 20261033,
+    "source": "demo_placeholder",
+    "contract_status": "mock",
+    "label_status": "LABEL_PENDING",
+    "semantic_known": false,
+    "label_ref": null,
+    "noise_floor": null,
+    "chart": "A17",
+    "disclaimer": "A17 真实契约未产出（P0-3 label 口径未定义、P0-5 融资事件未到位）。本文件为结构同构占位：校准样本与估值区间均为确定性合成；Wilson 区间、Brier、ECE、可靠性斜率、AUC 均为现场计算。数值不得作为实证结论引用。"
+  },
+  "data": {
+    "chart": "A17",
+    "status": "mock",
+    "status_note": "结构同构占位（demo_placeholder）：可演示校准与区间读法，数值不可对外引用。",
+    "calibration": {
+      "n": 1017,
+      "events": 234,
+      "prevalence": 0.23009,
+      "bins": [
+        {
+          "bin": 1,
+          "n": 102,
+          "p_mean": 0.04681,
+          "obs": 0.03922,
+          "obs_lo": 0.01535,
+          "obs_hi": 0.09653
+        },
+        {
+          "bin": 2,
+          "n": 101,
+          "p_mean": 0.08347,
+          "obs": 0.0495,
+          "obs_lo": 0.02133,
+          "obs_hi": 0.11069
+        },
+        {
+          "bin": 3,
+          "n": 102,
+          "p_mean": 0.11658,
+          "obs": 0.07843,
+          "obs_lo": 0.04028,
+          "obs_hi": 0.14719
+        },
+        {
+          "bin": 4,
+          "n": 102,
+          "p_mean": 0.14309,
+          "obs": 0.14706,
+          "obs_lo": 0.09119,
+          "obs_hi": 0.22855
+        },
+        {
+          "bin": 5,
+          "n": 101,
+          "p_mean": 0.17589,
+          "obs": 0.15842,
+          "obs_lo": 0.09993,
+          "obs_hi": 0.24194
+        },
+        {
+          "bin": 6,
+          "n": 102,
+          "p_mean": 0.21284,
+          "obs": 0.2451,
+          "obs_lo": 0.17188,
+          "obs_hi": 0.33682
+        },
+        {
+          "bin": 7,
+          "n": 102,
+          "p_mean": 0.26545,
+          "obs": 0.29412,
+          "obs_lo": 0.21446,
+          "obs_hi": 0.38872
+        },
+        {
+          "bin": 8,
+          "n": 102,
+          "p_mean": 0.32223,
+          "obs": 0.27451,
+          "obs_lo": 0.19728,
+          "obs_hi": 0.36811
+        },
+        {
+          "bin": 9,
+          "n": 101,
+          "p_mean": 0.40014,
+          "obs": 0.44554,
+          "obs_lo": 0.35238,
+          "obs_hi": 0.5427
+        },
+        {
+          "bin": 10,
+          "n": 102,
+          "p_mean": 0.57164,
+          "obs": 0.56863,
+          "obs_lo": 0.47175,
+          "obs_hi": 0.66052
+        }
+      ],
+      "ci_method": "wilson",
+      "brier": 0.14987,
+      "brier_baseline": 0.17715,
+      "ece": 0.0258,
+      "reliability_slope": 1.0602,
+      "reliability_intercept": -0.0179,
+      "auc": 0.7567,
+      "note": "分箱按预测概率等频十分位；观测率的 95% 区间用 Wilson 得分区间（低概率箱里 Wald 会给出负下界）。Brier 的基准是「恒用总体发生率」，低于它才说明概率有增量信息。"
+    },
+    "valuation": {
+      "unit": "万元",
+      "horizon": "未来 6–12 个月",
+      "target": "下一轮融资的投前估值",
+      "bars": [
+        {
+          "entity": "u0491",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s3",
+          "stage_label": "扩张期",
+          "p_next": 0.1733,
+          "p10": 4800,
+          "p50": 8650,
+          "p90": 15600,
+          "width_ratio": 3.25
+        },
+        {
+          "entity": "u0622",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s2",
+          "stage_label": "成长期",
+          "p_next": 0.2198,
+          "p10": 2700,
+          "p50": 5650,
+          "p90": 11900,
+          "width_ratio": 4.407
+        },
+        {
+          "entity": "u0208",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s2",
+          "stage_label": "成长期",
+          "p_next": 0.229,
+          "p10": 2050,
+          "p50": 4300,
+          "p90": 9050,
+          "width_ratio": 4.415
+        },
+        {
+          "entity": "u0884",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s1",
+          "stage_label": "初创期",
+          "p_next": 0.2684,
+          "p10": 1500,
+          "p50": 3750,
+          "p90": 9450,
+          "width_ratio": 6.3
+        },
+        {
+          "entity": "u0042",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s1",
+          "stage_label": "初创期",
+          "p_next": 0.2216,
+          "p10": 1350,
+          "p50": 3350,
+          "p90": 8450,
+          "width_ratio": 6.259
+        },
+        {
+          "entity": "u0356",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s1",
+          "stage_label": "初创期",
+          "p_next": 0.2763,
+          "p10": 1300,
+          "p50": 3300,
+          "p90": 8300,
+          "width_ratio": 6.385
+        },
+        {
+          "entity": "u0117",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s0",
+          "stage_label": "种子期",
+          "p_next": 0.3163,
+          "p10": 850,
+          "p50": 2500,
+          "p90": 7550,
+          "width_ratio": 8.882
+        },
+        {
+          "entity": "u0733",
+          "entity_note": "匿名编号（P0-1 userid→企业名映射键未到位）",
+          "stage": "s0",
+          "stage_label": "种子期",
+          "p_next": 0.2752,
+          "p10": 800,
+          "p50": 2350,
+          "p90": 7100,
+          "width_ratio": 8.875
+        }
+      ],
+      "method": "对数正态：P50 取阶段中位，P10/P90 = P50·exp(∓1.2816σ)，σ 按阶段递减（阶段越晚估值越集中）",
+      "summary": {
+        "n": 8,
+        "p50_median": 3750,
+        "width_ratio_median": 6.3
+      }
+    },
+    "unlock": {
+      "blocked_by": [
+        "P0-3",
+        "P0-5"
+      ],
+      "requires": [
+        "P0-3 label 口径定义（事件 = 违约还是经营异常？观测窗前还是后？不定这个，生存时间无从谈起）",
+        "P0-5 融资事件表（下一轮融资的时间、金额、投前/投后估值，A17 的估值区间需要真实成交价）",
+        "企业级随访窗口（当前面板每企业中位 2 个月观测，24 个月随访在真实数据上尚不成立）"
+      ],
+      "after": "事件口径与融资事件到位后，本脚本改为读取真实队列（同一套 KM / Cox / 校准实现不动），前端零改动。",
+      "owner": "施汶邑（算法）· 袁雪茹（P0-3 口径与指导教师确认，P0-5 对外取数）"
+    },
+    "derived": true,
+    "derivation": "以同一批协变量按 logistic 真值生成「是否在 12 个月内完成下一轮融资」，预测概率 = 真值 logit 收缩 15%（模拟偏保守的模型），再按预测概率等频十分位分箱，观测率区间用 Wilson；估值按对数正态取 P10/P50/P90，σ 随阶段递减。所有统计量现场计算，队列为合成。"
+  }
+}

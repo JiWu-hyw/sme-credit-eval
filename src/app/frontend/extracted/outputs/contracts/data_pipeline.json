@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "generated_at": "2026-10-22T12:37:21+08:00",
+    "script": "scripts/build_data_contracts.py",
+    "dataset": "real_panel",
+    "n_samples": 1017,
+    "seed": 20261022,
+    "schema_version": "1.0",
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "demo_placeholder",
+    "disclaimer": "结构同构占位数据（demo_placeholder）：真实信贷面板尚未接入 data/processed，本契约仅用于前端页面结构与交互联调，不得作为任何实证结论引用。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor": 0.477,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "src-credit",
+        "name": "信贷面板",
+        "kind": "source",
+        "status": "ready",
+        "description": "银行信贷台账月度观测（real_panel），企业 1,284 家 / 覆盖 1,017 家"
+      },
+      {
+        "id": "src-patent",
+        "name": "专利数据（CNIPA）",
+        "kind": "source",
+        "status": "pending",
+        "description": "国家知识产权局开放数据，免费；对应数据缺口 P0-4"
+      },
+      {
+        "id": "src-invest",
+        "name": "融资与投资机构",
+        "kind": "source",
+        "status": "pending",
+        "description": "企查查 / 天眼查 API，¥3,000 预算内；对应数据缺口 P0-5"
+      },
+      {
+        "id": "src-reg",
+        "name": "工商与资质变更",
+        "kind": "source",
+        "status": "pending",
+        "description": "高新证书、经营异常名录；依赖 userid→统一社会信用代码映射键（P0-1）"
+      },
+      {
+        "id": "src-news",
+        "name": "新闻与招聘文本",
+        "kind": "source",
+        "status": "pending",
+        "description": "非结构化文本，用于 SciBERT 语义向量化"
+      },
+      {
+        "id": "key-map",
+        "name": "主键映射",
+        "kind": "process",
+        "status": "blocked",
+        "description": "userid → 统一社会信用代码 / 企业名（缺口 P0-1，阻塞全部外部数据接入）"
+      },
+      {
+        "id": "preprocess",
+        "name": "预处理流水线",
+        "kind": "process",
+        "status": "ready",
+        "description": "src/data/preprocess.py：按 userid 分组切分 → 训练集中位数填充 → 1%/99% 缩尾 → Z-score"
+      },
+      {
+        "id": "text-embed",
+        "name": "SciBERT 向量化",
+        "kind": "process",
+        "status": "pending",
+        "description": "专利摘要 / 新闻切片 → 768 维语义向量"
+      },
+      {
+        "id": "graph-build",
+        "name": "异质图构建",
+        "kind": "process",
+        "status": "ready",
+        "description": "src/graph/panel_graph.py 面板自建图；synthetic.py 六类实体合成图"
+      },
+      {
+        "id": "panel-ds",
+        "name": "企业级面板数据集",
+        "kind": "dataset",
+        "status": "ready",
+        "description": "每企业平均 2 个月观测，纵深浅 → 长序列建模不可行"
+      },
+      {
+        "id": "hetero-graph",
+        "name": "六类实体异质图",
+        "kind": "dataset",
+        "status": "synthetic_only",
+        "description": "当前仅合成图（架构验证用），真实实体数据未接入"
+      },
+      {
+        "id": "feature-table",
+        "name": "标准化特征表",
+        "kind": "dataset",
+        "status": "partial",
+        "description": "技术要素 / 成长轨迹 / 融合特征三类；外部数据未接入前只有信贷面板字段"
+      }
+    ],
+    "edges": [
+      {
+        "from": "src-credit",
+        "to": "preprocess",
+        "label": "月度观测",
+        "status": "ready"
+      },
+      {
+        "from": "src-patent",
+        "to": "key-map",
+        "label": "申请号→企业",
+        "status": "pending"
+      },
+      {
+        "from": "src-invest",
+        "to": "key-map",
+        "label": "企业名→userid",
+        "status": "pending"
+      },
+      {
+        "from": "src-reg",
+        "to": "key-map",
+        "label": "信用代码",
+        "status": "pending"
+      },
+      {
+        "from": "src-news",
+        "to": "text-embed",
+        "label": "文本",
+        "status": "pending"
+      },
+      {
+        "from": "key-map",
+        "to": "graph-build",
+        "label": "实体对齐",
+        "status": "blocked"
+      },
+      {
+        "from": "preprocess",
+        "to": "panel-ds",
+        "label": "企业-月",
+        "status": "ready"
+      },
+      {
+        "from": "preprocess",
+        "to": "feature-table",
+        "label": "结构化特征",
+        "status": "partial"
+      },
+      {
+        "from": "text-embed",
+        "to": "feature-table",
+        "label": "语义特征",
+        "status": "pending"
+      },
+      {
+        "from": "graph-build",
+        "to": "hetero-graph",
+        "label": "节点/边",
+        "status": "synthetic_only"
+      }
+    ],
+    "steps": [
+      {
+        "order": 1,
+        "name": "按 userid 分组切分",
+        "impl": "src/data/preprocess.py",
+        "detail": "GroupShuffleSplit(userid) 7:1.5:1.5，禁止行级随机切分（会泄漏同企业跨月信息）",
+        "status": "ready"
+      },
+      {
+        "order": 2,
+        "name": "缺失值填充",
+        "impl": "src/data/preprocess.py",
+        "detail": "训练集中位数填充，统计量只在训练集拟合",
+        "status": "ready"
+      },
+      {
+        "order": 3,
+        "name": "缩尾",
+        "impl": "src/data/preprocess.py",
+        "detail": "1% / 99% 分位缩尾，边界取训练集",
+        "status": "ready"
+      },
+      {
+        "order": 4,
+        "name": "标准化",
+        "impl": "src/data/preprocess.py",
+        "detail": "Z-score，均值与方差取训练集",
+        "status": "ready"
+      },
+      {
+        "order": 5,
+        "name": "文本语义向量化",
+        "impl": "src/data/text_embed.py（待建）",
+        "detail": "SciBERT-base 768 维，句向量池化",
+        "status": "pending"
+      },
+      {
+        "order": 6,
+        "name": "多源融合",
+        "impl": "src/data/fusion.py（待建）",
+        "detail": "按 userid + 月份左连接外部特征，缺测保留 NaN 交给第 2 步",
+        "status": "blocked"
+      }
+    ]
+  }
+}

@@ -1,0 +1,466 @@
+{
+  "meta": {
+    "generated_at": "2026-10-22T12:37:21+08:00",
+    "script": "scripts/build_data_contracts.py",
+    "dataset": "real_panel",
+    "n_samples": 11,
+    "seed": 20261022,
+    "schema_version": "1.0",
+    "noise_floor": 0.477,
+    "semantic_known": false,
+    "label_ref": null,
+    "source": "demo_placeholder",
+    "disclaimer": "结构同构占位数据（demo_placeholder）：真实信贷面板尚未接入 data/processed，本契约仅用于前端页面结构与交互联调，不得作为任何实证结论引用。",
+    "redline": {
+      "no_mixed_dataset": true,
+      "noise_floor": 0.477,
+      "unknown_fields_shown_as_code": true
+    }
+  },
+  "data": {
+    "roots": [
+      {
+        "kind": "branch",
+        "name": "技术要素",
+        "code": "TECH",
+        "level": 1,
+        "hint": "专利 / 研发投入 / 核心团队 —— 对应项目三大目标之「技术要素」维度",
+        "data_ready": false,
+        "children": [
+          {
+            "kind": "branch",
+            "name": "知识产权",
+            "code": "TECH-IP",
+            "level": 2,
+            "hint": "发明专利占比、授权率、被引、技术广度、专利三值评分（待 CNIPA 数据接入）",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x037",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x037",
+                "type": "numeric",
+                "missing_rate": 0.12,
+                "used_in_model": true,
+                "note": "面板内字段，语义待字典确认",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.12,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": true,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              },
+              {
+                "kind": "leaf",
+                "field": "x052",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x052",
+                "type": "numeric",
+                "missing_rate": 0.31,
+                "used_in_model": true,
+                "note": "面板内字段，缺失率偏高",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.31,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": true,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "branch",
+            "name": "研发投入",
+            "code": "TECH-RD",
+            "level": 2,
+            "hint": "研发费用率、研发人员占比（待工商/年报数据接入）",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x108",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x108",
+                "type": "numeric",
+                "missing_rate": 0.04,
+                "used_in_model": true,
+                "note": "",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.04,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "branch",
+            "name": "核心团队",
+            "code": "TECH-TEAM",
+            "level": 2,
+            "hint": "核心人员稳定性、任职年限（待人员任职数据接入）",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x066",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x066",
+                "type": "numeric",
+                "missing_rate": 0.07,
+                "used_in_model": false,
+                "note": "仅入图，未进模型",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.07,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "branch",
+        "name": "成长轨迹",
+        "code": "GROW",
+        "level": 1,
+        "hint": "融资 / 里程碑 / 规模增长 —— 对应「成长轨迹」维度",
+        "data_ready": false,
+        "children": [
+          {
+            "kind": "branch",
+            "name": "融资历程",
+            "code": "GROW-FIN",
+            "level": 2,
+            "hint": "新获融资额、上轮估值比、投资机构知名度（待企查查/天眼查 API）",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x121",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x121",
+                "type": "numeric",
+                "missing_rate": 0.58,
+                "used_in_model": false,
+                "note": "缺失 58%，暂不进模型",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.58,
+                  "winsorized": false,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              },
+              {
+                "kind": "leaf",
+                "field": "x134",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x134",
+                "type": "category",
+                "missing_rate": 0.09,
+                "used_in_model": true,
+                "note": "",
+                "detail": {
+                  "dtype": "category",
+                  "missing_rate": 0.09,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "branch",
+            "name": "规模增长",
+            "code": "GROW-SCALE",
+            "level": 2,
+            "hint": "营收 / 员工 / 专利复合增长率",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x155",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x155",
+                "type": "numeric",
+                "missing_rate": 0.22,
+                "used_in_model": true,
+                "note": "",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.22,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              },
+              {
+                "kind": "leaf",
+                "field": "x147",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x147",
+                "type": "numeric",
+                "missing_rate": 0.26,
+                "used_in_model": false,
+                "note": "",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.26,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "branch",
+            "name": "里程碑事件",
+            "code": "GROW-MILE",
+            "level": 2,
+            "hint": "高新资质、融资轮次、团队变动虚拟变量（待工商变更数据）",
+            "data_ready": false,
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x094",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x094",
+                "type": "boolean",
+                "missing_rate": 0.18,
+                "used_in_model": false,
+                "note": "虚拟变量，未进模型",
+                "detail": {
+                  "dtype": "boolean",
+                  "missing_rate": 0.18,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "branch",
+        "name": "融合特征",
+        "code": "FUSE",
+        "level": 1,
+        "hint": "技术转化效率 / 资本技术协同度 / 图谱结构 —— 前两类需双维数据齐备后才能算",
+        "data_ready": false,
+        "children": [
+          {
+            "kind": "branch",
+            "name": "图谱结构",
+            "code": "FUSE-GRAPH",
+            "level": 2,
+            "hint": "度中心性、邻居平均信用、技术相似度（GAT 聚合后的结构特征）",
+            "data_ready": "partial",
+            "children": [
+              {
+                "kind": "leaf",
+                "field": "x163",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x163",
+                "type": "numeric",
+                "missing_rate": 0.06,
+                "used_in_model": true,
+                "note": "入图且进模型",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.06,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": true,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              },
+              {
+                "kind": "leaf",
+                "field": "x178",
+                "semantic_known": false,
+                "label_ref": "feature_dict.x178",
+                "type": "numeric",
+                "missing_rate": 0.41,
+                "used_in_model": false,
+                "note": "",
+                "detail": {
+                  "dtype": "numeric",
+                  "missing_rate": 0.41,
+                  "winsorized": true,
+                  "standardized": true,
+                  "fit_scope": "train_only",
+                  "in_graph": false,
+                  "shap_rank": null,
+                  "semantic_status": "unknown",
+                  "semantic_note": "字段字典（x21–x200）未补齐，仅显示原始代号；业务名一律经 label_ref 间接引用"
+                }
+              }
+            ]
+          },
+          {
+            "kind": "branch",
+            "name": "技术-资本协同",
+            "code": "FUSE-COOP",
+            "level": 2,
+            "hint": "技术转化效率、资本技术协同度（双维数据齐备后计算，当前为占位节点）",
+            "data_ready": false,
+            "children": []
+          }
+        ]
+      }
+    ],
+    "flat": [
+      {
+        "field": "x037",
+        "semantic_known": false,
+        "path": "技术要素 / 知识产权",
+        "type": "numeric",
+        "missing_rate": 0.12,
+        "used_in_model": true
+      },
+      {
+        "field": "x052",
+        "semantic_known": false,
+        "path": "技术要素 / 知识产权",
+        "type": "numeric",
+        "missing_rate": 0.31,
+        "used_in_model": true
+      },
+      {
+        "field": "x108",
+        "semantic_known": false,
+        "path": "技术要素 / 研发投入",
+        "type": "numeric",
+        "missing_rate": 0.04,
+        "used_in_model": true
+      },
+      {
+        "field": "x066",
+        "semantic_known": false,
+        "path": "技术要素 / 核心团队",
+        "type": "numeric",
+        "missing_rate": 0.07,
+        "used_in_model": false
+      },
+      {
+        "field": "x121",
+        "semantic_known": false,
+        "path": "成长轨迹 / 融资历程",
+        "type": "numeric",
+        "missing_rate": 0.58,
+        "used_in_model": false
+      },
+      {
+        "field": "x134",
+        "semantic_known": false,
+        "path": "成长轨迹 / 融资历程",
+        "type": "category",
+        "missing_rate": 0.09,
+        "used_in_model": true
+      },
+      {
+        "field": "x155",
+        "semantic_known": false,
+        "path": "成长轨迹 / 规模增长",
+        "type": "numeric",
+        "missing_rate": 0.22,
+        "used_in_model": true
+      },
+      {
+        "field": "x147",
+        "semantic_known": false,
+        "path": "成长轨迹 / 规模增长",
+        "type": "numeric",
+        "missing_rate": 0.26,
+        "used_in_model": false
+      },
+      {
+        "field": "x094",
+        "semantic_known": false,
+        "path": "成长轨迹 / 里程碑事件",
+        "type": "boolean",
+        "missing_rate": 0.18,
+        "used_in_model": false
+      },
+      {
+        "field": "x163",
+        "semantic_known": false,
+        "path": "融合特征 / 图谱结构",
+        "type": "numeric",
+        "missing_rate": 0.06,
+        "used_in_model": true
+      },
+      {
+        "field": "x178",
+        "semantic_known": false,
+        "path": "融合特征 / 图谱结构",
+        "type": "numeric",
+        "missing_rate": 0.41,
+        "used_in_model": false
+      }
+    ],
+    "summary": {
+      "level1": 3,
+      "level2": 9,
+      "leaves": 11,
+      "used_in_model": 6,
+      "semantic_known_leaves": 0,
+      "data_ready_branches": 0,
+      "blocked_by": [
+        "P0-1 userid→企业映射键",
+        "P0-2 x21–x200 字段字典"
+      ]
+    }
+  }
+}

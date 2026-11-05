@@ -6,36 +6,14 @@
 # 消费方式：前端不直接读 yaml，消费其类型化镜像 src/config/dataGaps.ts
 #       （与 styles/theme.ts ← configs/viz_theme.yaml 的生成机制同构，生成器后补）。
 # 状态枚举：missing（未到位）/ in_progress（推进中）/ ready（已到位）
-#
-# 防过期机制（2026-10-17 增补）：本文件为业务口径单一来源；首屏数字由
-#   scripts/sync_data_gaps.py 依据本文件 + 库内实况生成 configs/data_gaps.mirror.json，
-#   再由生成器刷新 src/config/dataGaps.ts。改完本文件请同步 meta.updated_at，
-#   并跑 `python scripts/sync_data_gaps.py --check`（CI）防止状态漂移 / 台账过期。
-#   探针映射见 configs/data_gaps_probe.yaml。
 # =============================================================================
 
 meta:
-  version: "1.0"
-  updated_at: "2026-10-17"
+  version: "1.1"
+  updated_at: "2026-11-04"
   maintainer: 袁雪茹（负责人/金融统筹）
 
 gaps:
-  - id: P0-1
-    name: userid → 统一社会信用代码/企业名映射键
-    status: missing
-    why: 无映射键则面板观测无法挂接企业实体，图谱与外源特征无法对齐
-    source: 信贷数据提供方
-    owner: 袁雪茹
-    blocks: [图谱对齐, 特征融合, P7单企业诊断]
-
-  - id: P0-2
-    name: x21–x200 字段字典
-    status: missing
-    why: SHAP 99% 贡献落在语义未知字段，业务解读与指标体系设计均被阻塞
-    source: 数据提供方字段说明文档
-    owner: 袁雪茹
-    blocks: [指标体系, 业务解读, 可解释性叙事]
-
   - id: P0-3
     name: label 标签口径定义
     status: missing
@@ -46,7 +24,7 @@ gaps:
 
   - id: P0-4
     name: 企业专利数据（技术要素）
-    status: in_progress
+    status: ready
     why: 技术要素维度完全缺失，是真实面板区分度弱（行级 AUC≈0.59）的主因之一
     source: CNIPA / 图书馆 Incopat（免费渠道已确认）
     owner: 吕键
