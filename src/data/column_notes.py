@@ -419,6 +419,115 @@ VIEW_NOTES["v_model_train_ready"] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# v1.4 口径诊断视图（依据数据交付包评审报告 XM-2026-RPT-001）
+# 它们不替换任何既有视图，只用来回答「这个数到底该信哪个」。
+# ---------------------------------------------------------------------------
+VIEW_COMMENTS["v_patent_master"] = (
+    "**专利唯一对外口径**：一行 = 一个申请号（30,103 行）。"
+    "对外报「专利件数」一律 COUNT(*) 本视图；fact_patent 是 32,969 行（A/B 两份文本各一行），"
+    "v_patent_canonical 是 30,346 行（一件专利 × 一个归属企业）"
+)
+VIEW_NOTES["v_patent_master"] = {
+    "app_no": "申请号，本视图唯一键（一件专利一行，不再按企业拆行）",
+    "patent_id_repr": "代表公告号：组内最小公告号，仅作追溯用",
+    "enterprise_id": "归属企业（多个归属时取任一家，具体见 join_status=multi_assignee）",
+    "n_enterprise": "该申请号归属几家企业（1=唯一，>1=同族跨企业申报）",
+    "join_status": "matched=已匹配单一企业 / multi_assignee=同一申请号归属多家企业 / "
+                   "unmatched=未匹配进 500 户清单",
+    "title": "专利名称",
+    "abstract": "摘要（源仅约 851 个申请号提供，缺失属源上限，不可回填）",
+    "has_abstract": "1=该申请号有摘要（851 个）/ 0=无",
+    "app_date": "申请日",
+    "app_year": "申请年，年度切片与 as-of 切分的时间基准",
+    "is_granted_ever": "**曾授权**（≠ 当前在权；算授权率必须用这一列）",
+    "grant_kind": "授权公告的 kind code（B/U/S/C），无授权则为 NULL",
+    "patent_type": "专利类型：invention / utility / design",
+    "ipc_main": "主 IPC 分类号",
+    "n_records": "该申请号在 fact_patent 里并入的原始行数（1 或 2）",
+}
+
+VIEW_COMMENTS["v_label_mechanism"] = (
+    "标签机制台账：n_events × cohort 的正例分布。"
+    "**用来钉住一个事实：n_events=1 的 21 家 100% 正例、n_events>=2 的 286 家 0% 正例，"
+    "标签≈「是否只被认定过一次」** —— n_events 绝不可进特征"
+)
+VIEW_NOTES["v_label_mechanism"] = {
+    "n_events": "资质认定次数（1 次 → 全为正例；>=2 次 → 全为负例）",
+    "cohort_year": "队列年（首次认定年）",
+    "n_enterprise": "该组企业数",
+    "n_positive": "该组正例数",
+    "n_negative": "该组负例数",
+    "positive_rate": "正例率；本表的设计用途就是让「完全分离」一眼可见",
+}
+
+VIEW_COMMENTS["v_model_train_ready_cv"] = (
+    "**交叉验证推荐口径**：在 v_model_train_ready 基础上加 fold_id（5 折、按 label 分层、"
+    "企业不跨折，每折正例 4~5 个）。原 split 的 val 只有 2 个正例，早停/阈值不可靠"
+)
+VIEW_NOTES["v_model_train_ready_cv"] = {
+    **VIEW_NOTES["v_model_train_ready"],
+    "fold_id": "1..5，按 label 分层后轮转分配；每折正例 >= 4，企业不跨折。"
+               "只做 CV 不做独立测试集时用它，不要再用 split",
+}
+
+VIEW_COMMENTS["v_feature_missing_reason"] = (
+    "特征缺失原因（仅列 is_available=0 的行）：把「缺多少」升级为「为什么缺」，"
+    "避免把「源没接入」和「该企业确实没有」混为一谈"
+)
+VIEW_NOTES["v_feature_missing_reason"] = {
+    "feature_name": "特征名（对应 ads_feature_asof.feature_name）",
+    "enterprise_id": "企业主键",
+    "as_of_policy": "时点口径：cohort=认定当年 / due_minus_1=到期前一年",
+    "as_of_year": "特征观测截止年（含）",
+    "missing_reason": "source_not_integrated=源数据未接入或经决策保持 NULL（见缺口登记册）/ "
+                      "no_patent_in_window=观察窗 2019..as_of 内无专利 / "
+                      "insufficient_sample=其他原料不足（如授权未过审结期）",
+    "n_patent_by_appyear": "申请年 <= as_of 的专利数（不看公开日）",
+    "n_patent_in_window": "观察窗 2019..as_of 内的专利数（ETL 实际使用的口径）",
+}
+
+VIEW_COMMENTS["v_graph_coverage"] = (
+    "图谱覆盖体检：每家企业各类边数一行看全，替代人工 COUNT（评审 §5.1 的复算入口）"
+)
+VIEW_NOTES["v_graph_coverage"] = {
+    "enterprise_id": "企业主键",
+    "name_display": "企业显示名",
+    "n_patent_edge": "files_patent 出边数（= 匹配到该企业的专利件数）",
+    "n_ipc_subclass": "该企业专利覆盖的 IPC 小类数",
+    "n_inventor": "该企业专利涉及的发明人数（v1.4 起已入图）",
+    "n_tech_similar": "tech_similar 边数（只算 top-20 邻居，无向边计一次）",
+    "n_investor": "funded_by 出边数（投资机构数，v1.4 起已入图）",
+}
+
+VIEW_COMMENTS["v_graph_patent_timeline"] = (
+    "年度切片规模台账：给算法端按 T 自建时序图用（口径 app_year <= T）。"
+    "预置图仍是全期单切片（time_slice=0），本视图只回答「每个 T 有多少料」"
+)
+VIEW_NOTES["v_graph_patent_timeline"] = {
+    "time_slice": "切片年 T（= 专利申请年上限）",
+    "n_patent": "该年新增申请号数",
+    "n_patent_matched": "该年新增且已匹配企业的申请号数",
+    "n_enterprise": "该年有专利申请的企业数（当年口径，非累计）",
+    "n_patent_cum": "截至 T 的累计申请号数（= T 切片图的节点规模）",
+    "n_patent_matched_cum": "截至 T 的累计已匹配申请号数（= T 切片 files_patent 边规模）",
+}
+
+VIEW_COMMENTS["v_train_ready_window_fixed"] = (
+    "等长观察窗复算表：把两个队列统一压到 as_of 前 3 年再比。"
+    "**队列专利数差异约有一半来自窗口长度（2021 只有 3 年、2022 有 4 年），不是技术能力**"
+)
+VIEW_NOTES["v_train_ready_window_fixed"] = {
+    "enterprise_id": "企业主键",
+    "cohort_year": "队列年",
+    "label": "标签（同 v_model_train_ready）",
+    "n_patent_3y": "cohort_year-2 .. cohort_year 三年内的申请号数（等长口径）",
+    "n_invention_3y": "同三年内的发明申请数",
+    "n_patent_window": "2019 .. cohort_year 的申请号数（= ETL 原口径，队列间不等长）",
+    "inv_patent_ratio_3y": "等长口径的发明专利占比",
+}
+
+
 def view_note_for(view: str, column: str) -> str:
     """视图列说明：视图专属 → 特征复用 → 通用。"""
     return (VIEW_NOTES.get(view, {}).get(column)

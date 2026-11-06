@@ -75,12 +75,15 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（63 项守卫）
+├── tests/                    单元测试 / 集成测试（82 项守卫）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
 │                             test_label_spec.py / test_patent_dedup.py
 │                             test_grant_definition.py / test_field_gap_registry.py
+│                             test_graph_v2.py（5 类节点 / 边陈旧 / 权重区分度）
+│                             test_label_mechanism.py（n_events 泄漏 / 5 折正例下限）
+│                             test_patent_master.py（专利唯一口径 30,103）
 │                             test_schema.py / test_collect_pool.py / selfcheck.py
 │
 ├── configs/                  配置文件
@@ -201,15 +204,38 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 | 2 | `score.value` 恒为 `null` 是设计 | 无可验证模型，只提供 `proxy_score`（`validated: false`），前端不得渲染成「信用分」 |
 | 3 | 两套数据不要混看 | A 信贷面板（1,714 家匿名 / 3,465 行）与 B 浙江高企（500 家 / 307 打标）样本、特征、标签都不同，只是共用同一套 API |
 
-### 6.4 两个已知坑
+### 6.4 四个已知坑
 
 - 专利数必须 `COUNT(DISTINCT app_no)`。`COUNT(*)` 得 32,969 行，实际 **30,103 件**，虚高 9%。
+  v1.4 起有唯一口径视图 `v_patent_master`（一行一个申请号，差额记在 `join_status` 里），
+  对外报数直接 `SELECT COUNT(*) FROM v_patent_master`。
 - `ads_model_dataset` 里 193 行 `split='excluded'` 是「认定窗口未闭合」，**不是负例**；
   当负例用会把正例率从 6.8% 稀释到 4.2%。
+- `n_events` 就是标签的定义式：认定 1 次的 21 家 100% 正例，≥2 次的 286 家 0% 正例。
+  **它绝不可进特征**（`tests/test_label_mechanism.py` 会拦），台账见 `v_label_mechanism`。
+- 观察窗起点固定 2019，2021 队列只有 3 年、2022 队列有 4 年。跨队列比专利数前先看
+  `v_train_ready_window_fixed`——统一压到 3 年后，队列均值差从 7.6 件降到 4.2 件。
 
-### 6.5 数据获取
+### 6.5 图谱口径（v1.4 重建）
 
-数据库 104 MB（33 表 / 9 视图 / 698 列），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+| 项 | v1.3 | v1.4 |
+|---|---|---|
+| 节点类型 | 3 类（企业 / 专利 / IPC） | **5 类**（+ 发明人 15,955 / 投资机构 572） |
+| 节点 / 边 | 45,077 / 101,491 | **61,604 / 171,229** |
+| 边语义 | files_patent / belongs_ipc / tech_similar | + **invented_by**（77,899）/ **funded_by**（583） |
+| `files_patent` | 29,751（**陈旧，漏 2,452 条**） | 32,203，与已匹配专利逐条对账 |
+| `tech_similar` | Jaccard 全量连边 19,945 条，权重中位 0.138、≥0.3 仅 663 条 | TF-IDF 余弦 + top-20，8,749 条，权重中位 **0.268**、p90 **0.500**、≥0.3 **3,574** 条；覆盖企业 294 → **490** |
+| 时间切片 | 单切片（`time_slice=0`） | 预置图仍是全期单切片；`v_graph_patent_timeline` 给每个 T 的规模，按 `app_year <= T` 自建年度切片 |
+
+重建命令：`python -m src.data.build_graph_v2`（幂等，可重复跑；`--dry-run` 只核对陈旧缺口）。
+企业节点无孤立点（0 家无任何边），5 家企业没有技术相似边但都有专利边。
+
+立项书写的六类实体里仍差「领域」「产品」：领域可由 IPC 部/大类等价替代（已在图内），
+产品在现有源数据中**完全没有**，登记为缺口，不做任何推断回填。
+
+### 6.6 数据获取
+
+数据库 138 MB（33 表 / 16 视图 / 764 列），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -217,7 +243,7 @@ unzip zjtech_credit_data.zip -d .          # 得到 05_数据库/zjtech_credit.d
 mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 ```
 
-附件里还带数据字典（698 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
+附件里还带数据字典（764 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 ## 七、归档规则

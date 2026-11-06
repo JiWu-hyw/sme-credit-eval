@@ -2,421 +2,421 @@
   "summary": {
     "metric": "weighted_degree（主）/ degree / pagerank",
     "n_nodes": 500,
-    "n_edges": 19945,
+    "n_edges": 8749,
     "degree": {
       "min": 0,
-      "max": 199,
-      "median": 80,
-      "p90": 136,
-      "n_isolated": 11
+      "max": 112,
+      "median": 30,
+      "p90": 62,
+      "n_isolated": 5
     },
     "weighted_degree": {
       "min": 0,
-      "max": 30.988,
-      "median": 12.622,
-      "p90": 21.2816
+      "max": 32.041,
+      "median": 9.3728,
+      "p90": 17.359
     }
   },
   "top": [
     {
       "rank": 1,
-      "enterprise_id": "ENT7A1493947B9B",
-      "name": "浙江骏融汽车零部件有限公司",
-      "degree": 151,
-      "weighted_degree": 30.988,
-      "pagerank": 0.003407
+      "enterprise_id": "ENTD9D5A5A4989B",
+      "name": "杭州新视窗信息技术有限公司",
+      "degree": 77,
+      "weighted_degree": 32.041,
+      "pagerank": 0.003966
     },
     {
       "rank": 2,
-      "enterprise_id": "ENT2803CAE1D888",
-      "name": "浙江科恩特电机科技有限公司",
-      "degree": 199,
-      "weighted_degree": 29.258,
-      "pagerank": 0.004387
+      "enterprise_id": "ENTF6963CA578B5",
+      "name": "杭州分叉智能科技有限公司",
+      "degree": 75,
+      "weighted_degree": 31.151,
+      "pagerank": 0.003846
     },
     {
       "rank": 3,
-      "enterprise_id": "ENTDBEAFCA6751E",
-      "name": "巴萨电气科技有限公司",
-      "degree": 178,
-      "weighted_degree": 28.174,
-      "pagerank": 0.004067
+      "enterprise_id": "ENT5712BF8D7048",
+      "name": "浙江浙大网新软件产业集团有限公司",
+      "degree": 48,
+      "weighted_degree": 26.566,
+      "pagerank": 0.00262
     },
     {
       "rank": 4,
-      "enterprise_id": "ENTA9CD8F1BF347",
-      "name": "浙江迈兴机械股份有限公司",
-      "degree": 151,
-      "weighted_degree": 27.804,
-      "pagerank": 0.00345
+      "enterprise_id": "ENTFBBA3C1D0FC4",
+      "name": "杭州青橄榄网络技术有限公司",
+      "degree": 66,
+      "weighted_degree": 26.2,
+      "pagerank": 0.003399
     },
     {
       "rank": 5,
-      "enterprise_id": "ENT1C6703755E96",
-      "name": "斯捷尔传动机械（杭州）有限公司",
-      "degree": 159,
-      "weighted_degree": 27.573,
-      "pagerank": 0.003578
+      "enterprise_id": "ENTF0F6F054DBEE",
+      "name": "六晟信息科技（杭州）有限公司",
+      "degree": 64,
+      "weighted_degree": 25.774,
+      "pagerank": 0.003317
     },
     {
       "rank": 6,
-      "enterprise_id": "ENT2F98382B4687",
-      "name": "浙江奥博管业股份有限公司",
-      "degree": 189,
-      "weighted_degree": 27.131,
-      "pagerank": 0.004193
+      "enterprise_id": "ENTF22C9B871455",
+      "name": "温州龙华日用电子有限公司",
+      "degree": 104,
+      "weighted_degree": 25.689,
+      "pagerank": 0.005327
     },
     {
       "rank": 7,
-      "enterprise_id": "ENT59A2E4770F2A",
-      "name": "浙江瑞亨电子材料有限公司",
-      "degree": 174,
-      "weighted_degree": 27.061,
-      "pagerank": 0.003898
+      "enterprise_id": "ENTFAEC204AE8C6",
+      "name": "杭州芯控智能科技有限公司",
+      "degree": 112,
+      "weighted_degree": 25.114,
+      "pagerank": 0.005587
     },
     {
       "rank": 8,
-      "enterprise_id": "ENT21F3584918D9",
-      "name": "桐乡市佑泰新材料有限公司",
-      "degree": 175,
-      "weighted_degree": 27.054,
-      "pagerank": 0.003882
+      "enterprise_id": "ENTA9CD8F1BF347",
+      "name": "浙江迈兴机械股份有限公司",
+      "degree": 82,
+      "weighted_degree": 24.789,
+      "pagerank": 0.004314
     },
     {
       "rank": 9,
-      "enterprise_id": "ENT6471E16B4A47",
-      "name": "浙江朝舜机电有限公司",
-      "degree": 179,
-      "weighted_degree": 26.998,
-      "pagerank": 0.004
+      "enterprise_id": "ENT7A1493947B9B",
+      "name": "浙江骏融汽车零部件有限公司",
+      "degree": 68,
+      "weighted_degree": 24.57,
+      "pagerank": 0.003662
     },
     {
       "rank": 10,
-      "enterprise_id": "ENT398257A2F9AD",
-      "name": "嘉兴正野新材料有限公司",
-      "degree": 154,
-      "weighted_degree": 26.945,
-      "pagerank": 0.00355
+      "enterprise_id": "ENTE0402E62F5BF",
+      "name": "浙江洛克新材料股份有限公司",
+      "degree": 87,
+      "weighted_degree": 24.123,
+      "pagerank": 0.004512
     },
     {
       "rank": 11,
-      "enterprise_id": "ENT0ECACD20BC1D",
-      "name": "新昌新天龙纽尚精密轴承有限公司",
-      "degree": 159,
-      "weighted_degree": 26.931,
-      "pagerank": 0.003568
+      "enterprise_id": "ENTA1A28C647B4D",
+      "name": "易联云计算（杭州）有限责任公司",
+      "degree": 57,
+      "weighted_degree": 23.478,
+      "pagerank": 0.003027
     },
     {
       "rank": 12,
-      "enterprise_id": "ENTC140AB2F4EC9",
-      "name": "浙江开诚机械有限公司",
-      "degree": 147,
-      "weighted_degree": 26.406,
-      "pagerank": 0.003338
+      "enterprise_id": "ENTDBEAFCA6751E",
+      "name": "巴萨电气科技有限公司",
+      "degree": 76,
+      "weighted_degree": 23.029,
+      "pagerank": 0.003915
     },
     {
       "rank": 13,
-      "enterprise_id": "ENT9215B362C095",
-      "name": "浙江大齐机械有限公司",
-      "degree": 144,
-      "weighted_degree": 26.252,
-      "pagerank": 0.003218
+      "enterprise_id": "ENTC09F49E9F347",
+      "name": "浙江天航咨询监理有限公司",
+      "degree": 56,
+      "weighted_degree": 22.861,
+      "pagerank": 0.002925
     },
     {
       "rank": 14,
-      "enterprise_id": "ENT2F3337C928AD",
-      "name": "浙江博秦精密工业有限公司",
-      "degree": 158,
-      "weighted_degree": 26.167,
-      "pagerank": 0.003529
+      "enterprise_id": "ENT9EC65FAE73CC",
+      "name": "浙江九州云信息科技有限公司",
+      "degree": 49,
+      "weighted_degree": 22.712,
+      "pagerank": 0.002629
     },
     {
       "rank": 15,
-      "enterprise_id": "ENT6E343B6E16A7",
-      "name": "浙江闻道智能装备有限公司",
-      "degree": 153,
-      "weighted_degree": 25.829,
-      "pagerank": 0.003475
+      "enterprise_id": "ENT7A82E4387E5D",
+      "name": "杭州火奴数据科技有限公司",
+      "degree": 43,
+      "weighted_degree": 22.664,
+      "pagerank": 0.002326
     },
     {
       "rank": 16,
-      "enterprise_id": "ENTA7510AF90346",
-      "name": "浙江蓝圣智能装备有限公司",
-      "degree": 159,
-      "weighted_degree": 25.407,
-      "pagerank": 0.003628
+      "enterprise_id": "ENTAC04671A18B7",
+      "name": "浙江锠泰机械工业有限公司",
+      "degree": 68,
+      "weighted_degree": 22.265,
+      "pagerank": 0.003562
     },
     {
       "rank": 17,
-      "enterprise_id": "ENT0B00856F11EB",
-      "name": "浙江海拓环宇传动科技有限公司",
-      "degree": 133,
-      "weighted_degree": 24.596,
-      "pagerank": 0.003144
+      "enterprise_id": "ENTB2962F73FCA6",
+      "name": "浙江鼎胜环保技术有限公司",
+      "degree": 68,
+      "weighted_degree": 21.89,
+      "pagerank": 0.003539
     },
     {
       "rank": 18,
-      "enterprise_id": "ENT2F38906CDC4D",
-      "name": "嘉兴达鼎自动化科技有限公司",
-      "degree": 151,
-      "weighted_degree": 24.542,
-      "pagerank": 0.003419
+      "enterprise_id": "ENT8EF83BC2B8AA",
+      "name": "杭州炽橙数字科技有限公司",
+      "degree": 53,
+      "weighted_degree": 21.828,
+      "pagerank": 0.002827
     },
     {
       "rank": 19,
-      "enterprise_id": "ENT0E8637C953A9",
-      "name": "杭州爱津生物技术有限公司",
-      "degree": 161,
-      "weighted_degree": 24.53,
-      "pagerank": 0.003636
+      "enterprise_id": "ENT9215B362C095",
+      "name": "浙江大齐机械有限公司",
+      "degree": 61,
+      "weighted_degree": 21.415,
+      "pagerank": 0.003262
     },
     {
       "rank": 20,
-      "enterprise_id": "ENT604E3D282861",
-      "name": "浙江爱客能源设备有限公司",
-      "degree": 153,
-      "weighted_degree": 24.523,
-      "pagerank": 0.003561
+      "enterprise_id": "ENTD55C62F22D54",
+      "name": "新昌县三特自动化科技有限公司",
+      "degree": 77,
+      "weighted_degree": 21.243,
+      "pagerank": 0.003987
     },
     {
       "rank": 21,
-      "enterprise_id": "ENTC2F4090FE973",
-      "name": "浙江华田特种材料有限公司",
-      "degree": 157,
-      "weighted_degree": 24.476,
-      "pagerank": 0.003525
+      "enterprise_id": "ENTDC522C46F009",
+      "name": "浙江嘉兴数字城市实验室有限公司",
+      "degree": 66,
+      "weighted_degree": 20.863,
+      "pagerank": 0.003422
     },
     {
       "rank": 22,
-      "enterprise_id": "ENT28525C70EF10",
-      "name": "华芯（嘉兴）智能装备有限公司",
-      "degree": 163,
-      "weighted_degree": 24.457,
-      "pagerank": 0.00378
+      "enterprise_id": "ENTA131E8F36058",
+      "name": "浙江布石新材料有限公司",
+      "degree": 67,
+      "weighted_degree": 20.311,
+      "pagerank": 0.00358
     },
     {
       "rank": 23,
-      "enterprise_id": "ENT9C87769A89B9",
-      "name": "浙江百润轴承有限公司",
-      "degree": 159,
-      "weighted_degree": 24.457,
-      "pagerank": 0.003571
+      "enterprise_id": "ENT38543026CCC0",
+      "name": "杭州云链趣链数字科技有限公司",
+      "degree": 32,
+      "weighted_degree": 19.692,
+      "pagerank": 0.001846
     },
     {
       "rank": 24,
-      "enterprise_id": "ENTA131E8F36058",
-      "name": "浙江布石新材料有限公司",
-      "degree": 146,
-      "weighted_degree": 24.235,
-      "pagerank": 0.003363
+      "enterprise_id": "ENTC140AB2F4EC9",
+      "name": "浙江开诚机械有限公司",
+      "degree": 73,
+      "weighted_degree": 19.578,
+      "pagerank": 0.003817
     },
     {
       "rank": 25,
-      "enterprise_id": "ENTE1AF641ED472",
-      "name": "杭州凡诺电子有限公司",
-      "degree": 174,
-      "weighted_degree": 23.869,
-      "pagerank": 0.003948
+      "enterprise_id": "ENTC19D3709010D",
+      "name": "嘉善边锋机械股份有限公司",
+      "degree": 83,
+      "weighted_degree": 19.561,
+      "pagerank": 0.00428
     },
     {
       "rank": 26,
-      "enterprise_id": "ENT30CC0F212934",
-      "name": "海盐欧亚特汽配有限公司",
-      "degree": 148,
-      "weighted_degree": 23.795,
+      "enterprise_id": "ENTA9589DB6C499",
+      "name": "杭州川禾机械有限公司",
+      "degree": 62,
+      "weighted_degree": 19.554,
       "pagerank": 0.003319
     },
     {
       "rank": 27,
-      "enterprise_id": "ENTD35A54C82750",
-      "name": "浙江浪潮精密机械有限公司",
-      "degree": 163,
-      "weighted_degree": 23.503,
-      "pagerank": 0.003629
+      "enterprise_id": "ENTEB8B782F844C",
+      "name": "杭州速博雷尔传动机械有限公司",
+      "degree": 79,
+      "weighted_degree": 19.546,
+      "pagerank": 0.00409
     },
     {
       "rank": 28,
-      "enterprise_id": "ENT4E38D9F2F444",
-      "name": "杭州博野精密工具有限公司",
-      "degree": 147,
-      "weighted_degree": 23.366,
-      "pagerank": 0.003328
+      "enterprise_id": "ENTA7510AF90346",
+      "name": "浙江蓝圣智能装备有限公司",
+      "degree": 56,
+      "weighted_degree": 19.514,
+      "pagerank": 0.003057
     },
     {
       "rank": 29,
-      "enterprise_id": "ENT0E811CE98ED1",
-      "name": "杭州国辰机器人科技有限公司",
-      "degree": 162,
-      "weighted_degree": 23.324,
-      "pagerank": 0.003638
+      "enterprise_id": "ENTE5DE0A0BE4C3",
+      "name": "绍兴市三合检测技术有限公司",
+      "degree": 79,
+      "weighted_degree": 19.448,
+      "pagerank": 0.004093
     },
     {
       "rank": 30,
-      "enterprise_id": "ENT3694852B93BA",
-      "name": "海盐得胜化工设备有限公司",
-      "degree": 163,
-      "weighted_degree": 23.213,
-      "pagerank": 0.003651
+      "enterprise_id": "ENT830F426BD7AD",
+      "name": "浙江浙达能源科技有限公司",
+      "degree": 46,
+      "weighted_degree": 19.361,
+      "pagerank": 0.002492
     },
     {
       "rank": 31,
-      "enterprise_id": "ENTA9589DB6C499",
-      "name": "杭州川禾机械有限公司",
-      "degree": 138,
-      "weighted_degree": 22.644,
-      "pagerank": 0.003141
+      "enterprise_id": "ENT3F02E7725D3C",
+      "name": "华数云科技有限公司",
+      "degree": 35,
+      "weighted_degree": 19.352,
+      "pagerank": 0.001991
     },
     {
       "rank": 32,
-      "enterprise_id": "ENTA4A9F4336F82",
-      "name": "开源环境科技集团有限公司",
-      "degree": 142,
-      "weighted_degree": 22.607,
-      "pagerank": 0.003308
+      "enterprise_id": "ENTCEAB52C7F79D",
+      "name": "杭州泰姆电气有限公司",
+      "degree": 50,
+      "weighted_degree": 19.325,
+      "pagerank": 0.002705
     },
     {
       "rank": 33,
-      "enterprise_id": "ENT08DA5C3FAC6D",
-      "name": "嘉兴凯隆智能科技股份有限公司",
-      "degree": 148,
-      "weighted_degree": 22.517,
-      "pagerank": 0.003308
+      "enterprise_id": "ENTEE51D37E34A6",
+      "name": "浙江恒隆智慧科技集团有限公司",
+      "degree": 75,
+      "weighted_degree": 19.117,
+      "pagerank": 0.003831
     },
     {
       "rank": 34,
-      "enterprise_id": "ENT238F46AAA02E",
-      "name": "韦德电子有限公司",
-      "degree": 146,
-      "weighted_degree": 22.496,
-      "pagerank": 0.003483
+      "enterprise_id": "ENTE87E8C5F541B",
+      "name": "长城电器集团浙江科技有限公司",
+      "degree": 70,
+      "weighted_degree": 19.105,
+      "pagerank": 0.003624
     },
     {
       "rank": 35,
-      "enterprise_id": "ENT1D819DA79D43",
-      "name": "杭州中为光电技术有限公司",
-      "degree": 149,
-      "weighted_degree": 22.443,
-      "pagerank": 0.003386
+      "enterprise_id": "ENTF39130CB80B5",
+      "name": "嘉兴创奇电缆有限公司",
+      "degree": 77,
+      "weighted_degree": 19.041,
+      "pagerank": 0.003916
     },
     {
       "rank": 36,
-      "enterprise_id": "ENT0A80A443F298",
-      "name": "浙江澳宇新材料科技有限公司",
-      "degree": 141,
-      "weighted_degree": 22.36,
-      "pagerank": 0.003225
+      "enterprise_id": "ENTB6CEB7C6B176",
+      "name": "浙江恒嘉轴承有限公司",
+      "degree": 65,
+      "weighted_degree": 19.015,
+      "pagerank": 0.003418
     },
     {
       "rank": 37,
-      "enterprise_id": "ENT9A96BD13D879",
-      "name": "杭州构建新型材料有限公司",
-      "degree": 134,
-      "weighted_degree": 22.33,
-      "pagerank": 0.003114
+      "enterprise_id": "ENT48B80909998A",
+      "name": "杭州邻汇网络科技有限公司",
+      "degree": 37,
+      "weighted_degree": 18.805,
+      "pagerank": 0.002081
     },
     {
       "rank": 38,
-      "enterprise_id": "ENT99D9D5762EF9",
-      "name": "浙江翱腾智能科技股份有限公司",
-      "degree": 147,
-      "weighted_degree": 22.303,
-      "pagerank": 0.003321
+      "enterprise_id": "ENTF4E298127D0A",
+      "name": "浙江省环境科技有限公司",
+      "degree": 89,
+      "weighted_degree": 18.631,
+      "pagerank": 0.004608
     },
     {
       "rank": 39,
-      "enterprise_id": "ENTE0402E62F5BF",
-      "name": "浙江洛克新材料股份有限公司",
-      "degree": 129,
-      "weighted_degree": 22.276,
-      "pagerank": 0.003
+      "enterprise_id": "ENTAD57CD30B9F4",
+      "name": "杭州华虹电子设备科技有限公司",
+      "degree": 71,
+      "weighted_degree": 18.622,
+      "pagerank": 0.003751
     },
     {
       "rank": 40,
-      "enterprise_id": "ENT047D1025AAF3",
-      "name": "浙江博纳华创汽车部件有限公司",
-      "degree": 130,
-      "weighted_degree": 22.258,
-      "pagerank": 0.002986
+      "enterprise_id": "ENTB8292D18E2A4",
+      "name": "杭州耐特阀门股份有限公司",
+      "degree": 59,
+      "weighted_degree": 18.584,
+      "pagerank": 0.003159
     },
     {
       "rank": 41,
-      "enterprise_id": "ENTEB8B782F844C",
-      "name": "杭州速博雷尔传动机械有限公司",
-      "degree": 122,
-      "weighted_degree": 21.83,
-      "pagerank": 0.00281
+      "enterprise_id": "ENT44839DECBC67",
+      "name": "杭州量知数据科技有限公司",
+      "degree": 31,
+      "weighted_degree": 18.42,
+      "pagerank": 0.001767
     },
     {
       "rank": 42,
-      "enterprise_id": "ENT47622F6F1A7A",
-      "name": "浙江嘉宁环保新材料科技有限公司",
-      "degree": 128,
-      "weighted_degree": 21.782,
-      "pagerank": 0.003018
+      "enterprise_id": "ENTF99DEE3870D1",
+      "name": "杭州富阳海康保泰安防技术服务有限公司",
+      "degree": 77,
+      "weighted_degree": 18.387,
+      "pagerank": 0.003937
     },
     {
       "rank": 43,
-      "enterprise_id": "ENT21169537B66D",
-      "name": "杭州邦林粘合科技有限公司",
-      "degree": 129,
-      "weighted_degree": 21.776,
-      "pagerank": 0.003018
+      "enterprise_id": "ENTA9F75FE15A84",
+      "name": "浙江希瑞新材料技术有限公司",
+      "degree": 78,
+      "weighted_degree": 18.338,
+      "pagerank": 0.004105
     },
     {
       "rank": 44,
-      "enterprise_id": "ENTCBB3D6E27B20",
-      "name": "杭州吉众机电股份有限公司",
-      "degree": 136,
-      "weighted_degree": 21.769,
-      "pagerank": 0.003116
+      "enterprise_id": "ENT48E387F92EB9",
+      "name": "杭州巨灵兽智能科技有限公司",
+      "degree": 31,
+      "weighted_degree": 18.323,
+      "pagerank": 0.001755
     },
     {
       "rank": 45,
-      "enterprise_id": "ENT5E839E18CDB5",
-      "name": "浙江英智杰自动化设备有限公司",
-      "degree": 131,
-      "weighted_degree": 21.579,
-      "pagerank": 0.003037
+      "enterprise_id": "ENTCDCB524F6925",
+      "name": "浙江海牛环境科技股份有限公司",
+      "degree": 61,
+      "weighted_degree": 18.279,
+      "pagerank": 0.003238
     },
     {
       "rank": 46,
-      "enterprise_id": "ENTD55C62F22D54",
-      "name": "新昌县三特自动化科技有限公司",
-      "degree": 115,
-      "weighted_degree": 21.543,
-      "pagerank": 0.002688
+      "enterprise_id": "ENTCBB3D6E27B20",
+      "name": "杭州吉众机电股份有限公司",
+      "degree": 68,
+      "weighted_degree": 17.968,
+      "pagerank": 0.003563
     },
     {
       "rank": 47,
-      "enterprise_id": "ENT71DC6FCFDE62",
-      "name": "江山市艺康化学有限公司",
-      "degree": 131,
-      "weighted_degree": 21.539,
-      "pagerank": 0.003063
+      "enterprise_id": "ENTE269A6AE5457",
+      "name": "浙江地球管业有限公司",
+      "degree": 66,
+      "weighted_degree": 17.767,
+      "pagerank": 0.00348
     },
     {
       "rank": 48,
-      "enterprise_id": "ENTA9F75FE15A84",
-      "name": "浙江希瑞新材料技术有限公司",
-      "degree": 147,
-      "weighted_degree": 21.521,
-      "pagerank": 0.003311
+      "enterprise_id": "ENT973C3D7EE8FB",
+      "name": "浙江保禄包装科技股份有限公司",
+      "degree": 55,
+      "weighted_degree": 17.58,
+      "pagerank": 0.003013
     },
     {
       "rank": 49,
-      "enterprise_id": "ENT1F5B3C5933D3",
-      "name": "杭州杭叉机械设备制造有限公司",
-      "degree": 148,
-      "weighted_degree": 21.491,
-      "pagerank": 0.00339
+      "enterprise_id": "ENTD03FA5997281",
+      "name": "杭州宇诺电子科技有限公司",
+      "degree": 61,
+      "weighted_degree": 17.51,
+      "pagerank": 0.003218
     },
     {
       "rank": 50,
-      "enterprise_id": "ENT7F6D57720EB2",
-      "name": "杭州祥生砂光机制造有限公司",
-      "degree": 130,
-      "weighted_degree": 21.381,
-      "pagerank": 0.003024
+      "enterprise_id": "ENT6E343B6E16A7",
+      "name": "浙江闻道智能装备有限公司",
+      "degree": 52,
+      "weighted_degree": 17.503,
+      "pagerank": 0.002881
     }
   ],
   "definition": {
@@ -430,8 +430,8 @@
     "displayable": true,
     "source": "ads_graph_edge（edge_type='tech_similar'，19,945 条）",
     "method": "度/加权度直接聚合；PageRank 用标准幂迭代实现",
-    "generated_at": "2026-11-06 00:17:56",
-    "schema_version": "v1.3",
+    "generated_at": "2026-11-06 16:33:40",
+    "schema_version": "v1.4",
     "note": "图形结构由本项目真实专利共现构建，非合成"
   }
 }

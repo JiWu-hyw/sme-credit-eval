@@ -1,31 +1,48 @@
 {
   "summary": {
-    "n_nodes": 45077,
-    "n_edges": 101491,
-    "n_node_types": 3,
-    "n_edge_types": 3,
-    "density_approx": 2.2515,
-    "n_enterprise_components": 12,
-    "largest_component": 489
+    "n_nodes": 61604,
+    "n_edges": 171229,
+    "n_node_types": 5,
+    "n_edge_types": 5,
+    "density_approx": 2.7795,
+    "n_enterprise_components": 6,
+    "largest_component": 495
   },
   "node_types": [
     {
       "type": "patent",
       "n": 32969,
-      "share": 0.7314
+      "share": 0.5352
+    },
+    {
+      "type": "inventor",
+      "n": 15955,
+      "share": 0.259
     },
     {
       "type": "ipc",
       "n": 11608,
-      "share": 0.2575
+      "share": 0.1884
+    },
+    {
+      "type": "investor",
+      "n": 572,
+      "share": 0.0093
     },
     {
       "type": "enterprise",
       "n": 500,
-      "share": 0.0111
+      "share": 0.0081
     }
   ],
   "edge_types": [
+    {
+      "type": "invented_by",
+      "src_type": "patent",
+      "dst_type": "inventor",
+      "n": 77899,
+      "weight_sum": 55434.0
+    },
     {
       "type": "belongs_ipc",
       "src_type": "patent",
@@ -37,21 +54,28 @@
       "type": "files_patent",
       "src_type": "enterprise",
       "dst_type": "patent",
-      "n": 29751,
-      "weight_sum": 29729.7
+      "n": 32203,
+      "weight_sum": 32126.15
     },
     {
       "type": "tech_similar",
       "src_type": "enterprise",
       "dst_type": "enterprise",
-      "n": 19945,
-      "weight_sum": 3125.39
+      "n": 8749,
+      "weight_sum": 2559.06
+    },
+    {
+      "type": "funded_by",
+      "src_type": "enterprise",
+      "dst_type": "investor",
+      "n": 583,
+      "weight_sum": 583.0
     }
   ],
   "time_slices": [
     {
       "time_slice": 0,
-      "n_nodes": 45077
+      "n_nodes": 61604
     }
   ],
   "degree_distribution": [
@@ -59,72 +83,60 @@
       "node_type": "enterprise",
       "bins": [
         {
-          "degree": 3,
-          "n_nodes": 1
-        },
-        {
-          "degree": 4,
-          "n_nodes": 1
-        },
-        {
-          "degree": 6,
-          "n_nodes": 1
-        },
-        {
-          "degree": 11,
-          "n_nodes": 1
-        },
-        {
           "degree": 13,
           "n_nodes": 1
         },
         {
-          "degree": 16,
-          "n_nodes": 1
-        },
-        {
-          "degree": 18,
+          "degree": 14,
           "n_nodes": 1
         },
         {
           "degree": 19,
-          "n_nodes": 2
-        },
-        {
-          "degree": 20,
-          "n_nodes": 2
-        },
-        {
-          "degree": 21,
           "n_nodes": 1
         },
         {
-          "degree": 23,
+          "degree": 20,
           "n_nodes": 1
         },
         {
           "degree": 24,
-          "n_nodes": 2
+          "n_nodes": 1
+        },
+        {
+          "degree": 25,
+          "n_nodes": 1
         },
         {
           "degree": 26,
           "n_nodes": 1
         },
         {
-          "degree": 27,
+          "degree": 30,
           "n_nodes": 1
         },
         {
           "degree": 31,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 32,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 33,
           "n_nodes": 1
+        },
+        {
+          "degree": 35,
+          "n_nodes": 1
+        },
+        {
+          "degree": 36,
+          "n_nodes": 2
+        },
+        {
+          "degree": 37,
+          "n_nodes": 3
         },
         {
           "degree": 39,
@@ -135,16 +147,32 @@
           "n_nodes": 1
         },
         {
+          "degree": 42,
+          "n_nodes": 1
+        },
+        {
           "degree": 43,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 44,
           "n_nodes": 2
         },
         {
+          "degree": 45,
+          "n_nodes": 2
+        },
+        {
           "degree": 46,
-          "n_nodes": 1
+          "n_nodes": 3
+        },
+        {
+          "degree": 47,
+          "n_nodes": 2
+        },
+        {
+          "degree": 48,
+          "n_nodes": 3
         },
         {
           "degree": 49,
@@ -152,59 +180,75 @@
         },
         {
           "degree": 50,
-          "n_nodes": 1
+          "n_nodes": 11
+        },
+        {
+          "degree": 51,
+          "n_nodes": 5
         },
         {
           "degree": 52,
-          "n_nodes": 2
+          "n_nodes": 5
         },
         {
           "degree": 53,
-          "n_nodes": 1
+          "n_nodes": 2
         },
         {
           "degree": 54,
-          "n_nodes": 4
+          "n_nodes": 3
         },
         {
           "degree": 55,
-          "n_nodes": 1
+          "n_nodes": 3
+        },
+        {
+          "degree": 56,
+          "n_nodes": 3
+        },
+        {
+          "degree": 57,
+          "n_nodes": 2
         },
         {
           "degree": 58,
-          "n_nodes": 1
+          "n_nodes": 2
         },
         {
           "degree": 59,
           "n_nodes": 2
         },
         {
+          "degree": 60,
+          "n_nodes": 7
+        },
+        {
           "degree": 61,
-          "n_nodes": 1
+          "n_nodes": 4
         },
         {
           "degree": 62,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 63,
-          "n_nodes": 2
-        },
-        {
-          "degree": 64,
-          "n_nodes": 1
-        },
-        {
-          "degree": 65,
-          "n_nodes": 2
-        },
-        {
-          "degree": 66,
           "n_nodes": 3
         },
         {
+          "degree": 64,
+          "n_nodes": 7
+        },
+        {
+          "degree": 65,
+          "n_nodes": 7
+        },
+        {
+          "degree": 66,
+          "n_nodes": 5
+        },
+        {
           "degree": 67,
-          "n_nodes": 2
+          "n_nodes": 8
         },
         {
           "degree": 68,
@@ -212,19 +256,23 @@
         },
         {
           "degree": 69,
-          "n_nodes": 2
+          "n_nodes": 5
         },
         {
           "degree": 70,
-          "n_nodes": 1
+          "n_nodes": 7
         },
         {
           "degree": 71,
-          "n_nodes": 1
+          "n_nodes": 10
+        },
+        {
+          "degree": 72,
+          "n_nodes": 3
         },
         {
           "degree": 73,
-          "n_nodes": 1
+          "n_nodes": 4
         },
         {
           "degree": 74,
@@ -232,23 +280,23 @@
         },
         {
           "degree": 75,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 76,
-          "n_nodes": 2
+          "n_nodes": 11
         },
         {
           "degree": 77,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 78,
-          "n_nodes": 2
+          "n_nodes": 3
         },
         {
           "degree": 79,
-          "n_nodes": 3
+          "n_nodes": 5
         },
         {
           "degree": 80,
@@ -256,19 +304,19 @@
         },
         {
           "degree": 81,
-          "n_nodes": 4
+          "n_nodes": 3
         },
         {
           "degree": 82,
-          "n_nodes": 2
+          "n_nodes": 3
         },
         {
           "degree": 83,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 84,
-          "n_nodes": 5
+          "n_nodes": 6
         },
         {
           "degree": 85,
@@ -276,11 +324,15 @@
         },
         {
           "degree": 86,
-          "n_nodes": 1
+          "n_nodes": 5
+        },
+        {
+          "degree": 87,
+          "n_nodes": 5
         },
         {
           "degree": 88,
-          "n_nodes": 1
+          "n_nodes": 5
         },
         {
           "degree": 89,
@@ -288,15 +340,15 @@
         },
         {
           "degree": 90,
-          "n_nodes": 2
-        },
-        {
-          "degree": 91,
           "n_nodes": 3
         },
         {
+          "degree": 91,
+          "n_nodes": 7
+        },
+        {
           "degree": 92,
-          "n_nodes": 1
+          "n_nodes": 3
         },
         {
           "degree": 93,
@@ -304,31 +356,31 @@
         },
         {
           "degree": 94,
-          "n_nodes": 2
-        },
-        {
-          "degree": 96,
-          "n_nodes": 3
-        },
-        {
-          "degree": 97,
-          "n_nodes": 1
-        },
-        {
-          "degree": 98,
-          "n_nodes": 3
-        },
-        {
-          "degree": 99,
-          "n_nodes": 2
-        },
-        {
-          "degree": 100,
           "n_nodes": 4
         },
         {
-          "degree": 101,
+          "degree": 95,
           "n_nodes": 3
+        },
+        {
+          "degree": 96,
+          "n_nodes": 1
+        },
+        {
+          "degree": 97,
+          "n_nodes": 4
+        },
+        {
+          "degree": 98,
+          "n_nodes": 8
+        },
+        {
+          "degree": 100,
+          "n_nodes": 3
+        },
+        {
+          "degree": 101,
+          "n_nodes": 4
         },
         {
           "degree": 102,
@@ -340,11 +392,11 @@
         },
         {
           "degree": 104,
-          "n_nodes": 3
+          "n_nodes": 9
         },
         {
           "degree": 105,
-          "n_nodes": 4
+          "n_nodes": 8
         },
         {
           "degree": 106,
@@ -352,15 +404,15 @@
         },
         {
           "degree": 107,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 108,
-          "n_nodes": 5
+          "n_nodes": 2
         },
         {
           "degree": 109,
-          "n_nodes": 4
+          "n_nodes": 3
         },
         {
           "degree": 110,
@@ -368,7 +420,7 @@
         },
         {
           "degree": 111,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 112,
@@ -376,27 +428,27 @@
         },
         {
           "degree": 113,
-          "n_nodes": 1
+          "n_nodes": 4
         },
         {
           "degree": 114,
-          "n_nodes": 4
+          "n_nodes": 5
         },
         {
           "degree": 115,
-          "n_nodes": 2
+          "n_nodes": 5
         },
         {
           "degree": 116,
-          "n_nodes": 1
+          "n_nodes": 3
         },
         {
           "degree": 117,
-          "n_nodes": 6
+          "n_nodes": 9
         },
         {
           "degree": 118,
-          "n_nodes": 4
+          "n_nodes": 2
         },
         {
           "degree": 119,
@@ -404,47 +456,47 @@
         },
         {
           "degree": 120,
-          "n_nodes": 6
+          "n_nodes": 2
         },
         {
           "degree": 121,
-          "n_nodes": 3
+          "n_nodes": 4
         },
         {
           "degree": 122,
-          "n_nodes": 2
+          "n_nodes": 4
         },
         {
           "degree": 123,
-          "n_nodes": 1
-        },
-        {
-          "degree": 124,
-          "n_nodes": 1
-        },
-        {
-          "degree": 125,
           "n_nodes": 5
         },
         {
-          "degree": 126,
-          "n_nodes": 2
-        },
-        {
-          "degree": 127,
-          "n_nodes": 4
-        },
-        {
-          "degree": 128,
-          "n_nodes": 4
-        },
-        {
-          "degree": 129,
+          "degree": 124,
           "n_nodes": 6
         },
         {
-          "degree": 130,
+          "degree": 125,
           "n_nodes": 3
+        },
+        {
+          "degree": 126,
+          "n_nodes": 3
+        },
+        {
+          "degree": 127,
+          "n_nodes": 3
+        },
+        {
+          "degree": 128,
+          "n_nodes": 2
+        },
+        {
+          "degree": 129,
+          "n_nodes": 7
+        },
+        {
+          "degree": 130,
+          "n_nodes": 2
         },
         {
           "degree": 131,
@@ -452,7 +504,7 @@
         },
         {
           "degree": 132,
-          "n_nodes": 3
+          "n_nodes": 2
         },
         {
           "degree": 133,
@@ -460,51 +512,51 @@
         },
         {
           "degree": 134,
-          "n_nodes": 1
+          "n_nodes": 4
         },
         {
           "degree": 135,
-          "n_nodes": 5
+          "n_nodes": 7
         },
         {
           "degree": 136,
-          "n_nodes": 3
-        },
-        {
-          "degree": 137,
-          "n_nodes": 5
-        },
-        {
-          "degree": 138,
           "n_nodes": 1
         },
         {
-          "degree": 140,
+          "degree": 137,
           "n_nodes": 2
+        },
+        {
+          "degree": 138,
+          "n_nodes": 4
+        },
+        {
+          "degree": 139,
+          "n_nodes": 7
+        },
+        {
+          "degree": 140,
+          "n_nodes": 4
         },
         {
           "degree": 141,
-          "n_nodes": 4
-        },
-        {
-          "degree": 142,
-          "n_nodes": 4
+          "n_nodes": 3
         },
         {
           "degree": 143,
-          "n_nodes": 6
+          "n_nodes": 2
         },
         {
           "degree": 144,
-          "n_nodes": 4
+          "n_nodes": 2
         },
         {
           "degree": 145,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 146,
-          "n_nodes": 2
+          "n_nodes": 3
         },
         {
           "degree": 147,
@@ -512,122 +564,90 @@
         },
         {
           "degree": 148,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 149,
-          "n_nodes": 3
+          "n_nodes": 2
         },
         {
           "degree": 150,
           "n_nodes": 1
         },
         {
-          "degree": 151,
-          "n_nodes": 4
-        },
-        {
-          "degree": 152,
-          "n_nodes": 4
-        },
-        {
           "degree": 153,
-          "n_nodes": 4
+          "n_nodes": 1
         },
         {
           "degree": 154,
-          "n_nodes": 4
+          "n_nodes": 1
         },
         {
           "degree": 155,
-          "n_nodes": 1
+          "n_nodes": 2
         },
         {
           "degree": 156,
-          "n_nodes": 4
+          "n_nodes": 1
         },
         {
           "degree": 157,
-          "n_nodes": 1
+          "n_nodes": 2
         },
         {
           "degree": 158,
-          "n_nodes": 3
-        },
-        {
-          "degree": 159,
           "n_nodes": 1
         },
         {
-          "degree": 160,
-          "n_nodes": 7
+          "degree": 159,
+          "n_nodes": 2
         },
         {
-          "degree": 161,
+          "degree": 160,
           "n_nodes": 1
         },
         {
           "degree": 162,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 163,
-          "n_nodes": 3
-        },
-        {
-          "degree": 164,
-          "n_nodes": 4
-        },
-        {
-          "degree": 165,
-          "n_nodes": 1
-        },
-        {
-          "degree": 166,
           "n_nodes": 2
         },
         {
-          "degree": 167,
-          "n_nodes": 1
+          "degree": 164,
+          "n_nodes": 2
         },
         {
-          "degree": 168,
-          "n_nodes": 4
+          "degree": 165,
+          "n_nodes": 2
         },
         {
           "degree": 169,
-          "n_nodes": 5
+          "n_nodes": 1
         },
         {
           "degree": 170,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 171,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 172,
           "n_nodes": 1
         },
         {
-          "degree": 173,
+          "degree": 174,
           "n_nodes": 2
         },
         {
-          "degree": 174,
-          "n_nodes": 6
-        },
-        {
           "degree": 175,
-          "n_nodes": 5
+          "n_nodes": 2
         },
         {
           "degree": 176,
-          "n_nodes": 3
-        },
-        {
-          "degree": 177,
           "n_nodes": 1
         },
         {
@@ -635,20 +655,8 @@
           "n_nodes": 1
         },
         {
-          "degree": 179,
-          "n_nodes": 2
-        },
-        {
-          "degree": 180,
-          "n_nodes": 3
-        },
-        {
           "degree": 181,
           "n_nodes": 1
-        },
-        {
-          "degree": 182,
-          "n_nodes": 2
         },
         {
           "degree": 183,
@@ -656,170 +664,50 @@
         },
         {
           "degree": 184,
-          "n_nodes": 3
-        },
-        {
-          "degree": 185,
-          "n_nodes": 4
-        },
-        {
-          "degree": 186,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 187,
-          "n_nodes": 2
-        },
-        {
-          "degree": 188,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 189,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 190,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 191,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
-          "degree": 193,
-          "n_nodes": 3
+          "degree": 192,
+          "n_nodes": 1
         },
         {
           "degree": 194,
-          "n_nodes": 3
+          "n_nodes": 1
         },
         {
           "degree": 195,
           "n_nodes": 1
         },
         {
-          "degree": 196,
-          "n_nodes": 3
-        },
-        {
-          "degree": 197,
-          "n_nodes": 3
-        },
-        {
-          "degree": 199,
-          "n_nodes": 1
-        },
-        {
-          "degree": 200,
-          "n_nodes": 1
-        },
-        {
-          "degree": 201,
+          "degree": 198,
           "n_nodes": 2
-        },
-        {
-          "degree": 202,
-          "n_nodes": 1
-        },
-        {
-          "degree": 203,
-          "n_nodes": 3
         },
         {
           "degree": 204,
-          "n_nodes": 2
+          "n_nodes": 1
         },
         {
           "degree": 206,
-          "n_nodes": 2
-        },
-        {
-          "degree": 207,
-          "n_nodes": 2
-        },
-        {
-          "degree": 208,
-          "n_nodes": 1
-        },
-        {
-          "degree": 211,
-          "n_nodes": 1
-        },
-        {
-          "degree": 212,
-          "n_nodes": 1
-        },
-        {
-          "degree": 213,
-          "n_nodes": 3
-        },
-        {
-          "degree": 214,
-          "n_nodes": 1
-        },
-        {
-          "degree": 216,
-          "n_nodes": 2
-        },
-        {
-          "degree": 217,
           "n_nodes": 1
         },
         {
           "degree": 220,
-          "n_nodes": 2
-        },
-        {
-          "degree": 221,
-          "n_nodes": 2
-        },
-        {
-          "degree": 222,
-          "n_nodes": 3
-        },
-        {
-          "degree": 224,
-          "n_nodes": 3
-        },
-        {
-          "degree": 225,
-          "n_nodes": 3
-        },
-        {
-          "degree": 227,
-          "n_nodes": 1
-        },
-        {
-          "degree": 228,
-          "n_nodes": 1
-        },
-        {
-          "degree": 229,
-          "n_nodes": 1
-        },
-        {
-          "degree": 230,
-          "n_nodes": 2
-        },
-        {
-          "degree": 231,
-          "n_nodes": 1
-        },
-        {
-          "degree": 232,
-          "n_nodes": 2
-        },
-        {
-          "degree": 235,
-          "n_nodes": 1
-        },
-        {
-          "degree": 236,
-          "n_nodes": 1
-        },
-        {
-          "degree": 239,
           "n_nodes": 1
         },
         {
@@ -827,111 +715,485 @@
           "n_nodes": 1
         },
         {
-          "degree": 241,
+          "degree": 247,
           "n_nodes": 1
         },
         {
-          "degree": 242,
+          "degree": 250,
           "n_nodes": 1
         },
         {
-          "degree": 243,
-          "n_nodes": 1
-        },
-        {
-          "degree": 245,
-          "n_nodes": 1
-        },
-        {
-          "degree": 246,
+          "degree": 282,
           "n_nodes": 2
         },
         {
-          "degree": 247,
+          "degree": 354,
+          "n_nodes": 1
+        },
+        {
+          "degree": 396,
+          "n_nodes": 1
+        },
+        {
+          "degree": 415,
+          "n_nodes": 1
+        }
+      ]
+    },
+    {
+      "node_type": "inventor",
+      "bins": [
+        {
+          "degree": 1,
+          "n_nodes": 7839
+        },
+        {
+          "degree": 2,
+          "n_nodes": 2391
+        },
+        {
+          "degree": 3,
+          "n_nodes": 1109
+        },
+        {
+          "degree": 4,
+          "n_nodes": 749
+        },
+        {
+          "degree": 5,
+          "n_nodes": 576
+        },
+        {
+          "degree": 6,
+          "n_nodes": 461
+        },
+        {
+          "degree": 7,
+          "n_nodes": 319
+        },
+        {
+          "degree": 8,
+          "n_nodes": 286
+        },
+        {
+          "degree": 9,
+          "n_nodes": 235
+        },
+        {
+          "degree": 10,
+          "n_nodes": 215
+        },
+        {
+          "degree": 11,
+          "n_nodes": 168
+        },
+        {
+          "degree": 12,
+          "n_nodes": 147
+        },
+        {
+          "degree": 13,
+          "n_nodes": 137
+        },
+        {
+          "degree": 14,
+          "n_nodes": 114
+        },
+        {
+          "degree": 15,
+          "n_nodes": 100
+        },
+        {
+          "degree": 16,
+          "n_nodes": 75
+        },
+        {
+          "degree": 17,
+          "n_nodes": 69
+        },
+        {
+          "degree": 18,
+          "n_nodes": 73
+        },
+        {
+          "degree": 19,
+          "n_nodes": 77
+        },
+        {
+          "degree": 20,
+          "n_nodes": 60
+        },
+        {
+          "degree": 21,
+          "n_nodes": 61
+        },
+        {
+          "degree": 22,
+          "n_nodes": 48
+        },
+        {
+          "degree": 23,
+          "n_nodes": 56
+        },
+        {
+          "degree": 24,
+          "n_nodes": 29
+        },
+        {
+          "degree": 25,
+          "n_nodes": 36
+        },
+        {
+          "degree": 26,
+          "n_nodes": 42
+        },
+        {
+          "degree": 27,
+          "n_nodes": 30
+        },
+        {
+          "degree": 28,
+          "n_nodes": 25
+        },
+        {
+          "degree": 29,
+          "n_nodes": 22
+        },
+        {
+          "degree": 30,
+          "n_nodes": 37
+        },
+        {
+          "degree": 31,
+          "n_nodes": 24
+        },
+        {
+          "degree": 32,
+          "n_nodes": 24
+        },
+        {
+          "degree": 33,
+          "n_nodes": 16
+        },
+        {
+          "degree": 34,
+          "n_nodes": 15
+        },
+        {
+          "degree": 35,
+          "n_nodes": 13
+        },
+        {
+          "degree": 36,
+          "n_nodes": 15
+        },
+        {
+          "degree": 37,
+          "n_nodes": 11
+        },
+        {
+          "degree": 38,
+          "n_nodes": 15
+        },
+        {
+          "degree": 39,
+          "n_nodes": 10
+        },
+        {
+          "degree": 40,
+          "n_nodes": 15
+        },
+        {
+          "degree": 41,
+          "n_nodes": 7
+        },
+        {
+          "degree": 42,
+          "n_nodes": 6
+        },
+        {
+          "degree": 43,
+          "n_nodes": 10
+        },
+        {
+          "degree": 44,
+          "n_nodes": 6
+        },
+        {
+          "degree": 45,
+          "n_nodes": 5
+        },
+        {
+          "degree": 46,
+          "n_nodes": 10
+        },
+        {
+          "degree": 47,
+          "n_nodes": 6
+        },
+        {
+          "degree": 48,
+          "n_nodes": 8
+        },
+        {
+          "degree": 49,
+          "n_nodes": 7
+        },
+        {
+          "degree": 50,
+          "n_nodes": 6
+        },
+        {
+          "degree": 51,
+          "n_nodes": 7
+        },
+        {
+          "degree": 52,
+          "n_nodes": 5
+        },
+        {
+          "degree": 53,
+          "n_nodes": 6
+        },
+        {
+          "degree": 54,
+          "n_nodes": 9
+        },
+        {
+          "degree": 55,
+          "n_nodes": 10
+        },
+        {
+          "degree": 56,
+          "n_nodes": 7
+        },
+        {
+          "degree": 57,
+          "n_nodes": 2
+        },
+        {
+          "degree": 58,
+          "n_nodes": 2
+        },
+        {
+          "degree": 59,
+          "n_nodes": 4
+        },
+        {
+          "degree": 60,
+          "n_nodes": 2
+        },
+        {
+          "degree": 61,
           "n_nodes": 3
         },
         {
-          "degree": 249,
-          "n_nodes": 1
+          "degree": 62,
+          "n_nodes": 3
         },
         {
-          "degree": 251,
-          "n_nodes": 1
-        },
-        {
-          "degree": 252,
-          "n_nodes": 1
-        },
-        {
-          "degree": 254,
-          "n_nodes": 1
-        },
-        {
-          "degree": 257,
-          "n_nodes": 1
-        },
-        {
-          "degree": 258,
-          "n_nodes": 1
-        },
-        {
-          "degree": 268,
-          "n_nodes": 1
-        },
-        {
-          "degree": 273,
+          "degree": 63,
           "n_nodes": 2
         },
         {
-          "degree": 274,
+          "degree": 64,
           "n_nodes": 1
         },
         {
-          "degree": 276,
+          "degree": 65,
+          "n_nodes": 6
+        },
+        {
+          "degree": 67,
+          "n_nodes": 3
+        },
+        {
+          "degree": 68,
+          "n_nodes": 3
+        },
+        {
+          "degree": 69,
+          "n_nodes": 5
+        },
+        {
+          "degree": 70,
           "n_nodes": 1
         },
         {
-          "degree": 277,
+          "degree": 71,
           "n_nodes": 1
         },
         {
-          "degree": 279,
+          "degree": 72,
+          "n_nodes": 2
+        },
+        {
+          "degree": 74,
           "n_nodes": 1
         },
         {
-          "degree": 285,
+          "degree": 75,
+          "n_nodes": 4
+        },
+        {
+          "degree": 77,
+          "n_nodes": 4
+        },
+        {
+          "degree": 78,
+          "n_nodes": 2
+        },
+        {
+          "degree": 79,
+          "n_nodes": 2
+        },
+        {
+          "degree": 80,
           "n_nodes": 1
         },
         {
-          "degree": 286,
+          "degree": 83,
+          "n_nodes": 3
+        },
+        {
+          "degree": 84,
           "n_nodes": 1
         },
         {
-          "degree": 289,
+          "degree": 85,
+          "n_nodes": 3
+        },
+        {
+          "degree": 89,
           "n_nodes": 1
         },
         {
-          "degree": 306,
+          "degree": 90,
+          "n_nodes": 2
+        },
+        {
+          "degree": 93,
           "n_nodes": 1
         },
         {
-          "degree": 307,
+          "degree": 94,
+          "n_nodes": 2
+        },
+        {
+          "degree": 95,
           "n_nodes": 1
         },
         {
-          "degree": 338,
+          "degree": 96,
+          "n_nodes": 2
+        },
+        {
+          "degree": 98,
+          "n_nodes": 2
+        },
+        {
+          "degree": 99,
           "n_nodes": 1
         },
         {
-          "degree": 390,
+          "degree": 101,
           "n_nodes": 1
         },
         {
-          "degree": 431,
+          "degree": 104,
           "n_nodes": 1
         },
         {
-          "degree": 447,
+          "degree": 109,
+          "n_nodes": 1
+        },
+        {
+          "degree": 110,
+          "n_nodes": 1
+        },
+        {
+          "degree": 112,
+          "n_nodes": 1
+        },
+        {
+          "degree": 114,
+          "n_nodes": 1
+        },
+        {
+          "degree": 117,
+          "n_nodes": 1
+        },
+        {
+          "degree": 119,
+          "n_nodes": 1
+        },
+        {
+          "degree": 123,
+          "n_nodes": 2
+        },
+        {
+          "degree": 125,
+          "n_nodes": 2
+        },
+        {
+          "degree": 126,
+          "n_nodes": 1
+        },
+        {
+          "degree": 132,
+          "n_nodes": 1
+        },
+        {
+          "degree": 134,
+          "n_nodes": 1
+        },
+        {
+          "degree": 137,
+          "n_nodes": 1
+        },
+        {
+          "degree": 159,
+          "n_nodes": 1
+        },
+        {
+          "degree": 172,
+          "n_nodes": 1
+        },
+        {
+          "degree": 174,
+          "n_nodes": 1
+        },
+        {
+          "degree": 235,
+          "n_nodes": 1
+        },
+        {
+          "degree": 265,
+          "n_nodes": 1
+        },
+        {
+          "degree": 363,
+          "n_nodes": 1
+        },
+        {
+          "degree": 366,
+          "n_nodes": 1
+        }
+      ]
+    },
+    {
+      "node_type": "investor",
+      "bins": [
+        {
+          "degree": 1,
+          "n_nodes": 564
+        },
+        {
+          "degree": 2,
+          "n_nodes": 7
+        },
+        {
+          "degree": 5,
           "n_nodes": 1
         }
       ]
@@ -1313,166 +1575,196 @@
       "node_type": "patent",
       "bins": [
         {
-          "degree": 0,
-          "n_nodes": 2202
-        },
-        {
           "degree": 1,
-          "n_nodes": 14711
+          "n_nodes": 658
         },
         {
           "degree": 2,
-          "n_nodes": 3583
+          "n_nodes": 14877
         },
         {
           "degree": 3,
-          "n_nodes": 4205
+          "n_nodes": 1106
         },
         {
           "degree": 4,
-          "n_nodes": 3049
+          "n_nodes": 2098
         },
         {
           "degree": 5,
-          "n_nodes": 2011
+          "n_nodes": 2311
         },
         {
           "degree": 6,
-          "n_nodes": 1260
+          "n_nodes": 2257
         },
         {
           "degree": 7,
-          "n_nodes": 743
+          "n_nodes": 2240
         },
         {
           "degree": 8,
-          "n_nodes": 427
+          "n_nodes": 1859
         },
         {
           "degree": 9,
-          "n_nodes": 274
+          "n_nodes": 1547
         },
         {
           "degree": 10,
-          "n_nodes": 171
+          "n_nodes": 1113
         },
         {
           "degree": 11,
-          "n_nodes": 97
+          "n_nodes": 812
         },
         {
           "degree": 12,
-          "n_nodes": 77
+          "n_nodes": 573
         },
         {
           "degree": 13,
-          "n_nodes": 59
+          "n_nodes": 451
         },
         {
           "degree": 14,
-          "n_nodes": 22
+          "n_nodes": 325
         },
         {
           "degree": 15,
-          "n_nodes": 25
+          "n_nodes": 234
         },
         {
           "degree": 16,
-          "n_nodes": 11
+          "n_nodes": 179
         },
         {
           "degree": 17,
-          "n_nodes": 11
+          "n_nodes": 86
         },
         {
           "degree": 18,
-          "n_nodes": 4
+          "n_nodes": 71
         },
         {
           "degree": 19,
-          "n_nodes": 7
+          "n_nodes": 45
         },
         {
           "degree": 20,
-          "n_nodes": 8
+          "n_nodes": 36
         },
         {
           "degree": 21,
-          "n_nodes": 5
+          "n_nodes": 28
         },
         {
           "degree": 22,
-          "n_nodes": 2
+          "n_nodes": 14
+        },
+        {
+          "degree": 23,
+          "n_nodes": 17
         },
         {
           "degree": 24,
-          "n_nodes": 1
+          "n_nodes": 5
         },
         {
           "degree": 25,
-          "n_nodes": 3
+          "n_nodes": 10
+        },
+        {
+          "degree": 26,
+          "n_nodes": 7
+        },
+        {
+          "degree": 27,
+          "n_nodes": 2
+        },
+        {
+          "degree": 28,
+          "n_nodes": 1
+        },
+        {
+          "degree": 31,
+          "n_nodes": 1
+        },
+        {
+          "degree": 32,
+          "n_nodes": 1
         },
         {
           "degree": 33,
+          "n_nodes": 1
+        },
+        {
+          "degree": 34,
+          "n_nodes": 2
+        },
+        {
+          "degree": 35,
+          "n_nodes": 1
+        },
+        {
+          "degree": 43,
           "n_nodes": 1
         }
       ]
     }
   ],
   "enterprise_components": {
-    "n_components": 12,
+    "n_components": 6,
     "sizes": [
-      489,
-      1,
-      1,
-      1,
-      1,
-      1,
-      1,
+      495,
       1,
       1,
       1,
       1,
       1
     ],
-    "n_isolated": 11
+    "n_isolated": 5
   },
   "tech_similar_weight_hist": [
     {
+      "weight_bucket": 0.0,
+      "n_edges": 552
+    },
+    {
       "weight_bucket": 0.1,
-      "n_edges": 16347
+      "n_edges": 2038
     },
     {
       "weight_bucket": 0.2,
-      "n_edges": 2935
+      "n_edges": 2585
     },
     {
       "weight_bucket": 0.3,
-      "n_edges": 488
+      "n_edges": 1762
     },
     {
       "weight_bucket": 0.4,
-      "n_edges": 95
+      "n_edges": 936
     },
     {
       "weight_bucket": 0.5,
-      "n_edges": 45
+      "n_edges": 508
     },
     {
       "weight_bucket": 0.6,
-      "n_edges": 20
+      "n_edges": 231
     },
     {
       "weight_bucket": 0.7,
-      "n_edges": 11
+      "n_edges": 102
     },
     {
       "weight_bucket": 0.8,
-      "n_edges": 1
+      "n_edges": 30
     },
     {
-      "weight_bucket": 1.0,
-      "n_edges": 3
+      "weight_bucket": 0.9,
+      "n_edges": 5
     }
   ],
   "provenance": {
@@ -1480,8 +1772,8 @@
     "displayable": true,
     "source": "ads_graph_node (45,077) + ads_graph_edge (101,491)",
     "method": "节点/边按类型聚合；度=该节点在 ads_graph_edge 的出入边总数；连通分量用并查集在 enterprise-enterprise tech_similar 子图上计算",
-    "generated_at": "2026-11-06 00:17:55",
-    "schema_version": "v1.3",
+    "generated_at": "2026-11-06 16:33:40",
+    "schema_version": "v1.4",
     "note": "本图谱为本项目真实构建（企业-专利-IPC 异质图），非合成图"
   }
 }

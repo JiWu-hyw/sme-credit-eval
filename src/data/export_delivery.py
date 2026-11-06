@@ -119,6 +119,37 @@ def _db_ver(con):
         return "unknown"
 
 
+def db_stats(con):
+    """库规模现场计算 —— 文档里的「33 表 / 16 视图 / 764 列 / 63 万行」不许再手写。
+
+    手写数字漂移过一次（图重建后表数没变但行数涨到 63 万、视图 9→16），
+    所以统一从这里取，谁改库谁的数字自动跟着走。
+    """
+    tables = [r[0] for r in q(con, "SELECT name FROM sqlite_master WHERE type='table' "
+                                   "AND name NOT LIKE 'sqlite_%'")]
+    views = [r[0] for r in q(con, "SELECT name FROM sqlite_master WHERE type='view'")]
+    n_rows = sum(q1(con, 'SELECT COUNT(*) FROM "%s"' % t) for t in tables)
+    n_cols = sum(len(q(con, 'PRAGMA table_info("%s")' % t)) for t in tables + views)
+    size_mb = os.path.getsize(DB) / 1048576 if os.path.exists(DB) else 0
+    return {
+        "n_tables": len(tables),
+        "n_views": len(views),
+        "n_cols": n_cols,
+        "n_rows": n_rows,
+        "size_mb": round(size_mb),
+        "rows_str": "{:,}".format(n_rows),
+    }
+
+
+def graph_stats(con):
+    """图表规模现场计算（节点 / 边 / 连通分量由契约现算，文档不手写）。"""
+    n_node = q1(con, "SELECT COUNT(*) FROM ads_graph_node")
+    n_edge = q1(con, "SELECT COUNT(*) FROM ads_graph_edge")
+    n_ntype = q1(con, "SELECT COUNT(DISTINCT node_type) FROM ads_graph_node")
+    return {"n_node": n_node, "n_edge": n_edge, "n_ntype": n_ntype,
+            "node_str": "{:,}".format(n_node), "edge_str": "{:,}".format(n_edge)}
+
+
 def rank_auc(pairs):
     """单变量 AUC（Mann-Whitney U / rank 法），自动处理并列值。"""
     clean = [(v, l) for v, l in pairs if v is not None]
@@ -185,6 +216,7 @@ def write_csv(path, header, rows):
 # ---------------------------------------------------------------------------
 def build_algorithm(con):
     ensure(D_ALG)
+    st = db_stats(con)
     ddl_cols = [r[1] for r in q(con, "PRAGMA table_info(v_model_train_ready)")]
     total = q1(con, "SELECT COUNT(*) FROM v_model_train_ready")
     n_pos = q1(con, "SELECT SUM(label) FROM v_model_train_ready")
@@ -407,7 +439,8 @@ te = df[df.split == 'test']
       % q1(con, "SELECT COUNT(*) FROM ads_model_dataset WHERE split='excluded'"))
     A("")
     A("## 如果需要原始库\n")
-    A("`zjtech_credit.db`（109 MB，33 表 / 9 视图 / 698 列）请单独索取，")
+    A("`zjtech_credit.db`（%d MB，%d 表 / %d 视图 / %d 列）请单独索取，"
+      % (st["size_mb"], st["n_tables"], st["n_views"], st["n_cols"]))
     A("字段说明见同包的 `04_数据字典与数据集/数据字典.md`。")
     A("")
     with open(os.path.join(D_ALG, "README.md"), "w", encoding="utf-8") as f:
@@ -422,6 +455,7 @@ te = df[df.split == 'test']
 # ---------------------------------------------------------------------------
 def build_frontend(con):
     ensure(D_FE)
+    gst = graph_stats(con)
 
     # ---- 2.1 契约真实性格档 ----
     truth = {}
@@ -589,7 +623,8 @@ def build_frontend(con):
                 "/api/features/tree":
                     "29 特征分 5 组，11 个进训练、5 个有判别力（|AUC−0.5|≥0.05）",
                 "/api/graph/structure":
-                    "真实异质图 45,077 节点 / 101,491 边，12 个连通分量（最大 489 家）",
+                    "真实异质图 %s 节点 / %s 边（%d 类节点），企业级 6 个连通分量"
+                    % (gst["node_str"], gst["edge_str"], gst["n_ntype"]),
                 "/api/graph/slices":
                     "按地区 / 认定年 / 标签切片；行业切片因覆盖率不足未产出",
                 "/api/graph/centrality":
@@ -761,7 +796,8 @@ def build_frontend(con):
     A("| `data_quality.json` | measured | 22 表逐列扫描 + 登记册 | 空值率、15 项缺口三态、6 条底表/视图矛盾 |")
     A("| `panel_depth.json` | measured | `v_model_dataset_asof_flat` | 307 家 × 2 期平衡面板；**无**财务年度面板 |")
     A("| `feature_tree.json` | derived | 训练视图 + as-of 视图 | 29 特征分 5 组、覆盖率、单变量 AUC |")
-    A("| `graph_structure.json` | measured | `ads_graph_node/edge` | 45,077 节点 / 101,491 边，真实异质图 |")
+    A("| `graph_structure.json` | measured | `ads_graph_node/edge` | %s 节点 / %s 边，真实异质图 |"
+      % (gst["node_str"], gst["edge_str"]))
     A("| `graph_slices.json` | measured | 企业维度 + 专利 + 边 | 地区/认定年/标签切片 |")
     A("| `graph_centrality.json` | derived | tech_similar 子图 | 度/加权度/PageRank Top50 |")
     A("| `train_curve.json` | partial | GAT + baseline 落盘结果 | 只有 5/41 个 GAT 点，**不是**完整曲线 |")
@@ -857,10 +893,11 @@ def build_frontend(con):
     A("")
     A("## 能直接联调的接口（实测 code=0 且 data 非空）\n")
     A("**图谱/检索**")
-    A("```\nGET /api/tech-graph/summary                        45,077 节点 / 101,491 边\n"
+    A("```\nGET /api/tech-graph/summary                        %s 节点 / %s 边\n"
       "GET /api/tech-graph/enterprises?q=&limit=          500 家企业，含 similar_cnt\n"
       "GET /api/tech-graph/enterprise/{id}/profile        专利数 / IPC 分布\n"
-      "GET /api/tech-graph/enterprise/{id}/neighborhood   技术相似企业\n```\n")
+      "GET /api/tech-graph/enterprise/{id}/neighborhood   技术相似企业\n```\n"
+      % (gst["node_str"], gst["edge_str"]))
     A("**评分/诊断（读库，不再依赖 dashboard_data.json）**")
     A("```\nGET  /api/score/company/{id}            档案+特征+proxy_score（score.value 为 null）\n"
       "GET  /api/company/{id}/graph            真实 tech_similar 子图（top_k 可调）\n"
@@ -898,6 +935,8 @@ def build_frontend(con):
 # 3. 交付说明
 # ---------------------------------------------------------------------------
 def build_doc(con, alg, fe):
+    st = db_stats(con)
+    gst = graph_stats(con)
     ensure(D_DOC)
     total = q1(con, "SELECT COUNT(*) FROM v_model_train_ready")
     n_pos = q1(con, "SELECT SUM(label) FROM v_model_train_ready")
@@ -931,13 +970,14 @@ def build_doc(con, alg, fe):
       % (fe["n_data"], fe["n_b"], fe["n_a"]))
     A("| 说明 | `03_交付说明/` | 本文档 | ✅ |")
     A("| 数据字典与数据集 | `04_数据字典与数据集/` | "
-      "698 列字典（md + csv）+ 代理标签说明书 + 3 个数据集 CSV + 缺口登记册 | ✅ 6 个文件 |")
+      "%d 列字典（md + csv）+ 代理标签说明书 + 3 个数据集 CSV + 缺口登记册 | ✅ 6 个文件 |"
+      % st["n_cols"])
     A("")
 
     A("## 二、数据底座\n")
     A("| 项 | 值 |")
     A("|---|---|")
-    A("| 库 | `zjtech_credit.db`，109 MB |")
+    A("| 库 | `zjtech_credit.db`，%d MB |" % st["size_mb"])
     A("| 结构 | %d 表 + %d 视图 / %d 列 / %s 行 |" % (n_tables, n_views, n_cols, f"{n_rows:,}"))
     A("| 企业 | %d 家浙江专精特新 |" % n_firm)
     A("| 专利 | %s 件（按申请号去重） |" % f"{n_patent:,}")
@@ -1018,7 +1058,7 @@ def build_doc(con, alg, fe):
     A("## 七、复现\n")
     A("```bash")
     A("python -m src.data.build_contracts          # 11 个契约 → outputs/contracts/")
-    A("python -m src.data.export_data_dictionary   # 字段字典 698 列")
+    A("python -m src.data.export_data_dictionary   # 字段字典 %d 列" % st["n_cols"])
     A("python -m src.data.export_label_spec         # 标签说明书")
     A("python -m src.data.export_field_gap_registry # 缺口登记册")
     A("python -m src.data.export_delivery --zip     # 本交付包三个 + zip")
@@ -1032,7 +1072,7 @@ def build_doc(con, alg, fe):
     A("python tests/test_grant_definition.py        # 7 项 授权口径守卫")
     A("python tests/test_field_gap_registry.py      # 5 项 缺口登记守卫")
     A("```")
-    A("合计 **63 项**，全绿。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **82 项**，全绿。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:

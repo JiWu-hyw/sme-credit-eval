@@ -1,7 +1,7 @@
 {
   "schema_version": "v1.3",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-05 23:03:51",
+  "generated_at": "2026-11-06 16:34:19",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",
@@ -235,7 +235,7 @@
         }
       ],
       "n_cols": 7,
-      "n_rows": 101491
+      "n_rows": 171229
     },
     "ads_graph_node": {
       "columns": [
@@ -269,7 +269,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 45077
+      "n_rows": 61604
     },
     "ads_label": {
       "columns": [
@@ -3466,7 +3466,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 3
+      "n_rows": 5
     },
     "ods_patent_raw": {
       "columns": [

@@ -1738,7 +1738,7 @@
     "displayable": true,
     "source": "outputs/baseline_results.json（holdout_row）+ outputs/qcc_signal_auc.json",
     "method": "binormal 双锚点反推：AUC 定 (a/b 的比值)、实测 KS 定 b，再拓扑导出 PR；B 套仅透传折分布，不重建",
-    "generated_at": "2026-11-06 00:17:56",
+    "generated_at": "2026-11-06 16:33:41",
     "schema_version": null,
     "anchors": [
       {

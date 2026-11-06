@@ -1,14 +1,14 @@
 {
   "summary": {
     "tables_checked": 22,
-    "total_rows": 359863,
-    "cell_completeness": 0.873,
+    "total_rows": 446128,
+    "cell_completeness": 0.894,
     "rows_by_layer": {
       "DIM": 28075,
       "FACT": 35535,
       "BRIDGE": 129694,
       "DWS": 1500,
-      "ADS": 148854,
+      "ADS": 235119,
       "ODS": 16205
     }
   },
@@ -548,7 +548,7 @@
     {
       "table": "ads_graph_node",
       "exists": true,
-      "n_rows": 45077,
+      "n_rows": 61604,
       "n_columns": 4,
       "columns_full": 4,
       "columns_empty": 0,
@@ -559,7 +559,7 @@
     {
       "table": "ads_graph_edge",
       "exists": true,
-      "n_rows": 101491,
+      "n_rows": 171229,
       "n_columns": 7,
       "columns_full": 7,
       "columns_empty": 0,
@@ -1174,8 +1174,8 @@
     "displayable": true,
     "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
     "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
-    "generated_at": "2026-11-06 00:17:54",
-    "schema_version": "v1.3",
+    "generated_at": "2026-11-06 16:33:38",
+    "schema_version": "v1.4",
     "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
   }
 }

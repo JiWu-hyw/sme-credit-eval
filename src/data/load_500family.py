@@ -89,19 +89,24 @@ FUND_EVENT_MAP = [
 ]
 
 # —— 技术相似图谱构建参数（统一 ETL 一环；scripts/build_tech_graph.py 共用）——
+# v1.4：图谱构建已整体移交 src/data/build_graph_v2.py（5 类节点 / 7 类边 /
+#       TF-IDF 余弦权重）。本文件仅保留 DDL 供存量旧库重建，参数不再驱动连边。
 GRAPH_TIME_SLICE = 0       # 0 = 全期累计切片
-GRAPH_JACCARD_MIN = 0.10   # 企业间技术相似连边的最小 Jaccard 相似度
+GRAPH_JACCARD_MIN = 0.10   # 旧 Jaccard 口径下限（v1.4 起由 SIM_MIN_COS 取代）
 GRAPH_SHARED_MIN = 2       # 连边所需的最少共享 IPC 小类数
 
-# 与 schema.sql 一致的图谱表定义（含 tech_similar 枚举；仅存量旧库需要重建时使用）
+# 与 schema.sql 一致的图谱表定义（v1.4 枚举：5 类节点 / 8 类边）
 GRAPH_EDGE_DDL = """
 CREATE TABLE IF NOT EXISTS ads_graph_edge (
-    src_type   TEXT NOT NULL CHECK (src_type IN ('enterprise','patent','ipc','inventor')),
+    src_type   TEXT NOT NULL CHECK (src_type IN
+                 ('enterprise','patent','ipc','inventor','investor')),
     src_id     TEXT NOT NULL,
-    dst_type   TEXT NOT NULL CHECK (dst_type IN ('enterprise','patent','ipc','inventor')),
+    dst_type   TEXT NOT NULL CHECK (dst_type IN
+                 ('enterprise','patent','ipc','inventor','investor')),
     dst_id     TEXT NOT NULL,
     edge_type  TEXT NOT NULL CHECK (edge_type IN
-                 ('files_patent','belongs_ipc','co_inventor','cites','qualifies','tech_similar')),
+                 ('files_patent','belongs_ipc','invented_by','funded_by',
+                  'co_inventor','cites','qualifies','tech_similar')),
     time_slice INTEGER NOT NULL,
     weight     REAL,
     PRIMARY KEY (src_type, src_id, dst_type, dst_id, edge_type, time_slice)
@@ -109,7 +114,8 @@ CREATE TABLE IF NOT EXISTS ads_graph_edge (
 """
 GRAPH_NODE_DDL = """
 CREATE TABLE IF NOT EXISTS ads_graph_node (
-    node_type    TEXT NOT NULL CHECK (node_type IN ('enterprise','patent','ipc','inventor')),
+    node_type    TEXT NOT NULL CHECK (node_type IN
+                   ('enterprise','patent','ipc','inventor','investor')),
     node_id      TEXT NOT NULL,
     time_slice   INTEGER NOT NULL,
     display_name TEXT,
@@ -819,6 +825,20 @@ def _ensure_graph_edge_enum(conn: sqlite3.Connection) -> bool:
 
 
 def build_tech_graph(conn: sqlite3.Connection, verbose: bool = True) -> dict:
+    """构建异质图（统一 ETL 一环）。
+
+    v1.4 起本函数委托给 src/data/build_graph_v2.rebuild：
+      · 5 类节点（enterprise / patent / ipc / inventor / investor）
+      · 7 类边（files_patent / belongs_ipc / invented_by / funded_by / tech_similar）
+      · tech_similar 由 Jaccard 全量连边改为 IPC 小类 TF-IDF 余弦 + top-K
+    保留本函数名是为了让 scripts/build_tech_graph.py 与统一 ETL 的调用点不变。
+    """
+    from src.data.build_graph_v2 import rebuild
+    return rebuild(conn, verbose=verbose)
+
+
+def _build_tech_graph_legacy(conn: sqlite3.Connection, verbose: bool = True) -> dict:
+    """v1.3 旧实现（Jaccard 全量连边 / 3 类节点），仅作回滚参照保留。"""
     """构建企业级「技术相似图谱」，写入 ads_graph_node / ads_graph_edge。
 
     数据来源（均为本次 ETL 已灌入的表）：

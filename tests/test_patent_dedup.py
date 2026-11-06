@@ -113,8 +113,12 @@ def main():
         pat_bad1 = re.compile(r"COUNT\s*\(\s*\*\s*\)\s*FROM\s+fact_patent", re.I)
         pat_bad2 = re.compile(r"COUNT\s*\(\s*DISTINCT\s+[\w.]*patent_id\s*\)", re.I)
         # 有意保留的例外：桥表自身行数统计、原始层核对
+        # build_graph_v2：统计的是「已匹配企业的专利行数」，用于与 files_patent
+        #   边数逐条对账（fact_patent 的 patent_id 唯一，行数即件数），
+        #   不是对外报的专利件数 —— 对外报数一律走 v_patent_master。
         allow_files = {"fill_patent_pubdate.py", "load_aux_tables.py",
-                       "rematch_unmatched_patents.py", "load_500family.py"}
+                       "rematch_unmatched_patents.py", "load_500family.py",
+                       "build_graph_v2.py"}
         hits = []
         for dirpath, _dirs, files in os.walk(SRC):
             for fn in files:
