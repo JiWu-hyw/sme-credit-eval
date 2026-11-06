@@ -1072,7 +1072,7 @@ def build_doc(con, alg, fe):
     A("python tests/test_grant_definition.py        # 7 项 授权口径守卫")
     A("python tests/test_field_gap_registry.py      # 5 项 缺口登记守卫")
     A("```")
-    A("合计 **96 项**，全绿（12 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **104 项**，全绿（12 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:

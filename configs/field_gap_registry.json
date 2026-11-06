@@ -410,6 +410,30 @@
       "field": "dim_enterprise.region_code / region_name",
       "after_cov": "500 / 500",
       "why": "区域维度的建模需求只需到地区，地址原文无分析价值"
+    },
+    {
+      "missing": "as-of 融资事件标志（原 m_funding 整列 NULL）",
+      "missing_cov": "0 / 307（声称「本地无时间维」）",
+      "substitute": "窗口内 0/1（event_year<=as_of_year）+ 事件计数 n_funding_events",
+      "field": "ads_feature_asof_funding.m_funding",
+      "after_cov": "cohort 60/307（19.5%）；MNAR——能融资的企业本身更活跃",
+      "why": "event_year 506/506 全填，能算而没算（v1.6 修正）；MNAR：能融资的企业本身更活跃"
+    },
+    {
+      "missing": "融资轮次计数（报告 §2.3(3) 明说可做）",
+      "missing_cov": "（无原字段）",
+      "substitute": "窗口内融资事件数",
+      "field": "ads_feature_asof_funding.n_funding_events",
+      "after_cov": "cohort 口径 121 次事件 / 60 家",
+      "why": "报告原话「融资维度可做『有没有融过、融了几轮』」的落地"
+    },
+    {
+      "missing": "as-of 投资机构声望（原 investor_prestige 整列 NULL）",
+      "missing_cov": "0 / 307（声称「本地无数据」）",
+      "substitute": "窗口内最好/最近一次 prestige_rank",
+      "field": "ads_feature_asof_funding.investor_prestige_best / _latest",
+      "after_cov": "cohort 59/307 家带等级；来源仅上市公司子集（AKShare），口径见 fact_funding_event.prestige_rank",
+      "why": "prestige_rank 352/506 有值（AKShare 上市公司子集），能算而没算（v1.6 修正）"
     }
   ]
 }

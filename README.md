@@ -75,7 +75,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（96 项守卫）
+├── tests/                    单元测试 / 集成测试（104 项守卫）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -91,7 +91,7 @@
 │                             enums.json（代码运行时权威源，load_entity_cn 直读）
 │                             enums.yaml（人读审阅版，带注释与 meta）
 │                             viz_theme.yaml / data_gaps.yaml / db_schema_manifest.json
-│                             field_gap_registry.json（17 空字段 / 7 替身 / 4 陷阱）
+│                             field_gap_registry.json（17 空字段 / 10 替身 / 4 陷阱）
 │                             data_gaps.mirror.json（data_gaps.yaml 的类型化镜像）
 │
 └── _archive/                 归档区（不删除策略）
@@ -289,9 +289,29 @@ SELECT * FROM v_feature_cohort_gap;      -- 只列队列间差距 ≥0.20 的，
 `core_staff_stability` 全样本 0.523，拆开是 **0.654 / 0.404**——后者报告没列，但同样是
 「全样本看起来没用、某队列里很强」的类型。这类特征的全样本 AUC 不得单独引用。
 
+### 6.5.2 融资特征 as-of 补算（v1.6 新增）
+
+评审报告 §2.3(3) 明说「融资维度可做『有没有融过、融了几轮』」，但 as-of 层此前把
+`m_funding` / `investor_prestige` 整列置 NULL，登记理由「本地无时间维」「本地无数据」
+与事实不符（`event_year` 506/506 全填、`prestige_rank` 352/506 有值）。已补算：
+
+```sql
+SELECT * FROM v_feature_asof_funding;   -- 614 行 = 307 家 × 2 口径
+```
+
+| 特征 | 口径 | cohort 覆盖 |
+|---|---|---|
+| `m_funding` | 窗口内（event_year ≤ as_of）有融资事件 0/1 | 60/307 家 |
+| `n_funding_events` | 窗口内融资次数（「融了几轮」） | 121 次 / 60 家 |
+| `investor_prestige_best/_latest` | 窗口内最好/最近机构等级（1=头部 VC…4=个人天使） | 59/307 家 |
+
+**必须知道的限制**：覆盖是 MNAR（能融资的企业本身更活跃），不是随机子集；
+不进 `v_model_train_ready`（那是 17 列既有口径），需要时 LEFT JOIN。
+补算命令 `python -m src.data.build_asof_funding`（幂等）。
+
 ### 6.6 数据获取
 
-数据库 153 MB（33 表 / 18 视图 / 788 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（34 表 / 19 视图 / 804 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -299,7 +319,7 @@ unzip zjtech_credit_data.zip -d .          # 得到 05_数据库/zjtech_credit.d
 mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 ```
 
-附件里还带数据字典（788 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
+附件里还带数据字典（804 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 ## 七、归档规则

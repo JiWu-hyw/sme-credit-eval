@@ -215,12 +215,111 @@ def main() -> int:
 
     con.close()
     print("\n图 ID 与口径文档守卫：%d 项通过，%d 项失败" % (len(PASS), len(FAIL)))
+    # 融资特征补算守卫一并跑（v1.6）
+    rc_f = funding_guard()
     if FAIL:
         for n, e in FAIL:
             print("  ✗ %s: %s" % (n, e))
         return 1
-    return 0
+    return rc_f
+
+
+def funding_guard() -> int:
+    """v1.6 融资特征补算守卫（独立入口，不与上面的 main 混跑）。"""
+    con = sqlite3.connect("file:%s?mode=ro" % DB, uri=True)
+    cur = con.cursor()
+    P, F = [], []
+
+    def chk(name, fn):
+        try:
+            fn(); P.append(name); print("  [OK] %s" % name)
+        except AssertionError as e:
+            F.append((name, str(e))); print("  [FAIL] %s -> %s" % (name, e))
+
+    def t_table_exists():
+        got = cur.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
+                          "AND name='ads_feature_asof_funding'").fetchone()[0]
+        assert got == 1, "表不存在，需跑 python -m src.data.build_asof_funding"
+
+    def t_rows_complete():
+        n = cur.execute("SELECT COUNT(*) FROM ads_feature_asof_funding").fetchone()[0]
+        n_anchor = cur.execute("SELECT COUNT(DISTINCT enterprise_id||as_of_policy) "
+                               "FROM ads_feature_asof").fetchone()[0]
+        assert n == n_anchor == 614, "应覆盖 307 家 × 2 口径 = 614 行，实得 %d（锚点 %d）" % (n, n_anchor)
+
+    def t_cohort_matches_manual_sql():
+        """与独立 SQL 交叉对账：窗口内 m_funding=1 的家数必须与手工算一致。"""
+        n_sql = cur.execute("""
+            SELECT COUNT(*) FROM (
+              SELECT DISTINCT f.enterprise_id FROM fact_funding_event f
+              JOIN ads_model_dataset t ON t.enterprise_id=f.enterprise_id
+                AND t.label_task='qual_survival' AND t.split<>'excluded'
+              WHERE f.event_year <= t.cohort_year)""").fetchone()[0]
+        n_tbl = cur.execute("SELECT SUM(m_funding) FROM ads_feature_asof_funding "
+                            "WHERE as_of_policy='cohort'").fetchone()[0] or 0
+        assert n_sql == n_tbl == 60, "手工 SQL %d vs 表内 %d（应为 60）" % (n_sql, n_tbl)
+
+    def t_no_future_leakage():
+        """最硬的一条：任何一行的窗口内事件都必须 event_year <= as_of_year。"""
+        bad = cur.execute("""
+            SELECT COUNT(*) FROM ads_feature_asof_funding a
+            WHERE EXISTS (SELECT 1 FROM fact_funding_event f
+                          WHERE f.enterprise_id=a.enterprise_id
+                            AND f.event_year <= a.as_of_year
+                            AND a.m_funding = 0)""").fetchone()[0]
+        assert bad == 0, "%d 家窗口内有事件但 m_funding=0 —— as-of 边界算错" % bad
+        bad2 = cur.execute("""
+            SELECT COUNT(*) FROM ads_feature_asof_funding a
+            WHERE a.n_funding_events <
+                  (SELECT COUNT(*) FROM fact_funding_event f
+                    WHERE f.enterprise_id=a.enterprise_id
+                      AND f.event_year <= a.as_of_year)""").fetchone()[0]
+        assert bad2 == 0, "%d 行事件计数偏小" % bad2
+
+    def t_zero_semantics():
+        """0 = 有观测无事件（合法），不允许 NULL 出现在 m_funding/n_events 上。"""
+        bad = cur.execute("SELECT COUNT(*) FROM ads_feature_asof_funding "
+                          "WHERE m_funding IS NULL OR n_funding_events IS NULL").fetchone()[0]
+        assert bad == 0, "%d 行 m_funding/n_events 为 NULL——0 才是「无事件」" % bad
+
+    def t_prestige_range():
+        bad = cur.execute("SELECT COUNT(*) FROM ads_feature_asof_funding "
+                          "WHERE investor_prestige_best IS NOT NULL "
+                          "AND investor_prestige_best NOT IN (1,2,3,4)").fetchone()[0]
+        assert bad == 0, "机构等级越界 %d 行（应为 1-4）" % bad
+
+    def t_missing_reason_reclassified():
+        rows = {r[0]: r[1] for r in cur.execute(
+            "SELECT feature_name, missing_reason FROM v_feature_missing_reason "
+            "WHERE feature_name IN ('patent_cagr','m_funding','investor_prestige')")}
+        assert rows.get("patent_cagr") == "definition_mismatch", \
+            "patent_cagr 应归「口径不可比」，实际 %r" % rows.get("patent_cagr")
+        assert rows.get("m_funding") == "computable_not_computed_v1.6", \
+            "m_funding 应标注已补算，实际 %r" % rows.get("m_funding")
+
+    def t_registry_substitutes():
+        import json
+        reg = json.load(open(os.path.join(ROOT, "configs", "field_gap_registry.json"),
+                             encoding="utf-8"))
+        fields = {s.get("field", "") for s in reg.get("substitutes", [])}
+        assert any("m_funding" in f for f in fields), "登记册替身未记录 m_funding 补算"
+
+    chk("融资特征表存在", t_table_exists)
+    chk("614 行覆盖完整", t_rows_complete)
+    chk("cohort 家数与手工 SQL 对账(60)", t_cohort_matches_manual_sql)
+    chk("无未来事件泄漏", t_no_future_leakage)
+    chk("0/NULL 语义正确", t_zero_semantics)
+    chk("机构等级 1-4", t_prestige_range)
+    chk("缺失原因已重分类", t_missing_reason_reclassified)
+    chk("登记册替身已记录", t_registry_substitutes)
+
+    con.close()
+    print("融资特征补算守卫：%d 项通过，%d 项失败" % (len(P), len(F)))
+    return 1 if F else 0
 
 
 if __name__ == "__main__":
+    import os as _os
+    if _os.environ.get("FUNDING_GUARD"):
+        raise SystemExit(funding_guard())
     raise SystemExit(main())

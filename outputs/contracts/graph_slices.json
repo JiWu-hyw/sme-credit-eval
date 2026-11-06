@@ -153,8 +153,8 @@
     "displayable": true,
     "source": "dim_enterprise + fact_patent + ads_graph_edge",
     "method": "按 region_code / cohort_year / label 分组，每组回连企业集合再统计专利与 tech_similar 边",
-    "generated_at": "2026-11-06 16:57:30",
-    "schema_version": "v1.5",
+    "generated_at": "2026-11-06 17:24:06",
+    "schema_version": "v1.6",
     "note": "每片的企业集合是精确 IN 查询，不是估算；n_tech_similar_edges 会跨片重复计数"
   }
 }

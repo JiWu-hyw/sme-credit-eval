@@ -1,7 +1,7 @@
 {
   "schema_version": "v1.3",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-06 16:57:32",
+  "generated_at": "2026-11-06 17:24:07",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",
@@ -181,6 +181,68 @@
       ],
       "n_cols": 8,
       "n_rows": 17806
+    },
+    "ads_feature_asof_funding": {
+      "columns": [
+        {
+          "name": "enterprise_id",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "as_of_policy",
+          "type": "TEXT",
+          "notnull": true,
+          "default": null,
+          "pk": true
+        },
+        {
+          "name": "cohort_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "as_of_year",
+          "type": "INTEGER",
+          "notnull": true,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "m_funding",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "n_funding_events",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "investor_prestige_best",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        },
+        {
+          "name": "investor_prestige_latest",
+          "type": "INTEGER",
+          "notnull": false,
+          "default": null,
+          "pk": false
+        }
+      ],
+      "n_cols": 8,
+      "n_rows": 614
     },
     "ads_graph_edge": {
       "columns": [
@@ -3466,7 +3528,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 6
+      "n_rows": 7
     },
     "ods_patent_raw": {
       "columns": [
@@ -4282,7 +4344,7 @@
       "match_confidence"
     ]
   },
-  "total_tables": 33,
+  "total_tables": 34,
   "total_views": 7,
-  "total_columns": 544
+  "total_columns": 552
 }

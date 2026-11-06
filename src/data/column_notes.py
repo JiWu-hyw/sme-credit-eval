@@ -494,6 +494,7 @@ VIEW_COMMENTS["v_feature_missing_reason"] = (
     "避免把「源没接入」和「该企业确实没有」混为一谈"
 )
 VIEW_NOTES["v_feature_missing_reason"] = {
+    "n_patent_observable": "按申请年且 as-of 时点已公开可观测的专利数（pub_date_last<=as_of 或为空）",
     "feature_name": "特征名（对应 ads_feature_asof.feature_name）",
     "enterprise_id": "企业主键",
     "as_of_policy": "时点口径：cohort=认定当年 / due_minus_1=到期前一年",
@@ -565,6 +566,26 @@ VIEW_NOTES["v_feature_discrimination"] = {
     "v_max": "该范围该特征最大值",
     "stability_note": "稳定性警示：正例 < 10 时标注「AUC 不稳，只作方向参考」",
 }
+
+TABLE_NOTES["ads_feature_asof_funding"] = {
+    "m_funding": "窗口内是否有融资事件（0/1；0=有观测无事件，与 NULL 语义不同）",
+    "n_funding_events": "窗口内融资事件数（评审报告 §2.3(3)「融了几轮」的落地）",
+    "investor_prestige_best": "窗口内最好机构等级（1=头部 VC … 4=个人天使；NULL=无带等级事件）",
+    "investor_prestige_latest": "最近一次带等级事件的机构等级（NULL=无带等级事件）",
+    "as_of_policy": "口径同 ads_feature_asof：cohort=认定前 / due_minus_1=到期前一年",
+    "as_of_year": "观测截止年；窗口=event_year <= as_of_year",
+}
+
+TABLE_COMMENTS["ads_feature_asof_funding"] = (
+    "融资特征 as-of 补算表（v1.6）：m_funding / n_funding_events / 机构等级两式；"
+    "另见 v_feature_asof_funding 视图"
+)
+
+VIEW_COMMENTS["v_feature_asof_funding"] = (
+    "融资特征 as-of 查询视图（v1.6）：m_funding / n_funding_events / 机构等级两式。"
+    "覆盖有限（cohort 口径 60/307 家），MNAR；不进 v_model_train_ready，需要时 LEFT JOIN"
+)
+VIEW_NOTES["v_feature_asof_funding"] = TABLE_NOTES["ads_feature_asof_funding"]
 
 VIEW_COMMENTS["v_feature_cohort_gap"] = (
     "队列反差台账：把「全样本看起来有用、拆开就散架」的特征单独拎出来。"
