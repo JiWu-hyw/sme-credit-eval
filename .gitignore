@@ -1,116 +1,69 @@
-# ---- Python ----
+# ============================================================
+#  数据与产物：一律不入库
+#  库 104 MB + 历史备份 ≈ 1.7 GB，超出 GitHub 单文件 100 MB 上限，
+#  且含 500 家真实企业的工商与专利明细。
+#  数据通过 Release 附件分发（zjtech_credit_data.zip）。
+# ============================================================
+data/db/
+data/raw/
+data/inbound/
+data/processed/
+data/真实数据集/
+deliverables/
+reports/
+_archive/
+*.db
+*.sqlite
+*.sqlite3
+*.db.bak*
+*.bak
+
+# 产物目录整体排除，仅保留接口契约（API 运行时直接读这里，前端也要用）
+outputs/*
+!outputs/contracts/
+!outputs/contracts/*.json
+
+# 保留建库 DDL（没有它别人无法起空库）
+!src/data/schema.sql
+
+# 名单副本：权威位置在 data/浙江省500家专精特新中小企业/
+浙江省500家专精特新中小企业/
+
+# 本地前端工作副本：权威源码在 src/app/frontend/extracted/，此处不入库
+frontend_v2/
+
+# 前端：依赖、构建产物、历史交付包
+node_modules/
+dist/
+.vite/
+src/app/frontend/*.zip
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib60/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# 虚拟环境
+.eggs/
+build/
 .venv/
 venv/
-ENV/
 env/
-.python-version
-
-# 测试与覆盖率
 .pytest_cache/
+.mypy_cache/
 .coverage
-.coverage.*
 htmlcov/
-.tox/
-.nox/
-coverage.xml
-*.cover
 
-# Jupyter
-.ipynb_checkpoints/
-*.ipynb_checkpoints
-
-# ---- Node / 前端 ----
-node_modules/
-.pnpm-store/
-.npm/
-.yarn/
-dist/
-dist-ssr/
-*.local
-.vite/
-
-# 日志
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# 编辑器 / 操作系统
-.vscode/*
-!.vscode/extensions.json
-.idea/
-*.swp
-*.swo
-*~
+# 编辑器与系统
 .DS_Store
 Thumbs.db
 desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
 
-# ---- 项目数据 ----
-# 原始数据体积大且含敏感信息，不纳入版本库（按需向资产库获取）
-data/raw/*
-!data/raw/.gitkeep
-
-# 数据库产物
-data/db/*.db
-data/db/*.db-journal
-data/db/*.sqlite
-data/db/*.sqlite3
-
-# 中间产物与模型权重
-data/processed/*.parquet
-data/processed/*.tmp
-*.h5
-*.hdf5
-*.pth
-*.pt
-*.ckpt
-*.onnx
-*.pkl
-*.joblib
-
-# 输出产物（可由脚本重跑生成）
-outputs/*.png
-outputs/*.pdf
-outputs/_tmp/
-
-# 环境变量与密钥
+# 日志与本地配置
+*.log
 .env
 .env.*
 !.env.example
-*.pem
-*.key
-secrets.yaml
-secrets.yml
-
-# 构建与预览产物
-src/app/frontend/dist/
-src/app/frontend/docs/preview/
-
-# 归档区：不建议提交，但保留在资产库中
-_archive/

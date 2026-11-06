@@ -1,0 +1,1181 @@
+{
+  "summary": {
+    "tables_checked": 22,
+    "total_rows": 359863,
+    "cell_completeness": 0.873,
+    "rows_by_layer": {
+      "DIM": 28075,
+      "FACT": 35535,
+      "BRIDGE": 129694,
+      "DWS": 1500,
+      "ADS": 148854,
+      "ODS": 16205
+    }
+  },
+  "tables": [
+    {
+      "table": "dim_enterprise",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 62,
+      "columns_full": 46,
+      "columns_empty": 0,
+      "completeness": 0.9398,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "stock_code",
+          "n_null": 498,
+          "null_rate": 0.996
+        },
+        {
+          "column": "annual_net_profit_wan",
+          "n_null": 489,
+          "null_rate": 0.978
+        },
+        {
+          "column": "annual_revenue_wan",
+          "n_null": 488,
+          "null_rate": 0.976
+        },
+        {
+          "column": "legal_rep",
+          "n_null": 42,
+          "null_rate": 0.084
+        },
+        {
+          "column": "found_date",
+          "n_null": 37,
+          "null_rate": 0.074
+        },
+        {
+          "column": "found_years",
+          "n_null": 37,
+          "null_rate": 0.074
+        },
+        {
+          "column": "biz_status",
+          "n_null": 37,
+          "null_rate": 0.074
+        },
+        {
+          "column": "admin_penalty_cnt",
+          "n_null": 37,
+          "null_rate": 0.074
+        }
+      ]
+    },
+    {
+      "table": "dim_inventor",
+      "exists": true,
+      "n_rows": 15955,
+      "n_columns": 7,
+      "columns_full": 4,
+      "columns_empty": 1,
+      "completeness": 0.8555,
+      "empty_columns": [
+        "addr_hash"
+      ],
+      "worst_columns": [
+        {
+          "column": "addr_hash",
+          "n_null": 15955,
+          "null_rate": 1.0
+        },
+        {
+          "column": "first_year",
+          "n_null": 94,
+          "null_rate": 0.0059
+        },
+        {
+          "column": "last_year",
+          "n_null": 94,
+          "null_rate": 0.0059
+        }
+      ]
+    },
+    {
+      "table": "dim_ipc",
+      "exists": true,
+      "n_rows": 11616,
+      "n_columns": 7,
+      "columns_full": 4,
+      "columns_empty": 0,
+      "completeness": 0.9997,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "ipc_class",
+          "n_null": 8,
+          "null_rate": 0.0007
+        },
+        {
+          "column": "ipc_subclass",
+          "n_null": 8,
+          "null_rate": 0.0007
+        },
+        {
+          "column": "parent_code",
+          "n_null": 8,
+          "null_rate": 0.0007
+        }
+      ]
+    },
+    {
+      "table": "dim_qual_type",
+      "exists": true,
+      "n_rows": 4,
+      "n_columns": 7,
+      "columns_full": 7,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "fact_patent",
+      "exists": true,
+      "n_rows": 32969,
+      "n_columns": 25,
+      "columns_full": 9,
+      "columns_empty": 7,
+      "completeness": 0.6502,
+      "empty_columns": [
+        "grant_date",
+        "grant_year",
+        "assignee_addr_raw",
+        "n_claims",
+        "n_cite_fwd",
+        "n_cite_bwd",
+        "family_size"
+      ],
+      "worst_columns": [
+        {
+          "column": "grant_date",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "grant_year",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "assignee_addr_raw",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "n_claims",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "n_cite_fwd",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "n_cite_bwd",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "family_size",
+          "n_null": 32969,
+          "null_rate": 1.0
+        },
+        {
+          "column": "abstract",
+          "n_null": 32038,
+          "null_rate": 0.9718
+        }
+      ]
+    },
+    {
+      "table": "fact_qualification",
+      "exists": true,
+      "n_rows": 1281,
+      "n_columns": 13,
+      "columns_full": 10,
+      "columns_empty": 3,
+      "completeness": 0.7692,
+      "empty_columns": [
+        "publish_date",
+        "notice_id",
+        "raw_id"
+      ],
+      "worst_columns": [
+        {
+          "column": "publish_date",
+          "n_null": 1281,
+          "null_rate": 1.0
+        },
+        {
+          "column": "notice_id",
+          "n_null": 1281,
+          "null_rate": 1.0
+        },
+        {
+          "column": "raw_id",
+          "n_null": 1281,
+          "null_rate": 1.0
+        }
+      ]
+    },
+    {
+      "table": "fact_qualification_event",
+      "exists": true,
+      "n_rows": 779,
+      "n_columns": 10,
+      "columns_full": 10,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "fact_funding_event",
+      "exists": true,
+      "n_rows": 506,
+      "n_columns": 12,
+      "columns_full": 7,
+      "columns_empty": 2,
+      "completeness": 0.7232,
+      "empty_columns": [
+        "post_valuation",
+        "source_id"
+      ],
+      "worst_columns": [
+        {
+          "column": "post_valuation",
+          "n_null": 506,
+          "null_rate": 1.0
+        },
+        {
+          "column": "source_id",
+          "n_null": 506,
+          "null_rate": 1.0
+        },
+        {
+          "column": "amount_cny",
+          "n_null": 361,
+          "null_rate": 0.7134
+        },
+        {
+          "column": "investor_names",
+          "n_null": 154,
+          "null_rate": 0.3043
+        },
+        {
+          "column": "prestige_rank",
+          "n_null": 154,
+          "null_rate": 0.3043
+        }
+      ]
+    },
+    {
+      "table": "bridge_patent_inventor",
+      "exists": true,
+      "n_rows": 77899,
+      "n_columns": 4,
+      "columns_full": 4,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "bridge_patent_ipc",
+      "exists": true,
+      "n_rows": 51795,
+      "n_columns": 5,
+      "columns_full": 5,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "dws_tech_feature",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 26,
+      "columns_full": 21,
+      "columns_empty": 3,
+      "completeness": 0.8765,
+      "empty_columns": [
+        "patent_citation",
+        "patent_triple_score",
+        "n_patent_cited"
+      ],
+      "worst_columns": [
+        {
+          "column": "patent_citation",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "patent_triple_score",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "n_patent_cited",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "core_staff_stability",
+          "n_null": 59,
+          "null_rate": 0.118
+        },
+        {
+          "column": "rd_intensity",
+          "n_null": 47,
+          "null_rate": 0.094
+        }
+      ]
+    },
+    {
+      "table": "dws_growth_feature",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 35,
+      "columns_full": 11,
+      "columns_empty": 7,
+      "completeness": 0.4553,
+      "empty_columns": [
+        "rev_cagr",
+        "emp_cagr",
+        "funding_to_last_val",
+        "m_team",
+        "m_cite",
+        "rev_cagr_flag",
+        "ever_fail_review"
+      ],
+      "worst_columns": [
+        {
+          "column": "rev_cagr",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "emp_cagr",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "funding_to_last_val",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "m_team",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "m_cite",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "rev_cagr_flag",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "ever_fail_review",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "latest_net_profit_wan",
+          "n_null": 489,
+          "null_rate": 0.978
+        }
+      ]
+    },
+    {
+      "table": "dws_fusion_feature",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 6,
+      "columns_full": 4,
+      "columns_empty": 1,
+      "completeness": 0.828,
+      "empty_columns": [
+        "cap_tech_synergy"
+      ],
+      "worst_columns": [
+        {
+          "column": "cap_tech_synergy",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "tech_growth_inter",
+          "n_null": 16,
+          "null_rate": 0.032
+        }
+      ]
+    },
+    {
+      "table": "ads_label",
+      "exists": true,
+      "n_rows": 307,
+      "n_columns": 10,
+      "columns_full": 10,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "ads_model_dataset",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 39,
+      "columns_full": 26,
+      "columns_empty": 8,
+      "completeness": 0.7694,
+      "empty_columns": [
+        "patent_citation",
+        "patent_triple_score",
+        "rev_cagr",
+        "emp_cagr",
+        "funding_to_last_val",
+        "m_team",
+        "m_cite",
+        "cap_tech_synergy"
+      ],
+      "worst_columns": [
+        {
+          "column": "patent_citation",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "patent_triple_score",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "rev_cagr",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "emp_cagr",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "funding_to_last_val",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "m_team",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "m_cite",
+          "n_null": 500,
+          "null_rate": 1.0
+        },
+        {
+          "column": "cap_tech_synergy",
+          "n_null": 500,
+          "null_rate": 1.0
+        }
+      ]
+    },
+    {
+      "table": "ads_survival_period",
+      "exists": true,
+      "n_rows": 1479,
+      "n_columns": 22,
+      "columns_full": 11,
+      "columns_empty": 0,
+      "completeness": 0.9835,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "event",
+          "n_null": 206,
+          "null_rate": 0.1393
+        },
+        {
+          "column": "core_staff_stability",
+          "n_null": 206,
+          "null_rate": 0.1393
+        },
+        {
+          "column": "n_ipc_subclass",
+          "n_null": 23,
+          "null_rate": 0.0156
+        },
+        {
+          "column": "tech_breadth_entropy",
+          "n_null": 23,
+          "null_rate": 0.0156
+        },
+        {
+          "column": "tech_breadth_ipc_class",
+          "n_null": 23,
+          "null_rate": 0.0156
+        },
+        {
+          "column": "inv_patent_ratio",
+          "n_null": 9,
+          "null_rate": 0.0061
+        },
+        {
+          "column": "n_inventor",
+          "n_null": 9,
+          "null_rate": 0.0061
+        },
+        {
+          "column": "n_patent_app",
+          "n_null": 9,
+          "null_rate": 0.0061
+        }
+      ]
+    },
+    {
+      "table": "ads_graph_node",
+      "exists": true,
+      "n_rows": 45077,
+      "n_columns": 4,
+      "columns_full": 4,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "ads_graph_edge",
+      "exists": true,
+      "n_rows": 101491,
+      "n_columns": 7,
+      "columns_full": 7,
+      "columns_empty": 0,
+      "completeness": 1.0,
+      "empty_columns": [],
+      "worst_columns": []
+    },
+    {
+      "table": "ods_qcc_annual",
+      "exists": true,
+      "n_rows": 500,
+      "n_columns": 16,
+      "columns_full": 5,
+      "columns_empty": 0,
+      "completeness": 0.4461,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "net_profit_wan",
+          "n_null": 489,
+          "null_rate": 0.978
+        },
+        {
+          "column": "profit_total_wan",
+          "n_null": 489,
+          "null_rate": 0.978
+        },
+        {
+          "column": "total_revenue_wan",
+          "n_null": 488,
+          "null_rate": 0.976
+        },
+        {
+          "column": "tax_total_wan",
+          "n_null": 488,
+          "null_rate": 0.976
+        },
+        {
+          "column": "liability_wan",
+          "n_null": 488,
+          "null_rate": 0.976
+        },
+        {
+          "column": "main_biz_rev_wan",
+          "n_null": 488,
+          "null_rate": 0.976
+        },
+        {
+          "column": "total_assets_wan",
+          "n_null": 487,
+          "null_rate": 0.974
+        },
+        {
+          "column": "owner_equity_wan",
+          "n_null": 487,
+          "null_rate": 0.974
+        }
+      ]
+    },
+    {
+      "table": "ods_qcc_cert",
+      "exists": true,
+      "n_rows": 10242,
+      "n_columns": 10,
+      "columns_full": 4,
+      "columns_empty": 0,
+      "completeness": 0.9078,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "cert_category",
+          "n_null": 6147,
+          "null_rate": 0.6002
+        },
+        {
+          "column": "issuer",
+          "n_null": 1271,
+          "null_rate": 0.1241
+        },
+        {
+          "column": "valid_to",
+          "n_null": 922,
+          "null_rate": 0.09
+        },
+        {
+          "column": "issue_date",
+          "n_null": 510,
+          "null_rate": 0.0498
+        },
+        {
+          "column": "enterprise_id",
+          "n_null": 498,
+          "null_rate": 0.0486
+        },
+        {
+          "column": "cert_no",
+          "n_null": 91,
+          "null_rate": 0.0089
+        }
+      ]
+    },
+    {
+      "table": "ods_qcc_honor",
+      "exists": true,
+      "n_rows": 3216,
+      "n_columns": 12,
+      "columns_full": 7,
+      "columns_empty": 0,
+      "completeness": 0.8908,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "valid_to",
+          "n_null": 2133,
+          "null_rate": 0.6632
+        },
+        {
+          "column": "valid_from",
+          "n_null": 1699,
+          "null_rate": 0.5283
+        },
+        {
+          "column": "enterprise_id",
+          "n_null": 210,
+          "null_rate": 0.0653
+        },
+        {
+          "column": "publish_date",
+          "n_null": 170,
+          "null_rate": 0.0529
+        },
+        {
+          "column": "cert_year",
+          "n_null": 4,
+          "null_rate": 0.0012
+        }
+      ]
+    },
+    {
+      "table": "ods_qcc_shareholder",
+      "exists": true,
+      "n_rows": 2247,
+      "n_columns": 12,
+      "columns_full": 4,
+      "columns_empty": 0,
+      "completeness": 0.6483,
+      "empty_columns": [],
+      "worst_columns": [
+        {
+          "column": "share_kind",
+          "n_null": 2217,
+          "null_rate": 0.9866
+        },
+        {
+          "column": "shares",
+          "n_null": 2094,
+          "null_rate": 0.9319
+        },
+        {
+          "column": "indirect_ratio",
+          "n_null": 1989,
+          "null_rate": 0.8852
+        },
+        {
+          "column": "related_product",
+          "n_null": 1753,
+          "null_rate": 0.7802
+        },
+        {
+          "column": "first_hold_date",
+          "n_null": 752,
+          "null_rate": 0.3347
+        },
+        {
+          "column": "enterprise_id",
+          "n_null": 244,
+          "null_rate": 0.1086
+        },
+        {
+          "column": "subscription_date",
+          "n_null": 243,
+          "null_rate": 0.1081
+        },
+        {
+          "column": "subscription_wan",
+          "n_null": 192,
+          "null_rate": 0.0854
+        }
+      ]
+    }
+  ],
+  "join_key_health": [
+    {
+      "table": "dim_enterprise",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "fact_patent",
+      "column": "enterprise_id",
+      "n_rows": 32969,
+      "n_null": 766,
+      "null_rate": 0.0232,
+      "severity": "high",
+      "impact": "这些行无法归属企业，企业级特征与建模时会整行丢弃"
+    },
+    {
+      "table": "fact_qualification",
+      "column": "enterprise_id",
+      "n_rows": 1281,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "fact_qualification_event",
+      "column": "enterprise_id",
+      "n_rows": 779,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "fact_funding_event",
+      "column": "enterprise_id",
+      "n_rows": 506,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "dws_tech_feature",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "dws_growth_feature",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "dws_fusion_feature",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "ads_label",
+      "column": "enterprise_id",
+      "n_rows": 307,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "ads_model_dataset",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "ads_survival_period",
+      "column": "enterprise_id",
+      "n_rows": 1479,
+      "n_null": 0,
+      "null_rate": 0.0,
+      "severity": "ok",
+      "impact": "全部可归属企业"
+    },
+    {
+      "table": "ods_qcc_annual",
+      "column": "enterprise_id",
+      "n_rows": 500,
+      "n_null": 26,
+      "null_rate": 0.052,
+      "severity": "high",
+      "impact": "这些行无法归属企业，企业级特征与建模时会整行丢弃"
+    },
+    {
+      "table": "ods_qcc_cert",
+      "column": "enterprise_id",
+      "n_rows": 10242,
+      "n_null": 498,
+      "null_rate": 0.0486,
+      "severity": "high",
+      "impact": "这些行无法归属企业，企业级特征与建模时会整行丢弃"
+    },
+    {
+      "table": "ods_qcc_honor",
+      "column": "enterprise_id",
+      "n_rows": 3216,
+      "n_null": 210,
+      "null_rate": 0.0653,
+      "severity": "high",
+      "impact": "这些行无法归属企业，企业级特征与建模时会整行丢弃"
+    },
+    {
+      "table": "ods_qcc_shareholder",
+      "column": "enterprise_id",
+      "n_rows": 2247,
+      "n_null": 244,
+      "null_rate": 0.1086,
+      "severity": "high",
+      "impact": "这些行无法归属企业，企业级特征与建模时会整行丢弃"
+    }
+  ],
+  "gap_registry": {
+    "meta": {
+      "version": "v1",
+      "updated_at": "2026-11-05",
+      "owner": "施汶邑（几梦）",
+      "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
+      "status_enum": {
+        "null_by_design": "已决策保持 NULL（数据源不足，填了就是造假）",
+        "source_missing": "依赖的外部数据源未采购/未接入，按设计留空",
+        "partial_insufficient": "有少量值但覆盖率过低，不足以建模，仅留档"
+      },
+      "traps": [
+        "SQLite 会把 COUNT(\"不存在的列\") 里的双引号当字符串字面量，返回总行数 → 覆盖率假性 100%。统计前必须先用 PRAGMA 确认列存在。",
+        "全空列不要用中位数/均值填充：填充后是常量列，既不提供信息，又会在特征重要性里留下幽灵特征。",
+        "同一件专利在源数据里会落两条（申请公布 …A 有 IPC 无法律状态，授权公告 …B 有法律状态无 IPC）。任何按 fact_patent 行数做的聚合都会重复计数 —— 实测 2,866 组 / 5,732 行，专利数虚增约 8%，手算授权率被压向 0.5。**专利级聚合一律走 v_patent_canonical 视图或用 COUNT(DISTINCT app_no)**，守卫测试 tests/test_patent_dedup.py 会扫源码拦截。",
+        "fact_patent.is_granted 是「此刻仍在权」，不是「是否曾获批授权」：年费断缴/期限届满/放弃会把已授权专利标回 0，于是「授权后失效」与「从未授权」混成一类（实测 7,940 件，占已授权 33.5%）。算授权率一律用 v_patent_canonical.is_granted_ever（依据公告号 kind code B/U/S/C），守卫测试 tests/test_grant_definition.py 会拦截裸聚合。"
+      ]
+    },
+    "summary": {
+      "total": 15,
+      "null_by_design": 9,
+      "source_missing": 5,
+      "partial_insufficient": 1,
+      "substitutes": 7,
+      "traps": 0
+    },
+    "fields": [
+      {
+        "table": "dws_tech_feature",
+        "field": "patent_triple_score",
+        "cn": "专利三值评分",
+        "indicator": "T5",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "四个分量一个都拿不到，任何写入值都是自造而非三值评分，会与《信用评估指标体系》表 2 T5 的定义冲突。"
+      },
+      {
+        "table": "dws_tech_feature",
+        "field": "patent_citation",
+        "cn": "专利被引（近 5 年）",
+        "indicator": "T3",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "引文库 fact_patent_citation 为 0 行，被引数无从计算；用申请量/授权量反推被引属于伪造关系。"
+      },
+      {
+        "table": "dws_tech_feature",
+        "field": "n_patent_cited",
+        "cn": "被引专利数（计数口径）",
+        "indicator": "T3",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "与 patent_citation 同源，引文库为空则计数亦为空。"
+      },
+      {
+        "table": "fact_patent",
+        "field": "n_cite_fwd",
+        "cn": "前向被引数（逐专利）",
+        "indicator": "T3",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "逐专利引用明细未采集，留空以保证下游任何聚合都不会被污染。"
+      },
+      {
+        "table": "fact_patent",
+        "field": "n_cite_bwd",
+        "cn": "后向引用数（逐专利）",
+        "indicator": "T3",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "同 n_cite_fwd。"
+      },
+      {
+        "table": "fact_patent",
+        "field": "n_claims",
+        "cn": "权利要求数",
+        "indicator": "T5",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "采集源无此字段。曾以占位值填充，已按诚实原则整体回退 NULL——占位值会自动流入 T5 计算并污染结果。"
+      },
+      {
+        "table": "fact_patent",
+        "field": "family_size",
+        "cn": "同族规模",
+        "indicator": "T5",
+        "priority": "P1",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "采集源无此字段，需 DOCDB 同族映射。"
+      },
+      {
+        "table": "fact_patent",
+        "field": "abstract",
+        "cn": "摘要原文",
+        "indicator": "T5",
+        "priority": "P1",
+        "status": "partial_insufficient",
+        "decision": "保留已有，不补不编",
+        "reason": "仅 2.82% 覆盖，做文本特征会引入严重选择偏差（有摘要的专利本身来自特定来源）。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "rev_cagr",
+        "cn": "营收复合增长率",
+        "indicator": "G1",
+        "priority": "P0",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "年报仅 2025 单年，且非上市企业营收普遍不公示，无法算 CAGR。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "emp_cagr",
+        "cn": "员工复合增长率",
+        "indicator": "G2",
+        "priority": "P1",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "社保/员工数仅当期快照，无多年份序列。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "funding_to_last_val",
+        "cn": "融资额与上轮估值比",
+        "indicator": "G4",
+        "priority": "P0",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "非上市企业融资额与估值均不披露，融资流水只有轮次与日期。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "m_team",
+        "cn": "里程碑：核心团队变动",
+        "indicator": "G5",
+        "priority": "P1",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "无董监高变更事件表，无法构造 0/1 里程碑。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "m_cite",
+        "cn": "里程碑：高影响力引用",
+        "indicator": "G5",
+        "priority": "P1",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "依赖引文库，与 T3 同源。"
+      },
+      {
+        "table": "dws_growth_feature",
+        "field": "rev_cagr_flag",
+        "cn": "营收 CAGR 口径标注",
+        "indicator": "G1",
+        "priority": "P0",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL",
+        "reason": "flag 是用来标注「这个值是按什么口径算的」。值为空时标注口径无意义，写 missing 反而会制造「口径齐全、值却没有」的怪状态。"
+      },
+      {
+        "table": "dws_fusion_feature",
+        "field": "cap_tech_synergy",
+        "cn": "资本-技术协同度",
+        "indicator": "F2",
+        "priority": "P2",
+        "status": "null_by_design",
+        "decision": "A 保持 NULL（P2 本轮不做）",
+        "reason": "P2 最低优先级指标，文档本身标注「暂不做」。技术上可用「融资事件前后 12 个月专利产出增速差」构造，但样本内仅 182/500 家有融资事件，构造出来覆盖率不到 37%，且融资与专利谁先谁后存在反向因果，入模风险大于收益。"
+      }
+    ],
+    "substitutes": [
+      {
+        "missing": "授权日期",
+        "missing_cov": "0 / 32,969",
+        "substitute": "申请日期（app_year 从申请号前缀恢复，134 条补齐）",
+        "field": "fact_patent.app_year / app_date",
+        "after_cov": "32,969 / 32,969（年份）",
+        "why": "授权日拿不到，但所有时间维特征本来就按申请年对齐，换锚点不影响口径；精确日仍不编"
+      },
+      {
+        "missing": "授权日 / 审结时点",
+        "missing_cov": "grant_date、grant_year 均为 0 / 32,969",
+        "substitute": "授权公告 kind code（B/U/S/C）+ 分类型审结期近似",
+        "field": "v_patent_canonical.is_granted_ever / grant_kind；ads_feature_asof.grant_rate",
+        "after_cov": "曾授权判据 100%（23,693/29,582 件已归属专利）；as-of 授权率 272/307 家（主口径）",
+        "why": "授权日确实拿不到，但「这条记录是不是授权公告」是确定信息：A 是申请公布，B/U/S/C 都是授权公告。再用审结期（发明 3 年、实用新型/外观 1 年）判断「as_of 时点是否已成定局」，就能算出无泄漏的授权率。代价是主口径下退化为常量 1.0（见 grant_rate_rule.known_degeneracy），所以这一项只回收了「能算」，没回收「有区分度」。"
+      },
+      {
+        "missing": "被引用次数",
+        "missing_cov": "0 / 32,969（引文库 0 行）",
+        "substitute": "法律状态（86.2%）→ 失效占比、驳回占比",
+        "field": "dws_tech_feature.patent_lapse_ratio / patent_reject_ratio / n_patent_lapsed / n_patent_rejected",
+        "after_cov": "500 / 500（企业级）",
+        "why": "被引是外部评价，失效是内部结局；两者都在说「这件专利值不值得维护」，后者本地可得"
+      },
+      {
+        "missing": "年报财务",
+        "missing_cov": "营收 12 / 500、利润 11、资产 13、纳税 12、员工 25",
+        "substitute": "年报实有项直接入库，没有的留空（不用社保人数折算）",
+        "field": "dws_growth_feature.latest_rev_wan / latest_net_profit_wan / latest_total_assets_wan / latest_tax_wan / latest_emp_num",
+        "after_cov": "见左；均只填真值",
+        "why": "人数与金额不是一个量纲，拿社保顶营收等于换指标；宁可空着"
+      },
+      {
+        "missing": "专利摘要",
+        "missing_cov": "931 / 32,969（2.8%）",
+        "substitute": "专利名称",
+        "field": "fact_patent.title",
+        "after_cov": "32,969 / 32,969（100%）",
+        "why": "名称里含技术关键词，可做文本特征；摘要不足时不强行做 embedding"
+      },
+      {
+        "missing": "主分类号",
+        "missing_cov": "16,244 / 32,969（49.3%）",
+        "substitute": "IPC 分类树对照（bridge_patent_ipc → dim_ipc）",
+        "field": "bridge_patent_ipc / dim_ipc",
+        "after_cov": "51,795 条 IPC 记录 100% 落到 11,608 个分类节点",
+        "why": "对照表只做层级映射，不会凭空生出缺的分类号；专利级 49.3% 是数据源上限"
+      },
+      {
+        "missing": "注册地址原文",
+        "missing_cov": "0 / 32,969",
+        "substitute": "企业所在地区",
+        "field": "dim_enterprise.region_code / region_name",
+        "after_cov": "500 / 500",
+        "why": "区域维度的建模需求只需到地区，地址原文无分析价值"
+      }
+    ]
+  },
+  "contradictions": [
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "rev_cagr",
+      "issue": "视图列全空且无对应底表列",
+      "impact": "该特征在本数据集不可用",
+      "action": "登记为 source_missing，需新增数据采购"
+    },
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "emp_cagr",
+      "issue": "视图列全空且无对应底表列",
+      "impact": "该特征在本数据集不可用",
+      "action": "登记为 source_missing，需新增数据采购"
+    },
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "patent_cagr",
+      "issue": "视图列全空，但底表 dws_growth_feature.patent_cagr 有 484 行有值",
+      "impact": "下游看到全空会误判为「未采集」；实为视图未把该底表列带出",
+      "action": "在视图定义里补 JOIN dws_growth_feature，或改用底表取数"
+    },
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "funding_to_last_val",
+      "issue": "视图列全空，但底表 dws_growth_feature.funding_net_increase_wan 有 100 行有值",
+      "impact": "下游看到全空会误判为「未采集」；实为视图未把该底表列带出",
+      "action": "在视图定义里补 JOIN dws_growth_feature，或改用底表取数"
+    },
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "investor_prestige",
+      "issue": "视图列全空，但底表 dws_growth_feature.investor_prestige 有 141 行有值",
+      "impact": "下游看到全空会误判为「未采集」；实为视图未把该底表列带出",
+      "action": "在视图定义里补 JOIN dws_growth_feature，或改用底表取数"
+    },
+    {
+      "view": "v_model_dataset_asof_flat",
+      "column": "rd_intensity",
+      "issue": "视图列全空且无对应底表列",
+      "impact": "该特征在本数据集不可用",
+      "action": "登记为 source_missing，需新增数据采购"
+    }
+  ],
+  "provenance": {
+    "kind": "measured",
+    "displayable": true,
+    "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
+    "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
+    "generated_at": "2026-11-06 00:17:54",
+    "schema_version": "v1.3",
+    "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
+  }
+}

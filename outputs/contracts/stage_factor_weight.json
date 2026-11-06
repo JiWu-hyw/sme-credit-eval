@@ -1,0 +1,323 @@
+{
+  "stages": [
+    {
+      "period_t": 1,
+      "n_rows": 493,
+      "n_enterprises": 493,
+      "n_event": 0,
+      "n_prospective": 5,
+      "event_rate": 0.0,
+      "feature_means": [
+        {
+          "feature": "n_patent_app",
+          "mean": 26.3889,
+          "min": 1.0,
+          "max": 211.0,
+          "n": 486
+        },
+        {
+          "feature": "n_patent_grant",
+          "mean": 14.8601,
+          "min": 0.0,
+          "max": 85.0,
+          "n": 486
+        },
+        {
+          "feature": "inv_patent_ratio",
+          "mean": 0.3665,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 486
+        },
+        {
+          "feature": "tech_conversion",
+          "mean": 2.2579,
+          "min": 0.0,
+          "max": 43.0,
+          "n": 486
+        },
+        {
+          "feature": "n_inventor",
+          "mean": 15.5988,
+          "min": 1.0,
+          "max": 147.0,
+          "n": 486
+        },
+        {
+          "feature": "n_ipc_subclass",
+          "mean": 9.1027,
+          "min": 1.0,
+          "max": 46.0,
+          "n": 477
+        },
+        {
+          "feature": "core_staff_stability",
+          "mean": 0.5281,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 407
+        },
+        {
+          "feature": "tech_breadth_entropy",
+          "mean": 2.389,
+          "min": 0.0,
+          "max": 4.6572,
+          "n": 477
+        },
+        {
+          "feature": "qual_rank",
+          "mean": 2.3773,
+          "min": 2.0,
+          "max": 3.0,
+          "n": 493
+        }
+      ]
+    },
+    {
+      "period_t": 2,
+      "n_rows": 493,
+      "n_enterprises": 493,
+      "n_event": 0,
+      "n_prospective": 15,
+      "event_rate": 0.0,
+      "feature_means": [
+        {
+          "feature": "n_patent_app",
+          "mean": 33.002,
+          "min": 1.0,
+          "max": 317.0,
+          "n": 491
+        },
+        {
+          "feature": "n_patent_grant",
+          "mean": 18.9287,
+          "min": 0.0,
+          "max": 94.0,
+          "n": 491
+        },
+        {
+          "feature": "inv_patent_ratio",
+          "mean": 0.3807,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 491
+        },
+        {
+          "feature": "tech_conversion",
+          "mean": 2.3407,
+          "min": 0.0,
+          "max": 48.0,
+          "n": 491
+        },
+        {
+          "feature": "n_inventor",
+          "mean": 19.224,
+          "min": 1.0,
+          "max": 157.0,
+          "n": 491
+        },
+        {
+          "feature": "n_ipc_subclass",
+          "mean": 11.0513,
+          "min": 1.0,
+          "max": 53.0,
+          "n": 487
+        },
+        {
+          "feature": "core_staff_stability",
+          "mean": 0.5798,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 426
+        },
+        {
+          "feature": "tech_breadth_entropy",
+          "mean": 2.6212,
+          "min": 0.0,
+          "max": 4.8377,
+          "n": 487
+        },
+        {
+          "feature": "qual_rank",
+          "mean": 2.6755,
+          "min": 2.0,
+          "max": 3.0,
+          "n": 493
+        }
+      ]
+    },
+    {
+      "period_t": 3,
+      "n_rows": 493,
+      "n_enterprises": 493,
+      "n_event": 21,
+      "n_prospective": 186,
+      "event_rate": 0.0426,
+      "feature_means": [
+        {
+          "feature": "n_patent_app",
+          "mean": 39.5355,
+          "min": 1.0,
+          "max": 366.0,
+          "n": 493
+        },
+        {
+          "feature": "n_patent_grant",
+          "mean": 23.0487,
+          "min": 0.0,
+          "max": 94.0,
+          "n": 493
+        },
+        {
+          "feature": "inv_patent_ratio",
+          "mean": 0.3928,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 493
+        },
+        {
+          "feature": "tech_conversion",
+          "mean": 2.4864,
+          "min": 0.0,
+          "max": 49.0,
+          "n": 493
+        },
+        {
+          "feature": "n_inventor",
+          "mean": 22.6673,
+          "min": 1.0,
+          "max": 157.0,
+          "n": 493
+        },
+        {
+          "feature": "n_ipc_subclass",
+          "mean": 13.0549,
+          "min": 1.0,
+          "max": 61.0,
+          "n": 492
+        },
+        {
+          "feature": "core_staff_stability",
+          "mean": 0.6508,
+          "min": 0.0,
+          "max": 1.0,
+          "n": 440
+        },
+        {
+          "feature": "tech_breadth_entropy",
+          "mean": 2.8029,
+          "min": 0.0,
+          "max": 4.9756,
+          "n": 492
+        },
+        {
+          "feature": "qual_rank",
+          "mean": 3.0,
+          "min": 3.0,
+          "max": 3.0,
+          "n": 493
+        }
+      ]
+    }
+  ],
+  "stage_deltas": [
+    {
+      "feature": "n_patent_grant",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 14.8601,
+      "to_mean": 23.0487,
+      "pct_change": 55.1
+    },
+    {
+      "feature": "n_patent_app",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 26.3889,
+      "to_mean": 39.5355,
+      "pct_change": 49.82
+    },
+    {
+      "feature": "n_inventor",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 15.5988,
+      "to_mean": 22.6673,
+      "pct_change": 45.31
+    },
+    {
+      "feature": "n_ipc_subclass",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 9.1027,
+      "to_mean": 13.0549,
+      "pct_change": 43.42
+    },
+    {
+      "feature": "qual_rank",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 2.3773,
+      "to_mean": 3.0,
+      "pct_change": 26.19
+    },
+    {
+      "feature": "core_staff_stability",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 0.5281,
+      "to_mean": 0.6508,
+      "pct_change": 23.23
+    },
+    {
+      "feature": "tech_breadth_entropy",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 2.389,
+      "to_mean": 2.8029,
+      "pct_change": 17.33
+    },
+    {
+      "feature": "tech_conversion",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 2.2579,
+      "to_mean": 2.4864,
+      "pct_change": 10.12
+    },
+    {
+      "feature": "inv_patent_ratio",
+      "from_period": 1,
+      "to_period": 3,
+      "from_mean": 0.3665,
+      "to_mean": 0.3928,
+      "pct_change": 7.18
+    }
+  ],
+  "capability": "descriptive_only",
+  "missing": [
+    {
+      "item": "因子权重模型",
+      "reason": "无可解释组产出的权重文件；缺口径的「阶段×因子」回归",
+      "impact": "本接口只给描述统计，不能充当 SHAP/因子重要性"
+    },
+    {
+      "item": "早期阶段事件",
+      "reason": "21 个事件全部落在 period_t=3（末期），period_t=1/2 事件数为 0",
+      "impact": "无法估计分阶段风险比，事件时间分布退化"
+    }
+  ],
+  "caveat": "事件全部集中于末期，stage_deltas 只描述特征在观察窗内的均值变化，**不能**解释为「该特征导致事件」",
+  "provenance": {
+    "kind": "partial",
+    "displayable": true,
+    "source": "ads_survival_period（1,479 行 / 493 家 / period_t∈{1,2,3}）",
+    "method": "按 period_t 分组算特征均值与事件率；跨期变化为末期均值对首期均值的相对变化",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": "v1.3",
+    "missing_dimensions": [
+      "分阶段因子权重模型",
+      "非末期事件样本"
+    ]
+  }
+}

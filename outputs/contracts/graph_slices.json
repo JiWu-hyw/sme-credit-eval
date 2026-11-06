@@ -1,0 +1,160 @@
+{
+  "by_region": [
+    {
+      "key": "330100",
+      "label": "杭州市",
+      "n_enterprises": 211,
+      "n_patents": 12974,
+      "n_tech_similar_edges": 12772,
+      "edges_per_enterprise": 60.53,
+      "patents_per_enterprise": 61.49
+    },
+    {
+      "key": "330400",
+      "label": "嘉兴市",
+      "n_enterprises": 72,
+      "n_patents": 4879,
+      "n_tech_similar_edges": 6020,
+      "edges_per_enterprise": 83.61,
+      "patents_per_enterprise": 67.76
+    },
+    {
+      "key": "330300",
+      "label": "温州市",
+      "n_enterprises": 67,
+      "n_patents": 3744,
+      "n_tech_similar_edges": 4958,
+      "edges_per_enterprise": 74.0,
+      "patents_per_enterprise": 55.88
+    },
+    {
+      "key": "330600",
+      "label": "绍兴市",
+      "n_enterprises": 36,
+      "n_patents": 1925,
+      "n_tech_similar_edges": 2887,
+      "edges_per_enterprise": 80.19,
+      "patents_per_enterprise": 53.47
+    },
+    {
+      "key": "330500",
+      "label": "湖州市",
+      "n_enterprises": 32,
+      "n_patents": 1876,
+      "n_tech_similar_edges": 2178,
+      "edges_per_enterprise": 68.06,
+      "patents_per_enterprise": 58.62
+    },
+    {
+      "key": "330700",
+      "label": "金华市",
+      "n_enterprises": 22,
+      "n_patents": 1151,
+      "n_tech_similar_edges": 1257,
+      "edges_per_enterprise": 57.14,
+      "patents_per_enterprise": 52.32
+    },
+    {
+      "key": "330800",
+      "label": "衢州市",
+      "n_enterprises": 18,
+      "n_patents": 967,
+      "n_tech_similar_edges": 1676,
+      "edges_per_enterprise": 93.11,
+      "patents_per_enterprise": 53.72
+    },
+    {
+      "key": "330900",
+      "label": "舟山市",
+      "n_enterprises": 14,
+      "n_patents": 549,
+      "n_tech_similar_edges": 642,
+      "edges_per_enterprise": 45.86,
+      "patents_per_enterprise": 39.21
+    },
+    {
+      "key": "331000",
+      "label": "台州市",
+      "n_enterprises": 14,
+      "n_patents": 729,
+      "n_tech_similar_edges": 1124,
+      "edges_per_enterprise": 80.29,
+      "patents_per_enterprise": 52.07
+    },
+    {
+      "key": "331100",
+      "label": "丽水市",
+      "n_enterprises": 14,
+      "n_patents": 788,
+      "n_tech_similar_edges": 1054,
+      "edges_per_enterprise": 75.29,
+      "patents_per_enterprise": 56.29
+    }
+  ],
+  "by_cohort_year": [
+    {
+      "key": 2021,
+      "label": "2021 年认定",
+      "n_enterprises": 160,
+      "n_patents": 9168,
+      "n_tech_similar_edges": 11019,
+      "edges_per_enterprise": 68.87,
+      "patents_per_enterprise": 57.3
+    },
+    {
+      "key": 2022,
+      "label": "2022 年认定",
+      "n_enterprises": 147,
+      "n_patents": 8369,
+      "n_tech_similar_edges": 10138,
+      "edges_per_enterprise": 68.97,
+      "patents_per_enterprise": 56.93
+    }
+  ],
+  "by_label": [
+    {
+      "key": "negative",
+      "label": "正常续存（负例）",
+      "n_enterprises": 286,
+      "n_patents": 16866,
+      "n_tech_similar_edges": 16789,
+      "edges_per_enterprise": 58.7,
+      "patents_per_enterprise": 58.97
+    },
+    {
+      "key": "positive",
+      "label": "到期未通过（正例）",
+      "n_enterprises": 21,
+      "n_patents": 671,
+      "n_tech_similar_edges": 1093,
+      "edges_per_enterprise": 52.05,
+      "patents_per_enterprise": 31.95
+    }
+  ],
+  "slices_available": [
+    "region_code",
+    "cohort_year",
+    "label"
+  ],
+  "missing": [
+    {
+      "item": "行业切片",
+      "reason": "qcc_industry_mid 覆盖 481/500",
+      "impact": "覆盖率过低时切片会大量落空，故不产出"
+    },
+    {
+      "item": "时间切片",
+      "reason": "graph 的 time_slice 只有单一取值，图未按年重建",
+      "impact": "无法做图谱演化动画"
+    }
+  ],
+  "provenance": {
+    "kind": "measured",
+    "displayable": true,
+    "source": "dim_enterprise + fact_patent + ads_graph_edge",
+    "method": "按 region_code / cohort_year / label 分组，每组回连企业集合再统计专利与 tech_similar 边",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": "v1.3",
+    "note": "每片的企业集合是精确 IN 查询，不是估算；n_tech_similar_edges 会跨片重复计数"
+  }
+}

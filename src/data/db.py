@@ -21,6 +21,8 @@ import sqlite3
 import sys
 from datetime import datetime
 
+# 项目数据根 = _backend（与 api.py 一致；configs / data 均位于 _backend 下）
+# db.py 位于 _backend/src/data/，上溯三级 → _backend
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB_DIR = os.path.join(ROOT, "data", "db")
 DB_PATH = os.path.join(DB_DIR, "zjtech_credit.db")

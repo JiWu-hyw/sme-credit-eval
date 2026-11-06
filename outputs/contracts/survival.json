@@ -1,0 +1,389 @@
+{
+  "configs": [
+    {
+      "config": "asof14",
+      "label": "仅 as-of 特征（无外采）",
+      "kind": "no_external",
+      "auc_mean": 0.6648,
+      "auc_std": 0.1259,
+      "n_folds": 100
+    },
+    {
+      "config": "asof14+qcc18",
+      "label": "as-of + 企查查 18 项外采",
+      "kind": "with_external",
+      "auc_mean": 0.8741,
+      "auc_std": 0.0854,
+      "n_folds": 100
+    },
+    {
+      "config": "perm_qcc",
+      "label": "置换对照（标签打乱）",
+      "kind": "permutation_control",
+      "auc_mean": 0.4673,
+      "auc_std": 0.1403,
+      "n_folds": 100
+    }
+  ],
+  "periods": [
+    {
+      "period_t": 1,
+      "n_rows": 493,
+      "n_event": 0
+    },
+    {
+      "period_t": 2,
+      "n_rows": 493,
+      "n_event": 0
+    },
+    {
+      "period_t": 3,
+      "n_rows": 493,
+      "n_event": 21
+    }
+  ],
+  "prospective_top": [
+    {
+      "rank": 1,
+      "enterprise_id": "ENT2C1FC8EBA0E3",
+      "name": "金锋流体控制科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9983,
+      "risk_pct": 100.0,
+      "is_renamed": true
+    },
+    {
+      "rank": 2,
+      "enterprise_id": "ENT9EC65FAE73CC",
+      "name": "浙江九州云信息科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9917,
+      "risk_pct": 99.5,
+      "is_renamed": true
+    },
+    {
+      "rank": 3,
+      "enterprise_id": "ENT2A9D91C73D90",
+      "name": "杭州慧仓信息科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9864,
+      "risk_pct": 98.9,
+      "is_renamed": true
+    },
+    {
+      "rank": 4,
+      "enterprise_id": "ENTF0F38B24BAC3",
+      "name": "浙江伟丰新材料有限公司",
+      "first_year": "2023",
+      "risk": 0.9807,
+      "risk_pct": 98.4,
+      "is_renamed": false
+    },
+    {
+      "rank": 5,
+      "enterprise_id": "ENT3E9CD33ED6DA",
+      "name": "杭州多禧生物科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9747,
+      "risk_pct": 97.8,
+      "is_renamed": true
+    },
+    {
+      "rank": 6,
+      "enterprise_id": "ENT5DD86FDA1B7D",
+      "name": "浙江阿凡特精密设备制造有限公司",
+      "first_year": "2023",
+      "risk": 0.973,
+      "risk_pct": 97.3,
+      "is_renamed": true
+    },
+    {
+      "rank": 7,
+      "enterprise_id": "ENTDF279346F29D",
+      "name": "浙江创新电机有限公司",
+      "first_year": "2023",
+      "risk": 0.957,
+      "risk_pct": 96.8,
+      "is_renamed": true
+    },
+    {
+      "rank": 8,
+      "enterprise_id": "ENTCC7D10189022",
+      "name": "浙江万事发纺织机械有限公司",
+      "first_year": "2023",
+      "risk": 0.9563,
+      "risk_pct": 96.2,
+      "is_renamed": false
+    },
+    {
+      "rank": 9,
+      "enterprise_id": "ENT414110E325EC",
+      "name": "杭州民安环境工程有限公司",
+      "first_year": "2023",
+      "risk": 0.9562,
+      "risk_pct": 95.7,
+      "is_renamed": false
+    },
+    {
+      "rank": 10,
+      "enterprise_id": "ENT3285F08B5D25",
+      "name": "浙江毅聚新材料有限公司",
+      "first_year": "2023",
+      "risk": 0.9544,
+      "risk_pct": 95.2,
+      "is_renamed": false
+    },
+    {
+      "rank": 11,
+      "enterprise_id": "ENTAD3DAFF32AD2",
+      "name": "杭州祥龙物流设备科技股份有限公司",
+      "first_year": "2023",
+      "risk": 0.9499,
+      "risk_pct": 94.6,
+      "is_renamed": false
+    },
+    {
+      "rank": 12,
+      "enterprise_id": "ENTF4E298127D0A",
+      "name": "浙江省环境科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9472,
+      "risk_pct": 94.1,
+      "is_renamed": true
+    },
+    {
+      "rank": 13,
+      "enterprise_id": "ENTB575A7E0B0F4",
+      "name": "浙江奇剑工具有限公司",
+      "first_year": "2023",
+      "risk": 0.945,
+      "risk_pct": 93.5,
+      "is_renamed": false
+    },
+    {
+      "rank": 14,
+      "enterprise_id": "ENT24871C25501A",
+      "name": "浙江大发齿轮有限公司",
+      "first_year": "2023",
+      "risk": 0.9338,
+      "risk_pct": 93.0,
+      "is_renamed": false
+    },
+    {
+      "rank": 15,
+      "enterprise_id": "ENT7BCE850F4B26",
+      "name": "浙江环玛信息科技有限公司",
+      "first_year": "2023",
+      "risk": 0.9235,
+      "risk_pct": 92.5,
+      "is_renamed": false
+    },
+    {
+      "rank": 16,
+      "enterprise_id": "ENT32F78256D300",
+      "name": "舟山市嘉鼎塑料机械有限公司",
+      "first_year": "2023",
+      "risk": 0.923,
+      "risk_pct": 91.9,
+      "is_renamed": false
+    },
+    {
+      "rank": 17,
+      "enterprise_id": "ENTE25E4A2829B8",
+      "name": "杭州富阳红润塑胶电器有限公司",
+      "first_year": "2023",
+      "risk": 0.9101,
+      "risk_pct": 91.4,
+      "is_renamed": false
+    },
+    {
+      "rank": 18,
+      "enterprise_id": "ENT7BD9249DDCAC",
+      "name": "浙江满德新材料有限公司",
+      "first_year": "2023",
+      "risk": 0.9069,
+      "risk_pct": 90.9,
+      "is_renamed": false
+    },
+    {
+      "rank": 19,
+      "enterprise_id": "ENT3FBAB75008FA",
+      "name": "派恩杰半导体（杭州）有限公司",
+      "first_year": "2023",
+      "risk": 0.8952,
+      "risk_pct": 90.3,
+      "is_renamed": false
+    },
+    {
+      "rank": 20,
+      "enterprise_id": "ENT3E61EBF46C50",
+      "name": "新昌县三元机械有限公司",
+      "first_year": "2023",
+      "risk": 0.8924,
+      "risk_pct": 89.8,
+      "is_renamed": false
+    },
+    {
+      "rank": 21,
+      "enterprise_id": "ENT5D5AA9A916D1",
+      "name": "浙江海蓝化工集团有限公司",
+      "first_year": "2023",
+      "risk": 0.891,
+      "risk_pct": 89.2,
+      "is_renamed": false
+    },
+    {
+      "rank": 22,
+      "enterprise_id": "ENT1C6703755E96",
+      "name": "斯捷尔传动机械（杭州）有限公司",
+      "first_year": "2023",
+      "risk": 0.8796,
+      "risk_pct": 88.7,
+      "is_renamed": false
+    },
+    {
+      "rank": 23,
+      "enterprise_id": "ENTCFCC4C7A4831",
+      "name": "安吉司润磁性材料股份有限公司",
+      "first_year": "2023",
+      "risk": 0.8591,
+      "risk_pct": 88.2,
+      "is_renamed": false
+    },
+    {
+      "rank": 24,
+      "enterprise_id": "ENTD21EF86B5D89",
+      "name": "新昌县鸿杰电子有限公司",
+      "first_year": "2023",
+      "risk": 0.8563,
+      "risk_pct": 87.6,
+      "is_renamed": false
+    },
+    {
+      "rank": 25,
+      "enterprise_id": "ENTCABB8CFDCF84",
+      "name": "浙江王牌家居有限公司",
+      "first_year": "2024",
+      "risk": 0.8422,
+      "risk_pct": 87.1,
+      "is_renamed": false
+    },
+    {
+      "rank": 26,
+      "enterprise_id": "ENTCB0785DD7D6A",
+      "name": "杭州博清环保科技有限公司",
+      "first_year": "2023",
+      "risk": 0.835,
+      "risk_pct": 86.6,
+      "is_renamed": false
+    },
+    {
+      "rank": 27,
+      "enterprise_id": "ENT5C1A938E1F5F",
+      "name": "杭州光预科技有限公司",
+      "first_year": "2023",
+      "risk": 0.8131,
+      "risk_pct": 86.0,
+      "is_renamed": false
+    },
+    {
+      "rank": 28,
+      "enterprise_id": "ENT1D819DA79D43",
+      "name": "杭州中为光电技术有限公司",
+      "first_year": "2023",
+      "risk": 0.7972,
+      "risk_pct": 85.5,
+      "is_renamed": false
+    },
+    {
+      "rank": 29,
+      "enterprise_id": "ENT7AFCAA6AC5A7",
+      "name": "杭州度言软件有限公司",
+      "first_year": "2023",
+      "risk": 0.7905,
+      "risk_pct": 84.9,
+      "is_renamed": false
+    },
+    {
+      "rank": 30,
+      "enterprise_id": "ENTD96274103666",
+      "name": "杭州佳煌传动科技有限公司",
+      "first_year": "2023",
+      "risk": 0.7732,
+      "risk_pct": 84.4,
+      "is_renamed": false
+    }
+  ],
+  "leakage_diagnosis": {
+    "n_samples": 307,
+    "n_positive": 21,
+    "protocol": "RepeatedStratifiedKFold(5, 20 repeats)",
+    "configs": [
+      {
+        "config": "leaky_full",
+        "n_features_used": 17,
+        "lr_auc": 0.8494845735027223,
+        "lr_auc_std": 0.08438357017036484,
+        "xgb_auc": 0.7956913944343619
+      },
+      {
+        "config": "leaky_nomcert",
+        "n_features_used": 16,
+        "lr_auc": 0.7405627646702964,
+        "lr_auc_std": 0.12372429618482522,
+        "xgb_auc": 0.6825142921960071
+      },
+      {
+        "config": "leaky_common14",
+        "n_features_used": 11,
+        "lr_auc": 0.8466740774349668,
+        "lr_auc_std": 0.08489422042081794,
+        "xgb_auc": 0.7922689806412585
+      },
+      {
+        "config": "noleak_asof14",
+        "n_features_used": 10,
+        "lr_auc": 0.5671484422262553,
+        "lr_auc_std": 0.13385417041763792,
+        "xgb_auc": 0.5237254234724744
+      },
+      {
+        "config": "perm_leaky_full",
+        "n_features_used": 17,
+        "lr_auc": 0.5078115547489412,
+        "lr_auc_std": 0.14171321440719747,
+        "xgb_auc": 0.47636645493042956
+      },
+      {
+        "config": "perm_noleak_asof14",
+        "n_features_used": 10,
+        "lr_auc": 0.5979094827586207,
+        "lr_auc_std": 0.15559598575531036,
+        "xgb_auc": 0.4772075015124016
+      }
+    ],
+    "note": "leaky_full 与「含 qcc 外采」属同一量级；把同期资质/证书类字段带进特征会把 AUC 抬到 0.85 上下，这部分增益不是续存预测能力"
+  },
+  "summary": {
+    "n_configs": 3,
+    "best_config": "asof14+qcc18",
+    "best_auc": 0.8741,
+    "permutation_floor": 0.4673,
+    "n_prospective_listed": 30
+  },
+  "warnings": [
+    "auc_std 在 0.085–0.140 之间，折间波动极大；n_folds=100 是重复交叉验证，不代表有 100 份独立样本",
+    "prospective_top 的 risk 是进入模型的排序分，未经独立时间外验证，不得作为「预测会掉队」的结论",
+    "标签只有 21 个正例，性能结论最多支撑方法论演示",
+    "best_config（含 qcc 外采）AUC 0.87 已被泄漏实验解释：同期资质/证书类字段带来的是标签同源信息，不是预测力。对外只报 asof14（≈0.66）并在同一句里给 permutation floor（≈0.47）"
+  ],
+  "provenance": {
+    "kind": "measured",
+    "displayable": true,
+    "source": "outputs/survival_model_auc.json + outputs/survival_prospective_top.csv + outputs/baseline_asof_leakage.json + ads_survival_period",
+    "method": "直接透传已落盘的 100 折 AUC 与前瞻名单；期数结构从库里统计；泄漏诊断为透传既有对照实验，未新算",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": "v1.3",
+    "note": "AUC 为已实测值，未重算、未调参；leakage_diagnosis 用于解释高 AUC 的来源"
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "series": [
+    {
+      "name": "HeteroGAT · val_auc",
+      "model": "HeteroGAT",
+      "dataset": "A 信贷面板",
+      "metric": "val_auc",
+      "points": [
+        {
+          "epoch": 37,
+          "val_auc": 0.609822
+        },
+        {
+          "epoch": 38,
+          "val_auc": 0.634697
+        },
+        {
+          "epoch": 39,
+          "val_auc": 0.634378
+        },
+        {
+          "epoch": 40,
+          "val_auc": 0.635016
+        },
+        {
+          "epoch": 41,
+          "val_auc": 0.635016
+        }
+      ],
+      "n_points": 5,
+      "complete": false,
+      "note": "训练跑满 41 epoch，但只落盘了尾部 5 个点"
+    },
+    {
+      "name": "logistic_regression · cv_row · fold_auc",
+      "model": "logistic_regression",
+      "dataset": "A 信贷面板",
+      "metric": "auc",
+      "points": [
+        {
+          "fold": 1,
+          "auc": 0.592915
+        },
+        {
+          "fold": 2,
+          "auc": 0.6477
+        },
+        {
+          "fold": 3,
+          "auc": 0.568564
+        },
+        {
+          "fold": 4,
+          "auc": 0.538479
+        },
+        {
+          "fold": 5,
+          "auc": 0.631317
+        }
+      ],
+      "n_points": 5,
+      "complete": true,
+      "note": "5 折 GroupKFold，每折一个点（不是逐 epoch）"
+    },
+    {
+      "name": "xgboost · cv_row · fold_auc",
+      "model": "xgboost",
+      "dataset": "A 信贷面板",
+      "metric": "auc",
+      "points": [
+        {
+          "fold": 1,
+          "auc": 0.587997
+        },
+        {
+          "fold": 2,
+          "auc": 0.61215
+        },
+        {
+          "fold": 3,
+          "auc": 0.625099
+        },
+        {
+          "fold": 4,
+          "auc": 0.551483
+        },
+        {
+          "fold": 5,
+          "auc": 0.599405
+        }
+      ],
+      "n_points": 5,
+      "complete": true,
+      "note": "5 折 GroupKFold，每折一个点（不是逐 epoch）"
+    },
+    {
+      "name": "logistic_regression · cv_company · fold_auc",
+      "model": "logistic_regression",
+      "dataset": "A 信贷面板",
+      "metric": "auc",
+      "points": [
+        {
+          "fold": 1,
+          "auc": 0.464782
+        },
+        {
+          "fold": 2,
+          "auc": 0.518491
+        },
+        {
+          "fold": 3,
+          "auc": 0.419834
+        },
+        {
+          "fold": 4,
+          "auc": 0.475612
+        },
+        {
+          "fold": 5,
+          "auc": 0.48871
+        }
+      ],
+      "n_points": 5,
+      "complete": true,
+      "note": "5 折 GroupKFold，每折一个点（不是逐 epoch）"
+    },
+    {
+      "name": "xgboost · cv_company · fold_auc",
+      "model": "xgboost",
+      "dataset": "A 信贷面板",
+      "metric": "auc",
+      "points": [
+        {
+          "fold": 1,
+          "auc": 0.496288
+        },
+        {
+          "fold": 2,
+          "auc": 0.502516
+        },
+        {
+          "fold": 3,
+          "auc": 0.441187
+        },
+        {
+          "fold": 4,
+          "auc": 0.52705
+        },
+        {
+          "fold": 5,
+          "auc": 0.427117
+        }
+      ],
+      "n_points": 5,
+      "complete": true,
+      "note": "5 折 GroupKFold，每折一个点（不是逐 epoch）"
+    }
+  ],
+  "summary": {
+    "n_series": 5,
+    "n_partial_series": 1,
+    "x_axis_note": "GAT 系列横轴为 epoch，baseline 系列横轴为 fold —— 两者不可画在同一张折线图"
+  },
+  "missing": [
+    {
+      "item": "基线逐 epoch 曲线",
+      "reason": "训练脚本未持久化每轮指标",
+      "impact": "无法看早停过程与过拟合拐点"
+    },
+    {
+      "item": "B 套（浙江 500 家）训练曲线",
+      "reason": "B 套无深度学习训练，只有 100 折重复交叉验证的 AUC 汇总",
+      "impact": "B 套曲线需用 qcc_signal_auc 的折分布代替"
+    }
+  ],
+  "caveat": "GAT 曲线只有 5/41 个 epoch 被持久化，不是完整训练曲线，不能用来判断收敛形态；baseline 只保留每折最终指标，无逐 epoch 曲线；折间点是不同折，横轴不可当时间",
+  "provenance": {
+    "kind": "partial",
+    "displayable": true,
+    "source": "outputs/gat_panel_results.json + outputs/baseline_results.json",
+    "method": "直接透传已落盘的逐点指标，未插值、未平滑、未补点",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": null,
+    "missing_dimensions": [
+      "GAT 完整 epoch 序列",
+      "baseline 逐 epoch 指标"
+    ]
+  }
+}

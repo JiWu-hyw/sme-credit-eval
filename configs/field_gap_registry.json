@@ -1,0 +1,373 @@
+{
+  "meta": {
+    "version": "v1",
+    "updated_at": "2026-11-05",
+    "owner": "施汶邑（几梦）",
+    "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
+    "status_enum": {
+      "null_by_design": "已决策保持 NULL（数据源不足，填了就是造假）",
+      "source_missing": "依赖的外部数据源未采购/未接入，按设计留空",
+      "partial_insufficient": "有少量值但覆盖率过低，不足以建模，仅留档"
+    },
+    "traps": [
+      "SQLite 会把 COUNT(\"不存在的列\") 里的双引号当字符串字面量，返回总行数 → 覆盖率假性 100%。统计前必须先用 PRAGMA 确认列存在。",
+      "全空列不要用中位数/均值填充：填充后是常量列，既不提供信息，又会在特征重要性里留下幽灵特征。",
+      "同一件专利在源数据里会落两条（申请公布 …A 有 IPC 无法律状态，授权公告 …B 有法律状态无 IPC）。任何按 fact_patent 行数做的聚合都会重复计数 —— 实测 2,866 组 / 5,732 行，专利数虚增约 8%，手算授权率被压向 0.5。**专利级聚合一律走 v_patent_canonical 视图或用 COUNT(DISTINCT app_no)**，守卫测试 tests/test_patent_dedup.py 会扫源码拦截。",
+      "fact_patent.is_granted 是「此刻仍在权」，不是「是否曾获批授权」：年费断缴/期限届满/放弃会把已授权专利标回 0，于是「授权后失效」与「从未授权」混成一类（实测 7,940 件，占已授权 33.5%）。算授权率一律用 v_patent_canonical.is_granted_ever（依据公告号 kind code B/U/S/C），守卫测试 tests/test_grant_definition.py 会拦截裸聚合。"
+    ]
+  },
+  "items": [
+    {
+      "table": "dws_tech_feature",
+      "field": "patent_triple_score",
+      "indicator": "T5",
+      "cn": "专利三值评分",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "四个分量一个都拿不到，任何写入值都是自造而非三值评分，会与《信用评估指标体系》表 2 T5 的定义冲突。",
+      "evidence": [
+        "SciBERT 摘要向量：库内无任何向量表/列，load_scibert.py 仅为模型加载器，从未落库",
+        "abstract 摘要原文：931 / 32,969 = 2.82%",
+        "family_size 同族规模：0%",
+        "n_claims 权利要求数：0%（曾为占位假值，已按诚实原则回退 NULL）",
+        "n_cite_fwd / n_cite_bwd：0%（依赖空表 fact_patent_citation，0 行）"
+      ],
+      "remedy": "接入 Google Patents / incoPat 的 family、claims、citation 字段，并跑一次 SciBERT 编码落 ext 表；四源同时到位才可起算。",
+      "remedy_cost": "数据采购 + 一次批量编码（约 3.3 万件专利）",
+      "impact": "T5 在建模宽表中恒空，下游必须整列剔除；不得用中位数填充（会变成常量列，纯噪声）。T1/T2/T4/T6/T7 不受影响，技术维度仍由 6 个指标支撑。",
+      "fallback": "专利质量代理已落在 patent_lapse_ratio / patent_reject_ratio（法律状态口径，500/500），字段名独立、不冒用 T5；若要做完整三值评分仍需四源。"
+    },
+    {
+      "table": "dws_tech_feature",
+      "field": "patent_citation",
+      "indicator": "T3",
+      "cn": "专利被引（近 5 年）",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "引文库 fact_patent_citation 为 0 行，被引数无从计算；用申请量/授权量反推被引属于伪造关系。",
+      "evidence": [
+        "fact_patent_citation：0 行",
+        "fact_patent.n_cite_fwd / n_cite_bwd：0 / 32,969"
+      ],
+      "remedy": "采购专利引用数据（Google Patents 引用表或 incoPat 引证信息）后重建 fact_patent_citation 与二元组特征。",
+      "remedy_cost": "外部采购，一次性导入",
+      "impact": "T3 整项暂空；feature 表中 patent_citation 需在下游剔除。",
+      "fallback": "已被「法律状态」部分替代：patent_lapse_ratio / patent_reject_ratio（500/500 有值），加上 title 文本相似度做技术相似边；但不等于被引。"
+    },
+    {
+      "table": "dws_tech_feature",
+      "field": "n_patent_cited",
+      "indicator": "T3",
+      "cn": "被引专利数（计数口径）",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "与 patent_citation 同源，引文库为空则计数亦为空。",
+      "evidence": [
+        "依赖 fact_patent_citation，0 行"
+      ],
+      "remedy": "随 T3 引文库一并解决。",
+      "remedy_cost": "随 T3",
+      "impact": "计数口径同样剔除。",
+      "fallback": "无"
+    },
+    {
+      "table": "fact_patent",
+      "field": "n_cite_fwd",
+      "indicator": "T3",
+      "cn": "前向被引数（逐专利）",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "逐专利引用明细未采集，留空以保证下游任何聚合都不会被污染。",
+      "evidence": [
+        "0 / 32,969"
+      ],
+      "remedy": "随 T3 引文库接入。",
+      "remedy_cost": "随 T3",
+      "impact": "不影响现有 32,203 条已归属专利的其余 20 个字段。",
+      "fallback": "无"
+    },
+    {
+      "table": "fact_patent",
+      "field": "n_cite_bwd",
+      "indicator": "T3",
+      "cn": "后向引用数（逐专利）",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "同 n_cite_fwd。",
+      "evidence": [
+        "0 / 32,969"
+      ],
+      "remedy": "随 T3 引文库接入。",
+      "remedy_cost": "随 T3",
+      "impact": "无",
+      "fallback": "无"
+    },
+    {
+      "table": "fact_patent",
+      "field": "n_claims",
+      "indicator": "T5",
+      "cn": "权利要求数",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "采集源无此字段。曾以占位值填充，已按诚实原则整体回退 NULL——占位值会自动流入 T5 计算并污染结果。",
+      "evidence": [
+        "0 / 32,969"
+      ],
+      "remedy": "Google Patents BigQuery 可批量取 claims 数，需一次联网批量任务。",
+      "remedy_cost": "低（免费额度内可完成）",
+      "impact": "T5 的四分量之一，缺此列 T5 无法起算。",
+      "fallback": "无（估算权利要求数等于编造）"
+    },
+    {
+      "table": "fact_patent",
+      "field": "family_size",
+      "indicator": "T5",
+      "cn": "同族规模",
+      "priority": "P1",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "采集源无此字段，需 DOCDB 同族映射。",
+      "evidence": [
+        "0 / 32,969"
+      ],
+      "remedy": "接入 EPO DOCDB / Google Patents family_id 后按族聚合。",
+      "remedy_cost": "中（需族 ID 映射表）",
+      "impact": "T5 的四分量之一。",
+      "fallback": "无"
+    },
+    {
+      "table": "fact_patent",
+      "field": "abstract",
+      "indicator": "T5",
+      "cn": "摘要原文",
+      "priority": "P1",
+      "status": "partial_insufficient",
+      "decision": "保留已有，不补不编",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "仅 2.82% 覆盖，做文本特征会引入严重选择偏差（有摘要的专利本身来自特定来源）。",
+      "evidence": [
+        "931 / 32,969 = 2.82%"
+      ],
+      "remedy": "补全摘要后再谈文本建模；当前可用 title（100% 覆盖）做轻量文本特征。",
+      "remedy_cost": "中",
+      "impact": "不进入 T5；title 可作为替代文本入口。",
+      "fallback": "title 100% 覆盖，已可用于关键词/IPC 语义扩展。"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "rev_cagr",
+      "indicator": "G1",
+      "cn": "营收复合增长率",
+      "priority": "P0",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "年报仅 2025 单年，且非上市企业营收普遍不公示，无法算 CAGR。",
+      "evidence": [
+        "0 / 500"
+      ],
+      "remedy": "采购工商年报多年份财务字段，或改用纳税/社保规模代理。",
+      "remedy_cost": "中高（需按年采购）",
+      "impact": "G1 整项暂空，F1 技术转化效率的分子改用可替代口径（如需）。",
+      "fallback": "以 emp（社保人数）CAGR 作为规模增长代理，但 G1 字段本身保持空。"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "emp_cagr",
+      "indicator": "G2",
+      "cn": "员工复合增长率",
+      "priority": "P1",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "社保/员工数仅当期快照，无多年份序列。",
+      "evidence": [
+        "0 / 500"
+      ],
+      "remedy": "按年采集社保参保人数（企查查/年报），至少 3 个年度。",
+      "remedy_cost": "中",
+      "impact": "G2 暂空。",
+      "fallback": "无（单期快照算不出增长率）"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "funding_to_last_val",
+      "indicator": "G4",
+      "cn": "融资额与上轮估值比",
+      "priority": "P0",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "非上市企业融资额与估值均不披露，融资流水只有轮次与日期。",
+      "evidence": [
+        "0 / 500"
+      ],
+      "remedy": "需一级市场数据库（IT 桔子/企名片）含金额与估值字段。",
+      "remedy_cost": "高（商业库授权）",
+      "impact": "G4 暂空；G5 里程碑、G6 机构知名度仍可用。",
+      "fallback": "以资质晋级序列作估值提升的弱代理（已有 qual_rank_delta）。"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "m_team",
+      "indicator": "G5",
+      "cn": "里程碑：核心团队变动",
+      "priority": "P1",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "无董监高变更事件表，无法构造 0/1 里程碑。",
+      "evidence": [
+        "0 / 500"
+      ],
+      "remedy": "接入工商变更记录（董监高/法定代表人变更）。",
+      "remedy_cost": "中",
+      "impact": "G5 四里程碑中缺 1 个，m_funding / m_cert 可用。",
+      "fallback": "核心人员稳定性（T6，441/500）部分覆盖该语义。"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "m_cite",
+      "indicator": "G5",
+      "cn": "里程碑：高影响力引用",
+      "priority": "P1",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "依赖引文库，与 T3 同源。",
+      "evidence": [
+        "0 / 500",
+        "fact_patent_citation 0 行"
+      ],
+      "remedy": "随 T3 引文库接入。",
+      "remedy_cost": "随 T3",
+      "impact": "G5 缺 1 个里程碑。",
+      "fallback": "无"
+    },
+    {
+      "table": "dws_growth_feature",
+      "field": "rev_cagr_flag",
+      "indicator": "G1",
+      "cn": "营收 CAGR 口径标注",
+      "priority": "P0",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "flag 是用来标注「这个值是按什么口径算的」。值为空时标注口径无意义，写 missing 反而会制造「口径齐全、值却没有」的怪状态。",
+      "evidence": [
+        "0 / 500（全为 NULL）",
+        "rev_cagr 同为 0 / 500"
+      ],
+      "remedy": "rev_cagr 真正有值时才需要同步填 reported / proxy / missing。",
+      "remedy_cost": "随 G1",
+      "impact": "不进入模型；与 rd_intensity_flag（453/500 有值）的用法形成对照——有值才标口径。",
+      "fallback": "无"
+    },
+    {
+      "table": "dws_fusion_feature",
+      "field": "cap_tech_synergy",
+      "indicator": "F2",
+      "cn": "资本-技术协同度",
+      "priority": "P2",
+      "status": "null_by_design",
+      "decision": "A 保持 NULL（P2 本轮不做）",
+      "decided_at": "2026-11-05",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "P2 最低优先级指标，文档本身标注「暂不做」。技术上可用「融资事件前后 12 个月专利产出增速差」构造，但样本内仅 182/500 家有融资事件，构造出来覆盖率不到 37%，且融资与专利谁先谁后存在反向因果，入模风险大于收益。",
+      "evidence": [
+        "0 / 500",
+        "fact_funding_event 506 条 / 涉及 182 家企业（36.4%）",
+        "《信用评估指标体系》标注该指标为 P2、暂不做"
+      ],
+      "remedy": "若要做：用 fact_funding_event.event_date 与 fact_patent.app_date 构造 ±12 个月专利产出差，并做事件研究式检验。",
+      "remedy_cost": "中（需处理反向因果与样本选择）",
+      "impact": "F2 不入模；F1 技术转化效率（500/500）已覆盖「技术→业务」的转化语义。",
+      "fallback": "tech_conversion（F1）为主替代；m_funding 提供融资是否发生的粗信号。"
+    }
+  ],
+  "substitutes": [
+    {
+      "missing": "授权日期",
+      "missing_cov": "0 / 32,969",
+      "substitute": "申请日期（app_year 从申请号前缀恢复，134 条补齐）",
+      "field": "fact_patent.app_year / app_date",
+      "after_cov": "32,969 / 32,969（年份）",
+      "why": "授权日拿不到，但所有时间维特征本来就按申请年对齐，换锚点不影响口径；精确日仍不编"
+    },
+    {
+      "missing": "授权日 / 审结时点",
+      "missing_cov": "grant_date、grant_year 均为 0 / 32,969",
+      "substitute": "授权公告 kind code（B/U/S/C）+ 分类型审结期近似",
+      "field": "v_patent_canonical.is_granted_ever / grant_kind；ads_feature_asof.grant_rate",
+      "after_cov": "曾授权判据 100%（23,693/29,582 件已归属专利）；as-of 授权率 272/307 家（主口径）",
+      "why": "授权日确实拿不到，但「这条记录是不是授权公告」是确定信息：A 是申请公布，B/U/S/C 都是授权公告。再用审结期（发明 3 年、实用新型/外观 1 年）判断「as_of 时点是否已成定局」，就能算出无泄漏的授权率。代价是主口径下退化为常量 1.0（见 grant_rate_rule.known_degeneracy），所以这一项只回收了「能算」，没回收「有区分度」。"
+    },
+    {
+      "missing": "被引用次数",
+      "missing_cov": "0 / 32,969（引文库 0 行）",
+      "substitute": "法律状态（86.2%）→ 失效占比、驳回占比",
+      "field": "dws_tech_feature.patent_lapse_ratio / patent_reject_ratio / n_patent_lapsed / n_patent_rejected",
+      "after_cov": "500 / 500（企业级）",
+      "why": "被引是外部评价，失效是内部结局；两者都在说「这件专利值不值得维护」，后者本地可得"
+    },
+    {
+      "missing": "年报财务",
+      "missing_cov": "营收 12 / 500、利润 11、资产 13、纳税 12、员工 25",
+      "substitute": "年报实有项直接入库，没有的留空（不用社保人数折算）",
+      "field": "dws_growth_feature.latest_rev_wan / latest_net_profit_wan / latest_total_assets_wan / latest_tax_wan / latest_emp_num",
+      "after_cov": "见左；均只填真值",
+      "why": "人数与金额不是一个量纲，拿社保顶营收等于换指标；宁可空着"
+    },
+    {
+      "missing": "专利摘要",
+      "missing_cov": "931 / 32,969（2.8%）",
+      "substitute": "专利名称",
+      "field": "fact_patent.title",
+      "after_cov": "32,969 / 32,969（100%）",
+      "why": "名称里含技术关键词，可做文本特征；摘要不足时不强行做 embedding"
+    },
+    {
+      "missing": "主分类号",
+      "missing_cov": "16,244 / 32,969（49.3%）",
+      "substitute": "IPC 分类树对照（bridge_patent_ipc → dim_ipc）",
+      "field": "bridge_patent_ipc / dim_ipc",
+      "after_cov": "51,795 条 IPC 记录 100% 落到 11,608 个分类节点",
+      "why": "对照表只做层级映射，不会凭空生出缺的分类号；专利级 49.3% 是数据源上限"
+    },
+    {
+      "missing": "注册地址原文",
+      "missing_cov": "0 / 32,969",
+      "substitute": "企业所在地区",
+      "field": "dim_enterprise.region_code / region_name",
+      "after_cov": "500 / 500",
+      "why": "区域维度的建模需求只需到地区，地址原文无分析价值"
+    }
+  ]
+}

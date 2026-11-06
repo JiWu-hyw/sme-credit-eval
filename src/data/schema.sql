@@ -184,6 +184,37 @@ CREATE TABLE IF NOT EXISTS dim_enterprise (
     order_award_cnt         INTEGER,         -- 订单中标
     honor_cnt               INTEGER,         -- 荣誉资质
     risk_negative_cnt       INTEGER,         -- 风险负面
+    -- ===== 企查查维度扩展列（QCC 维度 v0.1；由 load_qcc_dimensions 回填） =====
+    is_little_giant         INTEGER,         -- D5 国家级小巨人(是=1)
+    is_tech_sme             INTEGER,         -- D6 科技型中小企业(是=1)
+    is_high_tech_union      INTEGER,         -- D2 高企认定(三源合并)(是=1)
+    is_renamed              INTEGER,         -- 是否更名(是=1)
+    qcc_is_micro            INTEGER,         -- QCC_是否小微(是=1)
+    qcc_tech_level_ord      INTEGER,         -- QCC_科创等级有序编码(入门1..卓越5)
+    qcc_scale_ord           INTEGER,         -- QCC_企业规模有序编码(XS1/S2/M3/L4)
+    qcc_credit_level_ord    INTEGER,         -- QCC_信用等级有序编码(数字)
+    zjtx_honor_cnt          INTEGER,         -- D7 专精特新类荣誉数
+    cert_cnt                INTEGER,         -- 资质证书_条数
+    cert_valid_cnt          INTEGER,         -- 有效资质证书数(来自 ods_qcc_cert)
+    shareholder_cnt         INTEGER,         -- 股东_人数
+    patent_union_cnt        INTEGER,         -- 专利数_并集(来自主表)
+    invention_union_cnt     INTEGER,         -- 发明专利数_并集(来自主表)
+    annual_social_sec       INTEGER,         -- QCC_年报社保人数(「46人」→46)
+    annual_revenue_wan      REAL,            -- QCC_年报营收(万元)
+    annual_net_profit_wan   REAL,            -- 净利润(万元；多为 NULL，来自 ods_qcc_annual)
+    qcc_reg_capital_wan     REAL,            -- QCC_注册资本(万元)
+    qcc_score               REAL,            -- QCC_企查分
+    qcc_tech_score          REAL,            -- QCC_科创分
+    qcc_tech_level          TEXT,            -- QCC_科创等级(原始文本)
+    qcc_enterprise_scale    TEXT,            -- QCC_企业规模(原始文本)
+    qcc_credit_level        TEXT,            -- QCC_信用等级(原始文本)
+    qcc_industry_section    TEXT,            -- QCC_国标行业门类
+    qcc_industry_class      TEXT,            -- QCC_国标行业大类
+    qcc_industry_mid        TEXT,            -- QCC_国标行业中类
+    qcc_industry_sub        TEXT,            -- QCC_国标行业小类
+    qcc_biz_scope           TEXT,            -- QCC_经营范围
+    qcc_intro               TEXT,            -- QCC_企业简介
+    qcc_match_method        TEXT,            -- QCC_匹配方式
     created_at        TEXT,
     updated_at        TEXT,
     PRIMARY KEY (enterprise_id)
@@ -307,10 +338,10 @@ CREATE TABLE IF NOT EXISTS fact_patent (
     match_method     TEXT CHECK (match_method IS NULL OR match_method IN
                         ('exact','alias','fuzzy','inventor_anchor','manual')),
     -- 质量与影响力
-    n_claims         INTEGER,                -- 权利要求数
-    n_cite_fwd       INTEGER,                -- 前向被引数（被后案引用）
-    n_cite_bwd       INTEGER,                -- 后向引用数（引用前案）
-    family_size      INTEGER,                -- 同族规模
+    n_claims         INTEGER,                -- 权利要求数（设计性 NULL：源未采集，禁止估算回填）
+    n_cite_fwd       INTEGER,                -- 前向被引数（设计性 NULL：依赖引文库）
+    n_cite_bwd       INTEGER,                -- 后向引用数（设计性 NULL：依赖引文库）
+    family_size      INTEGER,                -- 同族规模（设计性 NULL：源未采集，禁止估算回填）
     ipc_main         TEXT,                   -- 主 IPC
     source_id        TEXT REFERENCES meta_data_source(source_id),
     raw_id           INTEGER REFERENCES ods_patent_raw(raw_id),
@@ -410,10 +441,10 @@ CREATE TABLE IF NOT EXISTS dws_tech_feature (
     -- 结构（对应 特征工程字典 3.1–3.6）
     inv_patent_ratio       REAL,            -- 3.1 发明专利占比
     grant_rate             REAL,            -- 3.2 授权率（按申请年对齐，剔除未决）
-    patent_citation        REAL,            -- 3.3 被引（近 5 年，含年代衰减可选）
+    patent_citation        REAL,            -- 3.3 被引（设计性 NULL：引文库未接入，见 field_gap_registry）
     tech_breadth_ipc_class INTEGER,         -- 3.4 技术广度·IPC 小类覆盖数
     tech_breadth_entropy   REAL,            -- 3.4 技术广度·Shannon 熵
-    patent_triple_score    REAL,            -- 3.5 专利三值评分（SciBERT 打分均值）
+    patent_triple_score    REAL,            -- 3.5 专利三值评分（设计性 NULL：SciBERT/同族/权利要求/被引 四源覆盖 0%）
     core_staff_stability   REAL,            -- 3.6 核心人员稳定性
     rd_intensity           REAL,            -- 3.7 研发投入（替代口径=研发人员占比）
     rd_intensity_flag      TEXT CHECK (rd_intensity_flag IS NULL OR rd_intensity_flag IN
@@ -424,12 +455,17 @@ CREATE TABLE IF NOT EXISTS dws_tech_feature (
     n_patent_invention     INTEGER,
     n_patent_utility       INTEGER,
     n_patent_design        INTEGER,
-    n_patent_cited         INTEGER,
+    n_patent_cited         INTEGER,         -- 设计性 NULL：依赖 fact_patent_citation
     n_inventor             INTEGER,
     n_ipc_subclass         INTEGER,
     n_patent_collab        INTEGER,         -- 合作申请专利数（≥2 申请人）
     first_app_year         INTEGER,
     computed_at            TEXT,
+    -- 法律状态代理（2026-11-05 新增）：被引次数拿不到，用「专利结局」替代
+    n_patent_lapsed        INTEGER,         -- 授权后失效的专利数（未缴年费/期限届满/失效/避重放弃）
+    n_patent_rejected      INTEGER,         -- 驳回或撤回的专利数
+    patent_lapse_ratio     REAL,            -- 失效数 / 有法律状态的专利数
+    patent_reject_ratio    REAL,            -- 驳回数 / 有法律状态的专利数
     PRIMARY KEY (enterprise_id, stat_year)
 ) STRICT;
 
@@ -469,6 +505,13 @@ CREATE TABLE IF NOT EXISTS dws_growth_feature (
     funding_top_org_level     INTEGER,       -- 融资_最高机构级别（A=1…D=4）
     funding_top_org_name      TEXT,          -- 融资_最高级别机构
     funding_orgs_list         TEXT,          -- 融资_参与机构名单（JSON 数组）
+    -- 年报财务快照（2026-11-05 新增）：有的填、没有留空，不拿社保人数折算
+    latest_report_year        INTEGER,       -- 最新一期年报年份
+    latest_rev_wan            REAL,          -- 营业收入（万元）
+    latest_net_profit_wan     REAL,          -- 净利润（万元）
+    latest_total_assets_wan   REAL,          -- 资产总计（万元）
+    latest_tax_wan            REAL,          -- 纳税总额（万元）
+    latest_emp_num            INTEGER,       -- 年报披露员工数
     computed_at          TEXT,
     PRIMARY KEY (enterprise_id, stat_year)
 ) STRICT;
@@ -593,12 +636,84 @@ CREATE TABLE IF NOT EXISTS ext_msme_sample (
 -- 七、视图：常用派生口径固化（避免各处 SQL 口径漂移）
 -- ============================================================================
 
+-- ---------------------------------------------------------------------------
+-- 专利唯一化视图（v1.2，2026-11-05）
+--   问题：同一件专利在源数据里落两条 —— 申请公布文本（公告号 …A，带 IPC 分类号、
+--         无法律状态）与授权公告文本（…B，带授权状态、无 IPC 分类号）。
+--         实测 2,866 组 / 5,732 行，其中 2,776 组是「一条未授权 + 一条已授权」。
+--   后果：任何按 fact_patent 行数做的聚合都会重复计数 —— 专利数虚增约 8%，
+--         手算授权率被硬压向 0.5（实测 406 家企业平均低估 5.7pp，最大 50pp）。
+--   口径：一行 = 一件专利（app_no）× 一个归属企业；未归属专利按 app_no 单独成行。
+--         共同申请人（同一 app_no 挂两个 enterprise_id，实测 4 组）各自成行，不合并。
+--         字段级合并：布尔取 MAX、文本取非空、日期取最早/最晚；
+--         title 冲突（实测 58 组）用 n_distinct_titles 标记，不强行统一。
+--   用法：**所有专利级聚合一律走本视图，不要直接 COUNT(*) fact_patent**。
+--
+--   ⚠️ 授权字段有两个，含义不同，别用错（2026-11-05 补，v1.3）：
+--       fact_patent.is_granted  = 1 仅当「此刻仍在权」。它会随年费断缴 / 期限届满
+--                                 翻回 0，所以 "is_granted=0" 里混着两类完全不同的专利：
+--                                 申请未获授权的，和授权后失效的。
+--       is_granted_ever         = 1 表示「曾经获得过授权」，依据公告号 kind code
+--                                 （B/U/S/C 均为授权公告，存在即授权）+ is_granted。
+--       实测：全部 29,582 件已归属专利里，is_granted=1 只有 15,753 件，
+--       而曾授权 23,603 件 —— 用 is_granted 算授权率会少算 7,850 件（33.3%），
+--       企业级授权率中位 0.567 被压到真值 0.831。
+--       凡「授权率 / 授权数 / 技术转化率」一律用 is_granted_ever；
+--       凡「当前有效专利数 / 维持率」才用 is_granted。
+-- ---------------------------------------------------------------------------
+DROP VIEW IF EXISTS v_patent_canonical;
+CREATE VIEW v_patent_canonical AS
+WITH base AS (
+    SELECT p.app_no,
+           p.enterprise_id,
+           p.patent_id,
+           p.title, p.abstract, p.app_date, p.app_year, p.pub_date,
+           p.patent_type, p.legal_status, p.is_granted, p.ipc_main,
+           p.match_method, p.match_confidence,
+           ROW_NUMBER() OVER (
+               PARTITION BY p.app_no, COALESCE(p.enterprise_id, '~NA')
+               ORDER BY p.is_granted DESC,
+                        CASE WHEN p.ipc_main IS NOT NULL THEN 0 ELSE 1 END,
+                        p.match_confidence DESC,
+                        p.patent_id
+           ) AS rn
+    FROM fact_patent p
+    WHERE p.app_no IS NOT NULL
+)
+SELECT b.app_no,
+       b.enterprise_id,
+       MAX(CASE WHEN b.rn = 1 THEN b.patent_id END)         AS patent_id,
+       COUNT(*)                                             AS n_records,
+       GROUP_CONCAT(b.patent_id, ',')                       AS patent_ids,
+       MAX(b.title)                                         AS title,
+       COUNT(DISTINCT b.title)                              AS n_distinct_titles,
+       MAX(b.abstract)                                      AS abstract,
+       MIN(b.app_date)                                      AS app_date,
+       MAX(b.app_year)                                      AS app_year,
+       MIN(b.pub_date)                                      AS pub_date_first,
+       MAX(b.pub_date)                                      AS pub_date_last,
+       MAX(b.patent_type)                                   AS patent_type,
+       MAX(b.legal_status)                                  AS legal_status,
+       MAX(b.is_granted)                                    AS is_granted,
+       -- 「曾授权」：任一记录是授权公告（B/U/S/C）或 is_granted=1 即成立
+       MAX(CASE WHEN b.is_granted = 1
+                 OR substr(b.patent_id, -1, 1) IN ('B','U','S','C')
+                THEN 1 ELSE 0 END)                          AS is_granted_ever,
+       -- 授权凭据：优先给出授权公告的 kind code，无则 NULL
+       MAX(CASE WHEN substr(b.patent_id, -1, 1) IN ('B','U','S','C')
+                THEN substr(b.patent_id, -1, 1) END)        AS grant_kind,
+       MAX(b.ipc_main)                                      AS ipc_main,
+       MAX(CASE WHEN b.rn = 1 THEN b.match_method END)      AS match_method,
+       MAX(CASE WHEN b.rn = 1 THEN b.match_confidence END)  AS match_confidence
+FROM base b
+GROUP BY b.app_no, COALESCE(b.enterprise_id, '~NA');
+
 -- 企业画像速览
 CREATE VIEW IF NOT EXISTS v_enterprise_profile AS
 SELECT e.enterprise_id, e.name_display, e.region_name, e.enterprise_type,
        e.first_qual_year, e.last_qual_year, e.max_qual_rank,
-       (SELECT COUNT(*) FROM fact_patent p WHERE p.enterprise_id = e.enterprise_id) AS n_patent,
-       (SELECT COUNT(*) FROM fact_patent p WHERE p.enterprise_id = e.enterprise_id
+       (SELECT COUNT(*) FROM v_patent_canonical p WHERE p.enterprise_id = e.enterprise_id) AS n_patent,
+       (SELECT COUNT(*) FROM v_patent_canonical p WHERE p.enterprise_id = e.enterprise_id
           AND p.patent_type = 'invention') AS n_invention
 FROM dim_enterprise e;
 
@@ -611,7 +726,7 @@ SELECT enterprise_id, app_year AS stat_year,
        SUM(CASE WHEN patent_type = 'utility'   THEN 1 ELSE 0 END) AS n_uty,
        SUM(CASE WHEN patent_type = 'design'    THEN 1 ELSE 0 END) AS n_des,
        COUNT(DISTINCT ipc_main) AS n_ipc
-FROM fact_patent
+FROM v_patent_canonical
 WHERE enterprise_id IS NOT NULL AND app_year IS NOT NULL
 GROUP BY enterprise_id, app_year;
 
@@ -648,3 +763,244 @@ UNION ALL SELECT 'graph_edge',    COUNT(*) FROM ads_graph_edge
 UNION ALL SELECT 'model_row',     COUNT(*) FROM ads_model_dataset
 UNION ALL SELECT 'patent_ipc_bridge', COUNT(*) FROM bridge_patent_ipc
 UNION ALL SELECT 'ipc_dict',          COUNT(*) FROM dim_ipc;
+
+-- ===========================================================================
+-- [ASOF:BEGIN]
+-- as-of 切面特征（消除后视泄漏）
+--   DDL 单一事实源：build_asof_features.py 只截取本区块执行，勿把建表语句复制到脚本。
+--   语义：ads_label.cohort_year = 特征窗口终点（见《数据字典-标准数据库》§4.6），
+--         as_of_year 之后发生的事实（专利 / 资质 / 发明人）一律不得进入特征。
+--   'cohort'      = 主口径，as_of_year = cohort_year（认定之前，字典规定）
+--   'due_minus_1' = 稳健性对照，as_of_year = cohort_year + VALID_YEARS - 1（到期前一年）
+--   原 ads_model_dataset / v_model_dataset_flat 保持不动，作为泄漏基线留存。
+-- ===========================================================================
+CREATE TABLE IF NOT EXISTS ads_feature_asof (
+    enterprise_id   TEXT NOT NULL,
+    as_of_policy    TEXT NOT NULL CHECK (as_of_policy IN ('cohort','due_minus_1')),
+    cohort_year     INTEGER NOT NULL,
+    as_of_year      INTEGER NOT NULL,       -- 特征观测截止年（含）
+    feature_name    TEXT NOT NULL,
+    feature_value   REAL,                   -- 无原料 / 不可切分时为 NULL
+    is_available    INTEGER NOT NULL CHECK (is_available IN (0,1)),
+    computed_at     TEXT,
+    PRIMARY KEY (enterprise_id, as_of_policy, feature_name)
+) STRICT;
+
+CREATE INDEX IF NOT EXISTS idx_asof_policy   ON ads_feature_asof(as_of_policy, as_of_year);
+CREATE INDEX IF NOT EXISTS idx_asof_feature  ON ads_feature_asof(feature_name, is_available);
+
+-- as-of 特征覆盖率体检（不改动既有 v_data_coverage）
+DROP VIEW IF EXISTS v_asof_feature_coverage;
+CREATE VIEW v_asof_feature_coverage AS
+SELECT as_of_policy, feature_name,
+       COUNT(*)                                   AS n_sample,
+       SUM(is_available)                          AS n_available,
+       ROUND(1.0 * SUM(is_available) / COUNT(*), 4) AS coverage
+FROM ads_feature_asof
+GROUP BY as_of_policy, feature_name;
+
+-- 无泄漏训练入口：列名与 v_model_dataset_flat 对齐，下游只需换视图名。
+-- ⚠️ 训练时必须加 WHERE as_of_policy='cohort' 取主口径；否则同一企业会出现两行。
+DROP VIEW IF EXISTS v_model_dataset_asof_flat;
+CREATE VIEW v_model_dataset_asof_flat AS
+SELECT d.enterprise_id, d.dataset_ver, d.label_task, d.cohort_year,
+       d.name_display, d.region_code, d.label,
+       MAX(CASE WHEN f.feature_name='inv_patent_ratio'       THEN f.feature_value END) AS inv_patent_ratio,
+       MAX(CASE WHEN f.feature_name='grant_rate'             THEN f.feature_value END) AS grant_rate,
+       MAX(CASE WHEN f.feature_name='patent_citation'        THEN f.feature_value END) AS patent_citation,
+       MAX(CASE WHEN f.feature_name='tech_breadth_ipc_class' THEN f.feature_value END) AS tech_breadth_ipc_class,
+       MAX(CASE WHEN f.feature_name='tech_breadth_entropy'   THEN f.feature_value END) AS tech_breadth_entropy,
+       MAX(CASE WHEN f.feature_name='patent_triple_score'    THEN f.feature_value END) AS patent_triple_score,
+       MAX(CASE WHEN f.feature_name='core_staff_stability'   THEN f.feature_value END) AS core_staff_stability,
+       MAX(CASE WHEN f.feature_name='rd_intensity'           THEN f.feature_value END) AS rd_intensity,
+       MAX(CASE WHEN f.feature_name='n_patent_app'           THEN f.feature_value END) AS n_patent_app,
+       MAX(CASE WHEN f.feature_name='n_patent_grant'         THEN f.feature_value END) AS n_patent_grant,
+       MAX(CASE WHEN f.feature_name='n_patent_invention'     THEN f.feature_value END) AS n_patent_invention,
+       MAX(CASE WHEN f.feature_name='n_inventor'             THEN f.feature_value END) AS n_inventor,
+       MAX(CASE WHEN f.feature_name='n_ipc_subclass'         THEN f.feature_value END) AS n_ipc_subclass,
+       MAX(CASE WHEN f.feature_name='n_patent_collab'        THEN f.feature_value END) AS n_patent_collab,
+       MAX(CASE WHEN f.feature_name='rev_cagr'               THEN f.feature_value END) AS rev_cagr,
+       MAX(CASE WHEN f.feature_name='emp_cagr'               THEN f.feature_value END) AS emp_cagr,
+       MAX(CASE WHEN f.feature_name='patent_cagr'            THEN f.feature_value END) AS patent_cagr,
+       MAX(CASE WHEN f.feature_name='funding_to_last_val'    THEN f.feature_value END) AS funding_to_last_val,
+       MAX(CASE WHEN f.feature_name='m_funding'              THEN f.feature_value END) AS m_funding,
+       MAX(CASE WHEN f.feature_name='m_team'                 THEN f.feature_value END) AS m_team,
+       MAX(CASE WHEN f.feature_name='m_cert'                 THEN f.feature_value END) AS m_cert,
+       MAX(CASE WHEN f.feature_name='m_cite'                 THEN f.feature_value END) AS m_cite,
+       MAX(CASE WHEN f.feature_name='investor_prestige'      THEN f.feature_value END) AS investor_prestige,
+       MAX(CASE WHEN f.feature_name='qual_rank'              THEN f.feature_value END) AS qual_rank,
+       MAX(CASE WHEN f.feature_name='qual_rank_delta'        THEN f.feature_value END) AS qual_rank_delta,
+       MAX(CASE WHEN f.feature_name='qual_upgrade_cum'       THEN f.feature_value END) AS qual_upgrade_cum,
+       MAX(CASE WHEN f.feature_name='tech_conversion'        THEN f.feature_value END) AS tech_conversion,
+       MAX(CASE WHEN f.feature_name='cap_tech_synergy'       THEN f.feature_value END) AS cap_tech_synergy,
+       MAX(CASE WHEN f.feature_name='tech_growth_inter'      THEN f.feature_value END) AS tech_growth_inter,
+       d.split, d.split_protocol, d.built_at,
+       l.label_name, l.label_value,
+       f.as_of_policy, MAX(f.as_of_year) AS as_of_year
+FROM ads_model_dataset d
+JOIN ads_label l
+  ON l.enterprise_id = d.enterprise_id
+ AND l.label_task    = d.label_task
+ AND l.cohort_year   = d.cohort_year
+JOIN ads_feature_asof f
+  ON f.enterprise_id = d.enterprise_id
+ AND f.cohort_year   = d.cohort_year
+WHERE d.split <> 'excluded'
+GROUP BY d.enterprise_id, d.dataset_ver, d.label_task, d.cohort_year, f.as_of_policy;
+-- [ASOF:END]
+
+-- ============================================================================
+-- 【算法端唯一训练入口】v_model_train_ready
+-- ============================================================================
+-- 这层视图存在的唯一目的：把三个已知的结构性问题在**物理上**挡掉，
+-- 让下游拿到就能 fit，不需要再读任何口径文档。
+--
+-- 1) 假负例隔离（P1-4）
+--    ads_model_dataset 有 193 行 split='excluded'，它们是 cohort 2023+、
+--    观察窗尚未闭合的企业（到期年 2026–2028），label 填 0 只是占位。
+--    直接 `SELECT * FROM ads_model_dataset` 训练，正例率会被从 6.8% 稀释到
+--    4.2%，AUC 看起来更"稳"，但那是假的。本视图只放 train/val/test。
+--
+-- 2) 伪重复（一家两行）
+--    v_model_dataset_asof_flat 是 614 行 = 307 家 × 2 种 as_of_policy
+--    （cohort / due_minus_1）。按行训练会把同一家企业算两次权重，正例也从
+--    21 虚增成 30。本视图固定 as_of_policy='cohort'，一行 = 一家企业。
+--
+-- 3) 常量列（浪费自由度且误导重要性排序）
+--    cohort 切面下这 4 列去重值恒为 1，单变量 AUC 全部 = 0.5000：
+--       m_cert=1.0   qual_rank=2.0
+--       qual_rank_delta=0.0   qual_upgrade_cum=0.0
+--    成因：队列由「首次高企认定年」定义，认定当年资质等级必然一致，
+--    故 m_cert / qual_rank 恒定；当年即首次认定，故 delta / cum 恒为 0。
+--    已从本视图剔除。要看它们请回 v_model_dataset_asof_flat。
+--
+-- 仍保留的 11 列均为 cohort 内非常量（去重值 20–237 个）。
+-- 缺口字段（引文库 / CAGR / 资金 / 三重评分等 15 个）不在本视图内，
+-- 原因见 configs/field_gap_registry.json。
+--
+-- ⚠️ grant_rate 跨队列不可混：2021 队列 160 家**全部为 1.0**（发明专利需 3 年
+--    审结期，2021 时点窗口内无成熟发明），2022 队列才有 0/1 变化。混队列训练
+--    会让它退化成「队列哑变量」。单变量 AUC 0.5185（|Δ|=0.0185，无判别力），
+--    建树下树时建议优先剔除。
+--
+-- 用法：
+--   SELECT * FROM v_model_train_ready;        -- 307 行 × 17 列，直接 fit
+--   split 已按企业级固定（train 214 / val 54 / test 39），
+--   禁止再按行随机切分，否则同一企业会同时进训练与验证。
+-- [TRAINREADY:BEGIN]
+DROP VIEW IF EXISTS v_model_train_ready;
+CREATE VIEW v_model_train_ready AS
+SELECT enterprise_id, name_display, region_code, cohort_year, split, label,
+       n_patent_app, n_patent_invention, n_patent_grant,
+       inv_patent_ratio, tech_conversion,
+       n_ipc_subclass, tech_breadth_entropy, tech_breadth_ipc_class,
+       grant_rate, core_staff_stability, n_inventor
+FROM v_model_dataset_asof_flat
+WHERE as_of_policy = 'cohort'
+  AND split IN ('train', 'val', 'test');
+-- [TRAINREADY:END]
+
+-- ============================================================================
+-- 企查查维度 ODS 表（QCC 维度 v0.1）
+-- 单一事实源：本区块由 load_qcc_dimensions 通过正则截取执行；主库存量库上
+-- 通过 CREATE TABLE IF NOT EXISTS 保证幂等。外键指向 dim_enterprise(enterprise_id)，
+-- enterprise_id 为 NULL 表示未匹配进 500 户清单（保留 company_name 兜底）。
+-- ============================================================================
+-- [QCC:BEGIN]
+CREATE TABLE IF NOT EXISTS ods_qcc_honor (
+    row_id          INTEGER PRIMARY KEY,
+    enterprise_id   TEXT REFERENCES dim_enterprise(enterprise_id) ON DELETE CASCADE,
+    company_name    TEXT NOT NULL,        -- 兜底名（企查查原文）
+    honor_name      TEXT,                 -- 荣誉名称
+    honor_type      TEXT,                 -- 荣誉类型
+    level           TEXT,                 -- 级别
+    publisher       TEXT,                 -- 发布单位
+    cert_year       INTEGER,              -- 认证年份
+    publish_date    TEXT,                 -- 发布日期
+    valid_from      TEXT,                 -- 有效期自
+    valid_to        TEXT,                 -- 有效期至
+    source          TEXT                  -- 来源
+) STRICT;
+CREATE INDEX IF NOT EXISTS idx_qcc_honor_eid ON ods_qcc_honor(enterprise_id);
+
+CREATE TABLE IF NOT EXISTS ods_qcc_cert (
+    row_id          INTEGER PRIMARY KEY,
+    enterprise_id   TEXT REFERENCES dim_enterprise(enterprise_id) ON DELETE CASCADE,
+    company_name    TEXT NOT NULL,        -- 兜底名
+    cert_name       TEXT,                 -- 资质名称
+    cert_category   TEXT,                 -- 资质类别及等级/产品名称/认证项目
+    cert_no         TEXT,                 -- 证书编号
+    issuer          TEXT,                 -- 发证机构
+    issue_date      TEXT,                 -- 发证日期
+    valid_to        TEXT,                 -- 有效期至
+    cert_status     TEXT                  -- 证书状态(有效/过期/…)
+) STRICT;
+CREATE INDEX IF NOT EXISTS idx_qcc_cert_eid ON ods_qcc_cert(enterprise_id);
+CREATE INDEX IF NOT EXISTS idx_qcc_cert_status ON ods_qcc_cert(enterprise_id, cert_status);
+
+CREATE TABLE IF NOT EXISTS ods_qcc_shareholder (
+    row_id              INTEGER PRIMARY KEY,
+    enterprise_id       TEXT REFERENCES dim_enterprise(enterprise_id) ON DELETE CASCADE,
+    company_name        TEXT NOT NULL,    -- 兜底名
+    shareholder_name    TEXT,             -- 股东名称
+    shareholder_type    TEXT,             -- 股东类型
+    share_kind          TEXT,             -- 股份类型
+    shares              INTEGER,          -- 持股数(股)
+    subscription_wan    REAL,             -- 认缴出资额(万元)
+    subscription_date   TEXT,             -- 认缴出资日期
+    indirect_ratio      REAL,             -- 间接持股比例
+    first_hold_date     TEXT,             -- 首次持股日期
+    related_product     TEXT              -- 关联产品/机构
+) STRICT;
+CREATE INDEX IF NOT EXISTS idx_qcc_share_eid ON ods_qcc_shareholder(enterprise_id);
+
+CREATE TABLE IF NOT EXISTS ods_qcc_annual (
+    row_id              INTEGER PRIMARY KEY,
+    enterprise_id       TEXT REFERENCES dim_enterprise(enterprise_id) ON DELETE CASCADE,
+    company_name        TEXT NOT NULL,    -- 兜底名
+    report_year         INTEGER,          -- 年报年份
+    publish_date        TEXT,             -- 公布日期
+    total_revenue_wan   REAL,             -- 营业总收入(万元；不公示→NULL)
+    employee_num        INTEGER,          -- 从业人数
+    social_sec_num      INTEGER,          -- 社保人数
+    total_assets_wan    REAL,             -- 资产总额(万元)
+    tax_total_wan       REAL,             -- 纳税总额(万元)
+    liability_wan       REAL,             -- 负债总额(万元)
+    net_profit_wan      REAL,             -- 净利润(万元)
+    profit_total_wan    REAL,             -- 利润总额(万元)
+    owner_equity_wan    REAL,             -- 所有者权益合计(万元)
+    main_biz_rev_wan    REAL,             -- 营业总收入中主营业务收入(万元)
+    biz_status          TEXT              -- 企业经营状态
+) STRICT;
+CREATE INDEX IF NOT EXISTS idx_qcc_annual_eid ON ods_qcc_annual(enterprise_id);
+-- [QCC:END]
+
+-- ===========================================================================
+-- 生存分析口径（方案C）：高企资格存续 person-period 表
+-- 每企业最多 3 期（高企资格 3 年有效，t=3 为续期屏障）。
+-- 特征锚点 = fy + t - 1（每期期初），严格无后视泄漏。
+-- event: 1=该期发生「到期未续」（仅 t=3 且完整观察窗）；0=存活至期末；
+--        NULL=前瞻行（2023+ 队列，观察窗未满，特征可用、结局未知）。
+-- prospective 标记 2023 队列 t=3 行（2026 年到期），供风险排序输出。
+-- ===========================================================================
+-- [SURV:BEGIN]
+CREATE TABLE IF NOT EXISTS ads_survival_period (
+    enterprise_id TEXT NOT NULL REFERENCES dim_enterprise(enterprise_id) ON DELETE CASCADE,
+    first_year    INTEGER NOT NULL,          -- 首次高企认定年 fy
+    period_t      INTEGER NOT NULL CHECK (period_t IN (1,2,3)),  -- 期次 1..3
+    anchor_year   INTEGER NOT NULL,          -- 特征锚点年 = fy + t - 1
+    event         INTEGER CHECK (event IN (0,1) OR event IS NULL),
+    prospective   INTEGER NOT NULL DEFAULT 0, -- 1=前瞻行（结局未知，只算特征）
+    split         TEXT,                      -- 沿用 md5 企业级 70/15/15 切分
+    -- as-of 14 特征（与 v_model_dataset_asof_flat 同名同义）
+    core_staff_stability REAL, inv_patent_ratio REAL, m_cert REAL, n_inventor REAL,
+    n_ipc_subclass REAL, n_patent_app REAL, n_patent_grant REAL,
+    n_patent_invention REAL, qual_rank REAL, qual_rank_delta REAL,
+    qual_upgrade_cum REAL, tech_breadth_entropy REAL,
+    tech_breadth_ipc_class REAL, tech_conversion REAL,
+    built_at      TEXT,
+    PRIMARY KEY (enterprise_id, period_t)
+) STRICT;
+CREATE INDEX IF NOT EXISTS idx_surv_anchor ON ads_survival_period(anchor_year, period_t);
+CREATE INDEX IF NOT EXISTS idx_surv_prosp ON ads_survival_period(prospective, first_year);
+-- [SURV:END]

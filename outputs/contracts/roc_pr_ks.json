@@ -1,0 +1,1757 @@
+{
+  "curves": [
+    {
+      "name": "logistic_regression · holdout_row",
+      "model": "logistic_regression",
+      "dataset": "A 信贷面板（1,714 家 / 3,465 行）",
+      "anchor": {
+        "auc": 0.5862,
+        "ks_measured": 0.16920278223649005,
+        "n_samples": 698,
+        "n_pos": 75,
+        "prevalence": 0.1074
+      },
+      "fit_mode": "two_anchor(auc+ks)",
+      "params": {
+        "a": 0.267986,
+        "b": 0.716125,
+        "auc_implied": 0.586239
+      },
+      "ks_reconstructed": 0.1692,
+      "ks_error_vs_measured": 0.0,
+      "roc": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.01,
+          "tpr": 0.081061
+        },
+        {
+          "fpr": 0.02,
+          "tpr": 0.114536
+        },
+        {
+          "fpr": 0.03,
+          "tpr": 0.140317
+        },
+        {
+          "fpr": 0.04,
+          "tpr": 0.162134
+        },
+        {
+          "fpr": 0.05,
+          "tpr": 0.181429
+        },
+        {
+          "fpr": 0.06,
+          "tpr": 0.198937
+        },
+        {
+          "fpr": 0.07,
+          "tpr": 0.215096
+        },
+        {
+          "fpr": 0.08,
+          "tpr": 0.23019
+        },
+        {
+          "fpr": 0.09,
+          "tpr": 0.244418
+        },
+        {
+          "fpr": 0.1,
+          "tpr": 0.257922
+        },
+        {
+          "fpr": 0.11,
+          "tpr": 0.270811
+        },
+        {
+          "fpr": 0.12,
+          "tpr": 0.28317
+        },
+        {
+          "fpr": 0.13,
+          "tpr": 0.295064
+        },
+        {
+          "fpr": 0.14,
+          "tpr": 0.306549
+        },
+        {
+          "fpr": 0.15,
+          "tpr": 0.317668
+        },
+        {
+          "fpr": 0.16,
+          "tpr": 0.32846
+        },
+        {
+          "fpr": 0.17,
+          "tpr": 0.338956
+        },
+        {
+          "fpr": 0.18,
+          "tpr": 0.349182
+        },
+        {
+          "fpr": 0.19,
+          "tpr": 0.359163
+        },
+        {
+          "fpr": 0.2,
+          "tpr": 0.368918
+        },
+        {
+          "fpr": 0.21,
+          "tpr": 0.378466
+        },
+        {
+          "fpr": 0.22,
+          "tpr": 0.387822
+        },
+        {
+          "fpr": 0.23,
+          "tpr": 0.397
+        },
+        {
+          "fpr": 0.24,
+          "tpr": 0.406012
+        },
+        {
+          "fpr": 0.25,
+          "tpr": 0.414871
+        },
+        {
+          "fpr": 0.26,
+          "tpr": 0.423585
+        },
+        {
+          "fpr": 0.27,
+          "tpr": 0.432165
+        },
+        {
+          "fpr": 0.28,
+          "tpr": 0.440619
+        },
+        {
+          "fpr": 0.29,
+          "tpr": 0.448953
+        },
+        {
+          "fpr": 0.3,
+          "tpr": 0.457176
+        },
+        {
+          "fpr": 0.31,
+          "tpr": 0.465294
+        },
+        {
+          "fpr": 0.32,
+          "tpr": 0.473313
+        },
+        {
+          "fpr": 0.33,
+          "tpr": 0.481238
+        },
+        {
+          "fpr": 0.34,
+          "tpr": 0.489075
+        },
+        {
+          "fpr": 0.35,
+          "tpr": 0.496828
+        },
+        {
+          "fpr": 0.36,
+          "tpr": 0.504502
+        },
+        {
+          "fpr": 0.37,
+          "tpr": 0.512101
+        },
+        {
+          "fpr": 0.38,
+          "tpr": 0.51963
+        },
+        {
+          "fpr": 0.39,
+          "tpr": 0.527091
+        },
+        {
+          "fpr": 0.4,
+          "tpr": 0.534489
+        },
+        {
+          "fpr": 0.41,
+          "tpr": 0.541826
+        },
+        {
+          "fpr": 0.42,
+          "tpr": 0.549107
+        },
+        {
+          "fpr": 0.43,
+          "tpr": 0.556334
+        },
+        {
+          "fpr": 0.44,
+          "tpr": 0.56351
+        },
+        {
+          "fpr": 0.45,
+          "tpr": 0.570637
+        },
+        {
+          "fpr": 0.46,
+          "tpr": 0.57772
+        },
+        {
+          "fpr": 0.47,
+          "tpr": 0.584759
+        },
+        {
+          "fpr": 0.48,
+          "tpr": 0.591758
+        },
+        {
+          "fpr": 0.49,
+          "tpr": 0.598719
+        },
+        {
+          "fpr": 0.5,
+          "tpr": 0.605645
+        },
+        {
+          "fpr": 0.51,
+          "tpr": 0.612538
+        },
+        {
+          "fpr": 0.52,
+          "tpr": 0.619399
+        },
+        {
+          "fpr": 0.53,
+          "tpr": 0.626232
+        },
+        {
+          "fpr": 0.54,
+          "tpr": 0.633038
+        },
+        {
+          "fpr": 0.55,
+          "tpr": 0.639819
+        },
+        {
+          "fpr": 0.56,
+          "tpr": 0.646578
+        },
+        {
+          "fpr": 0.57,
+          "tpr": 0.653317
+        },
+        {
+          "fpr": 0.58,
+          "tpr": 0.660038
+        },
+        {
+          "fpr": 0.59,
+          "tpr": 0.666743
+        },
+        {
+          "fpr": 0.6,
+          "tpr": 0.673434
+        },
+        {
+          "fpr": 0.61,
+          "tpr": 0.680113
+        },
+        {
+          "fpr": 0.62,
+          "tpr": 0.686782
+        },
+        {
+          "fpr": 0.63,
+          "tpr": 0.693444
+        },
+        {
+          "fpr": 0.64,
+          "tpr": 0.7001
+        },
+        {
+          "fpr": 0.65,
+          "tpr": 0.706753
+        },
+        {
+          "fpr": 0.66,
+          "tpr": 0.713406
+        },
+        {
+          "fpr": 0.67,
+          "tpr": 0.72006
+        },
+        {
+          "fpr": 0.68,
+          "tpr": 0.726718
+        },
+        {
+          "fpr": 0.69,
+          "tpr": 0.733383
+        },
+        {
+          "fpr": 0.7,
+          "tpr": 0.740058
+        },
+        {
+          "fpr": 0.71,
+          "tpr": 0.746744
+        },
+        {
+          "fpr": 0.72,
+          "tpr": 0.753446
+        },
+        {
+          "fpr": 0.73,
+          "tpr": 0.760166
+        },
+        {
+          "fpr": 0.74,
+          "tpr": 0.766908
+        },
+        {
+          "fpr": 0.75,
+          "tpr": 0.773675
+        },
+        {
+          "fpr": 0.76,
+          "tpr": 0.780472
+        },
+        {
+          "fpr": 0.77,
+          "tpr": 0.787302
+        },
+        {
+          "fpr": 0.78,
+          "tpr": 0.794169
+        },
+        {
+          "fpr": 0.79,
+          "tpr": 0.80108
+        },
+        {
+          "fpr": 0.8,
+          "tpr": 0.808039
+        },
+        {
+          "fpr": 0.81,
+          "tpr": 0.815052
+        },
+        {
+          "fpr": 0.82,
+          "tpr": 0.822127
+        },
+        {
+          "fpr": 0.83,
+          "tpr": 0.829271
+        },
+        {
+          "fpr": 0.84,
+          "tpr": 0.836492
+        },
+        {
+          "fpr": 0.85,
+          "tpr": 0.843801
+        },
+        {
+          "fpr": 0.86,
+          "tpr": 0.851208
+        },
+        {
+          "fpr": 0.87,
+          "tpr": 0.858728
+        },
+        {
+          "fpr": 0.88,
+          "tpr": 0.866376
+        },
+        {
+          "fpr": 0.89,
+          "tpr": 0.874172
+        },
+        {
+          "fpr": 0.9,
+          "tpr": 0.882137
+        },
+        {
+          "fpr": 0.91,
+          "tpr": 0.890302
+        },
+        {
+          "fpr": 0.92,
+          "tpr": 0.898703
+        },
+        {
+          "fpr": 0.93,
+          "tpr": 0.907387
+        },
+        {
+          "fpr": 0.94,
+          "tpr": 0.916422
+        },
+        {
+          "fpr": 0.95,
+          "tpr": 0.925898
+        },
+        {
+          "fpr": 0.96,
+          "tpr": 0.935957
+        },
+        {
+          "fpr": 0.97,
+          "tpr": 0.946831
+        },
+        {
+          "fpr": 0.98,
+          "tpr": 0.958959
+        },
+        {
+          "fpr": 0.99,
+          "tpr": 0.97344
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "pr": [
+        {
+          "recall": 2.8e-05,
+          "precision": 1.0
+        },
+        {
+          "recall": 0.081061,
+          "precision": 0.49389
+        },
+        {
+          "recall": 0.114536,
+          "precision": 0.408081
+        },
+        {
+          "recall": 0.140317,
+          "precision": 0.360233
+        },
+        {
+          "recall": 0.162134,
+          "precision": 0.327941
+        },
+        {
+          "recall": 0.181429,
+          "precision": 0.304022
+        },
+        {
+          "recall": 0.198937,
+          "precision": 0.285281
+        },
+        {
+          "recall": 0.215096,
+          "precision": 0.27003
+        },
+        {
+          "recall": 0.23019,
+          "precision": 0.257275
+        },
+        {
+          "recall": 0.244418,
+          "precision": 0.246385
+        },
+        {
+          "recall": 0.257922,
+          "precision": 0.236933
+        },
+        {
+          "recall": 0.270811,
+          "precision": 0.228621
+        },
+        {
+          "recall": 0.28317,
+          "precision": 0.221232
+        },
+        {
+          "recall": 0.295064,
+          "precision": 0.214603
+        },
+        {
+          "recall": 0.306549,
+          "precision": 0.20861
+        },
+        {
+          "recall": 0.317668,
+          "precision": 0.203156
+        },
+        {
+          "recall": 0.32846,
+          "precision": 0.198163
+        },
+        {
+          "recall": 0.338956,
+          "precision": 0.193568
+        },
+        {
+          "recall": 0.349182,
+          "precision": 0.189322
+        },
+        {
+          "recall": 0.359163,
+          "precision": 0.185381
+        },
+        {
+          "recall": 0.368918,
+          "precision": 0.181711
+        },
+        {
+          "recall": 0.378466,
+          "precision": 0.178281
+        },
+        {
+          "recall": 0.387822,
+          "precision": 0.175066
+        },
+        {
+          "recall": 0.397,
+          "precision": 0.172045
+        },
+        {
+          "recall": 0.406012,
+          "precision": 0.169199
+        },
+        {
+          "recall": 0.414871,
+          "precision": 0.166512
+        },
+        {
+          "recall": 0.423585,
+          "precision": 0.163969
+        },
+        {
+          "recall": 0.432165,
+          "precision": 0.161559
+        },
+        {
+          "recall": 0.440619,
+          "precision": 0.15927
+        },
+        {
+          "recall": 0.448953,
+          "precision": 0.157093
+        },
+        {
+          "recall": 0.457176,
+          "precision": 0.155018
+        },
+        {
+          "recall": 0.465294,
+          "precision": 0.153039
+        },
+        {
+          "recall": 0.473313,
+          "precision": 0.151148
+        },
+        {
+          "recall": 0.481238,
+          "precision": 0.14934
+        },
+        {
+          "recall": 0.489075,
+          "precision": 0.147608
+        },
+        {
+          "recall": 0.496828,
+          "precision": 0.145947
+        },
+        {
+          "recall": 0.504502,
+          "precision": 0.144354
+        },
+        {
+          "recall": 0.512101,
+          "precision": 0.142823
+        },
+        {
+          "recall": 0.51963,
+          "precision": 0.141351
+        },
+        {
+          "recall": 0.527091,
+          "precision": 0.139935
+        },
+        {
+          "recall": 0.534489,
+          "precision": 0.138571
+        },
+        {
+          "recall": 0.541826,
+          "precision": 0.137256
+        },
+        {
+          "recall": 0.549107,
+          "precision": 0.135988
+        },
+        {
+          "recall": 0.556334,
+          "precision": 0.134764
+        },
+        {
+          "recall": 0.56351,
+          "precision": 0.133582
+        },
+        {
+          "recall": 0.570637,
+          "precision": 0.13244
+        },
+        {
+          "recall": 0.57772,
+          "precision": 0.131336
+        },
+        {
+          "recall": 0.584759,
+          "precision": 0.130268
+        },
+        {
+          "recall": 0.591758,
+          "precision": 0.129234
+        },
+        {
+          "recall": 0.598719,
+          "precision": 0.128233
+        },
+        {
+          "recall": 0.605645,
+          "precision": 0.127264
+        },
+        {
+          "recall": 0.612538,
+          "precision": 0.126324
+        },
+        {
+          "recall": 0.619399,
+          "precision": 0.125413
+        },
+        {
+          "recall": 0.626232,
+          "precision": 0.12453
+        },
+        {
+          "recall": 0.633038,
+          "precision": 0.123673
+        },
+        {
+          "recall": 0.639819,
+          "precision": 0.122842
+        },
+        {
+          "recall": 0.646578,
+          "precision": 0.122035
+        },
+        {
+          "recall": 0.653317,
+          "precision": 0.121252
+        },
+        {
+          "recall": 0.660038,
+          "precision": 0.120491
+        },
+        {
+          "recall": 0.666743,
+          "precision": 0.119752
+        },
+        {
+          "recall": 0.673434,
+          "precision": 0.119035
+        },
+        {
+          "recall": 0.680113,
+          "precision": 0.118339
+        },
+        {
+          "recall": 0.686782,
+          "precision": 0.117662
+        },
+        {
+          "recall": 0.693444,
+          "precision": 0.117004
+        },
+        {
+          "recall": 0.7001,
+          "precision": 0.116366
+        },
+        {
+          "recall": 0.706753,
+          "precision": 0.115746
+        },
+        {
+          "recall": 0.713406,
+          "precision": 0.115143
+        },
+        {
+          "recall": 0.72006,
+          "precision": 0.114558
+        },
+        {
+          "recall": 0.726718,
+          "precision": 0.113991
+        },
+        {
+          "recall": 0.733383,
+          "precision": 0.113439
+        },
+        {
+          "recall": 0.740058,
+          "precision": 0.112904
+        },
+        {
+          "recall": 0.746744,
+          "precision": 0.112386
+        },
+        {
+          "recall": 0.753446,
+          "precision": 0.111883
+        },
+        {
+          "recall": 0.760166,
+          "precision": 0.111395
+        },
+        {
+          "recall": 0.766908,
+          "precision": 0.110924
+        },
+        {
+          "recall": 0.773675,
+          "precision": 0.110467
+        },
+        {
+          "recall": 0.780472,
+          "precision": 0.110026
+        },
+        {
+          "recall": 0.787302,
+          "precision": 0.1096
+        },
+        {
+          "recall": 0.794169,
+          "precision": 0.109189
+        },
+        {
+          "recall": 0.80108,
+          "precision": 0.108793
+        },
+        {
+          "recall": 0.808039,
+          "precision": 0.108413
+        },
+        {
+          "recall": 0.815052,
+          "precision": 0.108048
+        },
+        {
+          "recall": 0.822127,
+          "precision": 0.107699
+        },
+        {
+          "recall": 0.829271,
+          "precision": 0.107366
+        },
+        {
+          "recall": 0.836492,
+          "precision": 0.107049
+        },
+        {
+          "recall": 0.843801,
+          "precision": 0.10675
+        },
+        {
+          "recall": 0.851208,
+          "precision": 0.106468
+        },
+        {
+          "recall": 0.858728,
+          "precision": 0.106206
+        },
+        {
+          "recall": 0.866376,
+          "precision": 0.105963
+        },
+        {
+          "recall": 0.874172,
+          "precision": 0.105741
+        },
+        {
+          "recall": 0.882137,
+          "precision": 0.105542
+        },
+        {
+          "recall": 0.890302,
+          "precision": 0.105369
+        },
+        {
+          "recall": 0.898703,
+          "precision": 0.105224
+        },
+        {
+          "recall": 0.907387,
+          "precision": 0.105112
+        },
+        {
+          "recall": 0.916422,
+          "precision": 0.105038
+        },
+        {
+          "recall": 0.925898,
+          "precision": 0.10501
+        },
+        {
+          "recall": 0.935957,
+          "precision": 0.105042
+        },
+        {
+          "recall": 0.946831,
+          "precision": 0.105153
+        },
+        {
+          "recall": 0.958959,
+          "precision": 0.105386
+        },
+        {
+          "recall": 0.97344,
+          "precision": 0.105843
+        },
+        {
+          "recall": 0.999997,
+          "precision": 0.10745
+        }
+      ],
+      "n_points": 101
+    },
+    {
+      "name": "xgboost · holdout_row",
+      "model": "xgboost",
+      "dataset": "A 信贷面板（1,714 家 / 3,465 行）",
+      "anchor": {
+        "auc": 0.5763,
+        "ks_measured": 0.1736329588014981,
+        "n_samples": 698,
+        "n_pos": 75,
+        "prevalence": 0.1074
+      },
+      "fit_mode": "two_anchor(auc+ks)",
+      "params": {
+        "a": 0.231206,
+        "b": 0.664809,
+        "auc_implied": 0.57634
+      },
+      "ks_reconstructed": 0.1736,
+      "ks_error_vs_measured": 0.0,
+      "roc": [
+        {
+          "fpr": 0.0,
+          "tpr": 0.0
+        },
+        {
+          "fpr": 0.01,
+          "tpr": 0.094192
+        },
+        {
+          "fpr": 0.02,
+          "tpr": 0.128367
+        },
+        {
+          "fpr": 0.03,
+          "tpr": 0.154063
+        },
+        {
+          "fpr": 0.04,
+          "tpr": 0.175496
+        },
+        {
+          "fpr": 0.05,
+          "tpr": 0.194259
+        },
+        {
+          "fpr": 0.06,
+          "tpr": 0.211154
+        },
+        {
+          "fpr": 0.07,
+          "tpr": 0.226653
+        },
+        {
+          "fpr": 0.08,
+          "tpr": 0.241059
+        },
+        {
+          "fpr": 0.09,
+          "tpr": 0.254582
+        },
+        {
+          "fpr": 0.1,
+          "tpr": 0.267372
+        },
+        {
+          "fpr": 0.11,
+          "tpr": 0.279542
+        },
+        {
+          "fpr": 0.12,
+          "tpr": 0.291182
+        },
+        {
+          "fpr": 0.13,
+          "tpr": 0.302358
+        },
+        {
+          "fpr": 0.14,
+          "tpr": 0.313129
+        },
+        {
+          "fpr": 0.15,
+          "tpr": 0.323539
+        },
+        {
+          "fpr": 0.16,
+          "tpr": 0.333627
+        },
+        {
+          "fpr": 0.17,
+          "tpr": 0.343426
+        },
+        {
+          "fpr": 0.18,
+          "tpr": 0.352961
+        },
+        {
+          "fpr": 0.19,
+          "tpr": 0.362259
+        },
+        {
+          "fpr": 0.2,
+          "tpr": 0.371338
+        },
+        {
+          "fpr": 0.21,
+          "tpr": 0.380217
+        },
+        {
+          "fpr": 0.22,
+          "tpr": 0.388912
+        },
+        {
+          "fpr": 0.23,
+          "tpr": 0.397437
+        },
+        {
+          "fpr": 0.24,
+          "tpr": 0.405805
+        },
+        {
+          "fpr": 0.25,
+          "tpr": 0.414026
+        },
+        {
+          "fpr": 0.26,
+          "tpr": 0.422111
+        },
+        {
+          "fpr": 0.27,
+          "tpr": 0.430069
+        },
+        {
+          "fpr": 0.28,
+          "tpr": 0.437909
+        },
+        {
+          "fpr": 0.29,
+          "tpr": 0.445638
+        },
+        {
+          "fpr": 0.3,
+          "tpr": 0.453263
+        },
+        {
+          "fpr": 0.31,
+          "tpr": 0.460791
+        },
+        {
+          "fpr": 0.32,
+          "tpr": 0.468228
+        },
+        {
+          "fpr": 0.33,
+          "tpr": 0.475579
+        },
+        {
+          "fpr": 0.34,
+          "tpr": 0.482849
+        },
+        {
+          "fpr": 0.35,
+          "tpr": 0.490044
+        },
+        {
+          "fpr": 0.36,
+          "tpr": 0.497167
+        },
+        {
+          "fpr": 0.37,
+          "tpr": 0.504223
+        },
+        {
+          "fpr": 0.38,
+          "tpr": 0.511217
+        },
+        {
+          "fpr": 0.39,
+          "tpr": 0.51815
+        },
+        {
+          "fpr": 0.4,
+          "tpr": 0.525028
+        },
+        {
+          "fpr": 0.41,
+          "tpr": 0.531854
+        },
+        {
+          "fpr": 0.42,
+          "tpr": 0.538631
+        },
+        {
+          "fpr": 0.43,
+          "tpr": 0.545362
+        },
+        {
+          "fpr": 0.44,
+          "tpr": 0.552049
+        },
+        {
+          "fpr": 0.45,
+          "tpr": 0.558696
+        },
+        {
+          "fpr": 0.46,
+          "tpr": 0.565306
+        },
+        {
+          "fpr": 0.47,
+          "tpr": 0.571881
+        },
+        {
+          "fpr": 0.48,
+          "tpr": 0.578424
+        },
+        {
+          "fpr": 0.49,
+          "tpr": 0.584937
+        },
+        {
+          "fpr": 0.5,
+          "tpr": 0.591423
+        },
+        {
+          "fpr": 0.51,
+          "tpr": 0.597883
+        },
+        {
+          "fpr": 0.52,
+          "tpr": 0.604321
+        },
+        {
+          "fpr": 0.53,
+          "tpr": 0.610739
+        },
+        {
+          "fpr": 0.54,
+          "tpr": 0.617139
+        },
+        {
+          "fpr": 0.55,
+          "tpr": 0.623523
+        },
+        {
+          "fpr": 0.56,
+          "tpr": 0.629894
+        },
+        {
+          "fpr": 0.57,
+          "tpr": 0.636253
+        },
+        {
+          "fpr": 0.58,
+          "tpr": 0.642603
+        },
+        {
+          "fpr": 0.59,
+          "tpr": 0.648947
+        },
+        {
+          "fpr": 0.6,
+          "tpr": 0.655287
+        },
+        {
+          "fpr": 0.61,
+          "tpr": 0.661624
+        },
+        {
+          "fpr": 0.62,
+          "tpr": 0.667962
+        },
+        {
+          "fpr": 0.63,
+          "tpr": 0.674302
+        },
+        {
+          "fpr": 0.64,
+          "tpr": 0.680648
+        },
+        {
+          "fpr": 0.65,
+          "tpr": 0.687002
+        },
+        {
+          "fpr": 0.66,
+          "tpr": 0.693366
+        },
+        {
+          "fpr": 0.67,
+          "tpr": 0.699744
+        },
+        {
+          "fpr": 0.68,
+          "tpr": 0.706138
+        },
+        {
+          "fpr": 0.69,
+          "tpr": 0.712551
+        },
+        {
+          "fpr": 0.7,
+          "tpr": 0.718986
+        },
+        {
+          "fpr": 0.71,
+          "tpr": 0.725447
+        },
+        {
+          "fpr": 0.72,
+          "tpr": 0.731938
+        },
+        {
+          "fpr": 0.73,
+          "tpr": 0.738462
+        },
+        {
+          "fpr": 0.74,
+          "tpr": 0.745023
+        },
+        {
+          "fpr": 0.75,
+          "tpr": 0.751625
+        },
+        {
+          "fpr": 0.76,
+          "tpr": 0.758274
+        },
+        {
+          "fpr": 0.77,
+          "tpr": 0.764975
+        },
+        {
+          "fpr": 0.78,
+          "tpr": 0.771733
+        },
+        {
+          "fpr": 0.79,
+          "tpr": 0.778555
+        },
+        {
+          "fpr": 0.8,
+          "tpr": 0.785447
+        },
+        {
+          "fpr": 0.81,
+          "tpr": 0.792418
+        },
+        {
+          "fpr": 0.82,
+          "tpr": 0.799475
+        },
+        {
+          "fpr": 0.83,
+          "tpr": 0.80663
+        },
+        {
+          "fpr": 0.84,
+          "tpr": 0.813892
+        },
+        {
+          "fpr": 0.85,
+          "tpr": 0.821275
+        },
+        {
+          "fpr": 0.86,
+          "tpr": 0.828794
+        },
+        {
+          "fpr": 0.87,
+          "tpr": 0.836467
+        },
+        {
+          "fpr": 0.88,
+          "tpr": 0.844314
+        },
+        {
+          "fpr": 0.89,
+          "tpr": 0.852361
+        },
+        {
+          "fpr": 0.9,
+          "tpr": 0.860639
+        },
+        {
+          "fpr": 0.91,
+          "tpr": 0.869186
+        },
+        {
+          "fpr": 0.92,
+          "tpr": 0.878053
+        },
+        {
+          "fpr": 0.93,
+          "tpr": 0.887306
+        },
+        {
+          "fpr": 0.94,
+          "tpr": 0.897035
+        },
+        {
+          "fpr": 0.95,
+          "tpr": 0.907368
+        },
+        {
+          "fpr": 0.96,
+          "tpr": 0.918504
+        },
+        {
+          "fpr": 0.97,
+          "tpr": 0.930773
+        },
+        {
+          "fpr": 0.98,
+          "tpr": 0.944818
+        },
+        {
+          "fpr": 0.99,
+          "tpr": 0.96228
+        },
+        {
+          "fpr": 1.0,
+          "tpr": 1.0
+        }
+      ],
+      "pr": [
+        {
+          "recall": 8.6e-05,
+          "precision": 1.0
+        },
+        {
+          "recall": 0.094192,
+          "precision": 0.531383
+        },
+        {
+          "recall": 0.128367,
+          "precision": 0.43588
+        },
+        {
+          "recall": 0.154063,
+          "precision": 0.382041
+        },
+        {
+          "recall": 0.175496,
+          "precision": 0.345626
+        },
+        {
+          "recall": 0.194259,
+          "precision": 0.31867
+        },
+        {
+          "recall": 0.211154,
+          "precision": 0.297587
+        },
+        {
+          "recall": 0.226653,
+          "precision": 0.28047
+        },
+        {
+          "recall": 0.241059,
+          "precision": 0.26619
+        },
+        {
+          "recall": 0.254582,
+          "precision": 0.254028
+        },
+        {
+          "recall": 0.267372,
+          "precision": 0.243499
+        },
+        {
+          "recall": 0.279542,
+          "precision": 0.234265
+        },
+        {
+          "recall": 0.291182,
+          "precision": 0.226076
+        },
+        {
+          "recall": 0.302358,
+          "precision": 0.218748
+        },
+        {
+          "recall": 0.313129,
+          "precision": 0.212138
+        },
+        {
+          "recall": 0.323539,
+          "precision": 0.206136
+        },
+        {
+          "recall": 0.333627,
+          "precision": 0.200655
+        },
+        {
+          "recall": 0.343426,
+          "precision": 0.195622
+        },
+        {
+          "recall": 0.352961,
+          "precision": 0.19098
+        },
+        {
+          "recall": 0.362259,
+          "precision": 0.186681
+        },
+        {
+          "recall": 0.371338,
+          "precision": 0.182685
+        },
+        {
+          "recall": 0.380217,
+          "precision": 0.178958
+        },
+        {
+          "recall": 0.388912,
+          "precision": 0.175472
+        },
+        {
+          "recall": 0.397437,
+          "precision": 0.172202
+        },
+        {
+          "recall": 0.405805,
+          "precision": 0.169127
+        },
+        {
+          "recall": 0.414026,
+          "precision": 0.166229
+        },
+        {
+          "recall": 0.422111,
+          "precision": 0.163492
+        },
+        {
+          "recall": 0.430069,
+          "precision": 0.160902
+        },
+        {
+          "recall": 0.437909,
+          "precision": 0.158446
+        },
+        {
+          "recall": 0.445638,
+          "precision": 0.156114
+        },
+        {
+          "recall": 0.453263,
+          "precision": 0.153896
+        },
+        {
+          "recall": 0.460791,
+          "precision": 0.151783
+        },
+        {
+          "recall": 0.468228,
+          "precision": 0.149768
+        },
+        {
+          "recall": 0.475579,
+          "precision": 0.147843
+        },
+        {
+          "recall": 0.482849,
+          "precision": 0.146003
+        },
+        {
+          "recall": 0.490044,
+          "precision": 0.144242
+        },
+        {
+          "recall": 0.497167,
+          "precision": 0.142554
+        },
+        {
+          "recall": 0.504223,
+          "precision": 0.140935
+        },
+        {
+          "recall": 0.511217,
+          "precision": 0.139382
+        },
+        {
+          "recall": 0.51815,
+          "precision": 0.137888
+        },
+        {
+          "recall": 0.525028,
+          "precision": 0.136453
+        },
+        {
+          "recall": 0.531854,
+          "precision": 0.135071
+        },
+        {
+          "recall": 0.538631,
+          "precision": 0.133741
+        },
+        {
+          "recall": 0.545362,
+          "precision": 0.132458
+        },
+        {
+          "recall": 0.552049,
+          "precision": 0.131222
+        },
+        {
+          "recall": 0.558696,
+          "precision": 0.130029
+        },
+        {
+          "recall": 0.565306,
+          "precision": 0.128878
+        },
+        {
+          "recall": 0.571881,
+          "precision": 0.127766
+        },
+        {
+          "recall": 0.578424,
+          "precision": 0.126691
+        },
+        {
+          "recall": 0.584937,
+          "precision": 0.125652
+        },
+        {
+          "recall": 0.591423,
+          "precision": 0.124648
+        },
+        {
+          "recall": 0.597883,
+          "precision": 0.123676
+        },
+        {
+          "recall": 0.604321,
+          "precision": 0.122735
+        },
+        {
+          "recall": 0.610739,
+          "precision": 0.121824
+        },
+        {
+          "recall": 0.617139,
+          "precision": 0.120943
+        },
+        {
+          "recall": 0.623523,
+          "precision": 0.120089
+        },
+        {
+          "recall": 0.629894,
+          "precision": 0.119261
+        },
+        {
+          "recall": 0.636253,
+          "precision": 0.11846
+        },
+        {
+          "recall": 0.642603,
+          "precision": 0.117683
+        },
+        {
+          "recall": 0.648947,
+          "precision": 0.11693
+        },
+        {
+          "recall": 0.655287,
+          "precision": 0.1162
+        },
+        {
+          "recall": 0.661624,
+          "precision": 0.115493
+        },
+        {
+          "recall": 0.667962,
+          "precision": 0.114808
+        },
+        {
+          "recall": 0.674302,
+          "precision": 0.114143
+        },
+        {
+          "recall": 0.680648,
+          "precision": 0.1135
+        },
+        {
+          "recall": 0.687002,
+          "precision": 0.112876
+        },
+        {
+          "recall": 0.693366,
+          "precision": 0.112272
+        },
+        {
+          "recall": 0.699744,
+          "precision": 0.111687
+        },
+        {
+          "recall": 0.706138,
+          "precision": 0.111121
+        },
+        {
+          "recall": 0.712551,
+          "precision": 0.110573
+        },
+        {
+          "recall": 0.718986,
+          "precision": 0.110044
+        },
+        {
+          "recall": 0.725447,
+          "precision": 0.109532
+        },
+        {
+          "recall": 0.731938,
+          "precision": 0.109037
+        },
+        {
+          "recall": 0.738462,
+          "precision": 0.10856
+        },
+        {
+          "recall": 0.745023,
+          "precision": 0.1081
+        },
+        {
+          "recall": 0.751625,
+          "precision": 0.107658
+        },
+        {
+          "recall": 0.758274,
+          "precision": 0.107232
+        },
+        {
+          "recall": 0.764975,
+          "precision": 0.106824
+        },
+        {
+          "recall": 0.771733,
+          "precision": 0.106432
+        },
+        {
+          "recall": 0.778555,
+          "precision": 0.106058
+        },
+        {
+          "recall": 0.785447,
+          "precision": 0.105702
+        },
+        {
+          "recall": 0.792418,
+          "precision": 0.105363
+        },
+        {
+          "recall": 0.799475,
+          "precision": 0.105043
+        },
+        {
+          "recall": 0.80663,
+          "precision": 0.104741
+        },
+        {
+          "recall": 0.813892,
+          "precision": 0.104459
+        },
+        {
+          "recall": 0.821275,
+          "precision": 0.104197
+        },
+        {
+          "recall": 0.828794,
+          "precision": 0.103956
+        },
+        {
+          "recall": 0.836467,
+          "precision": 0.103738
+        },
+        {
+          "recall": 0.844314,
+          "precision": 0.103544
+        },
+        {
+          "recall": 0.852361,
+          "precision": 0.103375
+        },
+        {
+          "recall": 0.860639,
+          "precision": 0.103236
+        },
+        {
+          "recall": 0.869186,
+          "precision": 0.103128
+        },
+        {
+          "recall": 0.878053,
+          "precision": 0.103056
+        },
+        {
+          "recall": 0.887306,
+          "precision": 0.103025
+        },
+        {
+          "recall": 0.897035,
+          "precision": 0.103045
+        },
+        {
+          "recall": 0.907368,
+          "precision": 0.103125
+        },
+        {
+          "recall": 0.918504,
+          "precision": 0.103285
+        },
+        {
+          "recall": 0.930773,
+          "precision": 0.103555
+        },
+        {
+          "recall": 0.944818,
+          "precision": 0.103994
+        },
+        {
+          "recall": 0.96228,
+          "precision": 0.104756
+        },
+        {
+          "recall": 0.999988,
+          "precision": 0.107449
+        }
+      ],
+      "n_points": 101
+    }
+  ],
+  "b_dataset_auc": [
+    {
+      "configuration": "noleak_asof14",
+      "model": "logistic_regression",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.5924,
+      "auc_std": 0.1557,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    },
+    {
+      "configuration": "noleak_asof14",
+      "model": "hist_gradient_boosting",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.6056,
+      "auc_std": 0.1481,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    },
+    {
+      "configuration": "asof14_plus_qcc_external",
+      "model": "logistic_regression",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.8589,
+      "auc_std": 0.1061,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    },
+    {
+      "configuration": "asof14_plus_qcc_external",
+      "model": "hist_gradient_boosting",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.8358,
+      "auc_std": 0.1286,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    },
+    {
+      "configuration": "perm_asof14_plus_qcc_external",
+      "model": "logistic_regression",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.4237,
+      "auc_std": 0.1492,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    },
+    {
+      "configuration": "perm_asof14_plus_qcc_external",
+      "model": "hist_gradient_boosting",
+      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "auc_mean": 0.551,
+      "auc_std": 0.1584,
+      "n_folds": null,
+      "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建"
+    }
+  ],
+  "summary": {
+    "n_curves": 2,
+    "reconstruction": "不等方差 binormal：tpr=Φ(a+b·z)，fpr=Φ(z)；由 AUC 定 a、由实测 KS 定 b",
+    "ks_error_max": 0.0
+  },
+  "warnings": [
+    "roc / pr 的点位是**由 AUC 锚点重建**，不是逐条样本实测；形状可信、点位不可引用为实测",
+    "ks_reconstructed 与 ks_measured 的差值即重建误差，已逐条列出；本轮已用双锚点拟合，残差应接近 0",
+    "B 套（本项目主数据集）只有 100 折 AUC 分布，**没有**可重建的单一 ROC —— 21 个正例不足以支撑性能结论"
+  ],
+  "provenance": {
+    "kind": "reconstructed",
+    "displayable": true,
+    "source": "outputs/baseline_results.json（holdout_row）+ outputs/qcc_signal_auc.json",
+    "method": "binormal 双锚点反推：AUC 定 (a/b 的比值)、实测 KS 定 b，再拓扑导出 PR；B 套仅透传折分布，不重建",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": null,
+    "anchors": [
+      {
+        "model": "logistic_regression",
+        "auc": 0.5862386302835741,
+        "ks": 0.16920278223649005
+      },
+      {
+        "model": "xgboost",
+        "auc": 0.5763402889245586,
+        "ks": 0.1736329588014981
+      }
+    ],
+    "note": "该文件不得用于声称「实测 ROC 曲线」"
+  }
+}

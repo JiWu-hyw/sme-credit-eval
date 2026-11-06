@@ -1,0 +1,399 @@
+{
+  "root": {
+    "id": "root",
+    "label": "特征体系",
+    "n_features": 29
+  },
+  "groups": [
+    {
+      "id": "规模产出",
+      "label": "创新规模产出",
+      "note": "按申请/发明/授权的绝对件数度量创新体量",
+      "n_features": 3,
+      "children": [
+        "n_patent_app",
+        "n_patent_invention",
+        "n_patent_grant"
+      ]
+    },
+    {
+      "id": "产出质量",
+      "label": "创新产出质量",
+      "note": "发明占比、授权率、转化率；衡量「量」之外的结构与落地",
+      "n_features": 3,
+      "children": [
+        "inv_patent_ratio",
+        "grant_rate",
+        "tech_conversion"
+      ]
+    },
+    {
+      "id": "技术广度",
+      "label": "技术领域广度",
+      "note": "IPC 子类数量与熵值，反映技术分散度",
+      "n_features": 3,
+      "children": [
+        "n_ipc_subclass",
+        "tech_breadth_entropy",
+        "tech_breadth_ipc_class"
+      ]
+    },
+    {
+      "id": "团队稳定",
+      "label": "团队与稳定性",
+      "note": "发明人规模与核心人员留存",
+      "n_features": 2,
+      "children": [
+        "n_inventor",
+        "core_staff_stability"
+      ]
+    },
+    {
+      "id": "资质等级",
+      "label": "资质与荣誉",
+      "note": "高企资格、资质层级及其变动；**cohort 切面下为常量，无判别力**",
+      "n_features": 4,
+      "children": [
+        "m_cert",
+        "qual_rank",
+        "qual_rank_delta",
+        "qual_upgrade_cum"
+      ]
+    },
+    {
+      "id": "ungrouped",
+      "label": "未分组（待特征工程归类）",
+      "note": "视图有列但尚未纳入语义分组；覆盖率为 0 的是空壳列",
+      "n_features": 14,
+      "children": [
+        "patent_citation",
+        "patent_triple_score",
+        "rd_intensity",
+        "n_patent_collab",
+        "rev_cagr",
+        "emp_cagr",
+        "patent_cagr",
+        "funding_to_last_val",
+        "m_funding",
+        "m_team",
+        "m_cite",
+        "investor_prestige",
+        "cap_tech_synergy",
+        "tech_growth_inter"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "id": "n_patent_app",
+      "label": "n_patent_app",
+      "group": "规模产出",
+      "cn": "专利申请数",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.3905,
+      "discriminative": true
+    },
+    {
+      "id": "n_patent_invention",
+      "label": "n_patent_invention",
+      "group": "规模产出",
+      "cn": "发明专利数",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.5102,
+      "discriminative": false
+    },
+    {
+      "id": "n_patent_grant",
+      "label": "n_patent_grant",
+      "group": "规模产出",
+      "cn": "专利授权数",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.2788,
+      "discriminative": true
+    },
+    {
+      "id": "inv_patent_ratio",
+      "label": "inv_patent_ratio",
+      "group": "产出质量",
+      "cn": "发明占比",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.6185,
+      "discriminative": true
+    },
+    {
+      "id": "grant_rate",
+      "label": "grant_rate",
+      "group": "产出质量",
+      "cn": "授权率（as-of）",
+      "in_train_ready": true,
+      "coverage_asof": 0.93,
+      "univariate_auc": 0.5185,
+      "discriminative": false
+    },
+    {
+      "id": "tech_conversion",
+      "label": "tech_conversion",
+      "group": "产出质量",
+      "cn": "技术转化率",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.2956,
+      "discriminative": true
+    },
+    {
+      "id": "n_ipc_subclass",
+      "label": "n_ipc_subclass",
+      "group": "技术广度",
+      "cn": "IPC 小类数",
+      "in_train_ready": true,
+      "coverage_asof": 0.9788,
+      "univariate_auc": 0.4868,
+      "discriminative": false
+    },
+    {
+      "id": "tech_breadth_entropy",
+      "label": "tech_breadth_entropy",
+      "group": "技术广度",
+      "cn": "技术广度熵",
+      "in_train_ready": true,
+      "coverage_asof": 0.9788,
+      "univariate_auc": 0.4817,
+      "discriminative": false
+    },
+    {
+      "id": "tech_breadth_ipc_class",
+      "label": "tech_breadth_ipc_class",
+      "group": "技术广度",
+      "cn": "技术广度（大类）",
+      "in_train_ready": true,
+      "coverage_asof": 0.9788,
+      "univariate_auc": 0.4868,
+      "discriminative": false
+    },
+    {
+      "id": "n_inventor",
+      "label": "n_inventor",
+      "group": "团队稳定",
+      "cn": "发明人数",
+      "in_train_ready": true,
+      "coverage_asof": 0.9886,
+      "univariate_auc": 0.3825,
+      "discriminative": true
+    },
+    {
+      "id": "core_staff_stability",
+      "label": "core_staff_stability",
+      "group": "团队稳定",
+      "cn": "核心人员稳定性",
+      "in_train_ready": true,
+      "coverage_asof": 0.8339,
+      "univariate_auc": 0.5227,
+      "discriminative": false
+    },
+    {
+      "id": "m_cert",
+      "label": "m_cert",
+      "group": "资质等级",
+      "cn": "m_cert",
+      "in_train_ready": false,
+      "coverage_asof": 1.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "qual_rank",
+      "label": "qual_rank",
+      "group": "资质等级",
+      "cn": "qual_rank",
+      "in_train_ready": false,
+      "coverage_asof": 1.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "qual_rank_delta",
+      "label": "qual_rank_delta",
+      "group": "资质等级",
+      "cn": "qual_rank_delta",
+      "in_train_ready": false,
+      "coverage_asof": 1.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "qual_upgrade_cum",
+      "label": "qual_upgrade_cum",
+      "group": "资质等级",
+      "cn": "qual_upgrade_cum",
+      "in_train_ready": false,
+      "coverage_asof": 1.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "patent_citation",
+      "label": "patent_citation",
+      "group": "ungrouped",
+      "cn": "patent_citation",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "patent_triple_score",
+      "label": "patent_triple_score",
+      "group": "ungrouped",
+      "cn": "patent_triple_score",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "rd_intensity",
+      "label": "rd_intensity",
+      "group": "ungrouped",
+      "cn": "rd_intensity",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "n_patent_collab",
+      "label": "n_patent_collab",
+      "group": "ungrouped",
+      "cn": "n_patent_collab",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "rev_cagr",
+      "label": "rev_cagr",
+      "group": "ungrouped",
+      "cn": "rev_cagr",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "emp_cagr",
+      "label": "emp_cagr",
+      "group": "ungrouped",
+      "cn": "emp_cagr",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "patent_cagr",
+      "label": "patent_cagr",
+      "group": "ungrouped",
+      "cn": "patent_cagr",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "funding_to_last_val",
+      "label": "funding_to_last_val",
+      "group": "ungrouped",
+      "cn": "funding_to_last_val",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "m_funding",
+      "label": "m_funding",
+      "group": "ungrouped",
+      "cn": "m_funding",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "m_team",
+      "label": "m_team",
+      "group": "ungrouped",
+      "cn": "m_team",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "m_cite",
+      "label": "m_cite",
+      "group": "ungrouped",
+      "cn": "m_cite",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "investor_prestige",
+      "label": "investor_prestige",
+      "group": "ungrouped",
+      "cn": "investor_prestige",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "cap_tech_synergy",
+      "label": "cap_tech_synergy",
+      "group": "ungrouped",
+      "cn": "cap_tech_synergy",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    },
+    {
+      "id": "tech_growth_inter",
+      "label": "tech_growth_inter",
+      "group": "ungrouped",
+      "cn": "tech_growth_inter",
+      "in_train_ready": false,
+      "coverage_asof": 0.0,
+      "univariate_auc": null,
+      "discriminative": false
+    }
+  ],
+  "summary": {
+    "n_features_total": 29,
+    "n_in_train_ready": 11,
+    "n_discriminative": 5,
+    "reference": {
+      "view": "v_model_train_ready",
+      "n": 307,
+      "n_pos": 21,
+      "n_neg": 286
+    },
+    "auc_threshold": 0.05
+  },
+  "caveat": "univariate_auc 是单变量秩统计量，不控制共线性、未做交叉验证；coverage_asof 为 0 的特征在 as-of 视图里是空壳列，不可用于建模。",
+  "provenance": {
+    "kind": "derived",
+    "displayable": true,
+    "source": "v_model_train_ready（307 行 21 正例）+ v_model_dataset_asof_flat（614 行）",
+    "method": "单变量 AUC 用 Mann-Whitney 秩公式；覆盖率 = COUNT(col)/总行数；分组为人工按列口径定义，非聚类结果",
+    "generated_at": "2026-11-06 00:17:55",
+    "schema_version": "v1.3"
+  }
+}

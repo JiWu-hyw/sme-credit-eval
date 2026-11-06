@@ -25,9 +25,14 @@
 │   └── 浙江省500家专精特新中小企业/    500 家样本名单（xlsx，外部授权）
 │
 ├── src/                      代码
-│   ├── data/                 模块一：采集与预处理管道
+│   ├── data/                 模块一：采集与预处理管道 + 数据层导出
 │   │                         collect_pool.py / preprocess.py / db.py
 │   │                         schema.sql / load_scibert.py
+│   │                         load_500family.py / build_asof_features.py
+│   │                         build_qual_dataset.py / build_contracts.py   ← 契约生成
+│   │                         export_data_dictionary.py / export_label_spec.py
+│   │                         export_field_gap_registry.py / export_delivery.py
+│   │                         export_db_bundle.py / pack_delivery.py
 │   ├── graph/                模块二：时空演化图谱构建
 │   │                         panel_graph.py / synthetic.py
 │   ├── model/                模块三 + 五：STGNN / DSTGNN / 预测
@@ -37,6 +42,8 @@
 │   │                         global_shap.py
 │   └── app/                  原型系统
 │       ├── backend/          后端 API：api.py / run_api.py
+│       │                     db_views.py（只读数据视图层）
+│       │                     import_validate.py（导入字段级校验）
 │       │                     export_dashboard.py / local_explain.py
 │       └── frontend/         前端可视化（Vue 3 + Vite + TS）
 │           └── frontend-source-2026-10-28.zip   ← 合并后的完整源码
@@ -50,6 +57,7 @@
 │                             baseline_results.json / gat_panel_results.json
 │                             shap_global.json / shap_top_features.csv
 │                             shap_global_summary.png
+│                             contracts/   ← 11 个接口契约，API 运行时直读
 │
 ├── notebooks/                探索性分析与实验记录（当前待补充）
 │
@@ -67,13 +75,20 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试
+├── tests/                    单元测试 / 集成测试（63 项守卫）
+│                             test_api_live.py（33 接口探活）
+│                             test_contracts.py（契约数值回查 SQLite）
+│                             test_train_ready.py / test_data_dictionary.py
+│                             test_label_spec.py / test_patent_dedup.py
+│                             test_grant_definition.py / test_field_gap_registry.py
 │                             test_schema.py / test_collect_pool.py / selfcheck.py
 │
 ├── configs/                  配置文件
 │                             enums.json（代码运行时权威源，load_entity_cn 直读）
 │                             enums.yaml（人读审阅版，带注释与 meta）
 │                             viz_theme.yaml / data_gaps.yaml / db_schema_manifest.json
+│                             field_gap_registry.json（15 空字段 / 7 替身 / 4 陷阱）
+│                             data_gaps.mirror.json（data_gaps.yaml 的类型化镜像）
 │
 └── _archive/                 归档区（不删除策略）
     ├── 2026-10-22/           第一批：根目录散落文件、旧版WebDemo、重复残件
@@ -116,7 +131,9 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 - Python 版本：见 `requirements.txt`
 - 前端栈：Vue 3.5 + Vite 6 + TypeScript(strict) + Pinia + Vue Router + ECharts
 - 路径别名：`@ → ./src`，已在 `vite.config.ts`（`resolve.alias`）与 `tsconfig.json`（`paths`）**双处配置**
-- 后端启动：`python src/app/backend/run_api.py`
+- 后端启动：`python -m src.app.backend.run_api --port 8000`
+  （**必须用 `-m`**：`run_api.py` 里 `uvicorn.run("src.app.backend.api:app")` 要按模块路径解析，
+  直接 `python src/app/backend/run_api.py` 会因 `sys.path[0]` 变成该子目录而导入失败）
 
 ---
 
@@ -145,7 +162,65 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 
 ---
 
-## 六、归档规则
+## 六、接口与数据契约
+
+### 6.1 接口现状
+
+启动后 `GET /docs` 可看 OpenAPI。共 **33 个接口**，实测：
+
+| 状态 | 数量 | 说明 |
+|---|---|---|
+| 有数据 | 31 | `code=0` 且返回真实数据 |
+| 需带文件 | 2 | `batch/upload`、`data/import`，不带文件返回 `IMPORT_REJECTED` 是正确行为 |
+| 空壳 / 占位 / 报错 | 0 | — |
+
+> **「空壳」的定义**：HTTP 200、`code:0`、`data` 非 null，但内部字段全是 null。
+> 只看 `code` 会以为可用，实际渲染是空白。此前 `company/diagnose` 就是这样。
+
+### 6.2 契约文件
+
+`outputs/contracts/` 下 11 个 JSON，是前端可以直接当 mock 的数据源。
+
+**每个文件顶层强制带 `provenance`，缺了这个字段生成脚本会直接抛错拒绝写出。** 等级决定展示口径：
+
+| `provenance.kind` | 展示方式 | 本轮哪些 |
+|---|---|---|
+| `measured` | 直接画图、可引用数值 | data_quality、panel_depth、graph_structure、graph_slices、survival |
+| `derived` | 同上，数值由实测算出 | feature_tree、graph_centrality |
+| `partial` | 画已知部分，`missing` 列出缺哪些 | train_curve、stage_factor、financing |
+| `reconstructed` | 画曲线，但必须注明「由锚点重建」 | roc_pr_ks |
+
+`explain/local/{userid}` 不预生成文件，按企业实时算（复用 `proxy_score` 的贡献分解，
+带 `model_based=false` / `is_shap=false`）。
+
+### 6.3 三条口径红线（引用数据前必读）
+
+| # | 红线 | 为什么 |
+|---|---|---|
+| 1 | 不要引用单一 AUC / 准确率 | 只有 21 个正例，`val` 集只有 2 个，只够验证方法论 |
+| 2 | `score.value` 恒为 `null` 是设计 | 无可验证模型，只提供 `proxy_score`（`validated: false`），前端不得渲染成「信用分」 |
+| 3 | 两套数据不要混看 | A 信贷面板（1,714 家匿名 / 3,465 行）与 B 浙江高企（500 家 / 307 打标）样本、特征、标签都不同，只是共用同一套 API |
+
+### 6.4 两个已知坑
+
+- 专利数必须 `COUNT(DISTINCT app_no)`。`COUNT(*)` 得 32,969 行，实际 **30,103 件**，虚高 9%。
+- `ads_model_dataset` 里 193 行 `split='excluded'` 是「认定窗口未闭合」，**不是负例**；
+  当负例用会把正例率从 6.8% 稀释到 4.2%。
+
+### 6.5 数据获取
+
+数据库 104 MB（33 表 / 9 视图 / 698 列），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+
+```bash
+curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
+unzip zjtech_credit_data.zip -d .          # 得到 05_数据库/zjtech_credit.db
+mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
+```
+
+附件里还带数据字典（698 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
+只想建空库不需要数据时，用 `src/data/schema.sql`。
+
+## 七、归档规则
 
 **原则：归档不删除。** 所有被取代的文件移入 `_archive/<日期>/`，并在同批次目录下留 `RESTORE.md` 记录：
 
@@ -162,14 +237,14 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 
 ---
 
-## 七、协作分工
+## 八、协作分工
 
 分工口径以 `docs/计划/项目指令更新-成员角色提示词.md` 为准。
 `README` 旧版中的分工表存在两个互相矛盾的版本，已统一到 2026-10-13 调整后的口径。
 
 ---
 
-## 八、待办
+## 九、待办
 
 - [x] ~~前端第二批迁移：`dist/` 构建产物 + 70 张预览截图~~ → 已完成，实际 **66 张**（8 个增量包，p1–p8，包间无重名，取并集）
 - [x] ~~核对 `src/app/backend/` 中 `export_dashboard.py`、`local_explain.py` 是否需合入归档的 `(1)` 版本逻辑~~ → 已完成：`(1)` 版为**后续修订版**（非残件），已覆盖正式文件；`enums.json` 同步回迁 `configs/`

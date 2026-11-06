@@ -1,0 +1,173 @@
+{
+  "capability": "descriptive_only",
+  "funding_activity": {
+    "n_events": 506,
+    "n_enterprises_with_funding": 182,
+    "n_enterprises_total": 500,
+    "funded_share": 0.364,
+    "year_range": [
+      2019,
+      2026
+    ],
+    "by_type": [
+      {
+        "event_type": "private_placement",
+        "n": 352,
+        "amount_sum_cny": null
+      },
+      {
+        "event_type": "seasoned_equity",
+        "n": 145,
+        "amount_sum_cny": 2696080557.0
+      },
+      {
+        "event_type": "ipo",
+        "n": 9,
+        "amount_sum_cny": null
+      }
+    ],
+    "by_year": [
+      {
+        "year": 2019,
+        "n_events": 1,
+        "n_enterprises": 1
+      },
+      {
+        "year": 2020,
+        "n_events": 69,
+        "n_enterprises": 51
+      },
+      {
+        "year": 2021,
+        "n_events": 79,
+        "n_enterprises": 53
+      },
+      {
+        "year": 2022,
+        "n_events": 74,
+        "n_enterprises": 54
+      },
+      {
+        "year": 2023,
+        "n_events": 120,
+        "n_enterprises": 63
+      },
+      {
+        "year": 2024,
+        "n_events": 94,
+        "n_enterprises": 66
+      },
+      {
+        "year": 2025,
+        "n_events": 68,
+        "n_enterprises": 42
+      },
+      {
+        "year": 2026,
+        "n_events": 1,
+        "n_enterprises": 1
+      }
+    ],
+    "by_round": [
+      {
+        "round_label": "新增机构",
+        "n": 352
+      },
+      {
+        "round_label": "增资型",
+        "n": 145
+      },
+      {
+        "round_label": "IPO上市",
+        "n": 7
+      },
+      {
+        "round_label": "上市",
+        "n": 2
+      }
+    ],
+    "n_distinct_investors_approx": 349
+  },
+  "financial_coverage": {
+    "latest_rev_wan": {
+      "n_available": 12,
+      "n_total": 500,
+      "coverage": 0.024
+    },
+    "latest_net_profit_wan": {
+      "n_available": 11,
+      "n_total": 500,
+      "coverage": 0.022
+    },
+    "latest_total_assets_wan": {
+      "n_available": 13,
+      "n_total": 500,
+      "coverage": 0.026
+    },
+    "latest_tax_wan": {
+      "n_available": 12,
+      "n_total": 500,
+      "coverage": 0.024
+    },
+    "latest_emp_num": {
+      "n_available": 25,
+      "n_total": 500,
+      "coverage": 0.05
+    },
+    "rev_cagr": {
+      "n_available": 0,
+      "n_total": 500,
+      "coverage": 0.0
+    },
+    "emp_cagr": {
+      "n_available": 0,
+      "n_total": 500,
+      "coverage": 0.0
+    },
+    "funding_net_increase_wan": {
+      "n_available": 100,
+      "n_total": 500,
+      "coverage": 0.2
+    },
+    "funding_rounds": {
+      "n_available": 500,
+      "n_total": 500,
+      "coverage": 1.0
+    }
+  },
+  "can_predict": {
+    "next_round": false,
+    "revenue_forecast": false,
+    "reason": "融资事件只有 182/500 家有记录、时间跨度 2019–2026，且无「未融资企业」的对照口径；财务报表 latest_rev_wan 仅 12/500 有值，做不出营收序列。任何「融资概率/营收预测」都无法验证，故不产出预测值。"
+  },
+  "missing": [
+    {
+      "item": "连续年度财务报表",
+      "reason": "dws_growth_feature 每家仅 1 行，latest_rev_wan 12/500",
+      "impact": "营收/利润预测不可做"
+    },
+    {
+      "item": "融资轮次时间序列",
+      "reason": "182 家有记录，其余 318 家是「无记录」不是「确认未融资」，存在选择性缺失",
+      "impact": "无法区分「没融过」与「没采到」"
+    },
+    {
+      "item": "投后估值",
+      "reason": "post_valuation 字段稀疏",
+      "impact": "估值预测不可做"
+    }
+  ],
+  "provenance": {
+    "kind": "partial",
+    "displayable": true,
+    "source": "fact_funding_event（506 条 / 182 家）+ dws_growth_feature（500 行）",
+    "method": "融资活动为事实统计；financial_coverage 逐列算真实覆盖率；不产出任何预测值",
+    "generated_at": "2026-11-06 00:17:56",
+    "schema_version": "v1.3",
+    "missing_dimensions": [
+      "连续财务序列",
+      "未融资对照口径",
+      "投后估值"
+    ]
+  }
+}

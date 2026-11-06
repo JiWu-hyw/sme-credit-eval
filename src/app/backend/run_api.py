@@ -28,7 +28,7 @@ def main():
     print(" 按 Ctrl+C 停止。")
 
     uvicorn.run(
-        "src.app.api:app",
+        "src.app.backend.api:app",
         host=args.host,
         port=args.port,
         reload=args.reload,

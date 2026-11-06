@@ -1,0 +1,265 @@
+{
+  "asof_panel": {
+    "n_enterprises": 307,
+    "n_periods": 4,
+    "n_rows": 614,
+    "balanced": true,
+    "periods": [
+      {
+        "as_of_policy": "cohort",
+        "as_of_year": 2021,
+        "n_rows": 160,
+        "n_enterprises": 160
+      },
+      {
+        "as_of_policy": "cohort",
+        "as_of_year": 2022,
+        "n_rows": 147,
+        "n_enterprises": 147
+      },
+      {
+        "as_of_policy": "due_minus_1",
+        "as_of_year": 2023,
+        "n_rows": 160,
+        "n_enterprises": 160
+      },
+      {
+        "as_of_policy": "due_minus_1",
+        "as_of_year": 2024,
+        "n_rows": 147,
+        "n_enterprises": 147
+      }
+    ],
+    "depth_distribution": [
+      {
+        "periods_per_enterprise": 2,
+        "n_enterprises": 307
+      }
+    ]
+  },
+  "raw_observation": {
+    "patent_years_per_enterprise": [
+      {
+        "years": 1,
+        "n_enterprises": 3
+      },
+      {
+        "years": 2,
+        "n_enterprises": 3
+      },
+      {
+        "years": 3,
+        "n_enterprises": 7
+      },
+      {
+        "years": 4,
+        "n_enterprises": 18
+      },
+      {
+        "years": 5,
+        "n_enterprises": 24
+      },
+      {
+        "years": 6,
+        "n_enterprises": 46
+      },
+      {
+        "years": 7,
+        "n_enterprises": 72
+      },
+      {
+        "years": 8,
+        "n_enterprises": 70
+      },
+      {
+        "years": 9,
+        "n_enterprises": 59
+      },
+      {
+        "years": 10,
+        "n_enterprises": 58
+      },
+      {
+        "years": 11,
+        "n_enterprises": 40
+      },
+      {
+        "years": 12,
+        "n_enterprises": 33
+      },
+      {
+        "years": 13,
+        "n_enterprises": 25
+      },
+      {
+        "years": 14,
+        "n_enterprises": 16
+      },
+      {
+        "years": 15,
+        "n_enterprises": 14
+      },
+      {
+        "years": 16,
+        "n_enterprises": 8
+      },
+      {
+        "years": 17,
+        "n_enterprises": 1
+      },
+      {
+        "years": 18,
+        "n_enterprises": 1
+      },
+      {
+        "years": 20,
+        "n_enterprises": 3
+      }
+    ],
+    "yearly_coverage": [
+      {
+        "year": "1992",
+        "n_enterprises": 1
+      },
+      {
+        "year": "1996",
+        "n_enterprises": 1
+      },
+      {
+        "year": "1999",
+        "n_enterprises": 1
+      },
+      {
+        "year": "2001",
+        "n_enterprises": 1
+      },
+      {
+        "year": "2002",
+        "n_enterprises": 1
+      },
+      {
+        "year": "2003",
+        "n_enterprises": 3
+      },
+      {
+        "year": "2004",
+        "n_enterprises": 9
+      },
+      {
+        "year": "2005",
+        "n_enterprises": 9
+      },
+      {
+        "year": "2006",
+        "n_enterprises": 11
+      },
+      {
+        "year": "2007",
+        "n_enterprises": 15
+      },
+      {
+        "year": "2008",
+        "n_enterprises": 18
+      },
+      {
+        "year": "2009",
+        "n_enterprises": 29
+      },
+      {
+        "year": "2010",
+        "n_enterprises": 53
+      },
+      {
+        "year": "2011",
+        "n_enterprises": 69
+      },
+      {
+        "year": "2012",
+        "n_enterprises": 95
+      },
+      {
+        "year": "2013",
+        "n_enterprises": 125
+      },
+      {
+        "year": "2014",
+        "n_enterprises": 148
+      },
+      {
+        "year": "2015",
+        "n_enterprises": 160
+      },
+      {
+        "year": "2016",
+        "n_enterprises": 200
+      },
+      {
+        "year": "2017",
+        "n_enterprises": 271
+      },
+      {
+        "year": "2018",
+        "n_enterprises": 285
+      },
+      {
+        "year": "2019",
+        "n_enterprises": 326
+      },
+      {
+        "year": "2020",
+        "n_enterprises": 370
+      },
+      {
+        "year": "2021",
+        "n_enterprises": 400
+      },
+      {
+        "year": "2022",
+        "n_enterprises": 421
+      },
+      {
+        "year": "2023",
+        "n_enterprises": 426
+      },
+      {
+        "year": "2024",
+        "n_enterprises": 399
+      },
+      {
+        "year": "2025",
+        "n_enterprises": 384
+      },
+      {
+        "year": "2026",
+        "n_enterprises": 244
+      }
+    ],
+    "qualification_span_years": [
+      {
+        "span_years": 1,
+        "n_enterprises": 500
+      }
+    ]
+  },
+  "missing": [
+    {
+      "item": "财务年度面板",
+      "reason": "dws_growth_feature 每家仅 1 行 stat_year，无连续年度财务；latest_rev_wan 仅 12/500 有值",
+      "impact": "无法做营收/利润的面板回归与增长预测"
+    },
+    {
+      "item": "更长观测窗",
+      "reason": "名单只到 2021 年，as-of 切面仅 2 期",
+      "impact": "无法构成 t≥3 的事件史，生存模型只能用 3 期"
+    }
+  ],
+  "provenance": {
+    "kind": "measured",
+    "displayable": true,
+    "source": "v_model_dataset_asof_flat + fact_patent + dim_enterprise",
+    "method": "按企业统计 distinct as_of_year / 专利活动年数 / 资质年限跨度，分组计数",
+    "generated_at": "2026-11-06 00:17:54",
+    "schema_version": "v1.3",
+    "note": "depth_distribution 全为 1 种取值时 balanced=true，说明是平衡面板而非缺失"
+  }
+}
