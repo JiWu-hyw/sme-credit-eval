@@ -1,14 +1,14 @@
 {
   "summary": {
     "tables_checked": 22,
-    "total_rows": 446128,
+    "total_rows": 446089,
     "cell_completeness": 0.894,
     "rows_by_layer": {
       "DIM": 28075,
       "FACT": 35535,
       "BRIDGE": 129694,
       "DWS": 1500,
-      "ADS": 235119,
+      "ADS": 235080,
       "ODS": 16205
     }
   },
@@ -548,7 +548,7 @@
     {
       "table": "ads_graph_node",
       "exists": true,
-      "n_rows": 61604,
+      "n_rows": 61584,
       "n_columns": 4,
       "columns_full": 4,
       "columns_empty": 0,
@@ -559,7 +559,7 @@
     {
       "table": "ads_graph_edge",
       "exists": true,
-      "n_rows": 171229,
+      "n_rows": 171210,
       "n_columns": 7,
       "columns_full": 7,
       "columns_empty": 0,
@@ -890,8 +890,8 @@
   ],
   "gap_registry": {
     "meta": {
-      "version": "v1",
-      "updated_at": "2026-11-05",
+      "version": "v2",
+      "updated_at": "2026-11-06",
       "owner": "施汶邑（几梦）",
       "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
       "status_enum": {
@@ -907,10 +907,10 @@
       ]
     },
     "summary": {
-      "total": 15,
+      "total": 17,
       "null_by_design": 9,
-      "source_missing": 5,
-      "partial_insufficient": 1,
+      "source_missing": 6,
+      "partial_insufficient": 2,
       "substitutes": 7,
       "traps": 0
     },
@@ -1064,6 +1064,26 @@
         "status": "null_by_design",
         "decision": "A 保持 NULL（P2 本轮不做）",
         "reason": "P2 最低优先级指标，文档本身标注「暂不做」。技术上可用「融资事件前后 12 个月专利产出增速差」构造，但样本内仅 182/500 家有融资事件，构造出来覆盖率不到 37%，且融资与专利谁先谁后存在反向因果，入模风险大于收益。"
+      },
+      {
+        "table": "fact_funding_event",
+        "field": "post_valuation",
+        "cn": "投后估值",
+        "indicator": "G4",
+        "priority": "P0",
+        "status": "source_missing",
+        "decision": "A 保持 NULL",
+        "reason": "企查查融资表返回的 506 条事件只含轮次名与投资方，不含估值。无估值则 G4「融资额与上轮估值比」无分母，任何倍数类指标都不能算。评审报告 §2.3(3) 已单列此项。"
+      },
+      {
+        "table": "fact_funding_event",
+        "field": "amount_cny",
+        "cn": "融资金额（人民币）",
+        "indicator": "G4",
+        "priority": "P1",
+        "status": "partial_insufficient",
+        "decision": "保留已有，不补不编",
+        "reason": "只有 145 / 506 条（28.7%）披露金额，且披露与否与轮次阶段强相关（早期轮与战略融资多不披露），缺失不是随机缺失（MNAR）。直接按有值样本算平均融资额会系统性高估。"
       }
     ],
     "substitutes": [
@@ -1174,8 +1194,8 @@
     "displayable": true,
     "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
     "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
-    "generated_at": "2026-11-06 16:33:38",
-    "schema_version": "v1.4",
+    "generated_at": "2026-11-06 16:57:28",
+    "schema_version": "v1.5",
     "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
   }
 }

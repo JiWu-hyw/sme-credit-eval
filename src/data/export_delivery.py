@@ -1072,7 +1072,7 @@ def build_doc(con, alg, fe):
     A("python tests/test_grant_definition.py        # 7 项 授权口径守卫")
     A("python tests/test_field_gap_registry.py      # 5 项 缺口登记守卫")
     A("```")
-    A("合计 **82 项**，全绿。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **96 项**，全绿（12 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:
@@ -1118,6 +1118,18 @@ def build_data_bundle(con):
     if os.path.exists(dd_path):
         with open(dd_path, encoding="utf-8-sig", newline="") as f:
             dd_rows = sum(1 for _ in _csv.reader(f)) - 1
+
+    # 缺口登记册条目数（以 configs/field_gap_registry.json 为准，不写死）
+    reg_n_items = reg_n_sub = reg_n_traps = 0
+    try:
+        with open(os.path.join(ROOT, "configs", "field_gap_registry.json"),
+                  encoding="utf-8") as f:
+            _reg = json.load(f)
+        reg_n_items = len(_reg.get("items", []))
+        reg_n_sub = len(_reg.get("substitutes", []))
+        reg_n_traps = len(_reg.get("meta", {}).get("traps", []))
+    except Exception:
+        pass
 
     # ---- 4.2 数据集：训练集 / 全量 as-of 面板 / 企业主档 ----
     tr_src = os.path.join(D_ALG, "model_train_ready.csv")
@@ -1211,7 +1223,8 @@ def build_data_bundle(con):
       % dd_rows)
     A("| **数据字典**（机器读） | `数据字典.csv` | %d 行 | 灌进元数据系统 / 写代码时查 |" % dd_rows)
     A("| **代理标签说明书** | `代理标签说明书.md` | 13 节 | 标签怎么造、阈值、陷阱、争议点 |")
-    A("| **字段缺口登记册** | `字段缺口登记册.md` | 15 空字段 + 7 替身 + 4 陷阱 | 哪个字段是空、为什么空、能不能补 |")
+    A("| **字段缺口登记册** | `字段缺口登记册.md` | %d 空字段 + %d 替身 + %d 陷阱 | 哪个字段是空、为什么空、能不能补 |"
+      % (reg_n_items, reg_n_sub, reg_n_traps))
     A("| **数据集** | `数据集/` | 3 个 CSV | 直接训练 + 全量面板 + 企业名单 |")
     A("")
     A("## 数据字典覆盖范围\n")

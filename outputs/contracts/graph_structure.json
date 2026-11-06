@@ -1,10 +1,10 @@
 {
   "summary": {
-    "n_nodes": 61604,
-    "n_edges": 171229,
+    "n_nodes": 61584,
+    "n_edges": 171210,
     "n_node_types": 5,
     "n_edge_types": 5,
-    "density_approx": 2.7795,
+    "density_approx": 2.7801,
     "n_enterprise_components": 6,
     "largest_component": 495
   },
@@ -12,17 +12,17 @@
     {
       "type": "patent",
       "n": 32969,
-      "share": 0.5352
+      "share": 0.5354
     },
     {
       "type": "inventor",
       "n": 15955,
-      "share": 0.259
+      "share": 0.2591
     },
     {
       "type": "ipc",
-      "n": 11608,
-      "share": 0.1884
+      "n": 11588,
+      "share": 0.1882
     },
     {
       "type": "investor",
@@ -47,8 +47,8 @@
       "type": "belongs_ipc",
       "src_type": "patent",
       "dst_type": "ipc",
-      "n": 51795,
-      "weight_sum": 34019.5
+      "n": 51776,
+      "weight_sum": 34010.0
     },
     {
       "type": "files_patent",
@@ -75,7 +75,7 @@
   "time_slices": [
     {
       "time_slice": 0,
-      "n_nodes": 61604
+      "n_nodes": 61584
     }
   ],
   "degree_distribution": [
@@ -1203,15 +1203,15 @@
       "bins": [
         {
           "degree": 1,
-          "n_nodes": 5088
+          "n_nodes": 5067
         },
         {
           "degree": 2,
-          "n_nodes": 2039
+          "n_nodes": 2040
         },
         {
           "degree": 3,
-          "n_nodes": 1117
+          "n_nodes": 1119
         },
         {
           "degree": 4,
@@ -1219,7 +1219,7 @@
         },
         {
           "degree": 5,
-          "n_nodes": 503
+          "n_nodes": 502
         },
         {
           "degree": 6,
@@ -1231,7 +1231,7 @@
         },
         {
           "degree": 8,
-          "n_nodes": 183
+          "n_nodes": 182
         },
         {
           "degree": 9,
@@ -1251,11 +1251,11 @@
         },
         {
           "degree": 13,
-          "n_nodes": 84
+          "n_nodes": 83
         },
         {
           "degree": 14,
-          "n_nodes": 66
+          "n_nodes": 67
         },
         {
           "degree": 15,
@@ -1291,11 +1291,11 @@
         },
         {
           "degree": 23,
-          "n_nodes": 31
+          "n_nodes": 28
         },
         {
           "degree": 24,
-          "n_nodes": 23
+          "n_nodes": 26
         },
         {
           "degree": 25,
@@ -1335,11 +1335,11 @@
         },
         {
           "degree": 34,
-          "n_nodes": 9
+          "n_nodes": 7
         },
         {
           "degree": 35,
-          "n_nodes": 9
+          "n_nodes": 11
         },
         {
           "degree": 36,
@@ -1439,11 +1439,11 @@
         },
         {
           "degree": 60,
-          "n_nodes": 3
+          "n_nodes": 2
         },
         {
           "degree": 61,
-          "n_nodes": 1
+          "n_nodes": 2
         },
         {
           "degree": 62,
@@ -1616,7 +1616,7 @@
         },
         {
           "degree": 11,
-          "n_nodes": 812
+          "n_nodes": 813
         },
         {
           "degree": 12,
@@ -1624,7 +1624,7 @@
         },
         {
           "degree": 13,
-          "n_nodes": 451
+          "n_nodes": 452
         },
         {
           "degree": 14,
@@ -1640,7 +1640,7 @@
         },
         {
           "degree": 17,
-          "n_nodes": 86
+          "n_nodes": 85
         },
         {
           "degree": 18,
@@ -1648,7 +1648,7 @@
         },
         {
           "degree": 19,
-          "n_nodes": 45
+          "n_nodes": 44
         },
         {
           "degree": 20,
@@ -1660,7 +1660,7 @@
         },
         {
           "degree": 22,
-          "n_nodes": 14
+          "n_nodes": 15
         },
         {
           "degree": 23,
@@ -1672,7 +1672,7 @@
         },
         {
           "degree": 25,
-          "n_nodes": 10
+          "n_nodes": 9
         },
         {
           "degree": 26,
@@ -1707,7 +1707,7 @@
           "n_nodes": 1
         },
         {
-          "degree": 43,
+          "degree": 39,
           "n_nodes": 1
         }
       ]
@@ -1772,8 +1772,8 @@
     "displayable": true,
     "source": "ads_graph_node (45,077) + ads_graph_edge (101,491)",
     "method": "节点/边按类型聚合；度=该节点在 ads_graph_edge 的出入边总数；连通分量用并查集在 enterprise-enterprise tech_similar 子图上计算",
-    "generated_at": "2026-11-06 16:33:40",
-    "schema_version": "v1.4",
+    "generated_at": "2026-11-06 16:57:29",
+    "schema_version": "v1.5",
     "note": "本图谱为本项目真实构建（企业-专利-IPC 异质图），非合成图"
   }
 }

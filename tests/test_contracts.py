@@ -119,9 +119,16 @@ def t_quality_catches_contradiction():
     # 至少要有 5 条矛盾（含无底表列的那几个）
     assert len(d["contradictions"]) >= 5, "矛盾检测只报了 %d 条，疑似漏检" % len(d["contradictions"])
     reg = d["gap_registry"]["summary"]
-    assert reg["total"] == 15, "登记册应有 15 项，实得 %s" % reg["total"]
-    assert reg["null_by_design"] + reg["source_missing"] + reg["partial_insufficient"] == 15, \
-        "三态之和应等于 15"
+    # 期望值取自单一事实源 configs/field_gap_registry.json，不写死数字
+    # （v1.5 登记册 15→17：补 post_valuation / amount_cny，写死会误报）
+    with open(os.path.join(ROOT, "configs", "field_gap_registry.json"),
+              encoding="utf-8") as f:
+        n_expect = len(json.load(f)["items"])
+    assert reg["total"] == n_expect, (
+        "登记册应有 %d 项，实得 %s" % (n_expect, reg["total"]))
+    assert (reg["null_by_design"] + reg["source_missing"]
+            + reg["partial_insufficient"]) == n_expect, \
+        "三态之和应等于 %d" % n_expect
 
 
 def t_join_key_health():
@@ -429,7 +436,7 @@ def main():
     check("1. 11 个契约齐全且带 provenance", t_all_exist_with_provenance)
     check("2. kind 枚举合法且 displayable 自洽", t_kind_enum_and_displayable)
     check("3. data_quality 行数与库一致", t_quality_rows_match_db)
-    check("4. 矛盾检测抓到 patent_cagr 且登记册 15 项", t_quality_catches_contradiction)
+    check("4. 矛盾检测抓到 patent_cagr 且登记册项数对账", t_quality_catches_contradiction)
     check("4b. 关联键空值单独可见（766 件专利未匹配）", t_join_key_health)
     check("5. panel_depth 与 614 行面板自洽", t_panel_depth_consistent)
     check("6. feature_tree 与训练视图列一致", t_feature_tree_matches_view)

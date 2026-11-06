@@ -179,7 +179,7 @@
     "displayable": true,
     "source": "outputs/gat_panel_results.json + outputs/baseline_results.json",
     "method": "直接透传已落盘的逐点指标，未插值、未平滑、未补点",
-    "generated_at": "2026-11-06 16:33:40",
+    "generated_at": "2026-11-06 16:57:30",
     "schema_version": null,
     "missing_dimensions": [
       "GAT 完整 epoch 序列",

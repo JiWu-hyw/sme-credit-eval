@@ -11,14 +11,17 @@
 
 本脚本一次性重建 ads_graph_node / ads_graph_edge：
   · 节点 5 类：enterprise / patent / ipc / inventor / investor
-  · 边   6 类：files_patent / belongs_ipc / invented_by / funded_by / tech_similar
-              （co_inventor / cites / qualifies 保留枚举，本脚本不产出）
+  · 边   5 类实际产出：files_patent / belongs_ipc / invented_by / funded_by / tech_similar
+              （CHECK 保留 8 个枚举位，co_inventor / cites / qualifies 无源数据不产出）
   · tech_similar 由「IPC 小类集合 Jaccard 全量连边」改为
     「IPC 小类 TF-IDF 向量余弦 + 每企业 top-K 邻居」，权重分布显著拉开。
 
 口径：
   · time_slice 统一 0 = 全期累计（与既有契约一致）。年度切片不物化，
     由 v_graph_patent_timeline 给出各 T 的规模，算法端按 app_year <= T 自建即可。
+  · IPC 节点 ID 先做规范化（见 _norm_ipc）：源数据混入 20 个带版本号后缀的串，
+    不剥会让同一分类在同一张图里成为两个节点（A61K31/426 与
+    A61K31/426(2006.01) 并存），belongs_ipc 边被拆开、消息传递重复计数。
   · 幂等：可重复执行，结果只取决于底表。
 
 用法：
@@ -30,6 +33,7 @@ import argparse
 import json
 import math
 import os
+import re
 import sqlite3
 import sys
 import time
@@ -46,6 +50,26 @@ TIME_SLICE = 0            # 0 = 全期累计
 SIM_TOPK = 20             # 每家企业保留的相似邻居数
 SIM_MIN_COS = 0.05        # 余弦下限（低于此值视为无技术关联）
 SIM_MIN_SHARED = 2        # 至少共享 2 个 IPC 小类，避免单点巧合
+
+# IPC 版本号后缀，如 'A61K31/426(2006.01)' -> 'A61K31/426'
+_IPC_VERSION_SUFFIX = re.compile(r"\s*\(\s*\d{4}\.\d{2}\s*\)$")
+
+
+def _norm_ipc(code: str) -> str:
+    """IPC 分类号规范化：剥掉 WIPO 版本号后缀。
+
+    源表 bridge_patent_ipc.ipc_code 里有 20 个串带了版本号
+    （'A61K31/426(2006.01)'、'A61P35/00(2006.01)' 等），而 dim_ipc 与
+    其余 11,588 个都是不带版本号的。若不规范化，同一分类会在图里生成
+    两个 ipc 节点，同一件专利的 belongs_ipc 边被拆到两处——
+    GAT 的邻居聚合会把一个分类算两遍。
+
+    另注：有 5 个节点只到小类粒度（A61B / A61K / A61P / C07D / C07K），
+    是源串截断所致，无法恢复到大组，原样保留（不臆造大组号）。
+    """
+    if not code:
+        return ""
+    return _IPC_VERSION_SUFFIX.sub("", code.strip())
 
 NODE_DDL = """
 CREATE TABLE {name} (
@@ -149,11 +173,14 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
     t0 = time.time()
     cur = conn.cursor()
 
-    # 依赖图表的视图（v_data_coverage 等）必须先卸下，否则 DROP TABLE 会报
-    # 「error in view ... no such table」。改名后再按原 DDL 原样建回。
+    # 依赖图表的视图（v_data_coverage / v_graph_coverage …）必须先卸下，
+    # 否则 DROP / RENAME 会报「error in view ... no such table」。改名后按原 DDL 建回。
+    # 注意：这里不能排除 v_graph_* —— v_graph_coverage 正是依赖 ads_graph_edge 的视图，
+    # v1.4 新增它之后旧的白名单写法（NOT LIKE 'v_graph_%'）就漏掉了，导致重建失败。
+    # 判据只用「视图 SQL 里是否出现 ads_graph_」，与视图命名无关。
     dep_views = [(r[0], r[1]) for r in cur.execute(
         "SELECT name, sql FROM sqlite_master WHERE type='view' "
-        "AND sql LIKE '%ads_graph_%' AND name NOT LIKE 'v_graph_%'").fetchall()]
+        "AND sql LIKE '%ads_graph_%'").fetchall()]
     for name, _ in dep_views:
         cur.execute("DROP VIEW IF EXISTS %s" % name)
 
@@ -167,8 +194,10 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
     patents = cur.execute(
         "SELECT patent_id, title, enterprise_id, COALESCE(match_confidence,1.0) "
         "FROM fact_patent").fetchall()
-    bridges = cur.execute(
+    bridges_raw = cur.execute(
         "SELECT patent_id, ipc_code, ipc_subclass, is_main FROM bridge_patent_ipc").fetchall()
+    bridges = [(r[0], _norm_ipc(r[1]), r[2], r[3]) for r in bridges_raw]
+    n_ipc_merged = sum(1 for r in bridges_raw if r[1] and r[1] != _norm_ipc(r[1]))
     inventors = cur.execute(
         "SELECT inventor_id, name_display FROM dim_inventor").fetchall()
     inv_edges = cur.execute(
@@ -176,7 +205,7 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
     fundings = cur.execute(
         "SELECT enterprise_id, investor_names FROM fact_funding_event "
         "WHERE investor_names IS NOT NULL AND TRIM(investor_names) <> ''").fetchall()
-    ipc_title = {r[0]: (r[1] or "") for r in cur.execute(
+    ipc_title = {_norm_ipc(r[0] or ""): (r[1] or "") for r in cur.execute(
         "SELECT ipc_code, title FROM dim_ipc").fetchall()}
 
     # ---------- 节点 ----------
@@ -281,6 +310,7 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
         "n_enterprises_with_patent": len(pat2ent.values()) and len(set(pat2ent.values())),
         "sim_topk": SIM_TOPK,
         "sim_min_cos": SIM_MIN_COS,
+        "ipc_id_normalized": n_ipc_merged,
         "elapsed_sec": round(time.time() - t0, 1),
     }
     if verbose:
@@ -288,11 +318,13 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
         print("[graph-v2] edges=%d %s" % (summary["n_edges"], edges_by_type))
         print("[graph-v2] files_patent 对账：匹配专利 %d / 边 %d / 缺口 %d"
               % (n_matched, n_files, summary["stale_gap"]))
+        print("[graph-v2] IPC 版本号后缀归一：%d 条边归并到无后缀节点" % n_ipc_merged)
     return summary
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="异质图 v2 重建（5 类节点 / 7 类边）")
+    ap = argparse.ArgumentParser(
+        description="异质图 v2 重建（5 类节点 / CHECK 8 枚举边、实产 5 类）")
     ap.add_argument("--db", default=os.path.join(
         os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
         "data", "db", "zjtech_credit.db"))

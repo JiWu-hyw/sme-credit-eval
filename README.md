@@ -75,13 +75,14 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（82 项守卫）
+├── tests/                    单元测试 / 集成测试（96 项守卫）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
 │                             test_label_spec.py / test_patent_dedup.py
 │                             test_grant_definition.py / test_field_gap_registry.py
 │                             test_graph_v2.py（5 类节点 / 边陈旧 / 权重区分度）
+│                             test_graph_id_docs.py（IPC ID 口径 / 字典枚举一致性 / 分队列 AUC）
 │                             test_label_mechanism.py（n_events 泄漏 / 5 折正例下限）
 │                             test_patent_master.py（专利唯一口径 30,103）
 │                             test_schema.py / test_collect_pool.py / selfcheck.py
@@ -90,7 +91,7 @@
 │                             enums.json（代码运行时权威源，load_entity_cn 直读）
 │                             enums.yaml（人读审阅版，带注释与 meta）
 │                             viz_theme.yaml / data_gaps.yaml / db_schema_manifest.json
-│                             field_gap_registry.json（15 空字段 / 7 替身 / 4 陷阱）
+│                             field_gap_registry.json（17 空字段 / 7 替身 / 4 陷阱）
 │                             data_gaps.mirror.json（data_gaps.yaml 的类型化镜像）
 │
 └── _archive/                 归档区（不删除策略）
@@ -216,26 +217,81 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 - 观察窗起点固定 2019，2021 队列只有 3 年、2022 队列有 4 年。跨队列比专利数前先看
   `v_train_ready_window_fixed`——统一压到 3 年后，队列均值差从 7.6 件降到 4.2 件。
 
-### 6.5 图谱口径（v1.4 重建）
+### 6.5 图谱口径（v1.4 重建 / v1.5 修 IPC 口径）
 
-| 项 | v1.3 | v1.4 |
+| 项 | v1.3 | 现在 |
 |---|---|---|
 | 节点类型 | 3 类（企业 / 专利 / IPC） | **5 类**（+ 发明人 15,955 / 投资机构 572） |
-| 节点 / 边 | 45,077 / 101,491 | **61,604 / 171,229** |
+| 节点 / 边 | 45,077 / 101,491 | **61,584 / 171,210** |
 | 边语义 | files_patent / belongs_ipc / tech_similar | + **invented_by**（77,899）/ **funded_by**（583） |
-| `files_patent` | 29,751（**陈旧，漏 2,452 条**） | 32,203，与已匹配专利逐条对账 |
+| `files_patent` | 29,751（**陈旧，漏 2,452 条**） | 32,203，与已匹配专利逐条对账，缺口 0 |
 | `tech_similar` | Jaccard 全量连边 19,945 条，权重中位 0.138、≥0.3 仅 663 条 | TF-IDF 余弦 + top-20，8,749 条，权重中位 **0.268**、p90 **0.500**、≥0.3 **3,574** 条；覆盖企业 294 → **490** |
-| 时间切片 | 单切片（`time_slice=0`） | 预置图仍是全期单切片；`v_graph_patent_timeline` 给每个 T 的规模，按 `app_year <= T` 自建年度切片 |
+| IPC 节点 ID | 混入 20 个带 WIPO 版本号后缀的串（`A61K31/426(2006.01)`），同一分类分裂成两个节点 | 已归一，31 条边并入无后缀节点；节点 11,608 → **11,588** |
+| 时间切片 | 单切片（`time_slice=0`） | 预置图仍是全期单切片；按下方 SQL 自建年度切片 |
+
+**边类型：CHECK 保留 8 个枚举位，本轮实际产出 5 类。** `co_inventor`（专利-专利共同发明人）
+语义已由 `invented_by` 二跳覆盖，`cites` / `qualifies` 无源数据，三者均不产出——
+不要按枚举位假设有这三种边。
 
 重建命令：`python -m src.data.build_graph_v2`（幂等，可重复跑；`--dry-run` 只核对陈旧缺口）。
 企业节点无孤立点（0 家无任何边），5 家企业没有技术相似边但都有专利边。
 
+#### 自建年度切片（评审报告 §5.3 明确由算法端做，后端不返工）
+
+`v_graph_patent_timeline` 给出每个 T 的规模台账，切片本身按 `app_year <= T` 现场取：
+
+```sql
+-- T 年的企业→专利边（files_patent 的切片版）
+SELECT 'enterprise' AS src_type, p.enterprise_id AS src_id,
+       'patent' AS dst_type, p.patent_id AS dst_id,
+       'files_patent' AS edge_type, :T AS time_slice, 1.0 AS weight
+  FROM v_patent_master p
+ WHERE p.enterprise_id IS NOT NULL
+   AND p.app_year <= :T;
+
+-- T 年的专利→IPC 边（经专利间接切片，IPC 节点随之自然收敛）
+SELECT 'patent', b.patent_id, 'ipc', b.ipc_code, 'belongs_ipc', :T,
+       CASE WHEN b.is_main THEN 1.0 ELSE 0.5 END
+  FROM bridge_patent_ipc b
+  JOIN v_patent_master p ON p.patent_id = b.patent_id
+ WHERE p.app_year <= :T;
+
+-- T 年的专利→发明人边
+SELECT 'patent', i.patent_id, 'inventor', i.inventor_id, 'invented_by', :T,
+       CASE WHEN i.is_first THEN 1.0 ELSE 0.5 END
+  FROM bridge_patent_inventor i
+  JOIN v_patent_master p ON p.patent_id = i.patent_id
+ WHERE p.app_year <= :T;
+```
+
+两条口径提醒：① IPC 节点 ID 已剥版本号后缀，自建时若从 `bridge_patent_ipc.ipc_code`
+直接取，需自行做同样的 `regexp_replace` 式清洗，否则会和预置图节点对不上；
+② 专利节点 ID 用 `fact_patent.patent_id`（中国专利为 CN 公开号，另有 4 件 JP/TW 同族），
+**不是** `app_no`——两者在库内不等值。
+
 立项书写的六类实体里仍差「领域」「产品」：领域可由 IPC 部/大类等价替代（已在图内），
 产品在现有源数据中**完全没有**，登记为缺口，不做任何推断回填。
 
+### 6.5.1 特征效应的分队列口径（v1.5 新增）
+
+评审报告 §3.3 / §4.2 的结论是「单一特征的全样本 AUC 混入了队列效应，不能直接当证据」。
+这条已固化成视图，引用任何特征效应前先过一遍：
+
+```sql
+SELECT feature_name, cohort_scope, n_pos, auc, stability_note
+  FROM v_feature_discrimination          -- 一行 = 一个特征 × (all/2021/2022)
+ ORDER BY feature_name, cohort_scope;
+
+SELECT * FROM v_feature_cohort_gap;      -- 只列队列间差距 ≥0.20 的，带 verdict
+```
+
+实测：`inv_patent_ratio` 全样本 0.619，拆开是 2021 队列 **0.784** / 2022 队列 **0.503**；
+`core_staff_stability` 全样本 0.523，拆开是 **0.654 / 0.404**——后者报告没列，但同样是
+「全样本看起来没用、某队列里很强」的类型。这类特征的全样本 AUC 不得单独引用。
+
 ### 6.6 数据获取
 
-数据库 138 MB（33 表 / 16 视图 / 764 列），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（33 表 / 18 视图 / 788 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -243,7 +299,7 @@ unzip zjtech_credit_data.zip -d .          # 得到 05_数据库/zjtech_credit.d
 mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 ```
 
-附件里还带数据字典（764 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
+附件里还带数据字典（788 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 ## 七、归档规则

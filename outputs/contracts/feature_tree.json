@@ -393,7 +393,7 @@
     "displayable": true,
     "source": "v_model_train_ready（307 行 21 正例）+ v_model_dataset_asof_flat（614 行）",
     "method": "单变量 AUC 用 Mann-Whitney 秩公式；覆盖率 = COUNT(col)/总行数；分组为人工按列口径定义，非聚类结果",
-    "generated_at": "2026-11-06 16:33:39",
-    "schema_version": "v1.4"
+    "generated_at": "2026-11-06 16:57:29",
+    "schema_version": "v1.5"
   }
 }

@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "v1",
-    "updated_at": "2026-11-05",
+    "version": "v2",
+    "updated_at": "2026-11-06",
     "owner": "施汶邑（几梦）",
     "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
     "status_enum": {
@@ -310,6 +310,48 @@
       "remedy_cost": "中（需处理反向因果与样本选择）",
       "impact": "F2 不入模；F1 技术转化效率（500/500）已覆盖「技术→业务」的转化语义。",
       "fallback": "tech_conversion（F1）为主替代；m_funding 提供融资是否发生的粗信号。"
+    },
+    {
+      "table": "fact_funding_event",
+      "field": "post_valuation",
+      "indicator": "G4",
+      "cn": "投后估值",
+      "priority": "P0",
+      "status": "source_missing",
+      "decision": "A 保持 NULL",
+      "decided_at": "2026-11-06",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "企查查融资表返回的 506 条事件只含轮次名与投资方，不含估值。无估值则 G4「融资额与上轮估值比」无分母，任何倍数类指标都不能算。评审报告 §2.3(3) 已单列此项。",
+      "evidence": [
+        "post_valuation：0 / 506（0.0%）",
+        "amount_cny：145 / 506（28.7%）",
+        "investor_names：352 / 506 非空（349 个不同机构名）",
+        "fact_funding_event 覆盖 182 / 500 家企业（36.4%）"
+      ],
+      "remedy": "接入含估值口径的融资数据库（清科私募通 / IT桔子 / CVSource）按 event_date + 轮次匹配合并；仅有估值区间时须拆成 val_low / val_high 两列，不得取中值冒充精确值。",
+      "remedy_cost": "数据采购；匹配后仍需人工抽检轮次对应关系",
+      "impact": "G4 恒空；融资维度只能做「有没有融过、融了几轮、谁投的」，不能做估值倍数、不能做溢价率。T51 融资力预测降级为二分类。",
+      "fallback": "funded_by 边（583 条，企业→投资机构）已入图，提供资本关系拓扑；prestige_rank（352/506）可作投资方质量代理，但语义不等同于估值。"
+    },
+    {
+      "table": "fact_funding_event",
+      "field": "amount_cny",
+      "indicator": "G4",
+      "cn": "融资金额（人民币）",
+      "priority": "P1",
+      "status": "partial_insufficient",
+      "decision": "保留已有，不补不编",
+      "decided_at": "2026-11-06",
+      "decided_by": "施汶邑（几梦）",
+      "reason": "只有 145 / 506 条（28.7%）披露金额，且披露与否与轮次阶段强相关（早期轮与战略融资多不披露），缺失不是随机缺失（MNAR）。直接按有值样本算平均融资额会系统性高估。",
+      "evidence": [
+        "amount_cny：145 / 506（28.7%）",
+        "未披露 361 条，覆盖轮次含未披露金额的战略融资/股权融资"
+      ],
+      "remedy": "随 post_valuation 一并采购；若无法补齐，建模时必须以「是否披露」作为伴生指示列，不能只留有值样本。",
+      "remedy_cost": "低（通常与估值数据同源）",
+      "impact": "融资强度类连续特征不可用；只能做「有无金额」的二值信号，且需注明 MNAR。",
+      "fallback": "以融资金额所在轮次（round_label）与融资次数替代强度语义；tech_conversion（F1）承接「技术转业务」的强度。"
     }
   ],
   "substitutes": [
@@ -358,7 +400,7 @@
       "missing_cov": "16,244 / 32,969（49.3%）",
       "substitute": "IPC 分类树对照（bridge_patent_ipc → dim_ipc）",
       "field": "bridge_patent_ipc / dim_ipc",
-      "after_cov": "51,795 条 IPC 记录 100% 落到 11,608 个分类节点",
+      "after_cov": "51,795 条 IPC 记录 100% 落到 11,588 个分类节点（v1.5 已剥版本号后缀归并 20 个重复节点）",
       "why": "对照表只做层级映射，不会凭空生出缺的分类号；专利级 49.3% 是数据源上限"
     },
     {

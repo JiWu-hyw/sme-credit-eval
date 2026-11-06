@@ -37,17 +37,35 @@ TABLE_NOTES = {
         "is_available": "该时点该特征是否有值（1/0），显式标记缺失而非留 NULL",
     },
     "ads_graph_node": {
-        "node_type": "节点类型：enterprise / inventor / ipc / qual_type",
-        "display_name": "展示名（企业名 / 发明人姓名 / IPC 标题）",
+        "node_type": "节点类型 5 类：enterprise（企业）/ patent（专利）/ ipc（分类号）/ inventor（发明人）/ investor（投资机构）",
+        "node_id": (
+            "节点 ID，各类型口径不同："
+            "enterprise = `ENT`+12 位大写 hex（同 dim_enterprise.enterprise_id）；"
+            "patent = fact_patent.patent_id（中国专利为 CN 开头公开号，另有 4 件 JP/TW 公开号，"
+            "为真实国外同族专利，非脏值）；"
+            "ipc = IPC 分类号（部+大类+小类+大组/小组，已剥 WIPO 版本号后缀如 (2006.01)；"
+            "另有 5 个节点仅到小类 A61B/A61K/A61P/C07D/C07K，源串截断无法恢复，保留原样）；"
+            "inventor = `INV`+10 位 hex（同 dim_inventor.inventor_id）；"
+            "investor = `IVS`+10 位 hex（源数据无机构主键，由规范化机构名 md5 派生）"
+        ),
+        "display_name": "展示名（企业名 / 专利标题 / IPC 小类标题 / 发明人姓名 / 投资机构名）",
     },
     "ads_graph_edge": {
-        "src_type": "起点节点类型",
-        "src_id": "起点节点 ID",
-        "dst_type": "终点节点类型",
-        "dst_id": "终点节点 ID",
-        "edge_type": "边语义：patent_cooccur / inventor_serve / qual_hierarchy / ipc_similar",
-        "time_slice": "年度切片（便于构造时序图）",
-        "weight": "边权（关系强度，默认 1）",
+        "src_type": "起点节点类型（枚举同 ads_graph_node.node_type）",
+        "src_id": "起点节点 ID（格式见 ads_graph_node.node_id）",
+        "dst_type": "终点节点类型（枚举同 ads_graph_node.node_type）",
+        "dst_id": "终点节点 ID（格式见 ads_graph_node.node_id）",
+        "edge_type": (
+            "边语义。CHECK 保留 8 个枚举位，本轮实际产出 5 类："
+            "files_patent（企业→专利，weight=匹配置信度）/ "
+            "belongs_ipc（专利→IPC，weight=1.0 主分类、0.5 副分类）/ "
+            "invented_by（专利→发明人，weight=1.0 第一发明人、0.5 其他）/ "
+            "funded_by（企业→投资机构，weight=1.0）/ "
+            "tech_similar（企业↔企业，weight=IPC 小类 TF-IDF 余弦，每企业 top-20、≥0.05）。"
+            "未产出：co_inventor / cites / qualifies（缺源数据或由 invented_by 覆盖）"
+        ),
+        "time_slice": "时间切片。当前全表为 0 = 全期累计；年度切片不物化，按 app_year<=T 自建",
+        "weight": "边权（0~1，语义随 edge_type 变化，见 edge_type 说明）",
     },
     "ads_label": {
         "label_value": "标签值：1=观察窗内未通过复核（正类）/ 0=通过或续存",
@@ -525,6 +543,45 @@ VIEW_NOTES["v_train_ready_window_fixed"] = {
     "n_invention_3y": "同三年内的发明申请数",
     "n_patent_window": "2019 .. cohort_year 的申请号数（= ETL 原口径，队列间不等长）",
     "inv_patent_ratio_3y": "等长口径的发明专利占比",
+}
+
+VIEW_COMMENTS["v_feature_discrimination"] = (
+    "特征判别力分队列复算（评审 §3.3 / §4.2 的落地）：一行 = 一个特征 × 一个样本范围。"
+    "AUC 用 Mann-Whitney U 平均秩等价式算，与 sklearn roc_auc_score 数值一致。"
+    "**全样本 AUC 会混入队列效应，引用单一特征效应前必须先看本视图的分队列值**"
+)
+VIEW_NOTES["v_feature_discrimination"] = {
+    "cohort_scope": "样本范围：'all' = 全样本 307 家；'2021' / '2022' = 该队列单独算",
+    "feature_name": "特征名（对应 v_model_train_ready 列名）",
+    "n_all": "该范围内的样本企业数（含特征缺失者）",
+    "n_missing": "该范围内特征为 NULL 的企业数",
+    "n_valid": "实际参与 AUC 计算的企业数（= n_all − n_missing）",
+    "n_pos": "参与计算的正例数",
+    "n_neg": "参与计算的负例数",
+    "auc": "单变量 AUC（0.5 = 无判别力；<0.5 表示数值越小越可能是正例）",
+    "mean_pos": "正例均值（仅有效样本）",
+    "mean_neg": "负例均值（仅有效样本）",
+    "v_min": "该范围该特征最小值",
+    "v_max": "该范围该特征最大值",
+    "stability_note": "稳定性警示：正例 < 10 时标注「AUC 不稳，只作方向参考」",
+}
+
+VIEW_COMMENTS["v_feature_cohort_gap"] = (
+    "队列反差台账：把「全样本看起来有用、拆开就散架」的特征单独拎出来。"
+    "|AUC₂₀₂₁ − AUC₂₀₂₂| ≥ 0.20 判为队列间不一致，此类特征的全样本 AUC 不得单独引用"
+)
+VIEW_NOTES["v_feature_cohort_gap"] = {
+    "feature_name": "特征名",
+    "n_pos_all": "全样本正例数（有值者）",
+    "auc_all": "全样本 AUC",
+    "n_pos_2021": "2021 队列正例数",
+    "auc_2021": "2021 队列 AUC",
+    "n_pos_2022": "2022 队列正例数",
+    "auc_2022": "2022 队列 AUC",
+    "auc_gap_21_22": "两队列 AUC 之差（取 2021 − 2022，正负号有意义）",
+    "gap_vs_full_2021": "2021 队列偏离 0.5 的程度 − 全样本偏离 0.5 的程度",
+    "gap_vs_full_2022": "2022 队列偏离 0.5 的程度 − 全样本偏离 0.5 的程度",
+    "verdict": "判定：队列差距 ≥0.20 记「全样本 AUC 不可单独引用」，否则「基本一致」",
 }
 
 
