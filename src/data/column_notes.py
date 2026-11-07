@@ -149,11 +149,12 @@ TABLE_NOTES = {
         "funding_occurred": "观察期内是否发生融资（0/1）",
     },
     "fact_funding_event": {
+        "source_id": "行级数据源标识：`zj_500family`（506/506 有值，A7 回填）；与 meta_data_source / meta_ingest_log 同源，属血缘列不是业务特征，勿入模",
         "event_id": "事件自增主键",
         "event_date": "事件发生日期",
         "event_year": "事件发生年份",
         "event_type": "事件类型（定增 / 融资轮次 / 股权变更）",
-        "is_public_co": "是否上市公司（1/0；非上市融资难以获取）",
+        "is_public_co": "事件主体是否上市公司（1/0）；非上市企业融资事件同样在表内，0 不代表数据缺失",
     },
     "fact_patent": {
         "app_no": "专利申请号",

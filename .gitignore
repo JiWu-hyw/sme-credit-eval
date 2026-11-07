@@ -22,6 +22,8 @@ _archive/
 outputs/*
 !outputs/contracts/
 !outputs/contracts/*.json
+# A7 回溯凭证随代码入库：干净检出也要能复核「回填没动业务数值」
+!outputs/funding_provenance_backfill.json
 
 # 保留建库 DDL（没有它别人无法起空库）
 !src/data/schema.sql

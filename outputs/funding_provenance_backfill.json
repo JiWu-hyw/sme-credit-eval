@@ -1,0 +1,35 @@
+{
+  "change_id": "A7_provenance_backfill",
+  "change": "A7 fact_funding_event.source_id 行级溯源回填",
+  "schema_version": "v1.8",
+  "applied_at": "2026-11-07 16:39:47",
+  "source_id": "zj_500family",
+  "rows_total": 506,
+  "rows_backfilled": 506,
+  "raw_csv": "data/raw/合并_融资事件流水.csv",
+  "raw_csv_rows": 506,
+  "ingest_log_evidence": {
+    "log_id": 9,
+    "source_id": "zj_500family",
+    "rows_in": 506,
+    "rows_ok": 506,
+    "status": "ok"
+  },
+  "columns_untouched": [
+    "event_id",
+    "enterprise_id",
+    "event_date",
+    "event_year",
+    "event_type",
+    "amount_cny",
+    "round_label",
+    "post_valuation",
+    "investor_names",
+    "prestige_rank",
+    "is_public_co"
+  ],
+  "business_columns_fingerprint_before": "04652a189e6cd9a6872ec5c2e3472b23c3d26d959c203491c8a67890d2e7ba25",
+  "business_columns_fingerprint_after": "04652a189e6cd9a6872ec5c2e3472b23c3d26d959c203491c8a67890d2e7ba25",
+  "schema_structure_changed": false,
+  "note": "load_500family.py 原 INSERT 把行级 source_id 写成 NULL，但 meta_ingest_log 已有 zj_500family 的 506/506 parse 记录、meta_data_source 已登记该源。只补这一列常量，不动金额/估值/事件等任何业务数值；schema 版本不升，仍为 v1.8。"
+}

@@ -430,7 +430,7 @@
     "displayable": true,
     "source": "ads_graph_edge（edge_type='tech_similar'，19,945 条）",
     "method": "度/加权度直接聚合；PageRank 用标准幂迭代实现",
-    "generated_at": "2026-11-07 16:12:38",
+    "generated_at": "2026-11-07 16:45:56",
     "schema_version": "v1.8",
     "note": "图形结构由本项目真实专利共现构建，非合成"
   }

@@ -23,7 +23,7 @@ deliverables/
 │   └── baseline_asof_leakage.json    泄漏实测（leaky vs noleak）
 ├── 02_前端/
 │   ├── README.md                     联调须知
-│   ├── openapi.json                  OpenAPI 3.1 规范（33 接口）
+│   ├── openapi.json                  OpenAPI 3.1 规范（35 接口）
 │   ├── api_checklist.md              逐接口：真数据 / 另一套 / 占位 / 空壳
 │   ├── enums.json                    实体枚举
 │   └── sample_responses.json         5 个真数据接口的实际返回样例
@@ -301,8 +301,8 @@ def build_algorithm(con):
     A = L.append
     A("# 数据集卡片　·　`v_model_train_ready`\n")
     A("> 生成：`python -m src.data.export_delivery`（只读，不改库）")
-    A("> 生成时间：%s　｜　库版本：v1.3　｜　视图：`v_model_train_ready`\n"
-      % datetime.now().strftime("%Y-%m-%d %H:%M"))
+    A("> 生成时间：%s　｜　库版本：%s　｜　视图：`v_model_train_ready`\n"
+      % (datetime.now().strftime("%Y-%m-%d %H:%M"), _db_ver(con)))
     A("## 1. 一句话\n")
     A("浙江 500 家专精特新企业里的 **%d 家**，每家一行、一行 17 列，" % total)
     A("用于预测「高企资格到期后是否通过复核」。**这是一套小样本代理标签数据集**，")
@@ -643,6 +643,12 @@ def build_frontend(con):
                     "506 条真实融资事件；`can_predict` 全 false —— 财务只有 12/500 有值",
                 "/api/explain/local/{userid}":
                     "逐特征百分位贡献，`model_based=false`、`is_shap=false`，按企业动态生成",
+                "/api/enterprise/grade":
+                    "五档 L0 静态快照基线（A 44 / B 95 / C 275 / D 83 / E 3）；"
+                    "**不是标签或信用分**，不得报准确率或入模验证",
+                "/api/data/datasets":
+                    "A 信贷面板 / B 浙江高企两套数据的登记台账；"
+                    "任何取值 `meta.allow_cross_join=false`，禁止跨集混用",
             }
             for _p, _note in CONTRACT_NOTES.items():
                 if row[1] == _p and row[2] == "有数据":
@@ -660,6 +666,8 @@ def build_frontend(con):
         "/api/company/diagnose", "/api/batch-evaluate", "/api/batch/{job_id}",
         "/api/batch/{job_id}/export", "/api/batch/upload", "/api/data/import",
         "/api/enterprise/{userid}",
+        # v1.8 新增：五档分档端点 + A/B 数据登记台账
+        "/api/enterprise/grade", "/api/data/datasets",
         # 本轮补齐的 12 个契约：来自 B 套（浙江 500 家）库内数据
         "/api/data/quality", "/api/data/panel-depth", "/api/features/tree",
         "/api/graph/structure", "/api/graph/slices", "/api/graph/centrality",
@@ -1062,6 +1070,8 @@ def build_doc(con, alg, fe):
     A("python -m src.data.export_data_dictionary   # 字段字典 %d 列" % st["n_cols"])
     A("python -m src.data.export_label_spec         # 标签说明书")
     A("python -m src.data.export_field_gap_registry # 缺口登记册")
+    A("python -m src.data.apply_funding_provenance  # A7 融资事件行级溯源回填（幂等）")
+    A("python -m src.data.export_db_bundle         # 05_数据库 快照 + Release 附件")
     A("python -m src.data.export_delivery --zip     # 本交付包三个 + zip")
     A("")
     A("python tests/test_train_ready.py             # 8 项 训练集守卫")
@@ -1080,8 +1090,9 @@ def build_doc(con, alg, fe):
     A("python tests/test_funding_join_contract.py   # 10 项 融资 LEFT JOIN 接入口径守卫")
     A("python tests/test_v1_8_views.py              # 8 项 有效覆盖 / 年度切片 / 物理口径守卫")
     A("python tests/test_dataset_isolation.py       # 8 项 A/B 数据隔离 / 分档端点守卫")
+    A("python tests/test_funding_provenance.py      # 8 项 融资事件行级溯源回填守卫")
     A("```")
-    A("合计 **144 项**，全绿（16 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **152 项**，全绿（17 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:

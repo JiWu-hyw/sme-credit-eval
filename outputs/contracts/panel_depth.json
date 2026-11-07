@@ -258,7 +258,7 @@
     "displayable": true,
     "source": "v_model_dataset_asof_flat + fact_patent + dim_enterprise",
     "method": "按企业统计 distinct as_of_year / 专利活动年数 / 资质年限跨度，分组计数",
-    "generated_at": "2026-11-07 16:12:36",
+    "generated_at": "2026-11-07 16:45:55",
     "schema_version": "v1.8",
     "note": "depth_distribution 全为 1 种取值时 balanced=true，说明是平衡面板而非缺失"
   }

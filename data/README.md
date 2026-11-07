@@ -36,7 +36,7 @@ sqlite3 /tmp/blank.db ".tables"
 ```bash
 python -m src.data.export_data_dictionary   # 生成 698 列字典
 python tests/test_data_dictionary.py        # 确认字典与库同步
-python tests/test_api_live.py               # 33 个接口探活
+python tests/test_api_live.py               # 35 个接口探活
 ```
 
 字段含义、空值原因（`null_by_design` / `source_missing` / `partial_insufficient`）

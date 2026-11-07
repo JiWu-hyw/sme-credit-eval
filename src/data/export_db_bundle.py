@@ -9,6 +9,7 @@ README 的表格不手写，全部现算，避免"说明里的行数和库里的
 from __future__ import annotations
 
 import os
+import shutil
 import sqlite3
 import time
 
@@ -16,6 +17,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 DB = os.path.join(ROOT, "data", "db", "zjtech_credit.db")
 OUT = os.path.join(ROOT, "deliverables", "05_数据库")
 SNAPSHOT = os.path.join(OUT, "zjtech_credit.db")
+
+# Release 附件：文件名是 README 里的下载链接，不能改。
+# 04_数据字典与数据集 + 05_数据库 = 11 个文件，加 MANIFEST.txt 共 12 项。
+RELEASE_ZIP = os.path.join(ROOT, "deliverables", "zjtech_credit_data.zip")
+RELEASE_ARCHIVE = os.path.join(ROOT, "deliverables", "zjtech_credit_data_v1.3.0.zip")
+RELEASE_PARTS = ["04_数据字典与数据集", "05_数据库"]
 
 # 分层：按表名前缀归类，未知前缀归「其他」
 LAYERS = [
@@ -35,7 +42,7 @@ NOTES = {
     "fact_patent": "专利明细；**按行数是 32,969，按申请号去重是 30,103 件**",
     "fact_patent_citation": "**空表**：引文库源数据缺失，已登记为 source_missing",
     "fact_qualification": "高企资格认定明细，标签就来自这里",
-    "fact_funding_event": "融资事件 506 条 / 182 家（2019–2026）",
+    "fact_funding_event": "融资事件 506 条 / 182 家（2019–2026）；`source_id` 506/506 指向 `zj_500family`（A7 回填）",
     "ads_label": "307 家打标结果，21 正例",
     "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是负例）",
     "ads_feature_asof": "长表形态的 as-of 特征（feature_name/feature_value）",
@@ -112,6 +119,9 @@ def build(db_path: str = DB) -> dict:
         n_pat = c.execute("SELECT COUNT(DISTINCT app_no) FROM fact_patent").fetchone()[0]
         n_tr = c.execute("SELECT COUNT(*) FROM v_model_train_ready").fetchone()[0]
         n_pos = c.execute("SELECT SUM(label) FROM v_model_train_ready").fetchone()[0]
+        n_fund = c.execute("SELECT COUNT(*) FROM fact_funding_event").fetchone()[0]
+        n_fund_src = c.execute(
+            "SELECT COUNT(source_id) FROM fact_funding_event").fetchone()[0]
         ver = c.execute("SELECT version FROM meta_schema_version "
                         "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
     finally:
@@ -138,6 +148,8 @@ def build(db_path: str = DB) -> dict:
     A("| 企业 | **%d** 家 |" % n_ent)
     A("| 专利 | **%s** 件（按 `app_no` 去重） |" % format(n_pat, ","))
     A("| 训练集 | **%d** 行，正例 **%d** |" % (n_tr, n_pos))
+    A("| 融资事件血缘 | **%d / %d** 行有 `source_id`（`zj_500family`） |"
+      % (n_fund_src, n_fund))
     A("")
     A("## 怎么打开\n")
     A("**只读打开**（推荐，防止手滑改库）：")
@@ -183,7 +195,22 @@ def build(db_path: str = DB) -> dict:
 
     return {"path": SNAPSHOT, "mb": round(size_mb, 1), "secs": round(secs, 1),
             "tables": len(tables), "views": len(views), "cols": n_cols,
-            "integrity": integrity, "fk_bad": fk_bad}
+            "integrity": integrity, "fk_bad": fk_bad,
+            "funding_src": (n_fund_src, n_fund)}
+
+
+def build_release_zip() -> dict:
+    """重打 Release 附件：04_数据字典与数据集 + 05_数据库 + MANIFEST.txt。
+
+    复用 pack_delivery.pack()，MANIFEST 里每个文件带 sha256，接收方可校验。
+    旧附件先本地留档为 zjtech_credit_data_v1.3.0.zip（add-new-no-overwrite），
+    GitHub 上 v1.3.0 Release 的附件本身不会被这次打包改动。
+    """
+    from src.data.pack_delivery import pack as pack_parts
+
+    if os.path.exists(RELEASE_ZIP) and not os.path.exists(RELEASE_ARCHIVE):
+        shutil.copy2(RELEASE_ZIP, RELEASE_ARCHIVE)
+    return pack_parts(os.path.basename(RELEASE_ZIP), RELEASE_PARTS)
 
 
 if __name__ == "__main__":
@@ -191,3 +218,6 @@ if __name__ == "__main__":
     print("✅ 数据库快照 %(path)s" % r)
     print("   %(mb).1f MB / %(tables)d 表 + %(views)d 视图 / %(cols)d 列" % r)
     print("   integrity=%(integrity)s 外键冲突=%(fk_bad)d 耗时 %(secs).1fs" % r)
+    print("   融资事件血缘 %(funding_src)s" % r)
+    z = build_release_zip()
+    print("📦 Release 附件 %(path)s（%(n)d 项 / %(mb).2f MB / testzip=%(bad)s）" % z)

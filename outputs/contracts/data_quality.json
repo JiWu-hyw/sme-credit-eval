@@ -2,7 +2,7 @@
   "summary": {
     "tables_checked": 22,
     "total_rows": 446089,
-    "cell_completeness": 0.894,
+    "cell_completeness": 0.8941,
     "rows_by_layer": {
       "DIM": 28075,
       "FACT": 35535,
@@ -239,21 +239,15 @@
       "exists": true,
       "n_rows": 506,
       "n_columns": 12,
-      "columns_full": 7,
-      "columns_empty": 2,
-      "completeness": 0.7232,
+      "columns_full": 8,
+      "columns_empty": 1,
+      "completeness": 0.8065,
       "empty_columns": [
-        "post_valuation",
-        "source_id"
+        "post_valuation"
       ],
       "worst_columns": [
         {
           "column": "post_valuation",
-          "n_null": 506,
-          "null_rate": 1.0
-        },
-        {
-          "column": "source_id",
           "n_null": 506,
           "null_rate": 1.0
         },
@@ -1218,7 +1212,7 @@
     "displayable": true,
     "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
     "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
-    "generated_at": "2026-11-07 16:12:36",
+    "generated_at": "2026-11-07 16:45:55",
     "schema_version": "v1.8",
     "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
   }

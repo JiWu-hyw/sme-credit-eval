@@ -390,7 +390,9 @@ CREATE TABLE IF NOT EXISTS fact_patent_citation (
 CREATE INDEX IF NOT EXISTS idx_cite_citing ON fact_patent_citation(citing_ent_id, cite_year);
 CREATE INDEX IF NOT EXISTS idx_cite_cited  ON fact_patent_citation(cited_ent_id, cite_year);
 
--- 融资事件表（仅上市公司子集可得，AKShare；非上市留空并诚实声明）
+-- 融资事件表（506 条全部来自 data/raw/合并_融资事件流水.csv，行级源标识 zj_500family；
+--   非上市企业融资事件同样在表内，AKShare 只是 meta_data_source 里登记的潜在补充渠道，不是本表来源；
+--   金额/估值缺失如实留 NULL，禁止用占位值回填）
 CREATE TABLE IF NOT EXISTS fact_funding_event (
     event_id       INTEGER PRIMARY KEY,
     enterprise_id  TEXT NOT NULL REFERENCES dim_enterprise(enterprise_id),

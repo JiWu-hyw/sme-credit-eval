@@ -75,8 +75,8 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（144 项守卫，16 文件）
-│                             test_api_live.py（33 接口探活）
+├── tests/                    单元测试 / 集成测试（152 项守卫，17 文件）
+│                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
 │                             test_label_spec.py / test_patent_dedup.py
@@ -414,9 +414,18 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 **版本边界**：v1.3.0 Release 附件是 **v1.6 快照**（34 表 / 19 视图 / 804 列）；
-本地工作库已到 **v1.8**（34 表 / 23 视图 / 837 列），v1.7 新增五档视图与标签任务登记，
-v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离，**两版都未改任何事实表数据**。
-算法端要拿到 v1.8 库需另发一个 Release（重新打包快照），**不覆盖 v1.3.0 附件**。
+**v1.4.0** 是重新打包的 **v1.8 快照**（34 表 / 23 视图 / 837 列），
+本地附件 `deliverables/zjtech_credit_data.zip`（12 项，含 837 列字典、3 个数据集 CSV、
+标签说明书、缺口登记册、VACUUM 库快照与 `MANIFEST.txt` 的 sha256 清单），
+发布说明见 `deliverables/RELEASE_v1.4.0.md`。v1.7 新增五档视图与标签任务登记；
+v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
+A7 另把 `fact_funding_event.source_id` 从 0/506 回填为 506/506 `zj_500family`——
+**只补行级血缘列**，金额 / 估值等业务列用 SHA-256 前后指纹对账未变，
+schema 结构未改、版本仍 v1.8；变更凭证 `outputs/funding_provenance_backfill.json`，
+幂等脚本 `python -m src.data.apply_funding_provenance`。
+新旧两版各自独立 Release，**v1.4.0 不覆盖 v1.3.0 附件**；旧附件本地留档为
+`deliverables/zjtech_credit_data_v1.3.0.zip`。全量交付包另见
+`wenlv_full_delivery_20261107.zip`（38 文件）/ `wenlv_delivery_20261107.zip`（36 文件）。
 
 ## 七、归档规则
 

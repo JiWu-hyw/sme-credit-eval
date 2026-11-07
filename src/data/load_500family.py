@@ -67,6 +67,11 @@ MASTER_CSV = "合并_500家_企业主表.csv"
 PATENT_CSV = "合并_专利明细_并集.csv"
 FUNDING_CSV = "合并_融资事件流水.csv"
 
+# 行级血缘：与 meta_data_source.source_id / meta_ingest_log.source_id 同源。
+# A7 之前 INSERT 把该列写成 NULL（0/506 有值），已由
+# src/data/apply_funding_provenance.py 幂等回填；这里保证以后重跑 ETL 不再断链。
+FUNDING_SOURCE_ID = "zj_500family"
+
 # 地市 → 行政区划代码（浙江省）
 CITY_CODE = {
     "杭州市": "330100", "宁波市": "330200", "温州市": "330300", "嘉兴市": "330400",
@@ -628,7 +633,7 @@ def load_patents(conn: sqlite3.Connection, path: Path, ent_by_norm: dict, verbos
 
 
 def load_funding(conn: sqlite3.Connection, path: Path, ent_by_norm: dict, verbose: bool = True):
-    """融资事件流水 → fact_funding_event。"""
+    """融资事件流水 → fact_funding_event（行级 source_id 指向 zj_500family）。"""
     n_fund = n_match = 0
     with open(path, "r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
@@ -651,9 +656,9 @@ def load_funding(conn: sqlite3.Connection, path: Path, ent_by_norm: dict, verbos
                    (event_id, enterprise_id, event_date, event_year, event_type,
                     amount_cny, round_label, post_valuation, investor_names,
                     prestige_rank, source_id, is_public_co)
-                   VALUES (NULL,?,?,?,?,?,?,NULL,?,?,NULL,?)""",
+                   VALUES (NULL,?,?,?,?,?,?,NULL,?,?,?,?)""",
                 (eid, edate, _year_of(row.get("事件日期")), etype, amount_cny,
-                 _clean(row.get("事件性质")), inv_json, prestige, is_pub))
+                 _clean(row.get("事件性质")), inv_json, prestige, FUNDING_SOURCE_ID, is_pub))
             n_fund += 1
     conn.commit()
     if verbose:
