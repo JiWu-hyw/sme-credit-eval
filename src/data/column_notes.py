@@ -606,6 +606,31 @@ VIEW_NOTES["v_feature_cohort_gap"] = {
 }
 
 
+VIEW_COMMENTS["v_enterprise_grade_l0"] = (
+    "企业「技术与资质梯队分档」L0 规则基线（v1.7，方案 §4 / §6 P0）：字典序分层 "
+    "E 预警 → D 观察 → A 引领 → B 优质 → C 稳健，实测 44/95/275/83/3 家合计 500。"
+    "这是可审计对照基线，不是信用好坏结论；不是 as-of 训练口径，不得入模验证；"
+    "A/B 档判据用了第三方等级，禁止再用同字段反向验证（循环定义）。"
+    "admin_penalty_cnt 语义与字段名不符，已排除在判据外。"
+)
+VIEW_NOTES["v_enterprise_grade_l0"] = {
+    "enterprise_id": "企业代理键 ENT+12 位 hex；一家一行，覆盖 dim_enterprise 全部 500 家",
+    "grade": "五档中文名：A 引领 / B 优质 / C 稳健 / D 观察 / E 预警（档次是输出，不是标签）",
+    "grade_code": "档位单字母码 A–E，便于排序与分组聚合",
+    "hit_rule": "实际命中的判据（如 E:严重失信 / D:风险负面 / A:小巨人 / C:兜底），可审计优先级",
+    "serious_dishonesty_cnt": "判据输入：严重失信计数，>0 一票定 E 档（原字段 COALESCE 为 0）",
+    "biz_anomaly_cnt": "判据输入：经营异常计数，>0 一票定 E 档",
+    "biz_status": "判据输入：工商经营状态；非 NULL 且不等于「开业」一票定 E 档",
+    "risk_negative_cnt": "判据输入：风险负面计数，>0 进 D 档（优先级低于 E）",
+    "is_little_giant": "判据输入：是否小巨人；=1 且未命中 E/D 时进 A 档",
+    "qcc_tech_level_ord": "判据输入：第三方技术等级序数（1–5）；>=5 进 A 档，=4 且信用等级>=11 进 B 档",
+    "qcc_credit_level_ord": "判据输入：第三方信用等级序数（1–12）；仅与技术等级=4 组合判定 B 档",
+    "label_value_qual_survival": "判据输入：qual_survival 弱标签；1=资质断档信号进 D 档；-1=未打标的 193 家，不参与 D 档判定，不是负例",
+    "grade_ver": "分档规则版本 l0_v1.0；判据或口径变更必须升版，禁止跨版本比较实验结论",
+    "scope_note": "使用边界声明：静态快照规则基线，非 as-of 训练口径，禁止入模验证，禁止用第三方等级反向验证",
+}
+
+
 def view_note_for(view: str, column: str) -> str:
     """视图列说明：视图专属 → 特征复用 → 通用。"""
     return (VIEW_NOTES.get(view, {}).get(column)

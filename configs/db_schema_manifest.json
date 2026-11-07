@@ -1,7 +1,7 @@
 {
-  "schema_version": "v1.3",
+  "schema_version": "v1.7",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-06 17:24:07",
+  "generated_at": "2026-11-07 15:21:16",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",
@@ -87,36 +87,6 @@
       "table": "ads_label",
       "field": "label_value",
       "note": "主任务标签：cohort_year 认定→观察期复核，未通过=1"
-    },
-    "3.3b patent_lapse_ratio": {
-      "table": "dws_tech_feature",
-      "field": "patent_lapse_ratio",
-      "note": "法律状态代理：授权后失效（未缴年费/期限届满/失效/避重放弃）占有状态专利比；替代缺失的被引次数，越高说明专利维护越差"
-    },
-    "3.3c patent_reject_ratio": {
-      "table": "dws_tech_feature",
-      "field": "patent_reject_ratio",
-      "note": "法律状态代理：驳回/撤回（公布驳回、公布撤回、公布视为撤回）占有状态专利比，反映申请质量"
-    },
-    "G0 latest_rev_wan": {
-      "table": "dws_growth_feature",
-      "field": "latest_rev_wan",
-      "note": "年报最新一期营业收入（万元），只有真实披露的企业有值；不得用社保人数折算"
-    },
-    "3.0 patent_universe": {
-      "table": "v_patent_canonical",
-      "field": "app_no",
-      "note": "专利唯一化口径：源数据里同一件专利会落两条（申请公布 …A 有 IPC 无法律状态，授权公告 …B 有法律状态无 IPC）。所有专利级聚合走本视图，禁止直接 COUNT(*) fact_patent —— 按行计数会让专利数虚增约 8%、授权率被压向 0.5。"
-    },
-    "3.1 is_granted_ever": {
-      "table": "v_patent_canonical",
-      "field": "is_granted_ever",
-      "note": "「曾获得授权」判据：授权公告 kind code 属于 B/U/S/C（授权公告独有，存在即授权）或 is_granted=1。**不要用 fact_patent.is_granted 算授权率** —— 它表示「此刻仍在权」，断缴年费/期限届满会翻回 0，实测把 29,582 件已归属专利中的授权数从 23,693 压到 15,753（少算 33.5%），企业级授权率中位 0.567 远低于真值 0.835。"
-    },
-    "3.2 grant_rate 三口径": {
-      "table": "ads_feature_asof",
-      "field": "grant_rate",
-      "note": "同名列存在三种口径，禁止互换：(1) dws/ads_model_dataset.grant_rate = 企查查汇总已授权/申请总量，全历史、含未审结，中位 0.619；(2) 明细 is_granted 口径中位 0.567（低估）；(3) as-of grant_rate = 窗口内已过审结期专利的曾授权占比，中位≈1.0（主口径退化）。建模宽表与 as-of 长表的 grant_rate 不可直接比较。"
     }
   },
   "tables": {
@@ -3528,7 +3498,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 7
+      "n_rows": 8
     },
     "ods_patent_raw": {
       "columns": [
@@ -4201,6 +4171,22 @@
       "obj",
       "n"
     ],
+    "v_enterprise_grade_l0": [
+      "enterprise_id",
+      "grade",
+      "grade_code",
+      "hit_rule",
+      "serious_dishonesty_cnt",
+      "biz_anomaly_cnt",
+      "biz_status",
+      "risk_negative_cnt",
+      "is_little_giant",
+      "qcc_tech_level_ord",
+      "qcc_credit_level_ord",
+      "label_value_qual_survival",
+      "grade_ver",
+      "scope_note"
+    ],
     "v_enterprise_profile": [
       "enterprise_id",
       "name_display",
@@ -4211,6 +4197,78 @@
       "max_qual_rank",
       "n_patent",
       "n_invention"
+    ],
+    "v_feature_asof_funding": [
+      "enterprise_id",
+      "as_of_policy",
+      "cohort_year",
+      "as_of_year",
+      "m_funding",
+      "n_funding_events",
+      "investor_prestige_best",
+      "investor_prestige_latest"
+    ],
+    "v_feature_cohort_gap": [
+      "feature_name",
+      "n_pos_all",
+      "auc_all",
+      "n_pos_2021",
+      "auc_2021",
+      "n_pos_2022",
+      "auc_2022",
+      "auc_gap_21_22",
+      "gap_vs_full_2021",
+      "gap_vs_full_2022",
+      "verdict"
+    ],
+    "v_feature_discrimination": [
+      "cohort_scope",
+      "feature_name",
+      "n_all",
+      "n_missing",
+      "n_valid",
+      "n_pos",
+      "n_neg",
+      "auc",
+      "mean_pos",
+      "mean_neg",
+      "v_min",
+      "v_max",
+      "stability_note"
+    ],
+    "v_feature_missing_reason": [
+      "feature_name",
+      "enterprise_id",
+      "as_of_policy",
+      "as_of_year",
+      "missing_reason",
+      "n_patent_by_appyear",
+      "n_patent_observable"
+    ],
+    "v_graph_coverage": [
+      "enterprise_id",
+      "name_display",
+      "n_patent_edge",
+      "n_ipc_subclass",
+      "n_inventor",
+      "n_tech_similar",
+      "n_investor"
+    ],
+    "v_graph_patent_timeline": [
+      "time_slice",
+      "n_patent",
+      "n_patent_matched",
+      "n_enterprise",
+      "n_patent_cum",
+      "n_patent_matched_cum"
+    ],
+    "v_label_mechanism": [
+      "n_events",
+      "cohort_year",
+      "n_enterprise",
+      "n_positive",
+      "n_negative",
+      "positive_rate"
     ],
     "v_model_dataset_asof_flat": [
       "enterprise_id",
@@ -4300,26 +4358,44 @@
       "label_name",
       "label_value"
     ],
-    "v_patent_yearly": [
-      "enterprise_id",
-      "stat_year",
-      "n_app",
-      "n_grant",
-      "n_inv",
-      "n_uty",
-      "n_des",
-      "n_ipc"
-    ],
-    "v_qual_history": [
+    "v_model_train_ready": [
       "enterprise_id",
       "name_display",
-      "year",
-      "qual_type",
-      "qual_name",
-      "level_rank",
-      "status",
-      "is_renewal",
-      "valid_until"
+      "region_code",
+      "cohort_year",
+      "split",
+      "label",
+      "n_patent_app",
+      "n_patent_invention",
+      "n_patent_grant",
+      "inv_patent_ratio",
+      "tech_conversion",
+      "n_ipc_subclass",
+      "tech_breadth_entropy",
+      "tech_breadth_ipc_class",
+      "grant_rate",
+      "core_staff_stability",
+      "n_inventor"
+    ],
+    "v_model_train_ready_cv": [
+      "enterprise_id",
+      "name_display",
+      "region_code",
+      "cohort_year",
+      "split",
+      "label",
+      "fold_id",
+      "n_patent_app",
+      "n_patent_invention",
+      "n_patent_grant",
+      "inv_patent_ratio",
+      "tech_conversion",
+      "n_ipc_subclass",
+      "tech_breadth_entropy",
+      "tech_breadth_ipc_class",
+      "grant_rate",
+      "core_staff_stability",
+      "n_inventor"
     ],
     "v_patent_canonical": [
       "app_no",
@@ -4342,9 +4418,56 @@
       "ipc_main",
       "match_method",
       "match_confidence"
+    ],
+    "v_patent_master": [
+      "app_no",
+      "patent_id_repr",
+      "enterprise_id",
+      "n_enterprise",
+      "join_status",
+      "title",
+      "abstract",
+      "has_abstract",
+      "app_date",
+      "app_year",
+      "is_granted_ever",
+      "grant_kind",
+      "patent_type",
+      "ipc_main",
+      "n_records"
+    ],
+    "v_patent_yearly": [
+      "enterprise_id",
+      "stat_year",
+      "n_app",
+      "n_grant",
+      "n_inv",
+      "n_uty",
+      "n_des",
+      "n_ipc"
+    ],
+    "v_qual_history": [
+      "enterprise_id",
+      "name_display",
+      "year",
+      "qual_type",
+      "qual_name",
+      "level_rank",
+      "status",
+      "is_renewal",
+      "valid_until"
+    ],
+    "v_train_ready_window_fixed": [
+      "enterprise_id",
+      "cohort_year",
+      "label",
+      "n_patent_3y",
+      "n_invention_3y",
+      "n_patent_window",
+      "inv_patent_ratio_3y"
     ]
   },
   "total_tables": 34,
-  "total_views": 7,
+  "total_views": 20,
   "total_columns": 552
 }

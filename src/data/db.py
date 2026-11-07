@@ -30,7 +30,7 @@ SCHEMA_SQL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema.sq
 MANIFEST_PATH = os.path.join(ROOT, "configs", "db_schema_manifest.json")
 EXPORT_DIR = os.path.join(ROOT, "data", "processed", "db_export")
 
-SCHEMA_VERSION = "v1.0"
+SCHEMA_VERSION = "v1.7"  # 与 meta_schema_version 最新行、schema.sql 末尾版本块保持一致
 
 # ============================================================================
 # 一、指标 → 字段 映射契约（与 docs/特征工程字典.md 一一对应）
@@ -223,7 +223,8 @@ def init_db(db_path: str = DB_PATH, force: bool = False, verbose: bool = True) -
             "INSERT OR REPLACE INTO meta_schema_version(version, applied_at, author, note) "
             "VALUES (?,?,?,?)",
             (SCHEMA_VERSION, now_iso(), "WorkBuddy(施汶邑)",
-             "建库：meta/ods/dim/fact/dws/ads 六层 28 表 + 5 视图；指标口径对齐 特征工程字典 v0.1"),
+             "按 schema.sql 全量建库并灌装字典种子；表/视图数量以库内 sqlite_master 为准，"
+             "指标口径对齐 特征工程字典 v0.1"),
         )
         conn.commit()
         if verbose:

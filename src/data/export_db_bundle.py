@@ -53,6 +53,11 @@ VIEW_NOTES = {
     "v_enterprise_profile": "企业画像宽视图，接口 `enterprise/{userid}` 在用",
     "v_data_coverage": "13 行覆盖率总览",
     "v_asof_feature_coverage": "58 行 as-of 特征覆盖明细",
+    "v_enterprise_grade_l0": (
+        "**v1.7 新增** 五档规则基线（A 44 / B 95 / C 275 / D 83 / E 3，合计 500）；"
+        "静态快照对照基线，非 as-of 训练口径，不得入模验证；"
+        "禁止用第三方等级反向验证（循环定义）"
+    ),
 }
 
 

@@ -435,5 +435,62 @@
       "after_cov": "cohort 59/307 家带等级；来源仅上市公司子集（AKShare），口径见 fact_funding_event.prestige_rank",
       "why": "prestige_rank 352/506 有值（AKShare 上市公司子集），能算而没算（v1.6 修正）"
     }
-  ]
+  ],
+  "label_tasks": {
+    "note": "ads_label.label_task 的 CHECK 枚举允许 4 类标签任务，实际只接入 1 类。这里显式登记另外 3 类为「源未接入」，避免被误读成「标签已有多源」或「只是暂时没写值」。守卫测试 tests/test_field_gap_registry.py 会核对：登记为 source_not_integrated 的任务在库里必须 0 行，登记为 connected 的任务必须有值。",
+    "status_enum": {
+      "connected": "已接入，库内有对应标签行",
+      "source_not_integrated": "外部数据源未接入，按设计 0 行；接入前不得冒充多标签"
+    },
+    "tasks": [
+      {
+        "label_task": "qual_survival",
+        "status": "connected",
+        "rows": 307,
+        "positive": 21,
+        "negative": 286,
+        "definition": "科技资质存续失败（弱标签）：高企资格到期后在 2021–2025 公示名单未再出现=1，续期=0",
+        "source": "浙江省高新技术企业公示名单 2021–2025（14 份）",
+        "caveat": "正例 21 个、验证集仅 2 个正例，不足以支撑任何性能结论；标签与名单出现次数完全共线（21 正例全为 n_events=1，286 负例全为 n_events>=2）；量的是「有没有再申报」，不是「有没有被驳回」，更不是「信用违约」"
+      },
+      {
+        "label_task": "msme_default",
+        "status": "source_not_integrated",
+        "rows": 0,
+        "source": "Kaggle MSME 中小企业真实违约样本（约 1,707 家）",
+        "plan": "P2 跨源外部效度：验证「特征 → 档次」映射能否迁移，不是把外部违约标签贴到浙江企业上",
+        "caveat": "接入前需单独升 DEFINITION_VER / DATASET_VER，禁止原地 UPDATE ads_label"
+      },
+      {
+        "label_task": "sba_default",
+        "status": "source_not_integrated",
+        "rows": 0,
+        "source": "美国 SBA Loans（约 90 万条，MIS_Status）",
+        "plan": "P2 跨源外部效度，同上",
+        "caveat": "国别与口径均不同，只作方法迁移验证，不与浙江样本合并训练"
+      },
+      {
+        "label_task": "survival_risk",
+        "status": "source_not_integrated",
+        "rows": 0,
+        "source": "需带时间戳的工商状态 / 注销 / 经营异常时序（P3）",
+        "plan": "生存分析口径，需先补齐 A 轴结果型硬标签与状态变更时间",
+        "caveat": "现有 ads_survival_period 的 21 个事件仍是「未再申报」口径，与 B 轴同源于公示名单，不构成独立标签轴"
+      }
+    ]
+  },
+  "policies": {
+    "as_of": {
+      "rule": "建模特征一律只用 v_model_dataset_asof_flat，且一次实验固定单一 as_of_policy（cohort 或 due_minus_1），禁止混用 —— 混用会出现一家两行的伪重复。",
+      "train_ready_view": "v_model_train_ready",
+      "allowed_policies": ["cohort", "due_minus_1"],
+      "forbidden_as_features": [
+        "ads_model_dataset 全量快照（含标签窗口内信息，仅可作泄漏基线）",
+        "v_enterprise_grade_l0（静态快照规则基线，非 as-of 特征切面，不得入模验证）"
+      ],
+      "grade_validation": "分档外部效度只能用 A 轴结果型标签（严重失信 / 经营异常 / 非开业 / 复核未通过）；禁止用 qcc_tech_level_ord / qcc_credit_level_ord 反向验证 L0 分档（循环定义）。",
+      "decided_at": "2026-11-07",
+      "decided_by": "WorkBuddy(施汶邑)"
+    }
+  }
 }

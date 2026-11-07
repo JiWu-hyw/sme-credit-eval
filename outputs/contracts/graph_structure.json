@@ -1772,8 +1772,8 @@
     "displayable": true,
     "source": "ads_graph_node (45,077) + ads_graph_edge (101,491)",
     "method": "节点/边按类型聚合；度=该节点在 ads_graph_edge 的出入边总数；连通分量用并查集在 enterprise-enterprise tech_similar 子图上计算",
-    "generated_at": "2026-11-06 17:24:06",
-    "schema_version": "v1.6",
+    "generated_at": "2026-11-07 15:13:07",
+    "schema_version": "v1.7",
     "note": "本图谱为本项目真实构建（企业-专利-IPC 异质图），非合成图"
   }
 }

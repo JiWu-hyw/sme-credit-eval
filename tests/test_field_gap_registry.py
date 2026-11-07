@@ -13,6 +13,7 @@
 """
 import json
 import os
+import re
 import sqlite3
 import sys
 
@@ -116,12 +117,56 @@ def main():
                 bad.append("%s 缺 %s" % (i.get("field", "?"), ",".join(sorted(miss))))
         _assert(not bad, "; ".join(bad))
 
+    def f_label_tasks():
+        """4 个标签任务必须逐个登记；「源未接入」的在库里必须真的是 0 行。
+
+        防的是把空的 label_task 当成「已经有多标签了」，以及悄悄回填后登记册失真。
+        """
+        lt = reg["label_tasks"]
+        tasks = lt["tasks"]
+        ddl = cur.execute(
+            "SELECT sql FROM sqlite_master WHERE name='ads_label'").fetchone()[0]
+        m = re.search(r"label_task\s+IN\s*\(([^)]*)\)", ddl, re.I | re.S)
+        allowed_ddl = set(re.findall(r"'([^']+)'", m.group(1))) if m else set()
+        declared = {t["label_task"] for t in tasks}
+        _assert(declared == allowed_ddl,
+                "登记任务与 DDL 枚举不符：多 %s / 少 %s"
+                % (declared - allowed_ddl, allowed_ddl - declared))
+        valid = set(lt["status_enum"])
+        bad = []
+        for t in tasks:
+            if t["status"] not in valid:
+                bad.append("%s 非法状态 %s" % (t["label_task"], t["status"]))
+            n = cur.execute("SELECT COUNT(*) FROM ads_label WHERE label_task=?",
+                            (t["label_task"],)).fetchone()[0]
+            if t["status"] == "source_not_integrated" and n != 0:
+                bad.append("%s 登记源未接入却有 %d 行" % (t["label_task"], n))
+            if t["status"] == "connected" and n == 0:
+                bad.append("%s 登记已接入却 0 行" % (t["label_task"], n))
+        _assert(not bad, "; ".join(bad))
+
+    def g_as_of_policy():
+        """as-of 口径约定必须落在登记册里，且点名的视图真实存在。"""
+        p = reg["policies"]["as_of"]
+        _assert("v_model_dataset_asof_flat" in p["rule"], "口径规则未点名 as-of 宽表")
+        _assert(set(p["allowed_policies"]) == {"cohort", "due_minus_1"},
+                "允许的切面口径不符：%r" % (p["allowed_policies"],))
+        _assert(any("v_enterprise_grade_l0" in x for x in p["forbidden_as_features"]),
+                "未把 L0 分档视图列为禁入模对象")
+        names = {r[0] for r in cur.execute(
+            "SELECT name FROM sqlite_master WHERE type='view'")}
+        for v in ("v_model_dataset_asof_flat", "v_model_train_ready",
+                  "v_enterprise_grade_l0"):
+            _assert(v in names, "视图缺失：%s" % v)
+
     print("缺口登记册守卫（%d 项登记）" % len(items))
     check("登记字段均存在于库", a_exists)
     check("设计性 NULL 未被回填", b_empty)
     check("状态枚举合法", c_enum)
     check("每条登记信息完整", d_fields)
     check("替身已落库且有值", e_substitutes)
+    check("4 个标签任务登记与库内行数一致", f_label_tasks)
+    check("as-of 口径约定与视图齐备", g_as_of_policy)
     con.close()
 
     print("=" * 60)

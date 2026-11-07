@@ -75,7 +75,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（104 项守卫）
+├── tests/                    单元测试 / 集成测试（117 项守卫，13 文件）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -309,9 +309,30 @@ SELECT * FROM v_feature_asof_funding;   -- 614 行 = 307 家 × 2 口径
 不进 `v_model_train_ready`（那是 17 列既有口径），需要时 LEFT JOIN。
 补算命令 `python -m src.data.build_asof_funding`（幂等）。
 
+### 6.5.3 企业技术与资质梯队分档 L0（v1.7 新增）
+
+方案见 `docs/论文/企业分档多标签体系方案-v1.0.md`。视图 `v_enterprise_grade_l0`
+把 500 家企业按字典序分层规则划成五档：E 预警 → D 观察 → A 引领 → B 优质 → C 稳健，
+实测 **3 / 83 / 44 / 95 / 275** 家（合计 500）。每行带 `hit_rule` 与 8 个判据中间量，
+可逐企业审计；`grade_ver = l0_v1.0`，判据或口径变更必须升版。
+
+```sql
+SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 GROUP BY grade;
+```
+
+三条使用边界：① 这是**静态快照对照基线**，不是 as-of 训练口径，不得入模验证；
+② A/B 档判据用了 `qcc_tech_level_ord` / `qcc_credit_level_ord`，禁止用同字段反向验证（循环定义）；
+③ `admin_penalty_cnt` 语义与字段名不符，已排除；`label_value_qual_survival = -1`
+的 193 家未打标企业不是负例，不参与 D 档判定。
+
+升版命令 `python -m src.data.apply_v1_7`（幂等，执行前自动留 `data/db/zjtech_credit_pre_v17.db`
+回滚点），守卫 `python tests/test_enterprise_grade_l0.py`（11 项，含与方案原文 SQL 逐企业独立对账）。
+另外 3 个空 `label_task`（标签任务）已在 `configs/field_gap_registry.json` 的 `label_tasks` 段
+登记为「源未接入」，as-of 切面口径约定固化在同文件 `policies.as_of`。
+
 ### 6.6 数据获取
 
-数据库 153 MB（34 表 / 19 视图 / 804 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（当前工作库 v1.7：34 表 / 20 视图 / 818 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -319,8 +340,12 @@ unzip zjtech_credit_data.zip -d .          # 得到 05_数据库/zjtech_credit.d
 mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 ```
 
-附件里还带数据字典（804 列 md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
+附件里还带数据字典（md + csv）、代理标签说明书、字段缺口登记册、3 个数据集 CSV。
 只想建空库不需要数据时，用 `src/data/schema.sql`。
+
+**版本边界**：v1.3.0 Release 附件是 **v1.6 快照**（34 表 / 19 视图 / 804 列）；
+本地 v1.7 只新增 `v_enterprise_grade_l0` 视图、标签任务登记与守卫测试，**未改任何事实表数据**。
+要让算法端拿到 v1.7 库，需另发一个 Release（重新打包快照）。
 
 ## 七、归档规则
 

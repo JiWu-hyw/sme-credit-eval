@@ -1481,3 +1481,67 @@ FROM ads_feature_asof f
 WHERE f.is_available = 0;
 
 -- [V16FUND:END]
+
+-- ============================================================================
+-- [V17GRADE:BEGIN]  v1.7 企业「技术与资质梯队分档」L0 规则基线
+-- 完整口径说明见 src/data/migrations/v1_7_grade.sql（两处 DDL 必须保持一致）
+-- 字典序分层：E 硬约束 → D 观察 → A 引领 → B 优质 → C 兜底
+-- 定位：对照基线，不是信用好坏结论；非 as-of 训练口径，禁止入模验证。
+-- ============================================================================
+DROP VIEW IF EXISTS v_enterprise_grade_l0;
+CREATE VIEW v_enterprise_grade_l0 AS
+WITH b AS (
+  SELECT d.enterprise_id,
+         COALESCE(d.serious_dishonesty_cnt, 0) AS sd,
+         COALESCE(d.biz_anomaly_cnt, 0)       AS ba,
+         d.biz_status                         AS biz_status,
+         COALESCE(d.risk_negative_cnt, 0)     AS rn,
+         COALESCE(d.is_little_giant, 0)       AS lg,
+         COALESCE(d.qcc_tech_level_ord, 0)    AS tech,
+         COALESCE(d.qcc_credit_level_ord, 0)  AS cred,
+         COALESCE(l.label_value, -1)          AS lab
+    FROM dim_enterprise d
+    LEFT JOIN ads_label l
+      ON l.enterprise_id = d.enterprise_id
+     AND l.label_task = 'qual_survival'
+), g AS (
+  SELECT b.*,
+         CASE
+           WHEN sd > 0 OR ba > 0
+             OR (biz_status IS NOT NULL AND biz_status <> '开业') THEN 'E 预警'
+           WHEN rn > 0 OR lab = 1                                 THEN 'D 观察'
+           WHEN lg = 1 OR tech >= 5                               THEN 'A 引领'
+           WHEN tech = 4 AND cred >= 11                           THEN 'B 优质'
+           ELSE 'C 稳健'
+         END AS grade,
+         CASE
+           WHEN sd > 0                                            THEN 'E:严重失信'
+           WHEN ba > 0                                            THEN 'E:经营异常'
+           WHEN biz_status IS NOT NULL AND biz_status <> '开业'   THEN 'E:非开业'
+           WHEN rn > 0 AND lab = 1                                THEN 'D:风险负面+资质断档'
+           WHEN rn > 0                                            THEN 'D:风险负面'
+           WHEN lab = 1                                           THEN 'D:资质断档信号'
+           WHEN lg = 1                                            THEN 'A:小巨人'
+           WHEN tech >= 5                                         THEN 'A:技术等级卓越'
+           WHEN tech = 4 AND cred >= 11                           THEN 'B:技术优秀且信用等级>=11'
+           ELSE 'C:兜底'
+         END AS hit_rule
+    FROM b
+)
+SELECT enterprise_id,
+       grade,
+       substr(grade, 1, 1)                  AS grade_code,
+       hit_rule,
+       sd                                  AS serious_dishonesty_cnt,
+       ba                                  AS biz_anomaly_cnt,
+       biz_status,
+       rn                                  AS risk_negative_cnt,
+       lg                                  AS is_little_giant,
+       tech                                AS qcc_tech_level_ord,
+       cred                                AS qcc_credit_level_ord,
+       lab                                 AS label_value_qual_survival,
+       'l0_v1.0'                           AS grade_ver,
+       '静态快照规则基线；非 as-of 训练口径，不得入模验证；禁止用第三方等级反向验证' AS scope_note
+  FROM g;
+
+-- [V17GRADE:END]
