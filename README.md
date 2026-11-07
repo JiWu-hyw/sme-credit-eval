@@ -306,8 +306,28 @@ SELECT * FROM v_feature_asof_funding;   -- 614 行 = 307 家 × 2 口径
 | `investor_prestige_best/_latest` | 窗口内最好/最近机构等级（1=头部 VC…4=个人天使） | 59/307 家 |
 
 **必须知道的限制**：覆盖是 MNAR（能融资的企业本身更活跃），不是随机子集；
-不进 `v_model_train_ready`（那是 17 列既有口径），需要时 LEFT JOIN。
-补算命令 `python -m src.data.build_asof_funding`（幂等）。
+不进 `v_model_train_ready`（那是 17 列既有口径），补算命令
+`python -m src.data.build_asof_funding`（幂等）。
+
+**接入口径（v1.7 固化，守卫 `tests/test_funding_join_contract.py`）**：
+`v_model_dataset_asof_flat` 与 `dataset_asof_flat.csv` 里的
+`m_funding` / `investor_prestige` **两列恒 NULL** —— 这是设计，不是漏补；
+按评审报告 §4.1 数「零覆盖特征」仍会得到 14 个。要用融资特征必须按
+`(enterprise_id, as_of_policy)` **双键** `LEFT JOIN v_feature_asof_funding`：
+
+```sql
+SELECT d.*, f.m_funding AS m_funding_asof, f.n_funding_events,
+       f.investor_prestige_best, f.investor_prestige_latest
+FROM v_model_dataset_asof_flat d
+LEFT JOIN v_feature_asof_funding f
+  ON  f.enterprise_id = d.enterprise_id
+  AND f.as_of_policy  = d.as_of_policy;
+```
+
+只按 `enterprise_id` 单键连接会把 614 行撑成 1,228 行伪重复。
+主宽表 29 列结构与 `ASOF_VER`（特征口径版本）绑定，**禁止原地 UPDATE** 回写补算值。
+交付说明 `deliverables/00_先看这个.md` 与数据字典同步写明了这条契约；
+两者按 `.gitignore` 约定不进 Git，随 Release 附件分发。
 
 ### 6.5.3 企业技术与资质梯队分档 L0（v1.7 新增）
 

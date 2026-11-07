@@ -91,11 +91,17 @@ def main():
     print("融资 LEFT JOIN 接入口径守卫")
 
     def a_doc_contract():
-        t = read(DOC0)
+        # README 是版本库内必在的契约载体；交付说明按 .gitignore 不进 Git，存在时一并校验
+        readme = read(os.path.join(ROOT, "README.md"))
         for kw in ("LEFT JOIN v_feature_asof_funding", "恒 NULL", "双键",
-                   "1,228", "MNAR", "test_funding_join_contract.py"):
-            assert kw in t, "00_先看这个.md 缺契约关键词：%s" % kw
-        assert "不要" in t and "当成「已补算」" in t, "第六节缺「别做的事」条目"
+                   "1,228", "MNAR", "test_funding_join_contract.py", "禁止原地 UPDATE"):
+            assert kw in readme, "README.md 缺契约关键词：%s" % kw
+        if os.path.exists(DOC0):
+            t = read(DOC0)
+            for kw in ("LEFT JOIN v_feature_asof_funding", "恒 NULL", "双键",
+                       "1,228", "MNAR", "test_funding_join_contract.py"):
+                assert kw in t, "00_先看这个.md 缺契约关键词：%s" % kw
+            assert "不要" in t and "当成「已补算」" in t, "第六节缺「别做的事」条目"
 
     def b_dict_md():
         a, b = read(MD_OUT), read(MD_DEL)
@@ -179,15 +185,17 @@ def main():
             % (ind_cohort, ind_due))
 
     def j_delivery_checklist():
-        for path in (EXPORT, DOC0):
-            t = read(path)
-            assert "test_funding_join_contract.py" in t, (
-                "%s 的守卫清单未登记新测试" % os.path.basename(path))
-            assert "127 项" in t, (
-                "%s 的守卫合计项数未同步为 127" % os.path.basename(path))
-        assert "14 个测试文件" in read(EXPORT), "export_delivery.py 文件数未同步为 14"
+        t = read(EXPORT)
+        assert "test_funding_join_contract.py" in t, "export_delivery.py 未登记新测试"
+        assert "127 项" in t, "export_delivery.py 合计项数未同步为 127"
+        assert "14 个测试文件" in t, "export_delivery.py 文件数未同步为 14"
+        assert "127 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
+        if os.path.exists(DOC0):
+            d = read(DOC0)
+            assert "test_funding_join_contract.py" in d and "127 项" in d, (
+                "00_先看这个.md 的守卫清单未同步")
 
-    check("交付说明写明接入口径", a_doc_contract)
+    check("README 与交付说明写明接入口径", a_doc_contract)
     check("两份数据字典同源且含契约", b_dict_md)
     check("两份字典 CSV 同源且含契约", c_dict_csv)
     check("说明源码含契约文本", d_notes_source)
