@@ -1095,6 +1095,13 @@ def build_doc(con, alg, fe):
     A("合计 **152 项**，全绿（17 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
+    A("**测试文件范围（2026-11-07 标注）**：`tests/` 下共 19 个 `test_*.py`。上列 17 个"
+      "是本次交付（B 套浙江 500 家 / schema v1.8）的活跃守卫，152 项全绿；另 2 个是"
+      "早期 A 套 27 表链路自测，不针对当前库：`tests/test_schema.py`（写死 27 表 / 5 视图 /"
+      " IPC 部类种子 8，在 v1.8 下 3 项失败）与 `tests/test_collect_pool.py`（夹具期望"
+      " 9 家企业、实际 8，2 项失败）。失败原因是旧断言与旧夹具未随 B 套更新，"
+      "这两文件不纳入交付守卫，也不用于评价 v1.8 的数据正确性。")
+    A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L))
 
