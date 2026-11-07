@@ -1076,8 +1076,9 @@ def build_doc(con, alg, fe):
     A("python tests/test_patent_master.py           # 4 项 专利唯一口径守卫")
     A("python tests/test_graph_id_docs.py           # 22 项 图 ID / 融资补算守卫")
     A("python tests/test_enterprise_grade_l0.py     # 11 项 五档分档视图守卫")
+    A("python tests/test_funding_join_contract.py   # 10 项 融资 LEFT JOIN 接入口径守卫")
     A("```")
-    A("合计 **117 项**，全绿（13 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **127 项**，全绿（14 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:

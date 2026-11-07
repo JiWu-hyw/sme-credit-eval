@@ -400,6 +400,16 @@ VIEW_NOTES["v_model_dataset_asof_flat"] = {
     "as_of_policy": "特征时点口径：cohort=认定当年 / due_minus_1=到期前一年；"
                     "同一企业两行，建模须按 enterprise_id 分组切分",
     "as_of_year": "特征观测截止年（含），该行所有特征只用到这一年及以前的数据",
+    "m_funding": "⚠️ 本列恒 NULL（不是漏补）：v1.6 起的融资补算落在旁路表 "
+                 "ads_feature_asof_funding / 视图 v_feature_asof_funding，"
+                 "主宽表 29 列结构与 ASOF_VER 绑定，禁止原地 UPDATE。"
+                 "要用融资特征必须 LEFT JOIN v_feature_asof_funding，"
+                 "且必须按 (enterprise_id, as_of_policy) 双键连接；"
+                 "单按 enterprise_id 会把 614 行撑成 1228 行伪重复",
+    "investor_prestige": "⚠️ 本列恒 NULL（不是漏补）：补算值是 "
+                         "investor_prestige_best / investor_prestige_latest 两式，"
+                         "在 v_feature_asof_funding；接入口径同本视图 m_funding 列，"
+                         "必须按 (enterprise_id, as_of_policy) 双键 LEFT JOIN",
 }
 
 # ---------------------------------------------------------------------------
@@ -407,7 +417,9 @@ VIEW_NOTES["v_model_dataset_asof_flat"] = {
 # ---------------------------------------------------------------------------
 VIEW_COMMENTS["v_model_train_ready"] = (
     "**算法端唯一训练入口**：307 行 = 307 家企业 × 1 行（固定 as_of_policy='cohort'），"
-    "已物理隔离 193 行 excluded 假负例、剔除 4 个 cohort 内常量列"
+    "已物理隔离 193 行 excluded 假负例、剔除 4 个 cohort 内常量列。"
+    "**不含 v1.6 融资补算特征**：需要融资特征时按 (enterprise_id, as_of_policy) "
+    "双键 LEFT JOIN v_feature_asof_funding，见 v_model_dataset_asof_flat 的列说明"
 )
 
 VIEW_NOTES["v_model_train_ready"] = {
@@ -568,22 +580,32 @@ VIEW_NOTES["v_feature_discrimination"] = {
 }
 
 TABLE_NOTES["ads_feature_asof_funding"] = {
+    "enterprise_id": "企业主键；与 as_of_policy 共同构成 JOIN 双键（单独用它连接会产生伪重复）",
     "m_funding": "窗口内是否有融资事件（0/1；0=有观测无事件，与 NULL 语义不同）",
     "n_funding_events": "窗口内融资事件数（评审报告 §2.3(3)「融了几轮」的落地）",
     "investor_prestige_best": "窗口内最好机构等级（1=头部 VC … 4=个人天使；NULL=无带等级事件）",
     "investor_prestige_latest": "最近一次带等级事件的机构等级（NULL=无带等级事件）",
-    "as_of_policy": "口径同 ads_feature_asof：cohort=认定前 / due_minus_1=到期前一年",
+    "as_of_policy": "口径同 ads_feature_asof：cohort=认定前 / due_minus_1=到期前一年；"
+                    "**与主宽表连接时必须同时匹配 enterprise_id 与 as_of_policy**",
     "as_of_year": "观测截止年；窗口=event_year <= as_of_year",
 }
 
 TABLE_COMMENTS["ads_feature_asof_funding"] = (
-    "融资特征 as-of 补算表（v1.6）：m_funding / n_funding_events / 机构等级两式；"
-    "另见 v_feature_asof_funding 视图"
+    "融资特征 as-of 补算表（v1.6）：m_funding / n_funding_events / 机构等级两式，"
+    "614 行 = 307 家 × 2 口径。**这是旁路表，不回写主宽表**："
+    "v_model_dataset_asof_flat 的 m_funding / investor_prestige 仍恒 NULL（设计，不是漏补），"
+    "必须用 (enterprise_id, as_of_policy) 双键 LEFT JOIN v_feature_asof_funding 才能取到值；"
+    "禁止原地 UPDATE 主宽表 29 列结构（ASOF_VER 升版规则）。"
+    "覆盖 MNAR：cohort 60/307、due_minus_1 95/307，入模须带是否披露的指示意识"
 )
 
 VIEW_COMMENTS["v_feature_asof_funding"] = (
     "融资特征 as-of 查询视图（v1.6）：m_funding / n_funding_events / 机构等级两式。"
-    "覆盖有限（cohort 口径 60/307 家），MNAR；不进 v_model_train_ready，需要时 LEFT JOIN"
+    "覆盖有限（cohort 口径 60/307 家），MNAR；不进 v_model_train_ready，"
+    "**接入口径：SELECT d.*, f.m_funding AS m_funding_asof FROM "
+    "v_model_dataset_asof_flat d LEFT JOIN v_feature_asof_funding f "
+    "ON f.enterprise_id=d.enterprise_id AND f.as_of_policy=d.as_of_policy**"
+    "（双键缺一不可，单键会把 614 行撑成 1228 行）"
 )
 VIEW_NOTES["v_feature_asof_funding"] = TABLE_NOTES["ads_feature_asof_funding"]
 

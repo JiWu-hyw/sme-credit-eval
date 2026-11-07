@@ -75,7 +75,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（117 项守卫，13 文件）
+├── tests/                    单元测试 / 集成测试（127 项守卫，14 文件）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
