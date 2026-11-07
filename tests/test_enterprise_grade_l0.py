@@ -183,13 +183,19 @@ def main() -> int:
             _assert(sch == mig, "schema.sql 与 migrations/v1_7_grade.sql 不一致")
 
         def k_version():
+            # v1.7 是五档视图的引入版本；后续 v1.8+ 只增视图、不改本视图定义，
+            # 因此守卫检查「不低于 v1.7 / 不少于 20 视图」，避免每次升版都假失败。
+            def _vt(s):
+                return tuple(int(x) for x in s.lstrip("v").split("."))
+            vers = [r[0] for r in con.execute("SELECT version FROM meta_schema_version")]
+            _assert("v1.7" in vers, "v1.7 版本登记丢失：%r" % vers)
             v = con.execute(
-                "SELECT version FROM meta_schema_version ORDER BY rowid DESC LIMIT 1"
-            ).fetchone()[0]
-            _assert(v == "v1.7", "库内最新版本为 %s" % v)
+                "SELECT version FROM meta_schema_version "
+                "ORDER BY applied_at DESC, rowid DESC LIMIT 1").fetchone()[0]
+            _assert(_vt(v) >= (1, 7), "库内最新版本 %s 低于 v1.7" % v)
             views = con.execute(
                 "SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-            _assert(views == 20, "视图数应为 20，实得 %d" % views)
+            _assert(views >= 20, "视图数不应少于 20，实得 %d" % views)
 
         for name, fn in [
             ("视图存在", a_exists),

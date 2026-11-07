@@ -81,7 +81,7 @@ def schema_version(con: sqlite3.Connection) -> str:
     """取库内实际最新版本号，而不是写死的常量。"""
     try:
         v = q1(con, "SELECT version FROM meta_schema_version "
-                    "ORDER BY applied_at DESC LIMIT 1")
+                    "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
         return v or "unknown"
     except sqlite3.Error:
         return "unknown"

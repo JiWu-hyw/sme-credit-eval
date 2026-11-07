@@ -1,0 +1,94 @@
+{
+  "provenance": {
+    "kind": "measured",
+    "displayable": true,
+    "source": "v_enterprise_grade_l0（库内视图）",
+    "method": "按 grade / hit_rule 直接 GROUP BY 计数；无插值、无补零、无外部评分",
+    "generated_at": "2026-11-07 16:12:36",
+    "schema_version": "v1.8"
+  },
+  "grade_ver": "l0_v1.0",
+  "n_enterprise": 500,
+  "grade_dist": [
+    {
+      "grade": "A 引领",
+      "grade_code": "A",
+      "n": 44,
+      "share": 0.088
+    },
+    {
+      "grade": "B 优质",
+      "grade_code": "B",
+      "n": 95,
+      "share": 0.19
+    },
+    {
+      "grade": "C 稳健",
+      "grade_code": "C",
+      "n": 275,
+      "share": 0.55
+    },
+    {
+      "grade": "D 观察",
+      "grade_code": "D",
+      "n": 83,
+      "share": 0.166
+    },
+    {
+      "grade": "E 预警",
+      "grade_code": "E",
+      "n": 3,
+      "share": 0.006
+    }
+  ],
+  "hit_rule_dist": [
+    {
+      "hit_rule": "C:兜底",
+      "n": 275
+    },
+    {
+      "hit_rule": "B:技术优秀且信用等级>=11",
+      "n": 95
+    },
+    {
+      "hit_rule": "D:风险负面",
+      "n": 64
+    },
+    {
+      "hit_rule": "A:小巨人",
+      "n": 42
+    },
+    {
+      "hit_rule": "D:资质断档信号",
+      "n": 16
+    },
+    {
+      "hit_rule": "D:风险负面+资质断档",
+      "n": 3
+    },
+    {
+      "hit_rule": "A:技术等级卓越",
+      "n": 2
+    },
+    {
+      "hit_rule": "E:严重失信",
+      "n": 2
+    },
+    {
+      "hit_rule": "E:经营异常",
+      "n": 1
+    }
+  ],
+  "scope_note": "静态快照规则基线；非 as-of 训练口径，不得入模验证；禁止用第三方等级反向验证",
+  "usage_boundary": {
+    "is_label": false,
+    "is_credit_score": false,
+    "can_report_accuracy": false,
+    "can_enter_model_training": false,
+    "forbidden_validation_fields": [
+      "qcc_tech_level_ord",
+      "qcc_credit_level_ord"
+    ],
+    "note": "静态快照规则基线；A/B 档判据用了第三方等级，禁止用同字段反向验证（循环定义）；建模只用 v_model_dataset_asof_flat 并固定单一 as_of_policy"
+  }
+}

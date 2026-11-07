@@ -62,7 +62,7 @@ CONTRACTS = [
     "data_quality.json", "panel_depth.json", "feature_tree.json",
     "graph_structure.json", "graph_slices.json", "graph_centrality.json",
     "stage_factor_weight.json", "survival.json", "financing.json",
-    "train_curve.json", "roc_pr_ks.json",
+    "train_curve.json", "roc_pr_ks.json", "enterprise_grade.json",
 ]
 ALLOWED_KIND = {"measured", "derived", "partial", "reconstructed", "unavailable"}
 
@@ -318,6 +318,7 @@ def t_endpoints_all_zero_code():
         ("explain/stage-factor", api.explain_stage_factor),
         ("forecast/survival", api.forecast_survival),
         ("forecast/financing", api.forecast_financing),
+        ("enterprise/grade", api.enterprise_grade),
     ]
     bad = []
     for name, fn in calls:
@@ -429,11 +430,28 @@ def t_staging_does_not_touch_core_db():
     assert n >= 1, "staging 库没有数据"
 
 
+def t_enterprise_grade_matches_db():
+    """v1.8 新增契约：五档家数必须能从 v_enterprise_grade_l0 现场复算。"""
+    d = _c("enterprise_grade.json")
+    con = _db()
+    try:
+        want = dict(con.execute(
+            "SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 GROUP BY grade").fetchall())
+        total = con.execute("SELECT COUNT(*) FROM v_enterprise_grade_l0").fetchone()[0]
+    finally:
+        con.close()
+    got = {x["grade"]: x["n"] for x in d["grade_dist"]}
+    assert got == want, "五档家数与库内不符：%r vs %r" % (got, want)
+    assert d["n_enterprise"] == total == 500
+    assert d["provenance"]["kind"] == "measured"
+    assert sum(x["n"] for x in d["hit_rule_dist"]) == total, "命中规则分布未闭合"
+
+
 def main():
     print("=" * 68)
     print("  契约文件守卫测试（反向比对：契约里的数 vs 库内现场算）")
     print("=" * 68)
-    check("1. 11 个契约齐全且带 provenance", t_all_exist_with_provenance)
+    check("1. 12 个契约齐全且带 provenance", t_all_exist_with_provenance)
     check("2. kind 枚举合法且 displayable 自洽", t_kind_enum_and_displayable)
     check("3. data_quality 行数与库一致", t_quality_rows_match_db)
     check("4. 矛盾检测抓到 patent_cagr 且登记册项数对账", t_quality_catches_contradiction)
@@ -447,10 +465,11 @@ def main():
     check("11. financing 不产出预测值", t_financing_no_prediction)
     check("12. survival 带泄漏诊断", t_survival_has_leakage_warning)
     check("13. stage_factor 是描述性且期数正确", t_stage_factor_descriptive)
-    check("14. 11 个契约接口全部 code=0", t_endpoints_all_zero_code)
+    check("14. 12 个契约接口全部 code=0", t_endpoints_all_zero_code)
     check("15. explain/local 按企业动态生成", t_explain_local_dynamic)
     check("16. 导入接口字段级校验生效", t_import_validation_works)
     check("17. 导入落库不污染主库结构", t_staging_does_not_touch_core_db)
+    check("18. 企业分档契约与库内现场对账", t_enterprise_grade_matches_db)
 
     print("-" * 68)
     if FAIL:

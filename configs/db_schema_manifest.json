@@ -1,7 +1,7 @@
 {
-  "schema_version": "v1.7",
+  "schema_version": "v1.8",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-07 15:21:16",
+  "generated_at": "2026-11-07 16:12:05",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",
@@ -3498,7 +3498,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 8
+      "n_rows": 9
     },
     "ods_patent_raw": {
       "columns": [
@@ -4221,6 +4221,16 @@
       "gap_vs_full_2022",
       "verdict"
     ],
+    "v_feature_coverage_effective": [
+      "as_of_policy",
+      "feature_name",
+      "n_sample",
+      "n_available",
+      "coverage",
+      "coverage_source",
+      "source_object",
+      "requires_left_join"
+    ],
     "v_feature_discrimination": [
       "cohort_scope",
       "feature_name",
@@ -4261,6 +4271,21 @@
       "n_enterprise",
       "n_patent_cum",
       "n_patent_matched_cum"
+    ],
+    "v_graph_slice_annual": [
+      "time_slice",
+      "metric",
+      "n_in_year",
+      "n_cumulative"
+    ],
+    "v_graph_slice_annual_edge": [
+      "time_slice",
+      "src_type",
+      "src_id",
+      "dst_type",
+      "dst_id",
+      "edge_type",
+      "weight"
     ],
     "v_label_mechanism": [
       "n_events",
@@ -4468,6 +4493,6 @@
     ]
   },
   "total_tables": 34,
-  "total_views": 20,
+  "total_views": 23,
   "total_columns": 552
 }

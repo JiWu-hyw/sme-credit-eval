@@ -64,6 +64,15 @@ VERSION_META = {
 NOISE_FLOOR = 0.477
 NOISE_FLOOR_NOTE = "置换对照 AUC（行级）LR 0.492 / XGB 0.477，取较低者 0.477 为保守零信号基线"
 
+# 两套数据：A=10 月信贷面板（旧），B=500 家高企弱标签（主）。
+# 两者样本、特征、标签完全不同，禁止跨集合并排序 / 拼接训练 / 共用同一 AUC 坐标。
+DATASET_IDS = ("A_credit_panel", "B_proxy_label_500")
+DATASET_ALLOWED = ("all",) + DATASET_IDS
+DATASET_JOIN_RULE = (
+    "A（1,714 家信贷面板 / 匿名 x1–x200 / 75 正例）与 B（500 家高企 / 资质存续弱标签）"
+    "不是同一套数据；禁止跨集合并排序、拼接训练或共用同一 AUC 坐标。"
+)
+
 # 未就绪接口 → 依赖的契约文件（文件缺失时才回落到 CONTRACT_PENDING）
 PENDING_CONTRACT = {
     "/api/data/quality": "data_quality.json",
@@ -78,6 +87,7 @@ PENDING_CONTRACT = {
     "/api/explain/local": "动态生成（依赖 v_model_train_ready 的 cohort 特征）",
     "/api/forecast/survival": "survival.json",
     "/api/forecast/financing": "financing.json",
+    "/api/enterprise/grade": "enterprise_grade.json",
 }
 
 # 已就绪接口（code=0 且 data 非空，且不含空壳）。这份清单必须与实现同步：
@@ -86,6 +96,8 @@ READY_ENDPOINTS = [
     "/health",
     "/api/overview/summary",
     "/api/data/pipeline",
+    "/api/data/datasets",
+    "/api/enterprise/grade",
     "/api/data/quality",
     "/api/data/panel-depth",
     "/api/features/tree",
@@ -347,23 +359,94 @@ def overview_summary():
 
 
 @app.get("/api/data/pipeline")
-def data_pipeline():
+def data_pipeline(dataset: str = "all"):
     """#2 数据管道与缺口台账：实时管道 + 当前登记册 + 10 月旧台账（留档）。
 
     原实现直接透传 ``configs/data_gaps.mirror.json``，那是 10 月的静态台账，
     P0-4 的 why 还写着「技术要素维度完全缺失」，而库里已有 3 万件专利。
     现在 live 为库内实测，registry 为当前缺口登记册，旧台账降级为留档并
     逐条做矛盾检测。
+
+    v1.8 起支持 ``dataset`` 参数做 A/B 两套数据隔离：
+      all              默认，保持原返回结构（向后兼容），meta 明确未隔离
+      A_credit_panel   只返回 legacy_ledger（10 月旧面板留档）
+      B_proxy_label_500 只返回 live + registry（本项目 500 家高企主数据）
+    任何取值都在 meta 标 ``allow_cross_join=false``；非法值返回业务码
+    INVALID_DATASET 而不是抛 HTTPException（HTTP 恒 200 的既有约定）。
     """
+    if dataset not in DATASET_ALLOWED:
+        return pending("INVALID_DATASET", "dataset 参数非法：%s" % dataset,
+                       detail="允许值：%s" % ", ".join(DATASET_ALLOWED))
     try:
         con = db_views.connect(DB_PATH)
         try:
-            data = db_views.pipeline(con)
+            payload = db_views.pipeline(con)
         finally:
             con.close()
     except FileNotFoundError:
         return pending("DB_PENDING", "数据库不存在：%s" % DB_PATH)
-    return ok(data=data, meta={"source": "sqlite + registry", "legacy_deprecated": True})
+
+    if dataset == "A_credit_panel":
+        data = {"legacy_ledger": payload.get("legacy_ledger")}
+    elif dataset == "B_proxy_label_500":
+        data = {"live": payload.get("live"), "registry": payload.get("registry")}
+    else:
+        data = payload
+    return ok(data=data, meta={
+        "source": "sqlite + registry",
+        "legacy_deprecated": True,
+        "dataset": dataset,
+        "isolated": dataset != "all",
+        "allow_cross_join": False,
+        "join_rule": DATASET_JOIN_RULE,
+        "dataset_ids": list(DATASET_IDS),
+    })
+
+
+@app.get("/api/data/datasets")
+def data_datasets():
+    """两套数据的登记台账与禁止混用规则（v1.8）。
+
+    B 套规模从库内实测取数，A 套是 10 月留档常量（不在本库里）。
+    本端点只做说明，不做任何跨集计算。
+    """
+    n_ent = n_label = None
+    try:
+        con = db_views.connect(DB_PATH)
+        try:
+            n_ent = db_views.q1(con, "SELECT COUNT(*) FROM dim_enterprise")
+            n_label = db_views.q1(con, "SELECT COUNT(*) FROM ads_label "
+                                       "WHERE label_task='qual_survival'")
+        finally:
+            con.close()
+    except (FileNotFoundError, sqlite3.Error):
+        pass
+    return ok(data={
+        "datasets": [
+            {"id": "A_credit_panel", "role": "legacy", "in_this_db": False,
+             "n_entity": 1714, "n_rows": 3465, "n_positive": 75,
+             "features": "匿名特征 x1–x200",
+             "label": "10 月信贷面板的信贷违约标签",
+             "backing": "outputs/baseline_results.json / outputs/shap_global.json"},
+            {"id": "B_proxy_label_500", "role": "primary", "in_this_db": True,
+             "n_entity": n_ent, "n_labeled": n_label,
+             "features": "专利 / 资质 / 融资 as-of 特征（29 列口径）",
+             "label": "高企资质存续失败弱标签 qual_survival（21 正例 / 286 负例）",
+             "backing": "zjtech_credit.db / v_model_dataset_asof_flat"},
+        ],
+        "join_rule": DATASET_JOIN_RULE,
+        "isolation": {
+            "endpoint": "/api/data/pipeline",
+            "param": "dataset",
+            "allowed": list(DATASET_ALLOWED),
+            "note": "dataset=all 为向后兼容默认，仍会并列返回两块；"
+                    "前端展示与任何实验都应显式选定单一数据集",
+        },
+        "cross_dataset_endpoints": {
+            "/api/model/benchmark": "A_credit_panel",
+            "/api/factors/importance": "同一响应内并列展示 primary(B) 与 legacy(A)，禁止合并排序",
+        },
+    }, meta={"allow_cross_join": False, "dataset_ids": list(DATASET_IDS)})
 
 
 @app.get("/api/model/benchmark")
@@ -383,6 +466,9 @@ def model_benchmark():
         "dataset_note": "1,714 家企业 / 3,465 行 / 匿名特征 x1–x200；"
                         "与 /api/tech-graph/* 的 500 家高企数据集无对应关系",
         "cross_dataset": True,
+        "dataset_scope": "A_credit_panel",
+        "allow_cross_join": False,
+        "join_rule": DATASET_JOIN_RULE,
     })
 
 
@@ -432,8 +518,14 @@ def factors_importance():
         return pending("DB_PENDING", "数据库不存在：%s" % DB_PATH)
     if not data["primary"]["items"]:
         return pending("CONTRACT_PENDING", "无可算特征", detail="v_model_train_ready 缺失")
-    return ok(data=data, meta={"primary_dataset": "B_proxy_label_500",
-                               "legacy_dataset": "A_credit_panel"})
+    return ok(data=data, meta={
+        "primary_dataset": "B_proxy_label_500",
+        "legacy_dataset": "A_credit_panel",
+        "dataset_scope": ["B_proxy_label_500", "A_credit_panel"],
+        "mixed_in_one_response": True,
+        "allow_cross_join": False,
+        "join_rule": DATASET_JOIN_RULE,
+    })
 
 
 def _snapshot_or_none(company_id: str):
@@ -877,6 +969,16 @@ def forecast_survival():
 def forecast_financing():
     """融资画像：506 条真实事件；明确标注不能做融资/营收预测。"""
     return contract_ok("financing.json", "融资画像（非预测）")
+
+
+@app.get("/api/enterprise/grade")
+def enterprise_grade():
+    """企业技术与资质梯队分档（v1.7 L0 规则基线）：实测 44/95/275/83/3 = 500 家。
+
+    档次是规则输出，不是标签、不是信用分；契约里带 usage_boundary，
+    禁止拿它报准确率或入模验证。
+    """
+    return contract_ok("enterprise_grade.json", "企业分档（库内实测）")
 
 
 @app.get("/api/explain/local/{userid}")

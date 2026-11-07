@@ -653,6 +653,62 @@ VIEW_NOTES["v_enterprise_grade_l0"] = {
 }
 
 
+# ---------------------------------------------------------------------------
+# v1.8 口径一致性三视图
+# ---------------------------------------------------------------------------
+VIEW_COMMENTS["v_feature_coverage_effective"] = (
+    "有效特征覆盖视图（v1.8）：修 v_asof_feature_coverage 只扫 ads_feature_asof "
+    "而把 m_funding / investor_prestige 报成 0 的口径分叉。按 "
+    "(as_of_policy, feature_name) 用旁路表实测值替换这两列，其余 12 个零覆盖特征"
+    "保持 0（真无数据源，不造值）。原视图保持不动，已发布契约与 ASOF_VER 不受影响。"
+    "取数仍须按双键 LEFT JOIN v_feature_asof_funding；本视图只用于回答「覆盖多少」，"
+    "不直接产出建模特征。"
+)
+VIEW_NOTES["v_feature_coverage_effective"] = {
+    "as_of_policy": "特征切面口径：cohort=认定前 / due_minus_1=到期前一年；一次实验固定单一口径",
+    "feature_name": "特征名；与 ads_feature_asof 的 29 个特征一一对应，一行一个 (口径, 特征)",
+    "n_sample": "该口径下的样本行数（307 家企业 × 1 行）",
+    "n_available": "实际非空的特征行数；旁路两列取 ads_feature_asof_funding 实测值，其余取主宽表",
+    "coverage": "n_available / n_sample，四位小数；0 表示该特征在该口径下完全不可用",
+    "coverage_source": "覆盖值来源：side_table=旁路表补算 / main_wide_table=as-of 主宽表",
+    "source_object": "具体取数对象（表名.列名），便于反向对账",
+    "requires_left_join": "1=该特征的真实值在旁路表，必须双键 LEFT JOIN 才能取到；0=主宽表原生列",
+}
+
+VIEW_COMMENTS["v_graph_slice_annual"] = (
+    "图谱年度切片规模台账（v1.8，评审报告 §5.2(1) / §5.3）：按 "
+    "fact_patent.app_year <= T 累计，29 个年份 × 4 个指标共 116 行。"
+    "关联键用 fact_patent.patent_id（全量 32,969 行），不用已去重的 "
+    "v_patent_master.patent_id_repr（会漏 19% 的 IPC / 发明人边）。"
+    "物理 ads_graph_node/edge.time_slice 仍全为 0 = 全期累计（既有契约口径，"
+    "build_graph_v2 幂等重建会写回 0），年度切片一律走本组视图，禁止 UPDATE 物理表。"
+    "末年 belongs_ipc 累计 51,795 与预置图 51,776 差 19 条，来自 IPC 版本号归一后并边。"
+)
+VIEW_NOTES["v_graph_slice_annual"] = {
+    "time_slice": "切片年份 T（1992–2026，共 29 个有专利申请的年份）",
+    "metric": "指标名：n_node_patent / n_edge_files_patent / n_edge_belongs_ipc / n_edge_invented_by",
+    "n_in_year": "该年份新增的节点或边数（按申请年分组）",
+    "n_cumulative": "截至该年（含）的累计节点或边数，单调不减；末年可与 ads_graph_edge 逐类型对账",
+}
+
+VIEW_COMMENTS["v_graph_slice_annual_edge"] = (
+    "图谱年度切片边级视图（v1.8）：README「自建年度切片」三条 SQL 的库内落地版，"
+    "把 files_patent / belongs_ipc / invented_by 三类边按 T 展开。"
+    "IPC 节点 ID 按 _norm_ipc 口径剥掉 WIPO 版本号后缀，与预置图节点对齐。"
+    "行数随 T 累计增长（末级约 16 万行，全视图为各 T 叠加），查询务必带 "
+    "WHERE time_slice = :T；视图是惰性的，不物化、不占库文件空间。"
+)
+VIEW_NOTES["v_graph_slice_annual_edge"] = {
+    "time_slice": "切片年份 T；查询必须带此条件，否则会把 29 个 T 的边全部展开",
+    "src_type": "源节点类型：enterprise / patent",
+    "src_id": "源节点 ID（企业 ENT+12hex 或专利公开号）",
+    "dst_type": "目标节点类型：patent / ipc / inventor",
+    "dst_id": "目标节点 ID；IPC 已剥 WIPO 版本号后缀，与 ads_graph_node 对齐",
+    "edge_type": "边类型：files_patent / belongs_ipc / invented_by（三类均可按年份切片）",
+    "weight": "边权：files_patent=1.0；belongs_ipc / invented_by 主项 1.0、次要项 0.5",
+}
+
+
 def view_note_for(view: str, column: str) -> str:
     """视图列说明：视图专属 → 特征复用 → 通用。"""
     return (VIEW_NOTES.get(view, {}).get(column)

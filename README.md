@@ -75,7 +75,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（127 项守卫，14 文件）
+├── tests/                    单元测试 / 集成测试（144 项守卫，16 文件）
 │                             test_api_live.py（33 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -170,11 +170,12 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 
 ### 6.1 接口现状
 
-启动后 `GET /docs` 可看 OpenAPI。共 **33 个接口**，实测：
+启动后 `GET /docs` 可看 OpenAPI。共 **35 个接口**（v1.8 新增 `/api/data/datasets`、
+`/api/enterprise/grade`），实测：
 
 | 状态 | 数量 | 说明 |
 |---|---|---|
-| 有数据 | 31 | `code=0` 且返回真实数据 |
+| 有数据 | 33 | `code=0` 且返回真实数据 |
 | 需带文件 | 2 | `batch/upload`、`data/import`，不带文件返回 `IMPORT_REJECTED` 是正确行为 |
 | 空壳 / 占位 / 报错 | 0 | — |
 
@@ -227,7 +228,7 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 | `files_patent` | 29,751（**陈旧，漏 2,452 条**） | 32,203，与已匹配专利逐条对账，缺口 0 |
 | `tech_similar` | Jaccard 全量连边 19,945 条，权重中位 0.138、≥0.3 仅 663 条 | TF-IDF 余弦 + top-20，8,749 条，权重中位 **0.268**、p90 **0.500**、≥0.3 **3,574** 条；覆盖企业 294 → **490** |
 | IPC 节点 ID | 混入 20 个带 WIPO 版本号后缀的串（`A61K31/426(2006.01)`），同一分类分裂成两个节点 | 已归一，31 条边并入无后缀节点；节点 11,608 → **11,588** |
-| 时间切片 | 单切片（`time_slice=0`） | 预置图仍是全期单切片；按下方 SQL 自建年度切片 |
+| 时间切片 | 单切片（`time_slice=0`） | 物理表仍是全期单切片；v1.8 起年度切片走 `v_graph_slice_annual*` 两个视图 |
 
 **边类型：CHECK 保留 8 个枚举位，本轮实际产出 5 类。** `co_inventor`（专利-专利共同发明人）
 语义已由 `invented_by` 二跳覆盖，`cites` / `qualifies` 无源数据，三者均不产出——
@@ -236,38 +237,54 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 重建命令：`python -m src.data.build_graph_v2`（幂等，可重复跑；`--dry-run` 只核对陈旧缺口）。
 企业节点无孤立点（0 家无任何边），5 家企业没有技术相似边但都有专利边。
 
-#### 自建年度切片（评审报告 §5.3 明确由算法端做，后端不返工）
+#### 年度切片（v1.8 已落库内视图，物理表仍是全期单切片）
 
-`v_graph_patent_timeline` 给出每个 T 的规模台账，切片本身按 `app_year <= T` 现场取：
+评审报告 §5.3 原定「算法端自建」，v1.8 起把切片视图落进库，可直接查：
+
+| 视图 | 内容 |
+|---|---|
+| `v_graph_patent_timeline` | 每个 T 的专利规模台账（v1.4 起有） |
+| `v_graph_slice_annual` | 29 年 × 4 指标累计台账（116 行），`n_cumulative` 单调不减 |
+| `v_graph_slice_annual_edge` | 边级年度切片，查询**必须**带 `WHERE time_slice = :T` |
 
 ```sql
--- T 年的企业→专利边（files_patent 的切片版）
-SELECT 'enterprise' AS src_type, p.enterprise_id AS src_id,
-       'patent' AS dst_type, p.patent_id AS dst_id,
-       'files_patent' AS edge_type, :T AS time_slice, 1.0 AS weight
-  FROM v_patent_master p
- WHERE p.enterprise_id IS NOT NULL
-   AND p.app_year <= :T;
+SELECT * FROM v_graph_slice_annual      WHERE time_slice = 2021;  -- 该年累计规模
+SELECT * FROM v_graph_slice_annual_edge WHERE time_slice = 2021;  -- 该年三类边明细
+```
 
--- T 年的专利→IPC 边（经专利间接切片，IPC 节点随之自然收敛）
-SELECT 'patent', b.patent_id, 'ipc', b.ipc_code, 'belongs_ipc', :T,
-       CASE WHEN b.is_main THEN 1.0 ELSE 0.5 END
-  FROM bridge_patent_ipc b
-  JOIN v_patent_master p ON p.patent_id = b.patent_id
+**物理表口径不变**：`ads_graph_node.time_slice` / `ads_graph_edge.time_slice` 仍全为 0
+（全期累计，与既有契约绑定，且 `build_graph_v2` 幂等重建会写回 0）；
+年度切片一律走视图，禁止 `UPDATE` 物理表。
+
+自建时按 `fact_patent.app_year <= T` 取数，**不要从 `v_patent_master` 取**：
+那是按申请号去重的主视图（30,103 件），其 `patent_id_repr` 与桥表 `patent_id`
+只命中 42,079 / 51,795 条 IPC 边、66,660 / 77,899 条发明人边，会漏约 19%。
+旧版这里的三条 SQL 用了并不存在的 `v_patent_master.patent_id` 列，v1.8 已修正：
+
+```sql
+-- T 年的企业→专利边
+SELECT 'enterprise', p.enterprise_id, 'patent', p.patent_id, 'files_patent', :T, 1.0
+  FROM fact_patent p
+ WHERE p.enterprise_id IS NOT NULL AND p.app_year <= :T;
+
+-- T 年的专利→IPC 边（IPC 节点 ID 需剥 WIPO 版本号后缀）
+SELECT 'patent', p.patent_id, 'ipc',
+       CASE WHEN instr(b.ipc_code,'(')>0
+            THEN substr(b.ipc_code,1,instr(b.ipc_code,'(')-1) ELSE b.ipc_code END,
+       'belongs_ipc', :T, CASE WHEN b.is_main THEN 1.0 ELSE 0.5 END
+  FROM fact_patent p JOIN bridge_patent_ipc b ON b.patent_id = p.patent_id
  WHERE p.app_year <= :T;
 
 -- T 年的专利→发明人边
-SELECT 'patent', i.patent_id, 'inventor', i.inventor_id, 'invented_by', :T,
+SELECT 'patent', p.patent_id, 'inventor', i.inventor_id, 'invented_by', :T,
        CASE WHEN i.is_first THEN 1.0 ELSE 0.5 END
-  FROM bridge_patent_inventor i
-  JOIN v_patent_master p ON p.patent_id = i.patent_id
+  FROM fact_patent p JOIN bridge_patent_inventor i ON i.patent_id = p.patent_id
  WHERE p.app_year <= :T;
 ```
 
-两条口径提醒：① IPC 节点 ID 已剥版本号后缀，自建时若从 `bridge_patent_ipc.ipc_code`
-直接取，需自行做同样的 `regexp_replace` 式清洗，否则会和预置图节点对不上；
-② 专利节点 ID 用 `fact_patent.patent_id`（中国专利为 CN 公开号，另有 4 件 JP/TW 同族），
-**不是** `app_no`——两者在库内不等值。
+末年累计对账：`n_edge_files_patent` 32,203、`n_edge_invented_by` 77,899 与
+`ads_graph_edge` 逐类型一致；`n_edge_belongs_ipc` 51,795 与预置图 51,776
+差 19 条，来自 IPC 版本号归一后的并边，不是漏数。
 
 立项书写的六类实体里仍差「领域」「产品」：领域可由 IPC 部/大类等价替代（已在图内），
 产品在现有源数据中**完全没有**，登记为缺口，不做任何推断回填。
@@ -350,9 +367,42 @@ SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 GROUP BY grade;
 另外 3 个空 `label_task`（标签任务）已在 `configs/field_gap_registry.json` 的 `label_tasks` 段
 登记为「源未接入」，as-of 切面口径约定固化在同文件 `policies.as_of`。
 
+### 6.5.4 口径一致性与 A/B 数据隔离（v1.8 新增）
+
+**有效特征覆盖**：`v_asof_feature_coverage` 只扫 `ads_feature_asof`，把
+`m_funding` / `investor_prestige` 报成 0 覆盖；真实值在旁路表
+`ads_feature_asof_funding`。新增 `v_feature_coverage_effective` 按
+`(as_of_policy, feature_name)` 把这两列替换为旁路表实测，并标
+`coverage_source` / `requires_left_join`。cohort 口径零覆盖特征 **14 → 12**，
+其余 12 个真无数据源，一个都不补。原视图保持不动，`ASOF_VER` 与主宽表
+43 列结构不变，取数仍按 §6.5.2 的双键 `LEFT JOIN`。
+
+```sql
+SELECT * FROM v_feature_coverage_effective
+ WHERE as_of_policy='cohort'
+   AND feature_name IN ('m_funding','investor_prestige');
+```
+
+**A/B 两套数据隔离**：`/api/data/pipeline?dataset=A_credit_panel|B_proxy_label_500`
+只返回对应数据块，默认 `all` 保持向后兼容；`/api/data/datasets` 给两套数据的登记台账。
+任何取值都带 `meta.allow_cross_join=false`。A 是 10 月信贷面板
+（1,714 家 / 匿名 x1–x200 / 75 正例），B 是本项目 500 家高企（资质存续弱标签），
+禁止跨集合并排序或共用同一 AUC 坐标。`/api/model/benchmark` 标
+`dataset_scope=A_credit_panel`，`/api/factors/importance` 标
+`mixed_in_one_response=true`（同一响应内并列展示，仍不得合并排序）。
+
+**分档端点**：`/api/enterprise/grade` 返回 `v_enterprise_grade_l0` 实测五档，
+契约 `outputs/contracts/enterprise_grade.json` 带 `usage_boundary`，
+明确不是标签、不是信用分、不得报准确率、不得入模验证。
+
+升版命令 `python -m src.data.apply_v1_8`（幂等，执行前自动留
+`data/db/zjtech_credit_pre_v18.db` 回滚点，`--check` 只读校验）；
+守卫 `python tests/test_v1_8_views.py`（8 项）与
+`python tests/test_dataset_isolation.py`（8 项）。
+
 ### 6.6 数据获取
 
-数据库 153 MB（当前工作库 v1.7：34 表 / 20 视图 / 818 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（当前工作库 v1.8：34 表 / 23 视图 / 837 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -364,8 +414,9 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 **版本边界**：v1.3.0 Release 附件是 **v1.6 快照**（34 表 / 19 视图 / 804 列）；
-本地 v1.7 只新增 `v_enterprise_grade_l0` 视图、标签任务登记与守卫测试，**未改任何事实表数据**。
-要让算法端拿到 v1.7 库，需另发一个 Release（重新打包快照）。
+本地工作库已到 **v1.8**（34 表 / 23 视图 / 837 列），v1.7 新增五档视图与标签任务登记，
+v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离，**两版都未改任何事实表数据**。
+算法端要拿到 v1.8 库需另发一个 Release（重新打包快照），**不覆盖 v1.3.0 附件**。
 
 ## 七、归档规则
 

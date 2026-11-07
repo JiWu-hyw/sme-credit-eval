@@ -741,7 +741,7 @@ def build_frontend(con):
     A("**现在有两处契约目录，别混：**\n")
     A("| 目录 | 谁在读 | 内容 |")
     A("|---|---|---|")
-    A("| `outputs/contracts/` | **API 正在读** | 本轮新产出的 11 个，全部带 `provenance` |")
+    A("| `outputs/contracts/` | **API 正在读** | 现共 12 个（v1.8 新增 `enterprise_grade.json`），全部带 `provenance` |")
     A("| `frontend_v2/source/outputs/contracts/` | 没人读 | 旧的 %d 个，其中 7 个是假数据 |"
       % len(truth))
     A("")
@@ -788,7 +788,7 @@ def build_frontend(con):
     A("| 12 个接口返回 `CONTRACT_PENDING` | 由 `build_contracts.py` 从真实数据源产出，"
       "全部带 `provenance`；`explain/local` 改按企业动态生成 |")
     A("")
-    A("## 本轮补齐的 12 个契约（`outputs/contracts/`）\n")
+    A("## 契约清单（`outputs/contracts/` 12 个文件 + 1 个动态生成接口）\n")
     A("由 `python -m src.data.build_contracts` 生成。每个文件顶层强制带 `provenance`，")
     A("缺了脚本直接报错拒绝写出 —— 这是防「为了让前端有图可画而编数据」的硬约束。\n")
     A("| 契约 | provenance | 数据来源 | 能展示什么 / 不能展示什么 |")
@@ -805,7 +805,8 @@ def build_frontend(con):
     A("| `stage_factor_weight.json` | partial | `ads_survival_period` | 按期描述统计，**不是**因子权重模型 |")
     A("| `survival.json` | measured | 100 折 AUC + 前瞻名单 | 含 `leakage_diagnosis` 解释 0.87 的泄漏 |")
     A("| `financing.json` | partial | 506 条融资事件 | 融资画像，**不能**做融资/营收预测 |")
-    A("| `local_explain` | 动态生成 | `v_model_train_ready` | 逐特征百分位贡献，非 SHAP |")
+    A("| `enterprise_grade.json` | measured | `v_enterprise_grade_l0` | 五档家数与命中规则；**不是**标签/信用分，不得报准确率或入模验证 |")
+    A("| `local_explain`（动态生成，非文件） | 动态生成 | `v_model_train_ready` | 逐特征百分位贡献，非 SHAP |")
     A("")
     A("### provenance 五级制（前端据此决定能不能展示数值）\n")
     A("| 等级 | 含义 | 能否展示 |")
@@ -1047,7 +1048,7 @@ def build_doc(con, alg, fe):
     A("|---|---|---|")
     A("| 扩样本池（500 → 5,000） | 只有这一条能真正解开「21 个正例」 | 高，取决于名单可得性 |")
     A("| 训练一个可验证模型 | `score.value` 恒为 null，只能给 `proxy_score` | 依赖扩样本 |")
-    A("| 旧契约目录 %d 个假数据尚未删除 | 已用 `outputs/contracts/` 的 11 个真契约替代，"
+    A("| 旧契约目录 %d 个假数据尚未删除 | 已用 `outputs/contracts/` 的 12 个真契约替代，"
       "API 不再读旧目录；但目录还在，误拷会覆盖 | 低 |" % fe["n_bad"])
     A("| `grant_date` / 引文库 / CAGR / 财务序列 | 结构性缺口，源数据没有 | 无解（已登记） |")
     A("| 行业切片 | `qcc_industry_mid` 覆盖率不足 | 依赖补采 |")
@@ -1057,7 +1058,7 @@ def build_doc(con, alg, fe):
     A("")
     A("## 七、复现\n")
     A("```bash")
-    A("python -m src.data.build_contracts          # 11 个契约 → outputs/contracts/")
+    A("python -m src.data.build_contracts          # 12 个契约 → outputs/contracts/")
     A("python -m src.data.export_data_dictionary   # 字段字典 %d 列" % st["n_cols"])
     A("python -m src.data.export_label_spec         # 标签说明书")
     A("python -m src.data.export_field_gap_registry # 缺口登记册")
@@ -1065,7 +1066,7 @@ def build_doc(con, alg, fe):
     A("")
     A("python tests/test_train_ready.py             # 8 项 训练集守卫")
     A("python tests/test_api_live.py                # 9 项 接口守卫")
-    A("python tests/test_contracts.py               # 18 项 契约反比对守卫")
+    A("python tests/test_contracts.py               # 19 项 契约反比对守卫")
     A("python tests/test_data_dictionary.py         # 5 项 字典守卫")
     A("python tests/test_label_spec.py              # 6 项 说明书守卫")
     A("python tests/test_patent_dedup.py            # 5 项 去重守卫")
@@ -1077,8 +1078,10 @@ def build_doc(con, alg, fe):
     A("python tests/test_graph_id_docs.py           # 22 项 图 ID / 融资补算守卫")
     A("python tests/test_enterprise_grade_l0.py     # 11 项 五档分档视图守卫")
     A("python tests/test_funding_join_contract.py   # 10 项 融资 LEFT JOIN 接入口径守卫")
+    A("python tests/test_v1_8_views.py              # 8 项 有效覆盖 / 年度切片 / 物理口径守卫")
+    A("python tests/test_dataset_isolation.py       # 8 项 A/B 数据隔离 / 分档端点守卫")
     A("```")
-    A("合计 **127 项**，全绿（14 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **144 项**，全绿（16 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:

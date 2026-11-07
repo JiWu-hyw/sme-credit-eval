@@ -1,4 +1,4 @@
-"""把「未就绪」的 12 个接口契约，从真实数据源产出到 ``outputs/contracts/``。
+"""把「未就绪」的 13 个接口契约，从真实数据源产出到 ``outputs/contracts/``。
 
 设计纪律（与 field_gap_registry 一致）
 --------------------------------------
@@ -1249,8 +1249,47 @@ def build_financing(con: sqlite3.Connection) -> dict:
 # ---------------------------------------------------------------------------
 # 主流程
 # ---------------------------------------------------------------------------
+def build_enterprise_grade(con: sqlite3.Connection) -> dict:
+    """企业五档分档契约（v1.8）：全部来自 v_enterprise_grade_l0 的 GROUP BY 实测。
+
+    档次是「技术与资质梯队」的输出，不是标签，也不是信用好坏结论。
+    契约里必须带使用边界，防止前端把它画成「预测准确率」。
+    """
+    total = q1(con, "SELECT COUNT(*) FROM v_enterprise_grade_l0") or 0
+    dist = qa(con, "SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 "
+                   "GROUP BY grade ORDER BY grade")
+    rules = qa(con, "SELECT hit_rule, COUNT(*) FROM v_enterprise_grade_l0 "
+                    "GROUP BY hit_rule ORDER BY COUNT(*) DESC, hit_rule")
+    ver = q1(con, "SELECT MAX(grade_ver) FROM v_enterprise_grade_l0")
+    scope = q1(con, "SELECT MAX(scope_note) FROM v_enterprise_grade_l0")
+    return {
+        "provenance": prov(
+            "measured", "v_enterprise_grade_l0（库内视图）",
+            "按 grade / hit_rule 直接 GROUP BY 计数；无插值、无补零、无外部评分"),
+        "grade_ver": ver,
+        "n_enterprise": total,
+        "grade_dist": [
+            {"grade": g, "grade_code": g[:1], "n": n,
+             "share": round(n / total, 4) if total else 0.0}
+            for g, n in dist
+        ],
+        "hit_rule_dist": [{"hit_rule": r, "n": n} for r, n in rules],
+        "scope_note": scope,
+        "usage_boundary": {
+            "is_label": False,
+            "is_credit_score": False,
+            "can_report_accuracy": False,
+            "can_enter_model_training": False,
+            "forbidden_validation_fields": ["qcc_tech_level_ord", "qcc_credit_level_ord"],
+            "note": "静态快照规则基线；A/B 档判据用了第三方等级，禁止用同字段反向验证（循环定义）；"
+                    "建模只用 v_model_dataset_asof_flat 并固定单一 as_of_policy",
+        },
+    }
+
+
 BUILDERS = {
     "data_quality.json": ("data_quality", True),
+    "enterprise_grade.json": ("enterprise_grade", True),
     "panel_depth.json": ("panel_depth", True),
     "feature_tree.json": ("feature_tree", True),
     "graph_structure.json": ("graph_structure", True),
@@ -1264,6 +1303,7 @@ BUILDERS = {
 }
 
 FUNCS = {
+    "enterprise_grade": build_enterprise_grade,
     "data_quality": build_data_quality,
     "panel_depth": build_panel_depth,
     "feature_tree": build_feature_tree,
@@ -1279,7 +1319,7 @@ FUNCS = {
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    ap = argparse.ArgumentParser(description="生成 12 个接口契约文件")
+    ap = argparse.ArgumentParser(description="生成 12 个契约文件（对应 13 个接口）")
     ap.add_argument("--check", action="store_true", help="只报告，不写盘")
     ap.add_argument("--only", nargs="*", help="只生成指定契约，如 data_quality graph_structure")
     args = ap.parse_args(argv)

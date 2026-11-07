@@ -1218,8 +1218,8 @@
     "displayable": true,
     "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
     "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
-    "generated_at": "2026-11-07 15:13:05",
-    "schema_version": "v1.7",
+    "generated_at": "2026-11-07 16:12:36",
+    "schema_version": "v1.8",
     "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
   }
 }

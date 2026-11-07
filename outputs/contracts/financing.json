@@ -162,8 +162,8 @@
     "displayable": true,
     "source": "fact_funding_event（506 条 / 182 家）+ dws_growth_feature（500 行）",
     "method": "融资活动为事实统计；financial_coverage 逐列算真实覆盖率；不产出任何预测值",
-    "generated_at": "2026-11-07 15:13:08",
-    "schema_version": "v1.7",
+    "generated_at": "2026-11-07 16:12:38",
+    "schema_version": "v1.8",
     "missing_dimensions": [
       "连续财务序列",
       "未融资对照口径",

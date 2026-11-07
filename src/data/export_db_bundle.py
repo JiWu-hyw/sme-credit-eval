@@ -58,6 +58,19 @@ VIEW_NOTES = {
         "静态快照对照基线，非 as-of 训练口径，不得入模验证；"
         "禁止用第三方等级反向验证（循环定义）"
     ),
+    "v_feature_coverage_effective": (
+        "**v1.8 新增** 有效特征覆盖：把 m_funding / investor_prestige 的覆盖从旁路表"
+        "ads_feature_asof_funding 按双键并入，零覆盖 14 → 12；"
+        "取数仍须 LEFT JOIN v_feature_asof_funding，原 v_asof_feature_coverage 保持不动"
+    ),
+    "v_graph_slice_annual": (
+        "**v1.8 新增** 图谱年度切片台账：29 年 × 4 指标累计规模，"
+        "按 fact_patent.app_year <= T；物理 time_slice 仍全为 0"
+    ),
+    "v_graph_slice_annual_edge": (
+        "**v1.8 新增** 边级年度切片（files_patent / belongs_ipc / invented_by）；"
+        "查询必须带 WHERE time_slice = :T，IPC 节点 ID 已剥 WIPO 版本号后缀"
+    ),
 }
 
 

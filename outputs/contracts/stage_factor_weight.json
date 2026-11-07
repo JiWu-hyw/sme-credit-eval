@@ -313,8 +313,8 @@
     "displayable": true,
     "source": "ads_survival_period（1,479 行 / 493 家 / period_t∈{1,2,3}）",
     "method": "按 period_t 分组算特征均值与事件率；跨期变化为末期均值对首期均值的相对变化",
-    "generated_at": "2026-11-07 15:13:08",
-    "schema_version": "v1.7",
+    "generated_at": "2026-11-07 16:12:38",
+    "schema_version": "v1.8",
     "missing_dimensions": [
       "分阶段因子权重模型",
       "非末期事件样本"
