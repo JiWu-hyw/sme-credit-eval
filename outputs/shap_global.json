@@ -1,4 +1,13 @@
 {
+  "_direction_warning": {
+    "status": "LEGACY / 历史留档，勿与新口径混用",
+    "added_at": "2026-11-09 (schema v1.9)",
+    "this_file_semantics": "v1.8 及以前的风险预警方向：模型输出 P(断档/违约)，direction +1 = 推高违约概率（风险因子），-1 = 保护因子",
+    "current_semantics": "正例=好企业·资质存续(286, label_value=0)；负例=坏企业·资质断档(21, label_value=1)；正确训练入口 v_model_train_ready_credit",
+    "replacement": "outputs/shap_credit_direction.json / .csv / .png（direction +1 = 增信因子，模型输出 P(好企业)）",
+    "sibling_csv": "outputs/shap_top_features.csv 与本文件同属旧口径；CSV 结构与数值保持不动，方向警告见 outputs/shap_legacy_notice.md",
+    "report": "outputs/credit_direction_asof_report.md；docs/论文/实验结果报告-基线SHAP与GAT.md §11"
+  },
   "explained_models": [
     "xgboost",
     "logistic_regression"

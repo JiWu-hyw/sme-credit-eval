@@ -394,10 +394,19 @@ te = df[df.split == 'test']
     with open(os.path.join(D_ALG, "dataset_card.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L))
 
-    # ---- 1.4 复制标签说明书与泄漏实测 ----
+    # ---- 1.4 复制标签说明书、泄漏实测与 P1-续 方向纠正产物 ----
+    # P1-续（v1.9）产物必须随交付包一起走：旧 baseline_asof_leakage.json 是
+    # 风险预警方向（预测断档），不能让算法端只拿到旧口径的结果。
     for src, dst in [
         (os.path.join(OUTPUTS, "label_spec.md"), "label_spec.md"),
         (os.path.join(OUTPUTS, "baseline_asof_leakage.json"), "baseline_asof_leakage.json"),
+        (os.path.join(OUTPUTS, "multilabel_eval_report.md"), "multilabel_eval_report.md"),
+        (os.path.join(OUTPUTS, "credit_direction_asof_report.md"), "credit_direction_asof_report.md"),
+        (os.path.join(OUTPUTS, "credit_direction_asof.json"), "credit_direction_asof.json"),
+        (os.path.join(OUTPUTS, "shap_credit_direction.json"), "shap_credit_direction.json"),
+        (os.path.join(OUTPUTS, "shap_credit_direction.csv"), "shap_credit_direction.csv"),
+        (os.path.join(OUTPUTS, "shap_credit_direction.png"), "shap_credit_direction.png"),
+        (os.path.join(OUTPUTS, "shap_legacy_notice.md"), "shap_legacy_notice.md"),
     ]:
         if os.path.exists(src):
             shutil.copy2(src, os.path.join(D_ALG, dst))
@@ -414,7 +423,12 @@ te = df[df.split == 'test']
     A("| `feature_dictionary.csv` | 29 个注册特征的覆盖率 / 单变量 AUC / 建议 |")
     A("| `dataset_card.md` | 数据集卡片：规模、切分、队列、标签、边界 |")
     A("| `label_spec.md` | 代理标签说明书（13 节，必读） |")
-    A("| `baseline_asof_leakage.json` | 泄漏实测：leaky 0.796 → noleak 0.524 |")
+    A("| `baseline_asof_leakage.json` | 泄漏实测：leaky 0.796 → noleak 0.524（**v1.8 旧风险方向，历史留档**） |")
+    A("| `multilabel_eval_report.md` | v1.9 多标签测评报告（6 锚点 / 五档 / 循环定义边界） |")
+    A("| `credit_direction_asof_report.md` | **P1-续 主报告**：方向纠正后 as-of 训练 / AUC 恒等式 / 分切面与分队列复核 / 重跑 SHAP |")
+    A("| `credit_direction_asof.json` | 上表结构化结果（含逐折明细） |")
+    A("| `shap_credit_direction.json` / `.csv` / `.png` | **当前口径**全局解释：P(好企业)，`+1`=增信因子 |")
+    A("| `shap_legacy_notice.md` | 旧 `shap_global.*` / `shap_top_features.csv` 方向警告，禁止与新产物混用 |")
     A("")
     A("## 30 秒上手\n")
     A("""```python
@@ -1099,11 +1113,12 @@ def build_doc(con, alg, fe):
     A("python tests/test_schema.py                 # 38 项 约束 / 字典 / 链路守卫（已适配 B 套）")
     A("python tests/test_collect_pool.py           # 16 项 公示名单采集器 / 幂等守卫（临时库）")
     A("python tests/test_multilabel_eval.py        # 16 项 v1.9 标签方向 / 多标签测评守卫")
+    A("python tests/test_credit_direction.py       # 20 项 P1-续 方向纠正训练 / SHAP / AUC 恒等式守卫")
     A("```")
-    A("合计 **222 项**，全绿（20 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **242 项**，全绿（21 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 20 个 `test_*.py` **全部纳入交付守卫**。"
+    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 21 个 `test_*.py` **全部纳入交付守卫**。"
       "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
       "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
       "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"
@@ -1361,6 +1376,13 @@ def main():
             fe = build_frontend(con)
         build_doc(con, alg, fe)
         print("✅ 说明：%s" % D_DOC)
+
+    # 方向声明必须「最后注入、打包之前执行」：交付文档重生成后头部声明会丢失。
+    # 历史上曾因只给 outputs/data_dictionary.md 补声明、漏了交付目录那份，
+    # 导致两份字典不同源、test_funding_join_contract 失败。此处统一收口。
+    # inject_direction_notice 幂等，且对不存在的目标自动跳过，不影响 --only 分块生成。
+    from src.data.inject_direction_notice import main as inject_notice
+    inject_notice()
 
     if args.zip:
         for zp, n, size in do_zip():

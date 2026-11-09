@@ -89,7 +89,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（222 项守卫，20 文件）
+├── tests/                    单元测试 / 集成测试（242 项守卫，21 文件）
 │                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -113,8 +113,10 @@
     └── 2026-10-28/           第二批：前端旧目录、旧版答复文档
 ```
 
-**测试文件范围（2026-11-09 更新）**：`tests/` 下 20 个 `test_*.py` **全部纳入交付守卫，
-共 222 项全绿**。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
+**测试文件范围（2026-11-09 更新）**：`tests/` 下 21 个 `test_*.py` **全部纳入交付守卫，
+共 242 项全绿**。新增 `test_credit_direction.py`（20 项）守卫 P1-续 的 AUC 方向恒等式、
+双方向打分对称性、分切面 / 分队列复核与重跑 SHAP；纯净检出缺 `outputs/` 产物时按项目
+约定显式 SKIP，不误报失败。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
 A 套 27 表链路自测，已于 11-09 适配 B 套 v1.8：IPC 断言改为校验 A–H 八个部类齐全
 （B 套 `dim_ipc` 是全量 11,616 行字典）、桥表改为按本次插入的 `patent_id` 定点校验、
 覆盖度视图改为断言「基线 500 + 本次插入 1 家」；采集器补齐 `requirements.txt` 已声明的

@@ -145,7 +145,7 @@ TABLE_NOTES = {
         "m_cert": "里程碑：资质晋级（0/1，名单差分直接产出）",
         "m_cite": "里程碑：高影响力引用（0/1）",
         "rev_cagr_flag": "营收 CAGR 口径标注（实测 / 代理 / 缺失）",
-        "ever_fail_review": "是否曾复核未通过（0/1）",
+        "ever_fail_review": "是否曾复核未通过（0/1）；理想设计枚举字段，本地无撤销/复核未通过公告，当前未接入且全空，不得当作实际标签使用",
         "funding_occurred": "观察期内是否发生融资（0/1）",
     },
     "fact_funding_event": {

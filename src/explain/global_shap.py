@@ -9,6 +9,19 @@ outputs/shap_global.json              全局贡献排序（JSON，供前端消�
 outputs/shap_global_summary.png       SHAP 全局重要性条形图（Top-20）
 outputs/shap_top_features.csv         特征贡献表（CSV，便于贴进报告）
 
+⚠️ 方向口径警告（2026-11-09 / v1.9）
+------------------------------------
+本脚本解释的是 **v1.8 及以前的风险预警方向模型**（1=断档、`+1`=推高违约概率），
+**不是**当前企业好坏 / 信用评价口径。方向已纠正为
+「**1 = 正例·好企业·资质存续（286）**，0 = 负例·坏企业·资质断档（21）」，
+正确入口是 `v_model_train_ready_credit` 与 `src/model/baseline_credit_direction.py`
+（产出 `outputs/shap_credit_direction.json`，`+1` = 增信因子）。
+
+本脚本产出的 `shap_global.json` / `shap_top_features.csv` / `shap_global_summary.png`
+为**历史留档，语义与新产物相反，不可混用、不可用于论文或前端新图例**；
+若前端切换解释数据源，须同步改图例方向措辞。详见
+`docs/论文/实验结果报告-基线SHAP与GAT.md` §11 与 `outputs/shap_legacy_notice.md`。
+
 口径说明
 --------
 - 全局重要性 = 测试集上 |SHAP 值| 的均值（mean|SHAP|）。

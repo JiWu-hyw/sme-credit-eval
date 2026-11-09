@@ -1,5 +1,19 @@
 # 实验结果报告 · 基线 / SHAP 全局解释 / GAT 异质图
 
+<!-- DIRECTION_NOTICE:v1 -->
+> **方向声明（2026-11-09 纠正，v1.9）**：本项目研究企业好坏 / 信用评价，
+> **正例 = 好企业 = 资质存续（286 家，`label_value=0`）**；
+> **负例 = 坏企业 = 资质断档（21 家，`label_value=1`）**。
+> 本报告为 **v1.8 及以前的历史留档**：文中「正例 / 违约概率 / 断档样本」沿用当时的
+> **风险预警方向**（1=断档），数值与结论保留不改，不代表企业好坏口径。
+> 正确方向的训练入口是 `v_model_train_ready_credit`；方向纠正后的 as-of 训练、
+> AUC 恒等式验证、分切面 / 分队列复核与重跑 SHAP 见
+> `outputs/credit_direction_asof_report.md`。
+> 旧 `outputs/shap_global.json` / `shap_top_features.csv` 的「违约概率」语义与新
+> `outputs/shap_credit_direction.json` 的「P(好企业)」**相反，不可混用**；
+> 前端若切换解释数据源，须同步改图例方向措辞（属原型联调事项）。
+<!-- /DIRECTION_NOTICE:v1 -->
+
 > **项目**：融合技术要素与成长轨迹的中小科技企业信用智能评估方法构建
 > **阶段**：模块三（可解释 STGNN）前置实验 — T11 / T30–T34 / T40 的部分落地
 > **日期**：2026-10-13　｜　**执行**：施汶邑（算法）　｜　**数据**：浙江信贷真实面板
@@ -232,4 +246,37 @@
 
 ---
 
-*本报告为阶段性实验记录，数据与口径以 `data/processed/preprocess_meta.json` 与 `data/processed/data_quality_report.md` 为准。*
+## 11. 新旧口径产物对照与旧数字读法（2026-11-09 补）
+
+本报告正文（§0–§10）是 **v1.8 及以前的风险预警方向**留档，数值保留不改。
+v1.9 方向纠正后，**正例 = 好企业·资质存续（286）**、**负例 = 坏企业·资质断档（21）**，
+训练入口改为 `v_model_train_ready_credit`。两套产物的语义相反，**不得混用**。
+
+| 用途 | 旧产物（v1.8，本报告 / 历史留档） | 新产物（v1.9，当前口径） |
+|---|---|---|
+| 训练与 AUC | `outputs/leakage_auc_report.md`、`baseline_asof_leakage.json`（预测**断档**） | `outputs/credit_direction_asof_report.md`、`credit_direction_asof.json`（预测**好企业**） |
+| 训练脚本 | `src/model/baseline.py` / `baseline_asof.py` | `src/model/baseline_credit_direction.py` |
+| 全局 SHAP | `outputs/shap_global.json`、`shap_top_features.csv`、`shap_global_summary.png`（`+1` = 推高**违约概率**） | `outputs/shap_credit_direction.json` / `.csv` / `.png`（`+1` = **增信因子**，P(好企业)） |
+| 解释脚本 | `src/explain/global_shap.py`（已加方向警告） | `src/model/baseline_credit_direction.py` 内 TreeSHAP + 线性精确解 |
+| SHAP 方向语义 | 风险因子 / 保护因子 | 增信因子 / 风险因子 |
+
+**旧数字怎么读**：
+
+- 旧 `noleak_asof14` 的 XGB **0.5237** 是旧 `balanced` 超参下「预测断档」的 AUC；
+  在**同一打分、只翻标签**的严格恒等式下，换成「预测好企业」应读作
+  **1 − 0.5237 = 0.4763**。
+- **重新训练**时打分也会翻一次（`p_credit = 1 − p_risk`），两次翻转抵消，
+  因此双方向 AUC **相等而非互补**；新脚本用 `symmetric` 配置实测
+  LR 0.6161 / XGB 0.6405 两方向完全相等，恒等式误差 2.22e-16。
+- 旧 `balanced` 超参直接翻标签会让 XGB `best_iteration=0`、输出常数、AUC 恒 0.5，
+  属**超参陷阱**，不是能力下降，详见新报告 §2。
+- 旧 `outputs/shap_top_features.csv` 结构与数值保持不动，方向警告见同目录
+  `outputs/shap_legacy_notice.md`；`outputs/shap_global.json` 已内嵌 `_direction_warning` 字段。
+
+**红线不变**：按评审报告 §7.1(3)，负例仅 21 家、置换噪声地板约 0.5，**任何 AUC /
+准确率 / 召回率的绝对值都不得写成性能结论**；分队列 2021 的 LR AUC 甚至低于其自身
+置换地板，不得写进论文。当前可用的只有**方向恒等式**与**相对差值**。
+
+---
+
+*本报告为阶段性实验记录，数据与口径以 `data/processed/preprocess_meta.json` 与 `data/processed/data_quality_report.md` 为准；方向纠正后的结果以 `outputs/credit_direction_asof_report.md` 为准。*

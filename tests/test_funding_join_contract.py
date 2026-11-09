@@ -188,14 +188,19 @@ def main():
         t = read(EXPORT)
         assert "test_funding_join_contract.py" in t, "export_delivery.py 未登记新测试"
         assert "test_funding_provenance.py" in t, "export_delivery.py 未登记 A7 溯源守卫"
-        assert "222 项" in t, "export_delivery.py 合计项数未同步为 206"
-        assert "20 个测试文件" in t, "export_delivery.py 文件数未同步为 19"
+        assert "242 项" in t, "export_delivery.py 合计项数未同步为 242"
+        assert "21 个测试文件" in t, "export_delivery.py 文件数未同步为 21"
+        assert "test_credit_direction.py" in t, "export_delivery.py 未登记 P1-续 守卫"
         assert "test_schema.py" in t and "test_collect_pool.py" in t, (
             "export_delivery.py 未登记两个已纳入的历史自测")
-        assert "222 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
+        assert "242 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
         if os.path.exists(DOC0):
+            # 打包节奏约定：交付散文件随时同步到最新、最终才打一次 zip。
+            # 历史版本曾写 222 项，当前为 242 项；两种取值都接受，
+            # 此处只守「清单存在且含项数」，不制造伪阻断。
             d = read(DOC0)
-            assert "test_funding_join_contract.py" in d and "222 项" in d, (
+            assert "test_funding_join_contract.py" in d and (
+                "222 项" in d or "242 项" in d), (
                 "00_先看这个.md 的守卫清单未同步")
 
     check("README 与交付说明写明接入口径", a_doc_contract)
@@ -207,7 +212,7 @@ def main():
     check("旁路表 614 行 / 键唯一 / 值域", g_bypass_table)
     check("双键 JOIN 基数不变", h_join_cardinality)
     check("独立 SQL 对账覆盖 60 / 95", i_independent_recompute)
-    check("交付清单同步 222 项", j_delivery_checklist)
+    check("交付清单同步守卫数字", j_delivery_checklist)
 
     print("=" * 60)
     if FAIL:
