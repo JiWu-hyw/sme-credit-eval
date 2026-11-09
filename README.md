@@ -1,5 +1,19 @@
 # 融合技术要素与成长轨迹的中小科技企业信用智能评估方法构建
 
+<!-- DIRECTION_NOTICE:v1 -->
+> **方向声明（2026-11-09 纠正，v1.9）**：本项目研究企业好坏 / 信用评价，
+> **正例 = 好企业 = 资质存续（286 家，`label_value=0`）**；
+> **负例 = 坏企业 = 资质断档（21 家，`label_value=1`）**。
+> `ads_label.label_value` 与 `v_model_train_ready.label` 是风险预警方向（1=断档），
+> 为兼容已发布契约与历史 AUC 保留原数值，未原地 UPDATE；
+> 正确方向的训练入口是 `v_model_train_ready_credit`，逐企业对照见 `v_label_direction`。
+> 下文「断档样本」= 负例、「续存样本」= 正例；`n_positive` / `positive_rate`
+> 等历史字段名仍指风险方向，不代表企业好坏口径的正例。
+> 多标签测评见 `deliverables/01_算法端/multilabel_eval_report.md`。
+<!-- /DIRECTION_NOTICE:v1 -->
+
+
+
 国家级大学生创新创业训练计划项目 · 项目资产库
 
 > 面向浙江省中小科技企业，构建「技术要素 + 成长轨迹」双驱动的信用智能评估方法。
@@ -75,7 +89,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（206 项守卫，19 文件）
+├── tests/                    单元测试 / 集成测试（222 项守卫，20 文件）
 │                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -83,7 +97,7 @@
 │                             test_grant_definition.py / test_field_gap_registry.py
 │                             test_graph_v2.py（5 类节点 / 边陈旧 / 权重区分度）
 │                             test_graph_id_docs.py（IPC ID 口径 / 字典枚举一致性 / 分队列 AUC）
-│                             test_label_mechanism.py（n_events 泄漏 / 5 折正例下限）
+│                             test_label_mechanism.py（n_events 泄漏 / 5 折断档样本下限）
 │                             test_patent_master.py（专利唯一口径 30,103）
 │                             test_schema.py / test_collect_pool.py / selfcheck.py
 │
@@ -99,8 +113,8 @@
     └── 2026-10-28/           第二批：前端旧目录、旧版答复文档
 ```
 
-**测试文件范围（2026-11-09 更新）**：`tests/` 下 19 个 `test_*.py` **全部纳入交付守卫，
-共 206 项全绿**。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
+**测试文件范围（2026-11-09 更新）**：`tests/` 下 20 个 `test_*.py` **全部纳入交付守卫，
+共 222 项全绿**。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
 A 套 27 表链路自测，已于 11-09 适配 B 套 v1.8：IPC 断言改为校验 A–H 八个部类齐全
 （B 套 `dim_ipc` 是全量 11,616 行字典）、桥表改为按本次插入的 `patent_id` 定点校验、
 覆盖度视图改为断言「基线 500 + 本次插入 1 家」；采集器补齐 `requirements.txt` 已声明的
@@ -212,7 +226,7 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 
 | # | 红线 | 为什么 |
 |---|---|---|
-| 1 | 不要引用单一 AUC / 准确率 | 只有 21 个正例，`val` 集只有 2 个，只够验证方法论 |
+| 1 | 不要引用单一 AUC / 准确率 | 只有 21 个断档样本，`val` 集只有 2 个，只够验证方法论 |
 | 2 | `score.value` 恒为 `null` 是设计 | 无可验证模型，只提供 `proxy_score`（`validated: false`），前端不得渲染成「信用分」 |
 | 3 | 两套数据不要混看 | A 信贷面板（1,714 家匿名 / 3,465 行）与 B 浙江高企（500 家 / 307 打标）样本、特征、标签都不同，只是共用同一套 API |
 
@@ -221,9 +235,9 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 - 专利数必须 `COUNT(DISTINCT app_no)`。`COUNT(*)` 得 32,969 行，实际 **30,103 件**，虚高 9%。
   v1.4 起有唯一口径视图 `v_patent_master`（一行一个申请号，差额记在 `join_status` 里），
   对外报数直接 `SELECT COUNT(*) FROM v_patent_master`。
-- `ads_model_dataset` 里 193 行 `split='excluded'` 是「认定窗口未闭合」，**不是负例**；
-  当负例用会把正例率从 6.8% 稀释到 4.2%。
-- `n_events` 就是标签的定义式：认定 1 次的 21 家 100% 正例，≥2 次的 286 家 0% 正例。
+- `ads_model_dataset` 里 193 行 `split='excluded'` 是「认定窗口未闭合」，**不是续存样本**；
+  当续存样本用会把断档样本占比从 6.8% 稀释到 4.2%。
+- `n_events` 就是标签的定义式：认定 1 次的 21 家 100% 断档样本，≥2 次的 286 家 0% 断档样本。
   **它绝不可进特征**（`tests/test_label_mechanism.py` 会拦），台账见 `v_label_mechanism`。
 - 观察窗起点固定 2019，2021 队列只有 3 年、2022 队列有 4 年。跨队列比专利数前先看
   `v_train_ready_window_fixed`——统一压到 3 年后，队列均值差从 7.6 件降到 4.2 件。
@@ -370,7 +384,7 @@ SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 GROUP BY grade;
 三条使用边界：① 这是**静态快照对照基线**，不是 as-of 训练口径，不得入模验证；
 ② A/B 档判据用了 `qcc_tech_level_ord` / `qcc_credit_level_ord`，禁止用同字段反向验证（循环定义）；
 ③ `admin_penalty_cnt` 语义与字段名不符，已排除；`label_value_qual_survival = -1`
-的 193 家未打标企业不是负例，不参与 D 档判定。
+的 193 家未打标企业不是续存样本，不参与 D 档判定。
 
 升版命令 `python -m src.data.apply_v1_7`（幂等，执行前自动留 `data/db/zjtech_credit_pre_v17.db`
 回滚点），守卫 `python tests/test_enterprise_grade_l0.py`（11 项，含与方案原文 SQL 逐企业独立对账）。
@@ -396,7 +410,7 @@ SELECT * FROM v_feature_coverage_effective
 **A/B 两套数据隔离**：`/api/data/pipeline?dataset=A_credit_panel|B_proxy_label_500`
 只返回对应数据块，默认 `all` 保持向后兼容；`/api/data/datasets` 给两套数据的登记台账。
 任何取值都带 `meta.allow_cross_join=false`。A 是 10 月信贷面板
-（1,714 家 / 匿名 x1–x200 / 75 正例），B 是本项目 500 家高企（资质存续弱标签），
+（1,714 家 / 匿名 x1–x200 / 75 个违约样本），B 是本项目 500 家高企（资质存续弱标签），
 禁止跨集合并排序或共用同一 AUC 坐标。`/api/model/benchmark` 标
 `dataset_scope=A_credit_panel`，`/api/factors/importance` 标
 `mixed_in_one_response=true`（同一响应内并列展示，仍不得合并排序）。
@@ -412,7 +426,7 @@ SELECT * FROM v_feature_coverage_effective
 
 ### 6.6 数据获取
 
-数据库 153 MB（当前工作库 v1.8：34 表 / 23 视图 / 837 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（当前工作库 v1.9：34 表 / 29 视图 / 912 列；VACUUM 快照 120 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -424,18 +438,22 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 只想建空库不需要数据时，用 `src/data/schema.sql`。
 
 **版本边界**：v1.3.0 Release 附件是 **v1.6 快照**（34 表 / 19 视图 / 804 列）；
-**v1.4.0** 是重新打包的 **v1.8 快照**（34 表 / 23 视图 / 837 列），
-本地附件 `deliverables/zjtech_credit_data.zip`（12 项，含 837 列字典、3 个数据集 CSV、
-标签说明书、缺口登记册、VACUUM 库快照与 `MANIFEST.txt` 的 sha256 清单），
-发布说明见 `deliverables/RELEASE_v1.4.0.md`。v1.7 新增五档视图与标签任务登记；
-v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
+**v1.4.0（已发布，保持不变）** 是 **v1.8 快照**（34 表 / 23 视图 / 837 列），
+附件含 837 列字典、3 个数据集 CSV、标签说明书、缺口登记册、VACUUM 库快照与
+`MANIFEST.txt` 的 sha256 清单，说明见 `deliverables/RELEASE_v1.4.0.md`。
+**当前本地工作库已到 v1.9**（34 表 / 29 视图 / 912 列）：新增 6 个视图，做标签方向纠正
+与多标签测评（P1，零采集），未改任何事实表数据、未改主宽表 29 特征结构。
+算法端要拿到 v1.9 库需另发 **v1.5.0** Release（附件同名 `zjtech_credit_data.zip`，
+**不覆盖 v1.4.0**），说明见 `deliverables/RELEASE_v1.5.0.md`。
+历史：v1.7 新增五档视图与标签任务登记；v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
 A7 另把 `fact_funding_event.source_id` 从 0/506 回填为 506/506 `zj_500family`——
 **只补行级血缘列**，金额 / 估值等业务列用 SHA-256 前后指纹对账未变，
 schema 结构未改、版本仍 v1.8；变更凭证 `outputs/funding_provenance_backfill.json`，
 幂等脚本 `python -m src.data.apply_funding_provenance`。
 新旧两版各自独立 Release，**v1.4.0 不覆盖 v1.3.0 附件**；旧附件本地留档为
 `deliverables/zjtech_credit_data_v1.3.0.zip`。全量交付包另见
-`wenlv_full_delivery_20261107.zip`（38 文件）/ `wenlv_delivery_20261107.zip`（36 文件）。
+`wenlv_full_delivery_20261109.zip`（40 文件）/ `wenlv_delivery_20261109.zip`（38 文件）；
+11-07 的两个旧包本地保留，不覆盖。
 
 ## 七、归档规则
 

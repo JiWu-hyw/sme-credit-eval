@@ -374,7 +374,7 @@
   "warnings": [
     "auc_std 在 0.085–0.140 之间，折间波动极大；n_folds=100 是重复交叉验证，不代表有 100 份独立样本",
     "prospective_top 的 risk 是进入模型的排序分，未经独立时间外验证，不得作为「预测会掉队」的结论",
-    "标签只有 21 个正例，性能结论最多支撑方法论演示",
+    "标签只有 21 个断档样本，性能结论最多支撑方法论演示",
     "best_config（含 qcc 外采）AUC 0.87 已被泄漏实验解释：同期资质/证书类字段带来的是标签同源信息，不是预测力。对外只报 asof14（≈0.66）并在同一句里给 permutation floor（≈0.47）"
   ],
   "provenance": {
@@ -382,8 +382,8 @@
     "displayable": true,
     "source": "outputs/survival_model_auc.json + outputs/survival_prospective_top.csv + outputs/baseline_asof_leakage.json + ads_survival_period",
     "method": "直接透传已落盘的 100 折 AUC 与前瞻名单；期数结构从库里统计；泄漏诊断为透传既有对照实验，未新算",
-    "generated_at": "2026-11-07 16:45:56",
-    "schema_version": "v1.8",
+    "generated_at": "2026-11-09 15:25:49",
+    "schema_version": "v1.9",
     "note": "AUC 为已实测值，未重算、未调参；leakage_diagnosis 用于解释高 AUC 的来源"
   }
 }

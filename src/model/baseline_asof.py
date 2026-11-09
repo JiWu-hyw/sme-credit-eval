@@ -13,7 +13,7 @@
 执行协议（与 src/model/baseline.py 同口径，便于横向对比）
 --------------------------------------------------------
 - 模型：LogisticRegression(C=0.1, balanced) + XGBoost(early_stopping)。
-- 划分：**RepeatedStratifiedKFold(5, 20 次)**，因正例仅 21 个，单次 5 折每折 ~4 正例，
+- 划分：**RepeatedStratifiedKFold(5, 20 次)**，因断档样本仅 21 个，单次 5 折每折 ~4 断档样本，
   单次 AUC 标准误过大，必须重复取均值；同企业天然单条记录，无需 GroupKFold。
 - 零泄漏约束：缺失中位数 / Z-score 均值方差**只在折内训练集拟合**；单变量特征筛选
   也只在训练折打分。
@@ -184,7 +184,7 @@ def main():
     assert df_asof["label_value"].notna().all(), "as-of 视图存在未对齐的空行（标签错位）"
     for name, df in (("leaky", df_leaky), ("asof", df_asof)):
         yv = df["label_value"].astype(int)
-        print("[load] %-5s n=%d  正例=%d (%.1f%%) 特征候选=%d" % (
+        print("[load] %-5s n=%d  断档样本=%d (%.1f%%) 特征候选=%d" % (
             name, len(df), int(yv.sum()), 100.0 * yv.mean(),
             len(feat_cols(df))))
     assert (df_leaky["label_value"].astype(int).sum() ==
@@ -301,7 +301,7 @@ def _write_md(results: Dict[str, object]):
                  "等于把标签做成特征；在无泄漏 cohort 切面里它退化为常量（队列由首次认定年定义），已剔除。")
     lines.append("2. **时间窗截断效应真实存在**：即使剔除 m_cert，同一 14 个特征在「全量历史」vs「窗口内」"
                  "的 AUC 仍有差距——全量值混入了标签窗口内才发生的专利/资质事件。")
-    lines.append("3. **样本极小（21 正例）**：RepeatedStratifiedKFold(5×20) 仅用于稳定估计；"
+    lines.append("3. **样本极小（21 断档样本）**：RepeatedStratifiedKFold(5×20) 仅用于稳定估计；"
                  "绝对 AUC 数值不可过度解读，重点看**泄漏前后差值**。")
     lines.append("4. **结论**：任何在 `v_model_dataset_flat`（或原 `ads_model_dataset`）上训练得到的 AUC，"
                  "都包含后视泄漏虚高，不应作为模型真实能力的证据；"

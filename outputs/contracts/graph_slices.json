@@ -114,7 +114,7 @@
   "by_label": [
     {
       "key": "negative",
-      "label": "正常续存（负例）",
+      "label": "正常续存（正例·好企业）",
       "n_enterprises": 286,
       "n_patents": 16866,
       "n_tech_similar_edges": 7292,
@@ -123,7 +123,7 @@
     },
     {
       "key": "positive",
-      "label": "到期未通过（正例）",
+      "label": "到期断档（负例·坏企业）",
       "n_enterprises": 21,
       "n_patents": 671,
       "n_tech_similar_edges": 548,
@@ -153,8 +153,8 @@
     "displayable": true,
     "source": "dim_enterprise + fact_patent + ads_graph_edge",
     "method": "按 region_code / cohort_year / label 分组，每组回连企业集合再统计专利与 tech_similar 边",
-    "generated_at": "2026-11-07 16:45:56",
-    "schema_version": "v1.8",
+    "generated_at": "2026-11-09 15:25:49",
+    "schema_version": "v1.9",
     "note": "每片的企业集合是精确 IN 查询，不是估算；n_tech_similar_edges 会跨片重复计数"
   }
 }

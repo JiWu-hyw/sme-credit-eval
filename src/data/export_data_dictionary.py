@@ -287,7 +287,7 @@ def main() -> None:
     L.append("| `v_model_dataset_asof_flat` | 614 行 / **307 家** | ✅ 可以 | 时点取数，无后视泄漏；"
              "每家 2 行（两种 as_of_policy），须按 enterprise_id 分组切分 |")
     L.append("| `v_model_dataset_flat` | 500 行 / 500 家 | ❌ 不可以 | 静态口径含后视信息，"
-             "且 `split='excluded'` 的 193 行 label=0 是占位假负例 |")
+             "且 `split='excluded'` 的 193 行 label=0 是占位假续存样本 |")
     L.append("")
 
     # 与 v1.0 的差异

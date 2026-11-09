@@ -496,7 +496,7 @@ def run(conn: sqlite3.Connection, refresh_wide: bool = True,
         for k in FEATURES:
             print(f"  [calc ] {k:<24} {diag['stats'][k]}")
         print(f"  [calc ] m_cert 年度={diag['m_cert']['m_cert_year']} "
-              f"正例={diag['m_cert']['n_positive']} 负例={diag['m_cert']['n_negative']} "
+              f"断档样本={diag['m_cert']['n_positive']} 续存样本={diag['m_cert']['n_negative']} "
               f"事件表一致性={diag['m_cert']['event_mismatch']['n_qual_only']}/"
               f"{diag['m_cert']['event_mismatch']['n_event_only']}")
     applied = apply(conn, result, refresh_wide=refresh_wide, verbose=verbose)
@@ -523,7 +523,7 @@ def main(argv=None) -> int:
         for k in FEATURES:
             print(f"  [calc ] {k:<24} {diag['stats'][k]}")
         print(f"  [calc ] m_cert 年度={diag['m_cert']['m_cert_year']} "
-              f"正例={diag['m_cert']['n_positive']} 负例={diag['m_cert']['n_negative']} "
+              f"断档样本={diag['m_cert']['n_positive']} 续存样本={diag['m_cert']['n_negative']} "
               f"事件表一致性={diag['m_cert']['event_mismatch']['n_qual_only']}/"
               f"{diag['m_cert']['event_mismatch']['n_event_only']}")
         sample = sorted(result)[:5]

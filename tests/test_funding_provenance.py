@@ -160,11 +160,14 @@ def main():
             views = [n for t, n in objs if t == "view"]
             cols = sum(len(c.execute('PRAGMA table_info("%s")' % n).fetchall())
                        for n in tables + views)
-            assert (len(tables), len(views), cols) == (34, 23, 837), \
-                "结构被改动：%d 表 / %d 视图 / %d 列" % (len(tables), len(views), cols)
+            # A7 时点为 v1.8（34/23/837）；其后 v1.9 只增 6 个多标签视图，
+            # 表数与事实表数据未变，故这里按「表数固定 + 视图数不低于」校验。
+            assert len(tables) == 34, "事实表数被改动：%d" % len(tables)
+            assert len(views) >= 23, "视图数少于 A7 时点：%d" % len(views)
+            assert cols >= 837, "字段数少于 A7 时点：%d" % cols
             ver = c.execute("SELECT version FROM meta_schema_version "
                             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
-            assert ver == "v1.8", "schema 版本被改动：%s" % ver
+            assert ver in ("v1.8", "v1.9"), "schema 版本异常：%s" % ver
             assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok", \
                 "integrity_check 不通过"
             assert not c.execute("PRAGMA foreign_key_check").fetchall(), "外键冲突"

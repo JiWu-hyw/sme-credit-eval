@@ -85,7 +85,7 @@ def load(db: str) -> pd.DataFrame:
     con.close()
     df = df.merge(de, on="enterprise_id", how="left")
     assert df["label_value"].notna().all(), "存在未对齐空行"
-    assert int(df["label_value"].sum()) == 21, "正例数异常"
+    assert int(df["label_value"].sum()) == 21, "断档样本数异常"
     return df
 
 
@@ -205,7 +205,7 @@ def main(argv=None) -> int:
     y = df["label_value"].astype(int).values
     X_asof = df[ASOFABLE].values.astype(float)
     X_qcc = df[ASOFABLE + QCC_EXTERNAL].values.astype(float)
-    print("[load] n=%d  正例=%d (%.1f%%)  asof14=%d维  +QCC外部=%d维"
+    print("[load] n=%d  断档样本=%d (%.1f%%)  asof14=%d维  +QCC外部=%d维"
           % (len(df), int(y.sum()), 100.0 * y.mean(), X_asof.shape[1], X_qcc.shape[1]))
 
     print("\n=== 单变量 AUC（QCC 外部维度，用满 307 样本）===")

@@ -4,8 +4,8 @@
     "displayable": true,
     "source": "v_enterprise_grade_l0（库内视图）",
     "method": "按 grade / hit_rule 直接 GROUP BY 计数；无插值、无补零、无外部评分",
-    "generated_at": "2026-11-07 16:45:55",
-    "schema_version": "v1.8"
+    "generated_at": "2026-11-09 15:25:46",
+    "schema_version": "v1.9"
   },
   "grade_ver": "l0_v1.0",
   "n_enterprise": 500,

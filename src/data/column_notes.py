@@ -387,7 +387,7 @@ VIEW_NOTES = {
     },
     "v_model_dataset_flat": {
         "label": "建模用标签（= ads_label.label_value；split=excluded 的行填 0 占位，不可当真）",
-        "split": "数据集划分：train / val / test / excluded（excluded = 观察窗未结束的假负例）",
+        "split": "数据集划分：train / val / test / excluded（excluded = 观察窗未结束的假续存样本）",
         "split_protocol": "划分协议说明（按企业分组，避免同企业跨集泄漏）",
         "label_name": "标签中文名（论文用）",
         "label_value": "标签原值：1=观察窗内未通过复核，0=通过或续存",
@@ -418,7 +418,7 @@ VIEW_NOTES["v_model_dataset_asof_flat"] = {
 # ---------------------------------------------------------------------------
 VIEW_COMMENTS["v_model_train_ready"] = (
     "**算法端唯一训练入口**：307 行 = 307 家企业 × 1 行（固定 as_of_policy='cohort'），"
-    "已物理隔离 193 行 excluded 假负例、剔除 4 个 cohort 内常量列。"
+    "已物理隔离 193 行 excluded 假续存样本、剔除 4 个 cohort 内常量列。"
     "**不含 v1.6 融资补算特征**：需要融资特征时按 (enterprise_id, as_of_policy) "
     "双键 LEFT JOIN v_feature_asof_funding，见 v_model_dataset_asof_flat 的列说明"
 )
@@ -429,7 +429,7 @@ VIEW_NOTES["v_model_train_ready"] = {
     "name_display": "企业显示名，仅供人工核对，**不入模**",
     "region_code": "行政区划码（330100 杭州 等）；**同时是队列分层变量，勿当普通特征**",
     "cohort_year": "队列年（= 首次高企认定年）：2021 有 160 家 / 2022 有 147 家；"
-                   "2021 队列正例率 5.0%，2022 为 8.8%，跨队列混训须带队列权重",
+                   "2021 队列断档样本占比 5.0%，2022 为 8.8%，跨队列混训须带队列权重",
     "split": "已固定：train 214 / val 54 / test 39（企业级 md5 切分）；"
              "**禁止再按行随机切分**，否则同一企业会同时进训练与验证",
     "label": "标签（代理标签，非官方违约口径）：1=观察窗内未通过复核，0=通过或续存；"
@@ -479,26 +479,26 @@ VIEW_NOTES["v_patent_master"] = {
 }
 
 VIEW_COMMENTS["v_label_mechanism"] = (
-    "标签机制台账：n_events × cohort 的正例分布。"
-    "**用来钉住一个事实：n_events=1 的 21 家 100% 正例、n_events>=2 的 286 家 0% 正例，"
+    "标签机制台账：n_events × cohort 的断档样本分布。"
+    "**用来钉住一个事实：n_events=1 的 21 家 100% 断档样本、n_events>=2 的 286 家 0% 断档样本，"
     "标签≈「是否只被认定过一次」** —— n_events 绝不可进特征"
 )
 VIEW_NOTES["v_label_mechanism"] = {
-    "n_events": "资质认定次数（1 次 → 全为正例；>=2 次 → 全为负例）",
+    "n_events": "资质认定次数（1 次 → 全为断档样本；>=2 次 → 全为续存样本）",
     "cohort_year": "队列年（首次认定年）",
     "n_enterprise": "该组企业数",
-    "n_positive": "该组正例数",
-    "n_negative": "该组负例数",
-    "positive_rate": "正例率；本表的设计用途就是让「完全分离」一眼可见",
+    "n_positive": "该组断档样本数",
+    "n_negative": "该组续存样本数",
+    "positive_rate": "断档样本占比；本表的设计用途就是让「完全分离」一眼可见",
 }
 
 VIEW_COMMENTS["v_model_train_ready_cv"] = (
     "**交叉验证推荐口径**：在 v_model_train_ready 基础上加 fold_id（5 折、按 label 分层、"
-    "企业不跨折，每折正例 4~5 个）。原 split 的 val 只有 2 个正例，早停/阈值不可靠"
+    "企业不跨折，每折断档样本 4~5 个）。原 split 的 val 只有 2 个断档样本，早停/阈值不可靠"
 )
 VIEW_NOTES["v_model_train_ready_cv"] = {
     **VIEW_NOTES["v_model_train_ready"],
-    "fold_id": "1..5，按 label 分层后轮转分配；每折正例 >= 4，企业不跨折。"
+    "fold_id": "1..5，按 label 分层后轮转分配；每折断档样本 >= 4，企业不跨折。"
                "只做 CV 不做独立测试集时用它，不要再用 split",
 }
 
@@ -570,14 +570,14 @@ VIEW_NOTES["v_feature_discrimination"] = {
     "n_all": "该范围内的样本企业数（含特征缺失者）",
     "n_missing": "该范围内特征为 NULL 的企业数",
     "n_valid": "实际参与 AUC 计算的企业数（= n_all − n_missing）",
-    "n_pos": "参与计算的正例数",
-    "n_neg": "参与计算的负例数",
-    "auc": "单变量 AUC（0.5 = 无判别力；<0.5 表示数值越小越可能是正例）",
-    "mean_pos": "正例均值（仅有效样本）",
-    "mean_neg": "负例均值（仅有效样本）",
+    "n_pos": "参与计算的断档样本数",
+    "n_neg": "参与计算的续存样本数",
+    "auc": "单变量 AUC（0.5 = 无判别力；<0.5 表示数值越小越可能是断档样本）",
+    "mean_pos": "断档样本均值（仅有效样本）",
+    "mean_neg": "续存样本均值（仅有效样本）",
     "v_min": "该范围该特征最小值",
     "v_max": "该范围该特征最大值",
-    "stability_note": "稳定性警示：正例 < 10 时标注「AUC 不稳，只作方向参考」",
+    "stability_note": "稳定性警示：断档样本 < 10 时标注「AUC 不稳，只作方向参考」",
 }
 
 TABLE_NOTES["ads_feature_asof_funding"] = {
@@ -616,11 +616,11 @@ VIEW_COMMENTS["v_feature_cohort_gap"] = (
 )
 VIEW_NOTES["v_feature_cohort_gap"] = {
     "feature_name": "特征名",
-    "n_pos_all": "全样本正例数（有值者）",
+    "n_pos_all": "全样本断档样本数（有值者）",
     "auc_all": "全样本 AUC",
-    "n_pos_2021": "2021 队列正例数",
+    "n_pos_2021": "2021 队列断档样本数",
     "auc_2021": "2021 队列 AUC",
-    "n_pos_2022": "2022 队列正例数",
+    "n_pos_2022": "2022 队列断档样本数",
     "auc_2022": "2022 队列 AUC",
     "auc_gap_21_22": "两队列 AUC 之差（取 2021 − 2022，正负号有意义）",
     "gap_vs_full_2021": "2021 队列偏离 0.5 的程度 − 全样本偏离 0.5 的程度",
@@ -648,7 +648,7 @@ VIEW_NOTES["v_enterprise_grade_l0"] = {
     "is_little_giant": "判据输入：是否小巨人；=1 且未命中 E/D 时进 A 档",
     "qcc_tech_level_ord": "判据输入：第三方技术等级序数（1–5）；>=5 进 A 档，=4 且信用等级>=11 进 B 档",
     "qcc_credit_level_ord": "判据输入：第三方信用等级序数（1–12）；仅与技术等级=4 组合判定 B 档",
-    "label_value_qual_survival": "判据输入：qual_survival 弱标签；1=资质断档信号进 D 档；-1=未打标的 193 家，不参与 D 档判定，不是负例",
+    "label_value_qual_survival": "判据输入：qual_survival 弱标签；1=资质断档信号进 D 档；-1=未打标的 193 家，不参与 D 档判定，不是续存样本",
     "grade_ver": "分档规则版本 l0_v1.0；判据或口径变更必须升版，禁止跨版本比较实验结论",
     "scope_note": "使用边界声明：静态快照规则基线，非 as-of 训练口径，禁止入模验证，禁止用第三方等级反向验证",
 }
@@ -707,6 +707,124 @@ VIEW_NOTES["v_graph_slice_annual_edge"] = {
     "dst_id": "目标节点 ID；IPC 已剥 WIPO 版本号后缀，与 ads_graph_node 对齐",
     "edge_type": "边类型：files_patent / belongs_ipc / invented_by（三类均可按年份切片）",
     "weight": "边权：files_patent=1.0；belongs_ipc / invented_by 主项 1.0、次要项 0.5",
+}
+
+
+# ============================================================================
+# v1.9 标签方向纠正 + 多标签测评（P1，2026-11-09，零采集）
+# 方向纪律：本组所有 y_* / credit_label 一律 1=好企业(正例)、0=坏企业(负例)、
+#           NULL=不可判定；旧 ads_label.label_value 是风险预警方向(1=断档)，保留兼容。
+# ============================================================================
+VIEW_COMMENTS["v_label_direction"] = (
+    "标签方向对照（v1.9）：纠正旧文档把 label_value=1 的 21 家断档称为「正例」的错误。"
+    "本项目研究企业好坏 / 信用评价，正例=好企业=资质存续（286 家, label_value 0），"
+    "负例=坏企业=资质断档（21 家, label_value 1）。底表数值绑定已发布 v1.4.0 快照与"
+    "12 个契约，禁止原地 UPDATE，故以并列视图给出信用方向。"
+)
+VIEW_NOTES["v_label_direction"] = {
+    "enterprise_id": "企业 ID（ENT + 12 位 hex），仅含 307 家已打标企业",
+    "label_task": "标签任务名，当前仅 qual_survival",
+    "risk_label": "风险预警方向的原值（= ads_label.label_value）：1=断档/坏，0=存续/好",
+    "credit_label": "企业好坏方向的标签（= 1 - risk_label）：1=正例/好企业，0=负例/坏企业",
+    "credit_class": "按企业好坏口径的类名：positive=好企业，negative=坏企业",
+    "positive_definition": "正例定义常量：1=资质正常存续 / 续期成功（好企业）",
+    "negative_definition": "负例定义常量：0=资格到期后未再出现 / 断档（坏企业）",
+    "definition_ver": "标签定义版本（与 ads_label 一致，本次未升版、未改口径值）",
+    "direction_note": "方向纠正说明：禁止再把 21 家断档称为正例，禁止原地 UPDATE 底表",
+}
+
+VIEW_COMMENTS["v_model_train_ready_credit"] = (
+    "正确方向的训练入口（v1.9）：与 v_model_train_ready 同 17 列数据 + 2 列方向说明，"
+    "label 翻转为 1 - 原 label，得到 286 正例（好企业）/ 21 负例（坏企业）。"
+    "历史 AUC≈0.52 是对风险方向标签算的，翻成信用方向后为 0.48，两者都表示无判别力。"
+)
+VIEW_NOTES["v_model_train_ready_credit"] = {
+    **VIEW_NOTES["v_model_train_ready"],
+    "label": "目标标签（企业好坏方向）：1=正例/好企业(资质存续)，0=负例/坏企业(资质断档)",
+    "label_direction": "方向标识常量 credit_good_positive，防止与旧视图混淆",
+    "positive_class": "正例定义常量：1=好企业(存续)，0=坏企业(断档)",
+}
+
+VIEW_COMMENTS["v_label_mechanism_credit"] = (
+    "标签机制台账（v1.9 正确方向）：与 v_label_mechanism 同分组，但 n_positive 现在"
+    "真的是「好企业」数。合计 286 正例 / 21 负例，仍钉住 n_events 与标签完全共线的事实。"
+)
+VIEW_NOTES["v_label_mechanism_credit"] = {
+    "n_events": "资质认定次数（1 次 → 全为负例/断档；>=2 次 → 全为正例/存续）",
+    "cohort_year": "队列年（首次认定年）",
+    "n_enterprise": "该组企业数",
+    "n_positive": "该组正例数（好企业 / 资质存续）",
+    "n_negative": "该组负例数（坏企业 / 资质断档）",
+    "positive_rate": "正例率（好企业占比）；与旧视图的 positive_rate 互补为 1",
+    "direction_note": "方向说明常量：1=好企业/正例，0=坏企业/负例",
+}
+
+VIEW_COMMENTS["v_enterprise_label_matrix"] = (
+    "多标签测评矩阵（v1.9 / P1，零采集）：500 家全覆盖，四轴 6 个二值锚点 + 3 个有序锚点。"
+    "所有二值标签一律 1=好/正例、0=坏/负例、NULL=不可判定；NULL 不计入票数，"
+    "193 家未打标企业不会被算成坏企业。A/D 轴相对独立，B(资质阶梯)与 C(资质存续)"
+    "同源于公示名单，不构成独立印证。阈值写死在 DDL 里（阶梯>=3 / 信用>=11 / 技术>=4）。"
+)
+VIEW_NOTES["v_enterprise_label_matrix"] = {
+    "enterprise_id": "企业 ID（ENT + 12 位 hex），500 家全覆盖",
+    "name_display": "企业显示名",
+    "y_hard_outcome": "A 轴硬结果：1=无严重失信/经营异常/非开业(好)，0=有(坏)，NULL=字段缺失(37 家)",
+    "y_risk_free": "A 轴辅助：1=risk_negative_cnt=0(好)，0=有风险负面(坏)；500 家全覆盖",
+    "y_survival": "C 轴资质存续：1=好企业/正例(286)，0=坏企业/负例(21)，NULL=未打标(193)",
+    "y_qual_ladder_good": "B 轴二值：三项资质标志全齐(阶梯>=3)=1，共 45 家",
+    "y_qcc_credit_good": "D 轴二值：qcc_credit_level_ord>=11 = 1，共 382 家；分档复用会形成循环定义",
+    "y_qcc_tech_good": "D 轴二值：qcc_tech_level_ord>=4 = 1，共 157 家；分档复用会形成循环定义",
+    "y_qual_ladder": "B 轴有序锚点：科技型中小 / 高企 / 小巨人三项标志之和（1–3），不参与投票",
+    "y_qcc_credit": "D 轴有序锚点：第三方信用等级序数（1–12），不参与投票",
+    "y_qcc_tech": "D 轴有序锚点：第三方技术等级序数（1–5），不参与投票",
+    "n_labels_observed": "6 个二值锚点中非 NULL 的个数（4–6），NULL 不计入",
+    "n_good": "好标签票数（值为 1 的锚点数）",
+    "n_bad": "坏标签票数（值为 0 的锚点数）；n_good + n_bad = n_labels_observed",
+    "label_agreement": "标签一致度 = n_good / n_labels_observed（0–1）；仅描述锚点一致性，不是模型置信度",
+    "axis_note": "独立性边界常量：A/D 相对独立，B/C 同源于公示名单，不构成独立印证",
+}
+
+VIEW_COMMENTS["v_enterprise_multilabel_grade"] = (
+    "多标签五档（v1.9 / P1）：硬约束优先（y_hard_outcome=0 → E），"
+    "y_survival=0 或 y_risk_free=0 → D，其余按好标签票数 n_good>=5 → A、>=4 → B、"
+    "否则 C。实测 A 81 / B 176 / C 157 / D 83 / E 3，与 L0 单标签分档仅 58.8% 同档。"
+    "⚠️ 分档判据用了 y_survival / y_hard_outcome，再用这两列算各档正例率是循环定义，"
+    "不能当外部效度；静态规则基线，不得入模验证、不得报准确率。"
+)
+VIEW_NOTES["v_enterprise_multilabel_grade"] = {
+    "enterprise_id": "企业 ID，500 家全覆盖",
+    "name_display": "企业显示名",
+    "y_survival": "C 轴资质存续锚点（1=好/正例，0=坏/负例，NULL=未打标）",
+    "y_hard_outcome": "A 轴硬结果锚点（0 → E 档硬约束）",
+    "y_risk_free": "A 轴风险负面锚点（0 → D 档）",
+    "grade_multilabel": "多标签五档：A 引领 / B 优质 / C 稳健 / D 观察 / E 预警",
+    "grade_code": "档次首字母 A–E，便于与 L0 的 grade_code 比对",
+    "grade_l0": "v_enterprise_grade_l0 的单标签规则分档（对照用）",
+    "is_consistent_with_l0": "两版档次首字母是否相同（1 一致 / 0 漂移）；全库 294/500 一致",
+    "n_labels_observed": "有效锚点数（4–6）",
+    "n_good": "好标签票数，A/B 档主序",
+    "n_bad": "坏标签票数",
+    "label_agreement": "标签一致度（0–1）",
+    "grade_ver": "分档规则版本 l1_multilabel_v1.0",
+    "scope_note": "适用边界常量：B/C 不独立、循环定义、禁止报准确率与用 D 轴反向验证",
+}
+
+VIEW_COMMENTS["v_multilabel_eval_summary"] = (
+    "交叉测评汇总长表（v1.9 / P1）：按多标签档次给出家数、平均一致度、与 L0 同档数、"
+    "资质存续正例率、硬结果正例率，另有全库一致率与锚点覆盖率。"
+    "⚠️ 资质存续 / 硬结果两列是循环定义（分档判据用了这两个锚点），只用于暴露口径，"
+    "不得当外部效度结论；E 档 3 家、D 档 83 家，点估计无意义，每档必须带家数与置信区间。"
+)
+VIEW_NOTES["v_multilabel_eval_summary"] = {
+    "metric": "测评指标：档次日数 / 资质存续正例率 / 硬结果正例率 / 多标签 vs L0 一致 / 标签锚点覆盖率",
+    "group_value": "分组值：多标签档次（A–E）或 ALL / 锚点名",
+    "n_enterprise": "该组企业数",
+    "n_positive": "该组正例（好企业）数；仅分母非空的样本计入",
+    "n_observed": "该指标的有效分母；未打标 / 字段缺失企业不计入",
+    "positive_rate": "正例率 = n_positive / n_observed；循环定义列见视图注释",
+    "mean_agreement": "该档平均标签一致度（仅档次日数行有值）",
+    "n_same_l0": "该档与 L0 同档的家数（仅档次日数行有值）",
+    "note": "口径警示：分母排除规则、循环定义边界、样本塌陷提示",
 }
 
 

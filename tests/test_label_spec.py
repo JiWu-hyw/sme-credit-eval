@@ -10,7 +10,7 @@
 六条断言：
   1. 说明书存在，且不早于库文件（不陈旧）
   2. `definition_ver` 与代码常量、库内存值三者一致，且出现在文档里
-  3. 核心分布数字与库内实测一致（总数 / 正例 / 正例率 / excluded 分解）
+  3. 核心分布数字与库内实测一致（总数 / 断档样本 / 断档样本占比 / excluded 分解）
   4. 所有 Markdown 表格行结构完整（首尾都有竖线，防渲染塌行）
   5. 限定语齐全（代理标签 / 不等同 / 结构占位 / 禁止入模）
   6. 建模契约齐全（时点视图 / 分组切分 / 排除 excluded）
@@ -83,7 +83,7 @@ def main():
         assert DEFINITION_VER in text, "说明书里没有出现当前定义版本 %s" % DEFINITION_VER
 
     def c_numbers_match():
-        want = "| 有多少 | %d 家：正例 **%d**、负例 %d，正例率 **%.2f%%** |" % (
+        want = "| 有多少 | %d 家：断档样本 **%d**、续存样本 %d，断档样本占比 **%.2f%%** |" % (
             n_label, n_pos, n_neg, 100.0 * n_pos / n_label)
         assert want in text, "核心分布行与库内实测不一致，期望：\n    %s" % want
         assert "excluded" in text, "说明书未提 excluded"

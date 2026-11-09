@@ -165,7 +165,7 @@ def _ref() -> dict:
     """参考集：v_model_train_ready（307 行）。给出每个特征的排序值、单变量 AUC。
 
     AUC 用 Mann-Whitney rank 法，并列取平均秩。方向语义：
-    AUC = P(正例值 > 负例值)，正例=1 表示「到期未通过复核」。
+    AUC = P(断档样本值 > 续存样本值)，断档样本=1 表示「到期未通过复核」。
     所以 AUC < 0.5 意味着「值越大越可能续存」。
     """
     global _REF_CACHE
@@ -256,7 +256,7 @@ def proxy_score(feats: dict, min_weight: float = 0.05) -> dict:
             continue
         auc = spec["auc"]
         if auc is None:
-            skipped.append({"feature": f, "reason": "参考集无正负例"})
+            skipped.append({"feature": f, "reason": "参考集无正续存样本"})
             continue
         w = abs(auc - 0.5)
         if w < min_weight:
@@ -289,7 +289,7 @@ def proxy_score(feats: dict, min_weight: float = 0.05) -> dict:
         "contributions": sorted(contribs, key=lambda c: -c["contribution"]),
         "skipped": skipped,
         "caveat": "代理分只反映与该弱标签的单变量秩相关，未经交叉验证与校准，"
-                  "不得作为信贷决策依据；正例仅 %d 个。" % ref["n_pos"],
+                  "不得作为信贷决策依据；断档样本仅 %d 个。" % ref["n_pos"],
     }
 
 
@@ -478,7 +478,7 @@ def importance(con: sqlite3.Connection) -> dict:
 
     return {
         "primary": {
-            "dataset": "B：浙江 500 家高企（弱标签，正例 %d）"
+            "dataset": "B：浙江 500 家高企（弱标签，断档样本 %d）"
                        % (ref.get("n_pos") or 0),
             "method": "单变量 AUC（Mann-Whitney rank，并列取平均秩）",
             "n_samples": ref.get("n"),

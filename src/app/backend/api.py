@@ -69,7 +69,7 @@ NOISE_FLOOR_NOTE = "置换对照 AUC（行级）LR 0.492 / XGB 0.477，取较低
 DATASET_IDS = ("A_credit_panel", "B_proxy_label_500")
 DATASET_ALLOWED = ("all",) + DATASET_IDS
 DATASET_JOIN_RULE = (
-    "A（1,714 家信贷面板 / 匿名 x1–x200 / 75 正例）与 B（500 家高企 / 资质存续弱标签）"
+    "A（1,714 家信贷面板 / 匿名 x1–x200 / 75 个违约样本）与 B（500 家高企 / 资质存续弱标签）"
     "不是同一套数据；禁止跨集合并排序、拼接训练或共用同一 AUC 坐标。"
 )
 
@@ -431,7 +431,7 @@ def data_datasets():
             {"id": "B_proxy_label_500", "role": "primary", "in_this_db": True,
              "n_entity": n_ent, "n_labeled": n_label,
              "features": "专利 / 资质 / 融资 as-of 特征（29 列口径）",
-             "label": "高企资质存续失败弱标签 qual_survival（21 正例 / 286 负例）",
+             "label": "高企资质存续失败弱标签 qual_survival（21 断档样本 / 286 续存样本）",
              "backing": "zjtech_credit.db / v_model_dataset_asof_flat"},
         ],
         "join_rule": DATASET_JOIN_RULE,
@@ -453,7 +453,7 @@ def data_datasets():
 def model_benchmark():
     """#10 基准对比实验（读 outputs/baseline_results.json）。
 
-    **注意数据集**：这是 10 月信贷面板（1,714 家 / 匿名特征 x1–x200 / 75 正例），
+    **注意数据集**：这是 10 月信贷面板（1,714 家 / 匿名特征 x1–x200 / 75 个违约样本），
     与本项目 500 家高企不是同一套数据。之前接口没写这一点，前端容易把面板的
     AUC 挂到高企页面上。现在在 meta 里显式标注。
     """
@@ -562,7 +562,7 @@ def score_company(company_id: str):
         "score": {
             "value": None,
             "status": "MODEL_PENDING",
-            "reason": "无已验证模型：弱标签正例仅 21 个，不足以产出可对外解释的模型分",
+            "reason": "无已验证模型：弱标签断档样本仅 21 个，不足以产出可对外解释的模型分",
         },
         "proxy_score": proxy,
         "profile": snap["profile"],
@@ -651,7 +651,7 @@ def _diagnose(company_id: str) -> dict:
         "graph": g,
         "patent": snap["patent"],
         "label": snap["label"],
-        "note": "score.value 为 null 是设计选择（21 个正例不足以支撑模型分）；"
+        "note": "score.value 为 null 是设计选择（21 个断档样本不足以支撑模型分）；"
                 "proxy_score 仅供原型展示排序，validated=false",
     }, meta={"source": "sqlite", "label_is_proxy": snap["label"] is not None})
 

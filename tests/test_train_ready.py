@@ -3,12 +3,12 @@
 
 这层视图的唯一职责是把三个结构性陷阱在物理上挡掉，本测试就是守这三件事：
 
-  A. **假负例隔离（P1-4）** —— ads_model_dataset 有 193 行 split='excluded'
+  A. **假续存样本隔离（P1-4）** —— ads_model_dataset 有 193 行 split='excluded'
      （cohort 2023+、观察窗未闭合，label 填 0 只是占位）。谁直接
-     `SELECT * FROM ads_model_dataset` 训练，正例率就被从 6.8% 稀释到 4.2%。
+     `SELECT * FROM ads_model_dataset` 训练，断档样本占比就被从 6.8% 稀释到 4.2%。
 
   B. **伪重复（一家两行）** —— v_model_dataset_asof_flat 是 614 行 =
-     307 家 × 2 种 as_of_policy。按行训练同一企业被算两次权重，正例 21 虚增成 30。
+     307 家 × 2 种 as_of_policy。按行训练同一企业被算两次权重，断档样本 21 虚增成 30。
 
   C. **常量列** —— cohort 切面下 m_cert / qual_rank / qual_rank_delta /
      qual_upgrade_cum 四列去重值恒为 1，单变量 AUC 全 = 0.5000。带进模型
@@ -20,7 +20,7 @@
   3. 零 excluded 行
   4. split 只含 train/val/test，三集齐全
   5. 每个 enterprise_id 只出现在一个 split（无跨集泄漏）
-  6. 正例数 == 21，且与 ads_label 口径一致
+  6. 断档样本数 == 21，且与 ads_label 口径一致
   7. 所有特征列在 cohort 内去重值 > 1（无常量列）
   8. schema.sql 里有 [TRAINREADY] 块，且视图 DDL 用 as_of_policy='cohort'
 
@@ -98,13 +98,13 @@ def t_no_pseudo_duplicate():
 
 
 # ---------------------------------------------------------------------------
-# 3. 假负例必须为 0
+# 3. 假续存样本必须为 0
 # ---------------------------------------------------------------------------
 def t_no_excluded():
     con = connect()
     n = q1(con, "SELECT COUNT(*) FROM v_model_train_ready WHERE split='excluded'")
     assert n == 0, (
-        "混入 %d 行 split='excluded' 假负例。这些是 cohort 2023+ 观察窗未闭合的"
+        "混入 %d 行 split='excluded' 假续存样本。这些是 cohort 2023+ 观察窗未闭合的"
         "企业，label=0 只是占位，不能训练。" % n)
 
     # 反证：源表里确实有这批行，说明过滤是真生效而非数据本身没有
@@ -140,12 +140,12 @@ def t_no_cross_split_leak():
 
 
 # ---------------------------------------------------------------------------
-# 6. 正例数与标签口径
+# 6. 断档样本数与标签口径
 # ---------------------------------------------------------------------------
 def t_positive_count():
     con = connect()
     pos = q1(con, "SELECT SUM(label) FROM v_model_train_ready")
-    assert pos == EXPECT_POS, "正例应为 %d，实际 %s" % (EXPECT_POS, pos)
+    assert pos == EXPECT_POS, "断档样本应为 %d，实际 %s" % (EXPECT_POS, pos)
 
     # 与 ads_label 对齐：视图里的 label 必须等于 label_value
     mismatch = q1(con, """
@@ -185,7 +185,7 @@ def t_schema_sql_sync():
     assert "as_of_policy" in ddl and "cohort" in ddl, (
         "视图 DDL 未固定 as_of_policy='cohort'，会产生伪重复")
     assert "excluded" in ddl or "split IN" in ddl, (
-        "视图 DDL 未过滤 split，假负例会进入训练集")
+        "视图 DDL 未过滤 split，假续存样本会进入训练集")
 
 
 def main():
@@ -195,10 +195,10 @@ def main():
     for name, fn in [
         ("视图存在且列口径一致", t_view_exists),
         ("无伪重复（行数=企业数）", t_no_pseudo_duplicate),
-        ("零 excluded 假负例", t_no_excluded),
+        ("零 excluded 假续存样本", t_no_excluded),
         ("split 取值合法且三集齐全", t_split_values),
         ("无跨集企业泄漏", t_no_cross_split_leak),
-        ("正例数与标签口径", t_positive_count),
+        ("断档样本数与标签口径", t_positive_count),
         ("无常量特征列", t_no_constant_feature),
         ("schema.sql 同步", t_schema_sql_sync),
     ]:

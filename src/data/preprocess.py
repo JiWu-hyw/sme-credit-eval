@@ -249,12 +249,12 @@ def write_report(df, panel, comp_panel, feats, ind_cols, miss_rate_train, q_lo, 
 
     rows.append("\n## 2. 标签分布\n")
     n_pos_r = int(panel["label"].sum())
-    rows.append("| 粒度 | 样本数 | 正例数 | 正例率 |")
+    rows.append("| 粒度 | 样本数 | 断档样本数 | 断档样本占比 |")
     rows.append("|---|---|---|---|")
     rows.append("| 行级（申请记录） | %d | %d | %.2f%% |" % (len(panel), n_pos_r, 100.0 * n_pos_r / len(panel)))
     n_pos_c = int(comp_panel["label"].sum())
     rows.append("| 企业级（取最新记录） | %d | %d | %.2f%% |" % (len(comp_panel), n_pos_c, 100.0 * n_pos_c / len(comp_panel)))
-    rows.append("\n> 类别不均衡（正例约 9.5%%），训练时须用 `scale_pos_weight` / `class_weight` 处理，"
+    rows.append("\n> 类别不均衡（断档样本约 9.5%%），训练时须用 `scale_pos_weight` / `class_weight` 处理，"
                 "评估以 AUC / KS 为主、准确率为辅。\n")
 
     rows.append("\n## 3. 面板纵深\n")
@@ -295,7 +295,7 @@ def write_report(df, panel, comp_panel, feats, ind_cols, miss_rate_train, q_lo, 
     rows.append("| 申请记录数 | %d | %d |" % (int(tr.sum()), int((~tr).sum())))
     rows.append("| 企业数 | %d | %d |" % (df.loc[df["split"] == "train", "userid"].nunique(),
                                         df.loc[df["split"] == "test", "userid"].nunique()))
-    rows.append("| 正例率 | %.2f%% | %.2f%% |" % (
+    rows.append("| 断档样本占比 | %.2f%% | %.2f%% |" % (
         100.0 * panel.loc[tr, "label"].mean(), 100.0 * panel.loc[~tr, "label"].mean()))
     rows.append("\n口径：`GroupShuffleSplit(test_size=%.2f, random_state=%d)`，按 userid 分组，"
                 "同一企业记录不跨集。**基线 / SHAP / GAT 全部复用本划分，结果可直接横向对比。**\n"

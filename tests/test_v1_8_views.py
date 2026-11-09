@@ -86,7 +86,8 @@ def b_views_and_version():
         assert v in got, "缺视图 %s" % v
     ver = one("SELECT version FROM meta_schema_version "
               "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
-    assert ver == "v1.8", "库版本 %s，期望 v1.8" % ver
+    # v1.9 只增多标签视图，v1.8 的三视图与物理口径保持不动，故接受 >= v1.8
+    assert ver in ("v1.8", "v1.9"), "库版本 %s，期望 v1.8 或更高" % ver
     assert os.path.exists(BACKUP), "升级前回滚点缺失：%s" % BACKUP
 
 

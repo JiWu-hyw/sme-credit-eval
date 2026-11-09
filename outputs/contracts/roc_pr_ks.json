@@ -1671,7 +1671,7 @@
     {
       "configuration": "noleak_asof14",
       "model": "logistic_regression",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.5924,
       "auc_std": 0.1557,
       "n_folds": null,
@@ -1680,7 +1680,7 @@
     {
       "configuration": "noleak_asof14",
       "model": "hist_gradient_boosting",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.6056,
       "auc_std": 0.1481,
       "n_folds": null,
@@ -1689,7 +1689,7 @@
     {
       "configuration": "asof14_plus_qcc_external",
       "model": "logistic_regression",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.8589,
       "auc_std": 0.1061,
       "n_folds": null,
@@ -1698,7 +1698,7 @@
     {
       "configuration": "asof14_plus_qcc_external",
       "model": "hist_gradient_boosting",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.8358,
       "auc_std": 0.1286,
       "n_folds": null,
@@ -1707,7 +1707,7 @@
     {
       "configuration": "perm_asof14_plus_qcc_external",
       "model": "logistic_regression",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.4237,
       "auc_std": 0.1492,
       "n_folds": null,
@@ -1716,7 +1716,7 @@
     {
       "configuration": "perm_asof14_plus_qcc_external",
       "model": "hist_gradient_boosting",
-      "dataset": "B 浙江高企（307 家 / 21 正例）",
+      "dataset": "B 浙江高企（307 家 / 21 断档样本）",
       "auc_mean": 0.551,
       "auc_std": 0.1584,
       "n_folds": null,
@@ -1731,14 +1731,14 @@
   "warnings": [
     "roc / pr 的点位是**由 AUC 锚点重建**，不是逐条样本实测；形状可信、点位不可引用为实测",
     "ks_reconstructed 与 ks_measured 的差值即重建误差，已逐条列出；本轮已用双锚点拟合，残差应接近 0",
-    "B 套（本项目主数据集）只有 100 折 AUC 分布，**没有**可重建的单一 ROC —— 21 个正例不足以支撑性能结论"
+    "B 套（本项目主数据集）只有 100 折 AUC 分布，**没有**可重建的单一 ROC —— 21 个断档样本不足以支撑性能结论"
   ],
   "provenance": {
     "kind": "reconstructed",
     "displayable": true,
     "source": "outputs/baseline_results.json（holdout_row）+ outputs/qcc_signal_auc.json",
     "method": "binormal 双锚点反推：AUC 定 (a/b 的比值)、实测 KS 定 b，再拓扑导出 PR；B 套仅透传折分布，不重建",
-    "generated_at": "2026-11-07 16:45:57",
+    "generated_at": "2026-11-09 15:25:50",
     "schema_version": null,
     "anchors": [
       {

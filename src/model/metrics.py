@@ -4,7 +4,7 @@
 --------
 - 主指标：**AUC**（与阈值无关）、**KS**（风控行业标准区分度指标）。
 - 辅指标：Accuracy / Precision / Recall / F1，取默认阈值 0.5，另附 best-F1 阈值下的结果。
-- 正例仅 9.5%，**不得只看 Accuracy**（全预测 0 也有 90.5%），故 Accuracy 仅作参考。
+- 断档样本仅 9.5%，**不得只看 Accuracy**（全预测 0 也有 90.5%），故 Accuracy 仅作参考。
 
 用法
 ----
@@ -23,7 +23,7 @@ from sklearn.metrics import (
 
 
 def ks_statistic(y_true, y_prob):
-    """KS = max|CDF(正例) - CDF(负例)|，衡量模型把好坏样本分开的能力。"""
+    """KS = max|CDF(断档样本) - CDF(续存样本)|，衡量模型把好坏样本分开的能力。"""
     y_true = np.asarray(y_true).astype(int)
     y_prob = np.asarray(y_prob).astype(float)
     order = np.argsort(y_prob)

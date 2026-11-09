@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "v2",
-    "updated_at": "2026-11-06",
+    "version": "v3",
+    "updated_at": "2026-11-09",
     "owner": "施汶邑（几梦）",
     "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
     "status_enum": {
@@ -437,7 +437,7 @@
     }
   ],
   "label_tasks": {
-    "note": "ads_label.label_task 的 CHECK 枚举允许 4 类标签任务，实际只接入 1 类。这里显式登记另外 3 类为「源未接入」，避免被误读成「标签已有多源」或「只是暂时没写值」。守卫测试 tests/test_field_gap_registry.py 会核对：登记为 source_not_integrated 的任务在库里必须 0 行，登记为 connected 的任务必须有值。",
+    "note": "ads_label.label_task 的 CHECK 枚举允许 4 类标签任务，实际只接入 1 类。这里显式登记另外 3 类为「源未接入」，避免被误读成「标签已有多源」或「只是暂时没写值」。守卫测试 tests/test_field_gap_registry.py 会核对：登记为 source_not_integrated 的任务在库里必须 0 行，登记为 connected 的任务必须有值。 【2026-11-09 方向纠正】旧版把 label_value=1 的 21 家断档称为「正例」，与企业好坏研究目标相反；positive/negative 已按企业好坏方向重定义。",
     "status_enum": {
       "connected": "已接入，库内有对应标签行",
       "source_not_integrated": "外部数据源未接入，按设计 0 行；接入前不得冒充多标签"
@@ -447,11 +447,11 @@
         "label_task": "qual_survival",
         "status": "connected",
         "rows": 307,
-        "positive": 21,
-        "negative": 286,
-        "definition": "科技资质存续失败（弱标签）：高企资格到期后在 2021–2025 公示名单未再出现=1，续期=0",
+        "positive": 286,
+        "negative": 21,
+        "definition": "科技资质存续（弱标签）：高企资格到期后在 2021–2025 公示名单未再出现=1（断档），续期=0（存续）。【方向纠正 2026-11-09】本项目研究企业好坏，正例=好企业=续存（286 家, label_value 0），负例=坏企业=断档（21 家, label_value 1）。ads_label.label_value 保留风险预警方向的原数值，正确方向见 v_label_direction / v_model_train_ready_credit",
         "source": "浙江省高新技术企业公示名单 2021–2025（14 份）",
-        "caveat": "正例 21 个、验证集仅 2 个正例，不足以支撑任何性能结论；标签与名单出现次数完全共线（21 正例全为 n_events=1，286 负例全为 n_events>=2）；量的是「有没有再申报」，不是「有没有被驳回」，更不是「信用违约」"
+        "caveat": "负例（断档）仅 21 家、验证集仅 2 个负例，不足以支撑任何性能结论；标签与名单出现次数完全共线（21 家断档全为 n_events=1，286 家续存全为 n_events>=2）；量的是「有没有再申报」，不是「有没有被驳回」，更不是「信用违约」"
       },
       {
         "label_task": "msme_default",
@@ -477,13 +477,75 @@
         "plan": "生存分析口径，需先补齐 A 轴结果型硬标签与状态变更时间",
         "caveat": "现有 ads_survival_period 的 21 个事件仍是「未再申报」口径，与 B 轴同源于公示名单，不构成独立标签轴"
       }
-    ]
+    ],
+    "multilabel_axes": {
+      "note": "P1（零采集）落地：v_enterprise_label_matrix 用现有字段构造 6 个二值锚点 + 3 个有序锚点，一律 1=好/正例，0=坏/负例，NULL=不可判定。守卫 tests/test_multilabel_eval.py 核对方向、票数与档次闭合。",
+      "direction_policy": "1=好企业/正例；0=坏企业/负例；NULL 不计入票数。193 家未打标企业不得当负例。",
+      "axes": [
+        {
+          "column": "y_hard_outcome",
+          "axis": "A 硬结果",
+          "rule": "无严重失信/经营异常/非开业",
+          "coverage": 463,
+          "is_result": true,
+          "independent": true
+        },
+        {
+          "column": "y_risk_free",
+          "axis": "A 风险负面",
+          "rule": "risk_negative_cnt=0",
+          "coverage": 500,
+          "is_result": false,
+          "independent": false
+        },
+        {
+          "column": "y_survival",
+          "axis": "C 资质存续",
+          "rule": "到期后仍被认定",
+          "coverage": 307,
+          "is_result": false,
+          "independent": false,
+          "note": "与 B 轴同源于公示名单"
+        },
+        {
+          "column": "y_qual_ladder_good",
+          "axis": "B 资质阶梯",
+          "rule": "三项资质标志全齐(>=3)",
+          "coverage": 500,
+          "is_result": false,
+          "independent": false,
+          "note": "与 C 轴同源"
+        },
+        {
+          "column": "y_qcc_credit_good",
+          "axis": "D 第三方信用",
+          "rule": "qcc_credit_level_ord>=11",
+          "coverage": 500,
+          "is_result": false,
+          "independent": true,
+          "note": "被分档复用，形成循环定义"
+        },
+        {
+          "column": "y_qcc_tech_good",
+          "axis": "D 第三方技术",
+          "rule": "qcc_tech_level_ord>=4",
+          "coverage": 500,
+          "is_result": false,
+          "independent": true,
+          "note": "被分档复用，形成循环定义"
+        }
+      ],
+      "evaluation": "v_multilabel_eval_summary / outputs/multilabel_eval_report.md：与 L0 单标签分档一致率 58.8%；A–D 档硬结果正例率恒 1.0 属循环定义，不得当外部效度。"
+    }
   },
   "policies": {
     "as_of": {
       "rule": "建模特征一律只用 v_model_dataset_asof_flat，且一次实验固定单一 as_of_policy（cohort 或 due_minus_1），禁止混用 —— 混用会出现一家两行的伪重复。",
       "train_ready_view": "v_model_train_ready",
-      "allowed_policies": ["cohort", "due_minus_1"],
+      "allowed_policies": [
+        "cohort",
+        "due_minus_1"
+      ],
       "forbidden_as_features": [
         "ads_model_dataset 全量快照（含标签窗口内信息，仅可作泄漏基线）",
         "v_enterprise_grade_l0（静态快照规则基线，非 as-of 特征切面，不得入模验证）"
@@ -491,6 +553,11 @@
       "grade_validation": "分档外部效度只能用 A 轴结果型标签（严重失信 / 经营异常 / 非开业 / 复核未通过）；禁止用 qcc_tech_level_ord / qcc_credit_level_ord 反向验证 L0 分档（循环定义）。",
       "decided_at": "2026-11-07",
       "decided_by": "WorkBuddy(施汶邑)"
+    },
+    "label_direction": {
+      "rule": "企业好坏 / 信用评价方向：正例=好企业(资质存续)，负例=坏企业(资质断档)。ads_label.label_value 与 v_model_train_ready.label 是风险预警方向(1=坏)，保留兼容；新代码一律用 v_model_train_ready_credit / v_label_direction。",
+      "forbid": "禁止原地 UPDATE ads_label；禁止再把 21 家断档称为正例；禁止把 193 家未打标当负例。",
+      "auc_note": "历史 AUC≈0.52 是对风险方向标签计算的，翻成信用方向后为 0.48，两者都表示无判别力。"
     }
   }
 }

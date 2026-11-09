@@ -30,7 +30,7 @@ SCHEMA_SQL = os.path.join(os.path.dirname(os.path.abspath(__file__)), "schema.sq
 MANIFEST_PATH = os.path.join(ROOT, "configs", "db_schema_manifest.json")
 EXPORT_DIR = os.path.join(ROOT, "data", "processed", "db_export")
 
-SCHEMA_VERSION = "v1.8"  # 与 meta_schema_version 最新行、schema.sql 末尾版本块保持一致
+SCHEMA_VERSION = "v1.9"  # 与 meta_schema_version 最新行、schema.sql 末尾版本块保持一致
 
 # ============================================================================
 # 一、指标 → 字段 映射契约（与 docs/特征工程字典.md 一一对应）

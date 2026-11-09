@@ -87,7 +87,7 @@ LABEL_NOTE = (
 SPLIT_PROTOCOL = (
     "按 md5(enterprise_id) 确定性 70/15/15 分组切分（防跨集泄漏）；"
     "split='excluded' 的 193 行观察窗未结束或无 high_tech 记录，"
-    "其 label=0 是满足 NOT NULL 的结构占位，不代表负例，禁止入模。"
+    "其 label=0 是满足 NOT NULL 的结构占位，不代表续存样本，禁止入模。"
 )
 
 # 企业名后缀：用于剔除 PDF/网页抽取时粘进来的标题行
@@ -443,7 +443,7 @@ def build_labels_and_dataset(conn: sqlite3.Connection, verbose: bool = True) -> 
         "definition_ver": DEFINITION_VER, "dataset_ver": DATASET_VER,
     }
     if verbose:
-        print(f"  [label] {len(labels)} 条（正例 {pos} / 负例 {len(labels)-pos}）"
+        print(f"  [label] {len(labels)} 条（断档样本 {pos} / 续存样本 {len(labels)-pos}）"
               f" cohorts={summary['cohorts']}")
         print(f"  [wide ] {len(dataset_rows)} 行  split={dict(split_cnt)}")
     return summary

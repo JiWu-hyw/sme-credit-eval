@@ -270,7 +270,7 @@ def build_algorithm(con):
 
         direction = "-"
         if auc is not None and abs(auc - 0.5) >= 0.05:
-            direction = "正向(值大→更可能正例)" if auc > 0.5 else "负向(值大→更不可能正例)"
+            direction = "正向(值大→更可能断档样本)" if auc > 0.5 else "负向(值大→更不可能断档样本)"
 
         frows.append([
             f, FEATURE_CN.get(f, ""), "是" if f in in_view else "否",
@@ -313,11 +313,11 @@ def build_algorithm(con):
     A("|---|---|")
     A("| 行数 | **%d**（= 企业数，无伪重复） |" % total)
     A("| 列数 | **%d**（标识 6 + 特征 11） |" % len(ddl_cols))
-    A("| 正例 | **%d**（%.2f%%） |" % (n_pos, 100.0 * n_pos / total))
-    A("| 负例 | %d |" % (total - n_pos))
+    A("| 断档样本 | **%d**（%.2f%%） |" % (n_pos, 100.0 * n_pos / total))
+    A("| 续存样本 | %d |" % (total - n_pos))
     A("| 不平衡比 | 1 : %.1f |" % ((total - n_pos) / n_pos))
     A("")
-    A("| split | 行数 | 正例 | 正例率 |")
+    A("| split | 行数 | 断档样本 | 断档样本占比 |")
     A("|---|---|---|---|")
     for s in ("train", "val", "test"):
         if s in splits:
@@ -328,13 +328,13 @@ def build_algorithm(con):
     A("不存在跨集泄漏。**禁止再按行随机切分。**\n")
 
     A("## 3. 队列结构\n")
-    A("| cohort_year | 企业数 | 正例 | 正例率 |")
+    A("| cohort_year | 企业数 | 断档样本 | 断档样本占比 |")
     A("|---|---|---|---|")
     for y, n, p in cohorts:
         A("| %d | %d | %d | %.1f%% |" % (y, n, p, 100.0 * p / n))
     A("")
     A("队列年 = 首次高企认定年。**混队列训练时务必带 `cohort_year` 做分层或权重**，")
-    A("否则模型会退化成「队列哑变量」（2021 vs 2022 的正例率差 3.8pp）。\n")
+    A("否则模型会退化成「队列哑变量」（2021 vs 2022 的断档样本占比差 3.8pp）。\n")
 
     A("## 4. 特征可用性（29 个注册特征的实际状态）\n")
     A("| 建议 | 个数 | 特征 |")
@@ -353,8 +353,8 @@ def build_algorithm(con):
     A("## 5. 标签口径（必读）\n")
     A("`label = 1` 表示「高企资格 3 年到期后**未通过复核**」，**不是**官方违约/经营异常定义。")
     A("它是从 14 份年度认定名单反推的**代理标签**，混淆来源与偏误方向见 `label_spec.md`。\n")
-    A("一个必须知道的事实：`n_events=1` 的 21 家**全部**是正例，`n_events>=2` 的 286 家")
-    A("**全部**是负例。标签几乎等价于「只被认定过一次」，这也是「持续经营类特征」")
+    A("一个必须知道的事实：`n_events=1` 的 21 家**全部**是断档样本，`n_events>=2` 的 286 家")
+    A("**全部**是续存样本。标签几乎等价于「只被认定过一次」，这也是「持续经营类特征」")
     A("天然有判别力的原因 —— 但分不清是经营恶化还是懒得申报。\n")
 
     A("## 6. 无后视保证\n")
@@ -384,9 +384,9 @@ te = df[df.split == 'test']
     A("## 8. 明确不能做的事\n")
     A("| 不能 | 原因 |")
     A("|---|---|")
-    A("| 报「AUC 0.87」这类单一指标 | 只有 %d 个正例，val 集仅 2 个，点估计无意义 |" % n_pos)
+    A("| 报「AUC 0.87」这类单一指标 | 只有 %d 个断档样本，val 集仅 2 个，点估计无意义 |" % n_pos)
     A("| 按行随机切分 / KFold 不打组 | 同一企业会同时进训练与验证 |")
-    A("| 用 `ads_model_dataset` 训练 | 含 %d 行假负例 + 后视泄漏 |"
+    A("| 用 `ads_model_dataset` 训练 | 含 %d 行假续存样本 + 后视泄漏 |"
       % q1(con, "SELECT COUNT(*) FROM ads_model_dataset WHERE split='excluded'"))
     A("| 把 `label` 当官方违约口径对外表述 | 是代理标签，非监管定义 |")
     A("| 与「信贷面板」那套数据混训 | 那是另一套 1,714 家企业、x1–x200 匿名特征 |")
@@ -434,8 +434,8 @@ te = df[df.split == 'test']
 """)
     A("## 三条硬约束\n")
     A("1. **不要重新切分**。`split` 已按企业级固定，重切会造成跨集泄漏。")
-    A("2. **不要报单一指标**。%d 个正例，val 集只有 2 个，请报区间或交叉验证分布。" % n_pos)
-    A("3. **不要用 `ads_model_dataset`**。那是后视宽表 + %d 行假负例。"
+    A("2. **不要报单一指标**。%d 个断档样本，val 集只有 2 个，请报区间或交叉验证分布。" % n_pos)
+    A("3. **不要用 `ads_model_dataset`**。那是后视宽表 + %d 行假续存样本。"
       % q1(con, "SELECT COUNT(*) FROM ads_model_dataset WHERE split='excluded'"))
     A("")
     A("## 如果需要原始库\n")
@@ -737,7 +737,7 @@ def build_frontend(con):
     A("| 企业数 | 1,714 | 500 |")
     A("| 样本 | 3,465 行 | 307 家打标 |")
     A("| 特征 | `x1`–`x200` 匿名 | 29 个有名字的特征 |")
-    A("| 正例 | 75 | 21 |")
+    A("| 断档样本 | 75 | 21 |")
     A("| 落在 | `baseline_results.json`、`shap_global.json`、`noise_floor.json` | "
       "`v_model_train_ready`、`ads_graph_node/edge` |")
     A("")
@@ -826,7 +826,7 @@ def build_frontend(con):
     A("| `unavailable` | 数据源不存在 | ❌ 只给原因，不给数值 |")
     A("")
     A("## 仍缺什么（数据层，不是工程层）\n")
-    A("1. **正例样本 21 个** —— AUC 的 std 在 0.126–0.140，只能支撑方法论演示，不能支撑性能结论。")
+    A("1. **断档样本样本 21 个** —— AUC 的 std 在 0.126–0.140，只能支撑方法论演示，不能支撑性能结论。")
     A("   唯一解是扩样本池（500 → 5,000），而名单只到 2021 年。")
     A("2. **财务序列缺失** —— `latest_rev_wan` 仅 12/500、`rev_cagr` 0/500，营收/利润预测做不了。")
     A("3. **766 件专利未匹配到企业**（`fact_patent.enterprise_id` 为空，占 2.3%），")
@@ -990,7 +990,7 @@ def build_doc(con, alg, fe):
     A("| 结构 | %d 表 + %d 视图 / %d 列 / %s 行 |" % (n_tables, n_views, n_cols, f"{n_rows:,}"))
     A("| 企业 | %d 家浙江专精特新 |" % n_firm)
     A("| 专利 | %s 件（按申请号去重） |" % f"{n_patent:,}")
-    A("| 标签 | %d 家打标，%d 正例（%.1f%%） |" % (total, n_pos, 100.0 * n_pos / total))
+    A("| 标签 | %d 家打标，%d 断档样本（%.1f%%） |" % (total, n_pos, 100.0 * n_pos / total))
     A("| 完整性 | `integrity_check` ok，外键 0 冲突 |")
     A("")
 
@@ -999,8 +999,8 @@ def build_doc(con, alg, fe):
     A("这层视图已把三个坑物理挡掉：\n")
     A("| 坑 | 后果 | 视图怎么处理 |")
     A("|---|---|---|")
-    A("| %d 行 `excluded` 假负例 | 正例率被从 6.8%% 稀释到 4.2%% | 只放 train/val/test |" % n_excl)
-    A("| 伪重复（一家两行）| 权重翻倍，正例 21→30 | 固定 `as_of_policy='cohort'` |")
+    A("| %d 行 `excluded` 假续存样本 | 断档样本占比被从 6.8%% 稀释到 4.2%% | 只放 train/val/test |" % n_excl)
+    A("| 伪重复（一家两行）| 权重翻倍，断档样本 21→30 | 固定 `as_of_policy='cohort'` |")
     A("| 4 个常量特征 | 污染重要性排序 | 已剔除 |")
     A("")
     fd = os.path.join(D_ALG, "feature_dictionary.csv")
@@ -1043,9 +1043,12 @@ def build_doc(con, alg, fe):
     A("本项目是 500 家企业（浙江高企）；另有早期一套 1,714 家企业的信贷面板（`x1–x200` 匿名特征）。")
     A("`/api/model/benchmark`、`/api/model/noise-floor`、`/api/explain/global` 返回的是**后者**，")
     A("`/api/tech-graph/*` 返回的是**前者**。同页面展示会自相矛盾。\n")
-    A("**2. 标签是代理标签。**")
-    A("`label=1` = 高企资格到期未通过复核，不等于官方违约。21 个正例只够验证方法论，")
-    A("**不够支撑性能结论**。汇报时别写单一 AUC。\n")
+    A("**2. 标签是代理标签，且方向已纠正（v1.9）。**")
+    A("按企业好坏口径：**正例 = 好企业 = 资质存续（286 家）**，"
+      "**负例 = 坏企业 = 资质断档（21 家）**。")
+    A("`ads_label.label_value` / `v_model_train_ready.label` 保留风险预警方向（1=断档）以兼容已发布契约；"
+      "**新实验一律用 `v_model_train_ready_credit`**，逐企业对照见 `v_label_direction`。")
+    A("21 个负例只够验证方法论，**不够支撑性能结论**。汇报时别写单一 AUC。\n")
     A("**3. 企业 ID 格式。**")
     A("`ENT` + 12 位 hex、共 15 字符。传 `CN-330100-0001` 不会 500，"
       "会返回 `code=NOT_FOUND` 且 `meta.detail` 写明正确格式；"
@@ -1054,8 +1057,10 @@ def build_doc(con, alg, fe):
     A("## 六、还没做的\n")
     A("| 项 | 影响 | 难度 |")
     A("|---|---|---|")
-    A("| 扩样本池（500 → 5,000） | 只有这一条能真正解开「21 个正例」 | 高，取决于名单可得性 |")
-    A("| 训练一个可验证模型 | `score.value` 恒为 null，只能给 `proxy_score` | 依赖扩样本 |")
+    A("| P1-续：用 `v_model_train_ready_credit` 重跑 as-of 训练 / SHAP，分队列与分 as_of_policy 复核多标签测评 | 方向翻转后 AUC 应互为 1−AUC；检验分档结论稳定性 | **零采集，本地可做** |")
+    A("| P2：补独立于公示名单的 A 轴结果标签（撤销公告 / 异常名录） | 当前 6 个锚点里 4 个是状态量，且分档复用形成循环定义，做不了真正的外部效度 | 需采集，**非 P1 前置** |")
+    A("| 扩样本池（500 → 5,000） | 只增加同类共线标签的**数量**，不增加标签**维度**，已从 P1 移出 | 需拍板的可选采集项 |")
+    A("| 训练一个可验证模型 | `score.value` 恒为 null，只能给 `proxy_score` | 依赖独立结果标签 |")
     A("| 旧契约目录 %d 个假数据尚未删除 | 已用 `outputs/contracts/` 的 12 个真契约替代，"
       "API 不再读旧目录；但目录还在，误拷会覆盖 | 低 |" % fe["n_bad"])
     A("| `grant_date` / 引文库 / CAGR / 财务序列 | 结构性缺口，源数据没有 | 无解（已登记） |")
@@ -1093,11 +1098,12 @@ def build_doc(con, alg, fe):
     A("python tests/test_funding_provenance.py      # 8 项 融资事件行级溯源回填守卫")
     A("python tests/test_schema.py                 # 38 项 约束 / 字典 / 链路守卫（已适配 B 套）")
     A("python tests/test_collect_pool.py           # 16 项 公示名单采集器 / 幂等守卫（临时库）")
+    A("python tests/test_multilabel_eval.py        # 16 项 v1.9 标签方向 / 多标签测评守卫")
     A("```")
-    A("合计 **206 项**，全绿（19 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **222 项**，全绿（20 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 19 个 `test_*.py` **全部纳入交付守卫**。"
+    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 20 个 `test_*.py` **全部纳入交付守卫**。"
       "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
       "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
       "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"
@@ -1198,7 +1204,7 @@ def build_data_bundle(con):
     A("|---|---|---|---|")
     A("| `model_train_ready.csv` | **%d × 17** | 训练集，一行一家，已切 split | ✅ 直接 fit |"
       % n_tr)
-    A("| `dataset_asof_flat.csv` | **%d × %d** | 全量 as-of 面板，含 `excluded` | ❌ 含假负例，勿直接训 |"
+    A("| `dataset_asof_flat.csv` | **%d × %d** | 全量 as-of 面板，含 `excluded` | ❌ 含假续存样本，勿直接训 |"
       % (n_all, len(flat_cols)))
     A("| `enterprise_roster.csv` | **%d × %d** | 企业主档（500 家名单） | ❌ 无标签，仅供关联 |"
       % (len(roster), len(roster_cols)))
@@ -1207,7 +1213,7 @@ def build_data_bundle(con):
     A("`%d` 行 = 500 家 − %d 家被排除（首次认定在 2023/2024/2025，3 年窗口未闭合）"
       "− 7 家无 high_tech 记录。" % (n_tr, n_excl))
     A("")
-    A("| split | 行数 | 其中正例 |")
+    A("| split | 行数 | 其中断档样本 |")
     A("|---|---|---|")
     for sp in ("train", "val", "test"):
         r_ = q1(con, "SELECT COUNT(*) FROM v_model_train_ready WHERE split=?", (sp,))
@@ -1230,13 +1236,13 @@ def build_data_bundle(con):
     A("df = df[df.as_of_policy == 'cohort']      # %d 行 → 一家一行" % n_tr)
     A("```")
     A("")
-    A("`split == 'excluded'` 的 %d 行**不是负例**，是「还没到观察终点」，"
-      "当负例用会把正例率从 6.8%% 稀释到 4.2%%。" % n_excl)
+    A("`split == 'excluded'` 的 %d 行**不是续存样本**，是「还没到观察终点」，"
+      "当续存样本用会把断档样本占比从 6.8%% 稀释到 4.2%%。" % n_excl)
     A("")
     A("## 三条不能做的事\n")
     A("1. **不要重新切分**。`split` 按企业级固定，重切会造成跨集泄漏（实测 AUC 0.796 → 0.524）。")
-    A("2. **不要报单一 AUC**。%d 个正例、val 只有 2 个，请报交叉验证区间。" % n_pos)
-    A("3. **不要把 `label` 当官方违约口径**。它是代理标签：高企资格 3 年到期复核未通过 = 正例。")
+    A("2. **不要报单一 AUC**。%d 个断档样本、val 只有 2 个，请报交叉验证区间。" % n_pos)
+    A("3. **不要把 `label` 当官方违约口径**。它是代理标签：高企资格 3 年到期复核未通过 = 断档样本。")
     A("")
     A("字段逐列说明见上级目录 `数据字典.md`，标签定义见 `代理标签说明书.md`。")
     A("")
@@ -1332,7 +1338,7 @@ def main():
     alg = fe = db = None
     if args.only in (None, "algorithm"):
         alg = build_algorithm(con)
-        print("✅ 算法端：%d 行 × %d 列，正例 %d → %s"
+        print("✅ 算法端：%d 行 × %d 列，断档样本 %d → %s"
               % (alg["rows"], alg["cols"], alg["pos"], D_ALG))
     if args.only in (None, "frontend"):
         fe = build_frontend(con)

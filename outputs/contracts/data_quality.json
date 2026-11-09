@@ -884,8 +884,8 @@
   ],
   "gap_registry": {
     "meta": {
-      "version": "v2",
-      "updated_at": "2026-11-06",
+      "version": "v3",
+      "updated_at": "2026-11-09",
       "owner": "施汶邑（几梦）",
       "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
       "status_enum": {
@@ -1212,8 +1212,8 @@
     "displayable": true,
     "source": "SQLite zjtech_credit.db 全表逐列扫描 + configs/field_gap_registry.json",
     "method": "SUM(CASE WHEN col IS NULL OR col='' ...) 单次全表扫描，按表汇总",
-    "generated_at": "2026-11-07 16:45:55",
-    "schema_version": "v1.8",
+    "generated_at": "2026-11-09 15:25:46",
+    "schema_version": "v1.9",
     "note": "空值率来自库内实测；contradictions 是自动比对底表与视图得出的矛盾，未人工干预"
   }
 }

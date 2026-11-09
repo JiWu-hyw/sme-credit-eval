@@ -43,8 +43,8 @@ NOTES = {
     "fact_patent_citation": "**空表**：引文库源数据缺失，已登记为 source_missing",
     "fact_qualification": "高企资格认定明细，标签就来自这里",
     "fact_funding_event": "融资事件 506 条 / 182 家（2019–2026）；`source_id` 506/506 指向 `zj_500family`（A7 回填）",
-    "ads_label": "307 家打标结果，21 正例",
-    "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是负例）",
+    "ads_label": "307 家打标结果，21 断档样本",
+    "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是续存样本）",
     "ads_feature_asof": "长表形态的 as-of 特征（feature_name/feature_value）",
     "ads_graph_node": "异质图节点（企业/专利/IPC/发明人/投资机构 5 类）",
     "ads_graph_edge": "异质图边（files_patent/belongs_ipc/invented_by/funded_by/tech_similar）",
@@ -77,6 +77,30 @@ VIEW_NOTES = {
     "v_graph_slice_annual_edge": (
         "**v1.8 新增** 边级年度切片（files_patent / belongs_ipc / invented_by）；"
         "查询必须带 WHERE time_slice = :T，IPC 节点 ID 已剥 WIPO 版本号后缀"
+    ),
+    "v_label_direction": (
+        "**v1.9 新增** 标签方向对照（307 行）：正例=好企业=资质存续(286)，"
+        "负例=坏企业=资质断档(21)；底表 ads_label 未原地 UPDATE"
+    ),
+    "v_model_train_ready_credit": (
+        "**v1.9 新增** 正确方向训练入口：label=1-原 label，286 正例 / 21 负例；"
+        "历史 AUC≈0.52 翻成信用方向为 0.48，都表示无判别力"
+    ),
+    "v_label_mechanism_credit": (
+        "**v1.9 新增** 标签机制台账（正确方向）：n_positive 现在真是好企业数，"
+        "合计 286 / 21，与旧 v_label_mechanism 互补"
+    ),
+    "v_enterprise_label_matrix": (
+        "**v1.9 / P1 多标签测评** 500 行 × 6 个二值锚点 + 3 个有序锚点；"
+        "一律 1=好/正例、0=坏/负例、NULL=不可判定；B/C 轴同源不独立"
+    ),
+    "v_enterprise_multilabel_grade": (
+        "**v1.9 / P1** 多标签五档（A 81 / B 176 / C 157 / D 83 / E 3）+ L0 对照，"
+        "同档 294 家(58.8%)；分档复用锚点形成循环定义，不得当外部效度"
+    ),
+    "v_multilabel_eval_summary": (
+        "**v1.9 / P1** 交叉测评长表：档次 → 各锚点正例率、与 L0 一致率、锚点覆盖率；"
+        "资质存续 / 硬结果两列是循环定义，只用于暴露口径"
     ),
 }
 
@@ -147,7 +171,7 @@ def build(db_path: str = DB) -> dict:
     A("| 字段合计 | **%d** |" % n_cols)
     A("| 企业 | **%d** 家 |" % n_ent)
     A("| 专利 | **%s** 件（按 `app_no` 去重） |" % format(n_pat, ","))
-    A("| 训练集 | **%d** 行，正例 **%d** |" % (n_tr, n_pos))
+    A("| 训练集 | **%d** 行，断档样本 **%d** |" % (n_tr, n_pos))
     A("| 融资事件血缘 | **%d / %d** 行有 `source_id`（`zj_500family`） |"
       % (n_fund_src, n_fund))
     A("")
@@ -181,11 +205,11 @@ def build(db_path: str = DB) -> dict:
                                   VIEW_NOTES.get(name, "—")))
     A("")
     A("## 四条使用红线\n")
-    A("1. **训练只认 `v_model_train_ready`**。它已经挡掉三个坑：193 行假负例、"
+    A("1. **训练只认 `v_model_train_ready`**。它已经挡掉三个坑：193 行假续存样本、"
       "伪重复（一家两行）、4 个常量特征。")
     A("2. **专利数用 `COUNT(DISTINCT app_no)`**。`COUNT(*)` 得 32,969，实际 30,103 件，虚高 9%。")
     A("3. **用 `ads_model_dataset` 前先过滤** `split != 'excluded'`，"
-      "`excluded` 是窗口未闭合，不是负例。")
+      "`excluded` 是窗口未闭合，不是续存样本。")
     A("4. **`ext_msme_sample` 不属于本项目**。那是外部对照组 1,707 行，别混进 500 家样本统计。")
     A("")
     A("字段逐列含义见上级目录 `04_数据字典与数据集/数据字典.md`（%d 列全覆盖）。" % n_cols)

@@ -456,7 +456,7 @@ def build_feature_tree(con: sqlite3.Connection) -> dict:
                   "coverage_asof 为 0 的特征在 as-of 视图里是空壳列，不可用于建模。",
         "provenance": prov(
             "derived",
-            f"{TRAIN_VIEW}（307 行 21 正例）+ {ASOF_VIEW}（614 行）",
+            f"{TRAIN_VIEW}（307 行 21 断档样本）+ {ASOF_VIEW}（614 行）",
             "单变量 AUC 用 Mann-Whitney 秩公式；覆盖率 = COUNT(col)/总行数；"
             "分组为人工按列口径定义，非聚类结果",
         ),
@@ -621,7 +621,7 @@ def build_graph_slices(con: sqlite3.Connection) -> dict:
         eids = [r[0] for r in qa(
             con, f"SELECT enterprise_id FROM {TRAIN_VIEW} WHERE label=? GROUP BY 1", (l,))]
         s = stats_for(eids, "positive" if l == 1 else "negative",
-                      "到期未通过（正例）" if l == 1 else "正常续存（负例）")
+                      "到期断档（负例·坏企业）" if l == 1 else "正常续存（正例·好企业）")
         if s:
             s["n_enterprises"] = n
             by_label.append(s)
@@ -962,7 +962,7 @@ def build_roc_pr_ks() -> dict:
                     continue
                 multi.append({
                     "configuration": cfg, "model": model,
-                    "dataset": "B 浙江高企（307 家 / 21 正例）",
+                    "dataset": "B 浙江高企（307 家 / 21 断档样本）",
                     "auc_mean": m.get("auc_mean"), "auc_std": m.get("auc_std"),
                     "n_folds": m.get("n_folds"),
                     "note": "B 套只有 100 折重复交叉验证的 AUC 分布，无单一 holdout ROC 可重建",
@@ -980,7 +980,7 @@ def build_roc_pr_ks() -> dict:
         "warnings": [
             "roc / pr 的点位是**由 AUC 锚点重建**，不是逐条样本实测；形状可信、点位不可引用为实测",
             "ks_reconstructed 与 ks_measured 的差值即重建误差，已逐条列出；本轮已用双锚点拟合，残差应接近 0",
-            "B 套（本项目主数据集）只有 100 折 AUC 分布，**没有**可重建的单一 ROC —— 21 个正例不足以支撑性能结论",
+            "B 套（本项目主数据集）只有 100 折 AUC 分布，**没有**可重建的单一 ROC —— 21 个断档样本不足以支撑性能结论",
         ],
         "provenance": prov(
             "reconstructed",
@@ -1158,7 +1158,7 @@ def build_survival(con: sqlite3.Connection) -> dict:
             "不代表有 100 份独立样本",
             "prospective_top 的 risk 是进入模型的排序分，未经独立时间外验证，"
             "不得作为「预测会掉队」的结论",
-            "标签只有 21 个正例，性能结论最多支撑方法论演示",
+            "标签只有 21 个断档样本，性能结论最多支撑方法论演示",
             "best_config（含 qcc 外采）AUC 0.87 已被泄漏实验解释：同期资质/证书类字段"
             "带来的是标签同源信息，不是预测力。对外只报 asof14（≈0.66）并在同一句里给 "
             "permutation floor（≈0.47）",

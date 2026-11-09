@@ -214,7 +214,7 @@ def train(epochs: int = EPOCHS, verbose: bool = True) -> Dict[str, object]:
 
     if verbose:
         print("[gat] 训练 %d 轮，best epoch=%d（val AUC=%.4f）" % (len(history), best["epoch"], best["val_auc"]))
-        print("      record 节点平均 PD=%.4f（真实正例率 %.4f）"
+        print("      record 节点平均 PD=%.4f（真实断档样本占比 %.4f）"
               % (prob.mean(), float(y.mean())))
         print("  GAT     AUC=%.4f  KS=%.4f  Acc=%.4f  Recall=%.4f  F1=%.4f"
               % (m_test["auc"], m_test["ks"], m_test["accuracy"], m_test["recall"], m_test["f1"]))

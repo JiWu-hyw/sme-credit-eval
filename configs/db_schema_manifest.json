@@ -1,7 +1,7 @@
 {
-  "schema_version": "v1.8",
+  "schema_version": "v1.9",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-07 16:12:05",
+  "generated_at": "2026-11-09 15:41:34",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",
@@ -3498,7 +3498,7 @@
         }
       ],
       "n_cols": 4,
-      "n_rows": 9
+      "n_rows": 10
     },
     "ods_patent_raw": {
       "columns": [
@@ -4187,6 +4187,41 @@
       "grade_ver",
       "scope_note"
     ],
+    "v_enterprise_label_matrix": [
+      "enterprise_id",
+      "name_display",
+      "y_hard_outcome",
+      "y_risk_free",
+      "y_survival",
+      "y_qual_ladder_good",
+      "y_qcc_credit_good",
+      "y_qcc_tech_good",
+      "y_qual_ladder",
+      "y_qcc_credit",
+      "y_qcc_tech",
+      "n_labels_observed",
+      "n_good",
+      "n_bad",
+      "label_agreement",
+      "axis_note"
+    ],
+    "v_enterprise_multilabel_grade": [
+      "enterprise_id",
+      "name_display",
+      "y_survival",
+      "y_hard_outcome",
+      "y_risk_free",
+      "grade_multilabel",
+      "grade_code",
+      "grade_l0",
+      "is_consistent_with_l0",
+      "n_labels_observed",
+      "n_good",
+      "n_bad",
+      "label_agreement",
+      "grade_ver",
+      "scope_note"
+    ],
     "v_enterprise_profile": [
       "enterprise_id",
       "name_display",
@@ -4287,6 +4322,17 @@
       "edge_type",
       "weight"
     ],
+    "v_label_direction": [
+      "enterprise_id",
+      "label_task",
+      "risk_label",
+      "credit_label",
+      "credit_class",
+      "positive_definition",
+      "negative_definition",
+      "definition_ver",
+      "direction_note"
+    ],
     "v_label_mechanism": [
       "n_events",
       "cohort_year",
@@ -4294,6 +4340,15 @@
       "n_positive",
       "n_negative",
       "positive_rate"
+    ],
+    "v_label_mechanism_credit": [
+      "n_events",
+      "cohort_year",
+      "n_enterprise",
+      "n_positive",
+      "n_negative",
+      "positive_rate",
+      "direction_note"
     ],
     "v_model_dataset_asof_flat": [
       "enterprise_id",
@@ -4402,6 +4457,27 @@
       "core_staff_stability",
       "n_inventor"
     ],
+    "v_model_train_ready_credit": [
+      "enterprise_id",
+      "name_display",
+      "region_code",
+      "cohort_year",
+      "split",
+      "label",
+      "n_patent_app",
+      "n_patent_invention",
+      "n_patent_grant",
+      "inv_patent_ratio",
+      "tech_conversion",
+      "n_ipc_subclass",
+      "tech_breadth_entropy",
+      "tech_breadth_ipc_class",
+      "grant_rate",
+      "core_staff_stability",
+      "n_inventor",
+      "label_direction",
+      "positive_class"
+    ],
     "v_model_train_ready_cv": [
       "enterprise_id",
       "name_display",
@@ -4421,6 +4497,17 @@
       "grant_rate",
       "core_staff_stability",
       "n_inventor"
+    ],
+    "v_multilabel_eval_summary": [
+      "metric",
+      "group_value",
+      "n_enterprise",
+      "n_positive",
+      "n_observed",
+      "positive_rate",
+      "mean_agreement",
+      "n_same_l0",
+      "note"
     ],
     "v_patent_canonical": [
       "app_no",
@@ -4493,6 +4580,6 @@
     ]
   },
   "total_tables": 34,
-  "total_views": 23,
+  "total_views": 29,
   "total_columns": 552
 }

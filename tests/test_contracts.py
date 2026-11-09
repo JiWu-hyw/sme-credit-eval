@@ -193,7 +193,7 @@ def t_feature_tree_matches_view():
     assert s["n_in_train_ready"] == 11, "进训练的应为 11 个特征，实得 %s" % s["n_in_train_ready"]
     assert s["n_discriminative"] == 5, \
         "有判别力特征应为 5 个（已知 4 负 1 正），实得 %s" % s["n_discriminative"]
-    assert s["reference"]["n_pos"] == 21, "参考集正例应为 21"
+    assert s["reference"]["n_pos"] == 21, "参考集断档样本应为 21"
 
 
 def t_graph_structure_exact():

@@ -79,7 +79,7 @@ def check(con: sqlite3.Connection) -> list[str]:
         "     OR (biz_status IS NOT NULL AND biz_status <> '开业'))").fetchone()[0]
     if leak:
         bad.append("E 档硬约束被降级：%d 家" % leak)
-    # 未打标企业不得被当成负例推入 D 档（只能靠风险负面命中）
+    # 未打标企业不得被当成续存样本推入 D 档（只能靠风险负面命中）
     mis = con.execute(
         "SELECT COUNT(*) FROM v_enterprise_grade_l0 "
         "WHERE label_value_qual_survival = -1 AND hit_rule = 'D:资质断档信号'").fetchone()[0]
