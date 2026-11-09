@@ -150,7 +150,15 @@ export const fetchRocPrKs = () => call<import('@/types/contracts').RocPrKs>('mod
 export const fetchNoiseFloor = () =>
   call<import('@/types/contracts').NoiseFloorContract>('model/noise-floor', '/model/noise-floor')
 
-/** P5 GET /api/explain/global —— 全局 SHAP 特征贡献（实测）+ 蜂群点位（锚点重建） */
+/**
+ * P5 GET /api/explain/global —— 全局 SHAP 特征贡献（实测）+ 蜂群点位（锚点重建）
+ *
+ * ⚠️ 方向语义（2026-11-09）：本页契约是 A 套信贷面板 **PD 风险方向** 的前端原型 mock，
+ * `+1 = 推高违约概率`（风险因子），`label_ref = null`、`semantic_known = false`。
+ * v1.9 企业好坏口径的实测解释是 `outputs/shap_credit_direction.json`（P(好企业)，
+ * `+1 = 增信因子`），两者方向相反且数据集不同，**禁止互引数值或合并排序**。
+ * 详见 `outputs/shap_legacy_notice.md`；契约 meta 内已注入 `label_direction` 声明。
+ */
 export const fetchShapGlobal = () =>
   call<import('@/types/contracts').ShapGlobal>('explain/global', '/explain/global')
 

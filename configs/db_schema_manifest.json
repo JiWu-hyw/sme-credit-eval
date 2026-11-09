@@ -1,7 +1,7 @@
 {
   "schema_version": "v1.9",
   "db_path": "data/db/zjtech_credit.db",
-  "generated_at": "2026-11-09 15:41:34",
+  "generated_at": "2026-11-09 21:28:05",
   "indicators": {
     "3.1 inv_patent_ratio": {
       "table": "dws_tech_feature",

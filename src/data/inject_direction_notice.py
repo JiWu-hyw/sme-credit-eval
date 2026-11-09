@@ -35,6 +35,8 @@ NOTICE = """**方向声明（2026-11-09 纠正，v1.9）**：本项目研究企�
 TARGETS = [
     # outputs 与交付目录的两份数据字典必须字节同源（test_funding_join_contract 会比对）
     "outputs/data_dictionary.md",
+    # 说明书两份也必须同源：只给交付份注入会造成 outputs/ 与 deliverables/ 分叉
+    "outputs/label_spec.md",
     "README.md",
     "data/docs/数据需求清单_扫描报告.md",
     "docs/论文/企业分档多标签体系方案-v1.0.md",

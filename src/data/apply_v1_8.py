@@ -41,13 +41,33 @@ NOTE = (
     "v1.3.0 Release 附件仍为 v1.6 快照。"
 )
 
-# 末年（T=2026）累计规模，独立 SQL 实跑基准
+# 末年（T=2026）累计规模，独立 SQL 实跑基准。
+# 2026-11-09 修订（V191GRAPHFIX）：旧基准 51795 来自「fact_patent JOIN
+# bridge_patent_ipc」的重复边，与物理图 ads_graph_edge 差 19 条；年度切片视图
+# 已改为以物理图为唯一边源，故基准同步为 51776。运行时 check() 不依赖此常量，
+# 而是从物理图现场重算（见 expected_cum），本常量仅供守卫做回归参照。
 EXPECT_CUM = {
     "n_node_patent": 32969,
     "n_edge_files_patent": 32203,
-    "n_edge_belongs_ipc": 51795,
+    "n_edge_belongs_ipc": 51776,
     "n_edge_invented_by": 77899,
 }
+
+
+def expected_cum(con: sqlite3.Connection) -> dict:
+    """从物理图独立重算末年累计期望值，避免再被硬编码的旧口径锁死。"""
+    phy = dict(con.execute(
+        "SELECT edge_type, COUNT(*) FROM ads_graph_edge "
+        "WHERE edge_type IN ('files_patent','belongs_ipc','invented_by') GROUP BY 1"
+    ).fetchall())
+    return {
+        "n_node_patent": con.execute(
+            "SELECT COUNT(*) FROM ads_graph_node WHERE node_type='patent'"
+        ).fetchone()[0],
+        "n_edge_files_patent": phy.get("files_patent", 0),
+        "n_edge_belongs_ipc": phy.get("belongs_ipc", 0),
+        "n_edge_invented_by": phy.get("invented_by", 0),
+    }
 # 旁路表实测非空家数（cohort / due_minus_1），用于有效覆盖对账
 EXPECT_SIDE = {
     ("cohort", "m_funding"): 307,
@@ -129,8 +149,9 @@ def check(con: sqlite3.Connection) -> list[str]:
     cum = dict(con.execute(
         "SELECT metric, n_cumulative FROM v_graph_slice_annual WHERE time_slice=?",
         (tmax,)).fetchall())
-    if cum != EXPECT_CUM:
-        bad.append("末年累计与独立基准不符：实得 %r，期望 %r" % (cum, EXPECT_CUM))
+    expect = expected_cum(con)
+    if cum != expect:
+        bad.append("末年累计与物理图独立重算不符：实得 %r，期望 %r" % (cum, expect))
     dec = con.execute(
         "SELECT COUNT(*) FROM ("
         " SELECT metric, time_slice, n_cumulative,"

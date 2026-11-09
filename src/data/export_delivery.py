@@ -345,14 +345,24 @@ def build_algorithm(con):
     A("| ⛔ drop_no_signal | %d | %s |" % (len(dno), "、".join("`%s`" % r[0] for r in dno) or "—"))
     A("| ❌ unavailable | %d | %s |" % (len(unav), "、".join("`%s`" % r[0] for r in unav) or "—"))
     A("")
-    A("完整判据见 `feature_dictionary.csv`。\n")
+    A("完整判据见 `feature_dictionary.csv`；**不可用的 14 列为什么留空、用什么替代、"
+      "什么时候能补**，逐条见同目录 `field_gap_decisions.md`（登记册 v3 的只读视图，"
+      "含主宽表 8 个全空列的现场核对）。**不要用均值/中位数填充**：填充后是常量列，"
+      "既不提供信息，又会在特征重要性里留下幽灵特征。\n")
     A("> ⚠️ `grant_rate` 在 2021 队列 160 家**全部为 1.0**（发明专利需 3 年审结期，")
     A("> 2021 时点窗口内没有成熟样本），2022 队列才有 0/1 变化。混队列训练会让它")
     A("> 退化成队列哑变量，建议优先剔除。\n")
 
     A("## 5. 标签口径（必读）\n")
-    A("`label = 1` 表示「高企资格 3 年到期后**未通过复核**」，**不是**官方违约/经营异常定义。")
-    A("它是从 14 份年度认定名单反推的**代理标签**，混淆来源与偏误方向见 `label_spec.md`。\n")
+    A("`v_model_train_ready.label = 1` 表示「高企资格 3 年到期后**未再出现在后续任何公示名单**」"
+      "（断档），**不等于官方「复核未通过」**，也不是违约 / 经营异常 / 严重失信。"
+      "它是从 14 份年度认定名单差分反推的**代理标签**：企业可能经营恶化，也可能只是没再申报，"
+      "两者在现有数据里无法区分。混淆来源与偏误方向见 `label_spec.md`。\n")
+    A("> **方向（v1.9）**：上面这个 `label` 是**风险预警方向**（1=断档）。本项目研究企业好坏 / "
+      "信用评价，**正例 = 好企业 = 资质存续（286 家，label_value=0）**，"
+      "**负例 = 坏企业 = 资质断档（21 家，label_value=1）**。"
+      "新代码一律从 `v_model_train_ready_credit` 取标签，逐企业对照见 `v_label_direction`；"
+      "本 CSV 为兼容已发布契约保留原数值，未原地改写。\n")
     A("一个必须知道的事实：`n_events=1` 的 21 家**全部**是断档样本，`n_events>=2` 的 286 家")
     A("**全部**是续存样本。标签几乎等价于「只被认定过一次」，这也是「持续经营类特征」")
     A("天然有判别力的原因 —— 但分不清是经营恶化还是懒得申报。\n")
@@ -407,6 +417,11 @@ te = df[df.split == 'test']
         (os.path.join(OUTPUTS, "shap_credit_direction.csv"), "shap_credit_direction.csv"),
         (os.path.join(OUTPUTS, "shap_credit_direction.png"), "shap_credit_direction.png"),
         (os.path.join(OUTPUTS, "shap_legacy_notice.md"), "shap_legacy_notice.md"),
+        # 评审 §5.2 时序图 / §6 T22 字段缺口的定稿说明（2026-11-09 补）
+        (os.path.join(OUTPUTS, "graph_temporal_contract.md"), "graph_temporal_contract.md"),
+        (os.path.join(OUTPUTS, "graph_temporal_contract.json"), "graph_temporal_contract.json"),
+        (os.path.join(OUTPUTS, "field_gap_decisions.md"), "field_gap_decisions.md"),
+        (os.path.join(OUTPUTS, "field_gap_decisions.json"), "field_gap_decisions.json"),
     ]:
         if os.path.exists(src):
             shutil.copy2(src, os.path.join(D_ALG, dst))
@@ -428,7 +443,9 @@ te = df[df.split == 'test']
     A("| `credit_direction_asof_report.md` | **P1-续 主报告**：方向纠正后 as-of 训练 / AUC 恒等式 / 分切面与分队列复核 / 重跑 SHAP |")
     A("| `credit_direction_asof.json` | 上表结构化结果（含逐折明细） |")
     A("| `shap_credit_direction.json` / `.csv` / `.png` | **当前口径**全局解释：P(好企业)，`+1`=增信因子 |")
-    A("| `shap_legacy_notice.md` | 旧 `shap_global.*` / `shap_top_features.csv` 方向警告，禁止与新产物混用 |")
+    A("| `shap_legacy_notice.md` | 旧 `shap_global.*` / `shap_top_features.csv` 方向警告，禁止与新产物混用；含前端 4 份 mock 契约的路径基准澄清 |")
+    A("| `graph_temporal_contract.md` / `.json` | **评审 §5.2 时序图**：29 帧年度累计切片 / STGNN 输入 SQL / 同源守恒校验 / 产品节点缺口定稿 |")
+    A("| `field_gap_decisions.md` / `.json` | **评审 §6 T22**：17 条字段级 NULL 定稿 + 10 条替代特征 + 主宽表 8 列现场核对 |")
     A("")
     A("## 30 秒上手\n")
     A("""```python
@@ -1114,11 +1131,14 @@ def build_doc(con, alg, fe):
     A("python tests/test_collect_pool.py           # 16 项 公示名单采集器 / 幂等守卫（临时库）")
     A("python tests/test_multilabel_eval.py        # 16 项 v1.9 标签方向 / 多标签测评守卫")
     A("python tests/test_credit_direction.py       # 20 项 P1-续 方向纠正训练 / SHAP / AUC 恒等式守卫")
+    A("python tests/test_graph_temporal_contract.py # 15 项 时序图同源 / 守恒 / 查询性能闸门守卫")
+    A("python tests/test_shap_direction_notice.py  # 8 项 SHAP 方向语义 / 契约路径基准守卫")
+    A("python tests/test_field_gap_decisions.py    # 11 项 缺口定稿落地 / 交付散文件同源守卫")
     A("```")
-    A("合计 **242 项**，全绿（21 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **276 项**，全绿（24 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 21 个 `test_*.py` **全部纳入交付守卫**。"
+    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 24 个 `test_*.py` **全部纳入交付守卫**。"
       "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
       "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
       "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"

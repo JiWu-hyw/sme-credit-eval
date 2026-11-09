@@ -538,7 +538,74 @@
       "evaluation": "v_multilabel_eval_summary / outputs/multilabel_eval_report.md：与 L0 单标签分档一致率 58.8%；A–D 档硬结果正例率恒 1.0 属循环定义，不得当外部效度。"
     }
   },
+  "graph_gaps": [
+    {
+      "id": "G-GRAPH-01",
+      "scope": "ads_graph_node / 立项六类实体",
+      "gap": "产品节点缺失",
+      "status": "source_missing",
+      "priority": "P2",
+      "decision": "A 保持缺失，禁止伪造",
+      "decided_at": "2026-11-09",
+      "decided_by": "WorkBuddy(施汶邑)",
+      "reason": "库内 34 张表没有任何产品 / 商标 / 经营范围 / 招投标源表；用专利标题聚类或 IPC 小组冒充产品节点会造出伪实体，与 v1.9 已禁止的伪多源 / 循环定义同类。",
+      "evidence": [
+        "ads_graph_node.node_type 实测 5 类：enterprise 500 / patent 32969 / inventor 15955 / ipc 11588 / investor 572",
+        "立项六类：企业 / 专利 / 投资机构 / 人员 / 领域 / 产品，仅缺产品",
+        "人员与投资机构已于 v1.2 入图，评审报告 §5.2(2) 的「3 类节点」为旧快照"
+      ],
+      "remedy": "接入工商经营范围、商标、产品或招投标目录，并建立产品—企业归属映射。",
+      "remedy_cost": "外部采集（非本轮零采集范围）",
+      "impact": "当前技术域语义由 ipc 节点承担；异质图缺一类实体，GAT/STGNN 不得宣称覆盖立项六类。",
+      "fallback": "无（禁止用 IPC / 专利标题构造替代节点）"
+    },
+    {
+      "id": "G-GRAPH-02",
+      "scope": "v_graph_slice_annual_edge / 年度时序切面",
+      "gap": "funded_by 与 tech_similar 两类边不进时序切面",
+      "status": "null_by_design",
+      "priority": "P2",
+      "decision": "A 静态边保持静态，不做伪时序切分",
+      "decided_at": "2026-11-09",
+      "decided_by": "WorkBuddy(施汶邑)",
+      "reason": "funded_by 缺「边—融资事件年份」的可靠映射（investor_names 为 JSON 名称串，与 investor 节点 ID 需二次匹配）；tech_similar 是全期静态余弦相似度，按年切分没有物理含义。",
+      "evidence": [
+        "funded_by 583 条 / tech_similar 8749 条，物理表 time_slice 全为 0",
+        "年度切片仅覆盖 files_patent 32203 / belongs_ipc 51776 / invented_by 77899"
+      ],
+      "remedy": "重建融资事件—投资机构 ID 映射并落 event_year；tech_similar 若需时序化，须按 as-of 年份重算相似度。",
+      "remedy_cost": "中（可复用现有 fact_funding_event，但需名称消歧）",
+      "impact": "年度切面不等于全边时序化；STGNN 报告须写明覆盖 3 类边。",
+      "fallback": "静态边在物理图中照常可用，见 graph_structure.json"
+    },
+    {
+      "id": "G-GRAPH-03",
+      "scope": "v_graph_slice_annual / v_graph_slice_annual_edge",
+      "gap": "旧年度切片与物理图不同源（belongs_ipc 差 19 条）",
+      "status": "fixed",
+      "decision": "已于 2026-11-09 修订为以 ads_graph_edge 为唯一边源",
+      "decided_at": "2026-11-09",
+      "decided_by": "WorkBuddy(施汶邑)",
+      "reason": "旧视图从 fact_patent JOIN bridge_patent_ipc 现算边；末年累计 51795 条，物理图 51776 条。新定义端点 ID 原样取自物理表，末年三类边严格守恒、孤立端点 0。",
+      "evidence": [
+        "修订前 51795 vs 51776",
+        "修订后 51776 / 32203 / 77899 全等，见 outputs/graph_temporal_contract.md"
+      ],
+      "remedy": "已由 src/data/migrations/v1_9_1_graph_slice_fix.sql 修复；守卫 tests/test_graph_temporal_contract.py 防回归。",
+      "remedy_cost": "零采集，已完成",
+      "impact": "STGNN 年度切面与静态图可互相对照。",
+      "fallback": "回滚点 outputs/graph_slice_pre_fix_ddl.json"
+    }
+  ],
   "policies": {
+    "graph_temporal": {
+      "rule": "时序图输入一律取 v_graph_slice_annual_edge（累计快照口径，t <= time_slice），按 as_of 年份过滤；物理表 time_slice=0 是全量单快照标记，不是缺失值，禁止 UPDATE 底表来「造时序」。",
+      "forbid": "禁止把累计量当当年流量喂 GRU/TCN；禁止用 2026 全量快照回测 2021 队列；禁止宣称全边时序化或覆盖立项六类实体。",
+      "contract": "outputs/graph_temporal_contract.md / .json",
+      "check": "python -m src.data.apply_graph_slice_fix --check",
+      "decided_at": "2026-11-09",
+      "decided_by": "WorkBuddy(施汶邑)"
+    },
     "as_of": {
       "rule": "建模特征一律只用 v_model_dataset_asof_flat，且一次实验固定单一 as_of_policy（cohort 或 due_minus_1），禁止混用 —— 混用会出现一家两行的伪重复。",
       "train_ready_view": "v_model_train_ready",

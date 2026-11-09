@@ -1,5 +1,8 @@
 {
   "meta": {
+    "label_direction": "A 套信贷面板 PD 风险方向（+1=推高违约概率）；与 v1.9 企业好坏口径 P(好企业) 语义相反",
+    "current_shap_entry": "outputs/shap_credit_direction.json（P(好企业)，+1=增信因子，-1=风险因子）",
+    "direction_notice": "v1：本契约是前端原型 mock（contract_status=mock / label_pending，label_ref=null），禁止与当前口径 SHAP 混用或互引数值；详见 outputs/shap_legacy_notice.md",
     "generated_at": "2026-10-28T16:20:00+08:00",
     "script": "scripts/build_enterprise_contracts.py",
     "dataset": "real_panel",

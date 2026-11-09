@@ -89,7 +89,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（242 项守卫，21 文件）
+├── tests/                    单元测试 / 集成测试（276 项守卫，24 文件）
 │                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -113,8 +113,8 @@
     └── 2026-10-28/           第二批：前端旧目录、旧版答复文档
 ```
 
-**测试文件范围（2026-11-09 更新）**：`tests/` 下 21 个 `test_*.py` **全部纳入交付守卫，
-共 242 项全绿**。新增 `test_credit_direction.py`（20 项）守卫 P1-续 的 AUC 方向恒等式、
+**测试文件范围（2026-11-09 更新）**：`tests/` 下 24 个 `test_*.py` **全部纳入交付守卫，
+共 276 项全绿**。新增 `test_credit_direction.py`（20 项）守卫 P1-续 的 AUC 方向恒等式、
 双方向打分对称性、分切面 / 分队列复核与重跑 SHAP；纯净检出缺 `outputs/` 产物时按项目
 约定显式 SKIP，不误报失败。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
 A 套 27 表链路自测，已于 11-09 适配 B 套 v1.8：IPC 断言改为校验 A–H 八个部类齐全
@@ -448,6 +448,15 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 算法端要拿到 v1.9 库需另发 **v1.5.0** Release（附件同名 `zjtech_credit_data.zip`，
 **不覆盖 v1.4.0**），说明见 `deliverables/RELEASE_v1.5.0.md`。
 历史：v1.7 新增五档视图与标签任务登记；v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
+
+**2026-11-09 晚间修订（仍记 v1.9，不升版本）**：两个年度切片视图 `v_graph_slice_annual*`
+改为以 `ads_graph_edge` 为唯一边源，修掉旧定义与物理图 IPC 边差 19 条的同源 bug；
+新增 `idx_gedge_dst_typ` / `idx_gedge_src_typ` 两个查询索引并用 `CROSS JOIN + INDEXED BY`
+固定连接顺序（全表 `COUNT(*)` 847,677 行约 0.9s，改回普通 JOIN 会劣化到 >170s）。
+**未 UPDATE 任何底表行、未增删表/视图/列**，仍是 34 表 / 29 视图 / 912 列。
+配套产物 `outputs/graph_temporal_contract.md`（STGNN 输入契约）、
+`outputs/field_gap_decisions.md`（17 条字段级 NULL 定稿）与
+`outputs/shap_legacy_notice.md`（前端 mock 契约方向警告），已整合进 `01_算法端/`。
 A7 另把 `fact_funding_event.source_id` 从 0/506 回填为 506/506 `zj_500family`——
 **只补行级血缘列**，金额 / 估值等业务列用 SHA-256 前后指纹对账未变，
 schema 结构未改、版本仍 v1.8；变更凭证 `outputs/funding_provenance_backfill.json`，

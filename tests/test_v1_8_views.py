@@ -21,6 +21,11 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(ROOT, "data", "db", "zjtech_credit.db")
 MIG = os.path.join(ROOT, "src", "data", "migrations", "v1_8_consistency.sql")
+# 2026-11-09：两个年度切片视图已被 V191GRAPHFIX 重定义（改为以物理图为唯一边源，
+# 修掉 belongs_ipc 差 19 条）。DDL 权威源随之切到新迁移文件；v1_8_consistency.sql
+# 保留历史原貌不改写，回滚点在 outputs/graph_slice_pre_fix_ddl.json。
+NEW_MIG = os.path.join(ROOT, "src", "data", "migrations", "v1_9_1_graph_slice_fix.sql")
+SLICE_VIEWS = ("v_graph_slice_annual", "v_graph_slice_annual_edge")
 SCHEMA = os.path.join(ROOT, "src", "data", "schema.sql")
 BACKUP = os.path.join(ROOT, "data", "db", "zjtech_credit_pre_v18.db")
 sys.path.insert(0, ROOT)
@@ -172,10 +177,14 @@ def h_ddl_consistency_and_edge_view():
     finally:
         c.close()
     for v in VIEWS:
-        for path in (MIG, SCHEMA):
+        paths = (NEW_MIG, SCHEMA) if v in SLICE_VIEWS else (MIG, SCHEMA)
+        for path in paths:
             t = read(path)
-            m = re.search(r"(CREATE VIEW %s AS.*?)(?=DROP VIEW|-- \[V18CONSISTENCY:END\]|\Z)"
-                          % re.escape(v), t, re.S | re.I)
+            m = re.search(
+                r"(CREATE VIEW %s AS.*?)"
+                r"(?=DROP VIEW|-- \[V18CONSISTENCY:END\]|"
+                r"-- \[V191GRAPHFIX:BEGIN\]|-- \[V191GRAPHFIX:END\]|\Z)"
+                % re.escape(v), t, re.S | re.I)
             assert m, "%s 缺 %s 的 CREATE VIEW 定义" % (os.path.basename(path), v)
             assert _norm(m.group(1)) == _norm(lib[v]), (
                 "%s 与库内 %s 定义不一致" % (os.path.basename(path), v))
@@ -183,7 +192,7 @@ def h_ddl_consistency_and_edge_view():
                 "edge_type", "weight"):
         assert col in cols, "边级切片视图缺列 %s" % col
     assert dirty == 0, "IPC 节点 ID 未剥 WIPO 版本号后缀：%d 条" % dirty
-    # 末年累计与预置图逐类型对账（belongs_ipc 差 19 条来自 IPC 归一并边，单独说明）
+    # 末年累计与预置图逐类型对账（V191GRAPHFIX 后三类边全部严格相等，不再有 19 条差）
     cum = one("SELECT n_cumulative FROM v_graph_slice_annual "
               "WHERE metric='n_edge_invented_by' "
               "AND time_slice=(SELECT MAX(time_slice) FROM v_graph_slice_annual)")
