@@ -4,13 +4,16 @@
 覆盖：多格式解析、编码探测、列名识别、脏行清洗、元数据推断、区域推断、
 端到端入库、幂等性、STRICT 约束拦截。
 
-适用边界（2026-11-07 标注）：本文件是早期 A 套公示名单采集器
-（src/data/collect_pool.py + src/data/db.py 临时空库）的自测。
-端到端夹具写死「5 文件 → 9 家企业 / 9 条资质」，当前采集器规范化去重后
-实际得到 8 家，因此端到端与幂等 2 项已知失败，属于旧夹具期望值未更新。
-当前交付库是 B 套浙江 500 家 / schema v1.8，走 load_500family.py 链路。
-本文件不纳入交付守卫清单（17 个活跃守卫 / 152 项），
-评价 v1.8 请用 README 与 00_先看这个.md 里登记的那 17 个。
+适用边界（2026-11-09 更新）：本文件是早期 A 套公示名单采集器
+（src/data/collect_pool.py + src/data/db.py 临时空库）的自测，
+全程用临时库，与交付库 B 套浙江 500 家 / schema v1.8 相互独立。
+2026-11-07 标注的「规范化去重后 8 家」归因有误：真实原因是当时解释器
+缺 openpyxl，build_cases 静默跳过 XLSX 夹具，5 个文件变 4 个、9 家变 8 家。
+requirements.txt 已声明 openpyxl>=3.1，补齐依赖后夹具恢复 5 文件 / 9 家，
+端到端与幂等 2 项通过，XLSX 解析路径也真正被覆盖。
+另把「缺依赖静默算 OK」改为显式 SKIP，端到端期望值按实际夹具文件数计算，
+避免换机器后又出现假阳性或假阴性。
+本文件已纳入交付守卫清单（19 个活跃守卫文件）。
 
 用法：.venv/Scripts/python.exe tests/test_collect_pool.py
 """
@@ -25,7 +28,13 @@ sys.path.insert(0, ROOT)
 from src.data import db as D                    # noqa: E402
 from src.data import collect_pool as C          # noqa: E402
 
-PASS, FAIL = [], []
+PASS, FAIL, SKIP = [], [], []
+
+
+def skip(name, reason):
+    """依赖缺失时显式跳过，不计入通过、也不算失败（避免假阳性）。"""
+    SKIP.append((name, reason))
+    print("  SKIP %s -- %s" % (name, reason))
 
 
 def check(name, fn):
@@ -90,7 +99,8 @@ def build_cases(tmp):
         xlsx = os.path.join(d, "high_tech_2024.xlsx")
         wb.save(xlsx)
     except ImportError:
-        pass
+        # 不静默吞掉：依赖缺失时 xlsx 保持 None，由 test_parse 显式记为 SKIP
+        xlsx = None
     return {"dir": d, "csv_gbk": csv_gbk, "csv_comma_head": csv_comma_head,
             "html": html, "json": js, "xlsx": xlsx}
 
@@ -157,7 +167,10 @@ def test_parse():
 
     check("解析：HTML 表格（标准库）", t_html)
     check("解析：JSON 列表", t_json)
-    check("解析：XLSX", t_xlsx)
+    if c["xlsx"]:
+        check("解析：XLSX", t_xlsx)
+    else:
+        skip("解析：XLSX", "未安装 openpyxl，夹具未生成 xlsx 文件")
     check("解析：PDF（PyMuPDF 抽文本）", t_pdf)
 
 
@@ -197,32 +210,34 @@ def test_end2end():
     dbp = os.path.join(tmp, "e2e.db")
     D.init_db(dbp, verbose=False)
     conn = D.connect(dbp)
+    files = [p for p in [c["csv_gbk"], c["csv_comma_head"], c["html"],
+                         c["json"], c["xlsx"]] if p]
+    # 前四个夹具固定贡献 8 家企业；XLSX 夹具额外 1 家，缺依赖时不计入
+    expect_n = 8 + (1 if c["xlsx"] else 0)
+    expect_notice = len(files)
 
     def run():
-        for p in [c["csv_gbk"], c["csv_comma_head"], c["html"], c["json"], c["xlsx"]]:
-            if not p:
-                continue
+        for p in files:
             r = C.process_file(conn, p, verbose=False)
             _assert(r.get("status") == "ok", r)
         n_ent = conn.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
         n_qual = conn.execute("SELECT COUNT(*) FROM fact_qualification").fetchone()[0]
         n_raw = conn.execute("SELECT COUNT(*) FROM ods_qual_company_raw").fetchone()[0]
         n_notice = conn.execute("SELECT COUNT(*) FROM ods_qual_notice").fetchone()[0]
-        _assert(n_ent == 9, n_ent)
-        _assert(n_qual == 9, n_qual)
-        _assert(n_raw == 9, n_raw)
-        _assert(n_notice == 5, n_notice)
+        _assert(n_ent == expect_n, (n_ent, expect_n))
+        _assert(n_qual == expect_n, (n_qual, expect_n))
+        _assert(n_raw == expect_n, (n_raw, expect_n))
+        _assert(n_notice == expect_notice, (n_notice, expect_notice))
 
     def t_idempotent():
         # 重跑全部文件：不应产生重复行
-        for p in [c["csv_gbk"], c["csv_comma_head"], c["html"], c["json"], c["xlsx"]]:
-            if not p:
-                continue
+        for p in files:
             C.process_file(conn, p, verbose=False)
         n_ent = conn.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
         n_qual = conn.execute("SELECT COUNT(*) FROM fact_qualification").fetchone()[0]
         n_raw = conn.execute("SELECT COUNT(*) FROM ods_qual_company_raw").fetchone()[0]
-        _assert((n_ent, n_qual, n_raw) == (9, 9, 9), (n_ent, n_qual, n_raw))
+        _assert((n_ent, n_qual, n_raw) == (expect_n, expect_n, expect_n),
+                (n_ent, n_qual, n_raw, expect_n))
 
     def t_log():
         n = conn.execute("SELECT COUNT(*) FROM meta_ingest_log").fetchone()[0]
@@ -246,7 +261,8 @@ def test_end2end():
             " ON s.source_id=n.source_id WHERE s.source_id IS NULL").fetchone()[0]
         _assert(rows == 0, rows)
 
-    check("端到端：5 文件 → 9 家企业 / 9 条资质", run)
+    check("端到端：%d 文件 → %d 家企业 / %d 条资质"
+          % (expect_notice, expect_n, expect_n), run)
     check("幂等：重复导入不翻倍", t_idempotent)
     check("治理：采集日志 + sha256 留痕", t_log)
     check("约束：非法资质类型被 CHECK 拦截", t_bad_qual)
@@ -263,11 +279,13 @@ def main():
     test_end2end()
     print("=" * 66)
     if FAIL:
-        print("通过 %d 项，失败 %d 项：" % (len(PASS), len(FAIL)))
+        print("通过 %d 项，跳过 %d 项，失败 %d 项：" % (len(PASS), len(SKIP), len(FAIL)))
         for n, e in FAIL:
             print("  - %s：%s" % (n, e))
         return 1
-    print("全部通过：%d 项" % len(PASS))
+    print("全部通过：%d 项，跳过 %d 项" % (len(PASS), len(SKIP)))
+    for n, r in SKIP:
+        print("  - SKIP %s：%s" % (n, r))
     print("=" * 66)
     return 0
 

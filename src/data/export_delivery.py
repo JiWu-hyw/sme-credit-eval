@@ -1091,16 +1091,20 @@ def build_doc(con, alg, fe):
     A("python tests/test_v1_8_views.py              # 8 项 有效覆盖 / 年度切片 / 物理口径守卫")
     A("python tests/test_dataset_isolation.py       # 8 项 A/B 数据隔离 / 分档端点守卫")
     A("python tests/test_funding_provenance.py      # 8 项 融资事件行级溯源回填守卫")
+    A("python tests/test_schema.py                 # 38 项 约束 / 字典 / 链路守卫（已适配 B 套）")
+    A("python tests/test_collect_pool.py           # 16 项 公示名单采集器 / 幂等守卫（临时库）")
     A("```")
-    A("合计 **152 项**，全绿（17 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **206 项**，全绿（19 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-07 标注）**：`tests/` 下共 19 个 `test_*.py`。上列 17 个"
-      "是本次交付（B 套浙江 500 家 / schema v1.8）的活跃守卫，152 项全绿；另 2 个是"
-      "早期 A 套 27 表链路自测，不针对当前库：`tests/test_schema.py`（写死 27 表 / 5 视图 /"
-      " IPC 部类种子 8，在 v1.8 下 3 项失败）与 `tests/test_collect_pool.py`（夹具期望"
-      " 9 家企业、实际 8，2 项失败）。失败原因是旧断言与旧夹具未随 B 套更新，"
-      "这两文件不纳入交付守卫，也不用于评价 v1.8 的数据正确性。")
+    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 19 个 `test_*.py` **全部纳入交付守卫**。"
+      "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
+      "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
+      "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"
+      "采集器补齐 `requirements.txt` 已声明的 `openpyxl>=3.1` 后，5 个夹具恢复为 9 家企业，"
+      "XLSX 解析路径真实覆盖。`test_collect_pool.py` 全程用临时库，与交付库相互独立；"
+      "若环境缺 openpyxl，XLSX 项显式记为 SKIP、端到端期望值按实际夹具数动态计算，"
+      "既不静默算通过也不会误报失败。")
     A("")
     with open(os.path.join(D_DOC, "delivery_spec.md"), "w", encoding="utf-8") as f:
         f.write("\n".join(L))

@@ -188,12 +188,14 @@ def main():
         t = read(EXPORT)
         assert "test_funding_join_contract.py" in t, "export_delivery.py 未登记新测试"
         assert "test_funding_provenance.py" in t, "export_delivery.py 未登记 A7 溯源守卫"
-        assert "152 项" in t, "export_delivery.py 合计项数未同步为 152"
-        assert "17 个测试文件" in t, "export_delivery.py 文件数未同步为 17"
-        assert "152 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
+        assert "206 项" in t, "export_delivery.py 合计项数未同步为 206"
+        assert "19 个测试文件" in t, "export_delivery.py 文件数未同步为 19"
+        assert "test_schema.py" in t and "test_collect_pool.py" in t, (
+            "export_delivery.py 未登记两个已纳入的历史自测")
+        assert "206 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
         if os.path.exists(DOC0):
             d = read(DOC0)
-            assert "test_funding_join_contract.py" in d and "152 项" in d, (
+            assert "test_funding_join_contract.py" in d and "206 项" in d, (
                 "00_先看这个.md 的守卫清单未同步")
 
     check("README 与交付说明写明接入口径", a_doc_contract)
@@ -205,7 +207,7 @@ def main():
     check("旁路表 614 行 / 键唯一 / 值域", g_bypass_table)
     check("双键 JOIN 基数不变", h_join_cardinality)
     check("独立 SQL 对账覆盖 60 / 95", i_independent_recompute)
-    check("交付清单同步 152 项", j_delivery_checklist)
+    check("交付清单同步 206 项", j_delivery_checklist)
 
     print("=" * 60)
     if FAIL:

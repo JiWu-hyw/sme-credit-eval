@@ -4,13 +4,13 @@
 验证重点：STRICT 类型校验、CHECK 枚举校验、外键校验、唯一约束，
 以及 15 个指标 → 字段 映射是否全部可解析。
 
-适用边界（2026-11-07 标注）：本文件是早期 A 套 27 表 / 5 视图链路的自测，
-断言里写死了 27 表、5 视图、IPC 部类种子 8、桥表非空、覆盖度视图 1 行。
-当前交付库是 B 套浙江 500 家 / schema v1.8（34 表 / 23 视图 / 837 列），
-在本库上跑会有 3 项已知失败（IPC 部类种子、桥表、覆盖度视图统计），
-原因是旧断言未随 B 套更新，不是当前交付数据错误。
-本文件不纳入交付守卫清单（17 个活跃守卫 / 152 项），
-评价 v1.8 请用 README 与 00_先看这个.md 里登记的那 17 个。
+适用边界（2026-11-09 更新）：本文件源自早期 A 套 27 表 / 5 视图链路的自测，
+但断言已适配当前交付库 B 套浙江 500 家 / schema v1.8（34 表 / 23 视图 / 837 列）：
+  - IPC 字典在 B 套是全量 11,616 行，改断言「A–H 八个部类齐全」而非行数 8；
+  - 两张桥表在 B 套各有 5 万 / 7 万行，改按本次插入的 patent_id 定点校验；
+  - 覆盖度视图统计的是全库企业数，改断言「基线 + 本次插入的 1 家」。
+以上三项都是让断言表达测试本意，没有放宽校验：写入仍必须真实发生。
+本文件已纳入交付守卫清单（19 个活跃守卫文件）。
 
 用法：.venv/Scripts/python.exe tests/test_schema.py
 """
@@ -76,16 +76,22 @@ def main():
     check("视图数量 == 5", lambda: _assert(len(rep["views"]) == 5, len(rep["views"])))
 
     conn = D.connect(D.DB_PATH)
+    # 事务开始前记录基线：覆盖度视图统计的是全库企业数，不能写死 1
+    n_ent_base = conn.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
     conn.execute("BEGIN")
     try:
         # ---------- 2. 字典种子数据 ----------
         print("\n[2] 字典种子数据")
         n_qt = conn.execute("SELECT COUNT(*) FROM dim_qual_type").fetchone()[0]
         n_src = conn.execute("SELECT COUNT(*) FROM meta_data_source").fetchone()[0]
-        n_ipc = conn.execute("SELECT COUNT(*) FROM dim_ipc").fetchone()[0]
+        # B 套 dim_ipc 是全量 IPC 字典（11,616 行），校验的是 A–H 八个部类齐全，
+        # 而不是「字典恰好只有 8 行」——后者只在 A 套种子库成立。
+        n_ipc_section = conn.execute(
+            "SELECT COUNT(DISTINCT ipc_section) FROM dim_ipc "
+            "WHERE ipc_section IN ('A','B','C','D','E','F','G','H')").fetchone()[0]
         check("资质类型种子 = 4", lambda: _assert(n_qt == 4, n_qt))
         check("数据源登记 >= 10", lambda: _assert(n_src >= 10, n_src))
-        check("IPC 部类种子 = 8", lambda: _assert(n_ipc == 8, n_ipc))
+        check("IPC 八个部类（A–H）齐全", lambda: _assert(n_ipc_section == 8, n_ipc_section))
         check("所有数据源成本为 0（免费路线）",
               lambda: _assert(conn.execute(
                   "SELECT COUNT(*) FROM meta_data_source WHERE cost_cny > 0").fetchone()[0] == 0,
@@ -204,10 +210,16 @@ def main():
                      (inv, "张三", "张三", "hash330100", 2019, 2021))
         conn.execute("INSERT INTO bridge_patent_inventor(patent_id, inventor_id, seq, is_first)"
                      " VALUES (?,?,?,?)", ("CN110000001A", inv, 1, 1))
-        check("桥表（IPC/发明人）写入成功", lambda: _assert(
-            conn.execute("SELECT COUNT(*) FROM bridge_patent_ipc").fetchone()[0] == 1
-            and conn.execute("SELECT COUNT(*) FROM bridge_patent_inventor").fetchone()[0] == 1,
-            "桥表为空"))
+        # B 套两张桥表已有全量数据（5 万 / 7 万行），只校验本次插入的那条边，
+        # 不能用全表 COUNT(*) == 1。
+        n_b_ipc = conn.execute(
+            "SELECT COUNT(*) FROM bridge_patent_ipc WHERE patent_id=?",
+            ("CN110000001A",)).fetchone()[0]
+        n_b_inv = conn.execute(
+            "SELECT COUNT(*) FROM bridge_patent_inventor WHERE patent_id=?",
+            ("CN110000001A",)).fetchone()[0]
+        check("桥表（IPC/发明人）本次写入成功", lambda: _assert(
+            n_b_ipc == 1 and n_b_inv == 1, (n_b_ipc, n_b_inv)))
 
         # 特征 + 标签 + 宽表
         conn.execute(
@@ -281,7 +293,9 @@ def main():
         check("宽表视图能关联到标签", lambda: _assert(n_flat == 1, n_flat))
         n_cov = conn.execute(
             "SELECT n FROM v_data_coverage WHERE obj='enterprise'").fetchone()[0]
-        check("覆盖度视图统计正确", lambda: _assert(n_cov == 1, n_cov))
+        # 视图统计的是全库企业数：B 套基线 500 家 + 本事务插入的 1 家 = 501
+        check("覆盖度视图统计正确（基线 + 本次插入 1 家）",
+              lambda: _assert(n_cov == n_ent_base + 1, (n_ent_base, n_cov)))
 
         # ---------- 7. 匹配审计 ----------
         print("\n[7] 名称匹配审计（论文写匹配准确率的依据）")
