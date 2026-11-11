@@ -43,7 +43,10 @@ NOTES = {
     "fact_patent_citation": "**空表**：引文库源数据缺失，已登记为 source_missing",
     "fact_qualification": "高企资格认定明细，标签就来自这里",
     "fact_funding_event": "融资事件 506 条 / 182 家（2019–2026）；`source_id` 506/506 指向 `zj_500family`（A7 回填）",
-    "ads_label": "307 家打标结果，21 断档样本",
+    "ads_label": "307 家打标结果，21 断档样本（v1.9 起正确方向：286 正例·好企业 / 21 负例·断档；本表数值未原地改写）",
+    "ods_qcc_judicial": "**v2.0 新增** 司法违约明细 34 条 / 6 户；`amount_kind` 区分涉案金额 / 执行标的 / 未履行金额，**三类禁止相加**",
+    "ods_qcc_person": "**v2.0 新增** 主要人员清洗后 2079 人 / 490 户；原始 2569 行含 490 行表头脏行已剔除",
+    "ods_qcc_axis_a_snapshot": "**v2.0 新增** 用户主表本轮 17 个新增列的原始快照 500 行；`高管_人数` 为未清洗口径，仅供对照",
     "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是续存样本）",
     "ads_feature_asof": "长表形态的 as-of 特征（feature_name/feature_value）",
     "ads_graph_node": "异质图节点（企业/专利/IPC/发明人/投资机构 5 类）",
@@ -101,6 +104,23 @@ VIEW_NOTES = {
     "v_multilabel_eval_summary": (
         "**v1.9 / P1** 交叉测评长表：档次 → 各锚点正例率、与 L0 一致率、锚点覆盖率；"
         "资质存续 / 硬结果两列是循环定义，只用于暴露口径"
+    ),
+    "v_axis_a_judicial": (
+        "**v2.0 新增** 企业层司法聚合 500 行，无事件补 0；三个金额列按口径分列，"
+        "`amount_note` 常量警示禁止混加"
+    ),
+    "v_enterprise_person_summary": (
+        "**v2.0 新增** 人员汇总 500 行，含 `n_person_raw` / `n_header_rows_dropped` "
+        "脏行对照；10 户无主要人员记录"
+    ),
+    "v_axis_a_compound_event": (
+        "**v2.0 新增** 复合负面事件 500 行：司法违约 ∪ v1 硬结果；"
+        "坏 6 / 好 458 / 不可判定 36。**并列候选锚点，不是新标签**，"
+        "禁止据此改写 `ads_label` 或五档"
+    ),
+    "v_axis_a_grade_cross": (
+        "**v2.0 新增** 五档 × 复合事件率交叉 5 行；A→E **不单调**（D 档为 0）、"
+        "事件仅 6 家，禁止当评级有效性结论"
     ),
 }
 
@@ -204,13 +224,16 @@ def build(db_path: str = DB) -> dict:
         A("| `%s` | %s | %s |" % (name, format(rows[name], ","),
                                   VIEW_NOTES.get(name, "—")))
     A("")
-    A("## 四条使用红线\n")
+    A("## 五条使用红线\n")
     A("1. **训练只认 `v_model_train_ready`**。它已经挡掉三个坑：193 行假续存样本、"
-      "伪重复（一家两行）、4 个常量特征。")
+      "伪重复（一家两行）、4 个常量特征。研究企业好坏方向时用 `v_model_train_ready_credit`。")
     A("2. **专利数用 `COUNT(DISTINCT app_no)`**。`COUNT(*)` 得 32,969，实际 30,103 件，虚高 9%。")
     A("3. **用 `ads_model_dataset` 前先过滤** `split != 'excluded'`，"
       "`excluded` 是窗口未闭合，不是续存样本。")
     A("4. **`ext_msme_sample` 不属于本项目**。那是外部对照组 1,707 行，别混进 500 家样本统计。")
+    A("5. **v2.0 A 轴层不得混用口径**。三类司法金额按 `amount_kind` 分列、禁止相加；"
+      "`高管_人数`（快照表）含表头脏行，取数一律走 `v_enterprise_person_summary`；"
+      "`v_axis_a_compound_event` 是并列候选，不是已发布标签，也不构成评级有效性证据。")
     A("")
     A("字段逐列含义见上级目录 `04_数据字典与数据集/数据字典.md`（%d 列全覆盖）。" % n_cols)
     A("")
@@ -238,10 +261,20 @@ def build_release_zip() -> dict:
 
 
 if __name__ == "__main__":
+    import argparse
+
+    ap = argparse.ArgumentParser(description="生成 05_数据库 一致性快照")
+    ap.add_argument("--no-zip", action="store_true",
+                    help="只生成快照与说明，不重打 Release 附件（打包冻结期用这个）")
+    args = ap.parse_args()
+
     r = build()
     print("✅ 数据库快照 %(path)s" % r)
     print("   %(mb).1f MB / %(tables)d 表 + %(views)d 视图 / %(cols)d 列" % r)
     print("   integrity=%(integrity)s 外键冲突=%(fk_bad)d 耗时 %(secs).1fs" % r)
     print("   融资事件血缘 %(funding_src)s" % r)
-    z = build_release_zip()
-    print("📦 Release 附件 %(path)s（%(n)d 项 / %(mb).2f MB / testzip=%(bad)s）" % z)
+    if args.no_zip:
+        print("⏸  --no-zip：附件未重打，zip / SHA-256 保持冻结")
+    else:
+        z = build_release_zip()
+        print("📦 Release 附件 %(path)s（%(n)d 项 / %(mb).2f MB / testzip=%(bad)s）" % z)

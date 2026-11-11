@@ -188,19 +188,19 @@ def main():
         t = read(EXPORT)
         assert "test_funding_join_contract.py" in t, "export_delivery.py 未登记新测试"
         assert "test_funding_provenance.py" in t, "export_delivery.py 未登记 A7 溯源守卫"
-        assert "276 项" in t, "export_delivery.py 合计项数未同步为 276"
-        assert "24 个测试文件" in t, "export_delivery.py 文件数未同步为 24"
+        assert "298 项" in t, "export_delivery.py 合计项数未同步为 286"
+        assert "26 个测试文件" in t, "export_delivery.py 文件数未同步为 25"
         assert "test_credit_direction.py" in t, "export_delivery.py 未登记 P1-续 守卫"
         assert "test_schema.py" in t and "test_collect_pool.py" in t, (
             "export_delivery.py 未登记两个已纳入的历史自测")
-        assert "276 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
+        assert "298 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
         if os.path.exists(DOC0):
             # 打包节奏约定：交付散文件随时同步到最新、最终才打一次 zip。
-            # 历史包曾写 222 / 242 项，当前为 276 项；三种取值都接受，
+            # 历史包曾写 222 / 242 项，当前为 298 项；五种取值都接受，
             # 此处只守「清单存在且含项数」，不制造伪阻断。
             d = read(DOC0)
             assert "test_funding_join_contract.py" in d and any(
-                x in d for x in ("222 项", "242 项", "276 项")), (
+                x in d for x in ("222 项", "242 项", "276 项", "286 项", "298 项")), (
                 "00_先看这个.md 的守卫清单未同步")
 
     check("README 与交付说明写明接入口径", a_doc_contract)

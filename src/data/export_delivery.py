@@ -363,6 +363,20 @@ def build_algorithm(con):
       "**负例 = 坏企业 = 资质断档（21 家，label_value=1）**。"
       "新代码一律从 `v_model_train_ready_credit` 取标签，逐企业对照见 `v_label_direction`；"
       "本 CSV 为兼容已发布契约保留原数值，未原地改写。\n")
+    A("> **官方核查（2026-11-11，issue ①）**：已核对「取消高企资格公告」栏目浙江省及宁波市 "
+      "7 份公告、287 家全覆盖（含 5 份扫描件逐页读图），500 家样本 / 307 家已标注 / "
+      "21 家断档经含别名比对**均 0 命中**；其中 7 家经别名归一"
+      "确认资格持续有效（改名假象），审计断档率 14/307 = 4.56%。"
+      "**口径隔离**：14/307 是审计结论，本 CSV 与库内 `ads_label` 仍为 21/307 = 6.84%，"
+      "`DEFINITION_VER` 未升版，两者禁止混用。处置是保留该指标、作为多标签评级里 "
+      "6 个锚点之一（C 轴 · 资质再申报行为），不废弃、不原地改写。"
+      "详见 `official_cancel_check.md`。\n")
+    A("> **v2.0 A 轴并列层（2026-11-11）**：企查查回传的失信被执行人 / 被执行人 / 终本案件 "
+      "与主要人员已入库为 3 张 ODS 贴源表 + 4 个并列视图（`ods_qcc_judicial` 34 条 / 6 户、"
+      "`ods_qcc_person` 清洗后 2079 人 / 490 户）。三类金额语义不同（涉案金额 / 执行标的 / "
+      "未履行金额）**禁止相加**；用户主表「高管_人数」含 490 行表头脏行，取数一律走清洗后视图。"
+      "复合负面事件是**并列候选锚点**，不是新标签：`ads_label`、多标签矩阵、五档评级、"
+      "训练入口与 `DEFINITION_VER` 逐项未动。详见 `axis_a_judicial_report.md`。\n")
     A("一个必须知道的事实：`n_events=1` 的 21 家**全部**是断档样本，`n_events>=2` 的 286 家")
     A("**全部**是续存样本。标签几乎等价于「只被认定过一次」，这也是「持续经营类特征」")
     A("天然有判别力的原因 —— 但分不清是经营恶化还是懒得申报。\n")
@@ -422,6 +436,20 @@ te = df[df.split == 'test']
         (os.path.join(OUTPUTS, "graph_temporal_contract.json"), "graph_temporal_contract.json"),
         (os.path.join(OUTPUTS, "field_gap_decisions.md"), "field_gap_decisions.md"),
         (os.path.join(OUTPUTS, "field_gap_decisions.json"), "field_gap_decisions.json"),
+        # 2026-11-11 issue ① 官方撤销公告核查（实证闭合，未改库、未升版）
+        (os.path.join(OUTPUTS, "official_cancel_check.md"), "official_cancel_check.md"),
+        (os.path.join(OUTPUTS, "official_cancel_check.json"), "official_cancel_check.json"),
+        # 2026-11-11 v2.0 A 轴司法违约 + 主要人员并列层（新增三表四视图，未改已发布标签）
+        (os.path.join(OUTPUTS, "axis_a_judicial_report.md"), "axis_a_judicial_report.md"),
+        (os.path.join(OUTPUTS, "axis_a_judicial_report.json"), "axis_a_judicial_report.json"),
+        (os.path.join(ROOT, "data", "audit", "标签核查_21家断档逐户.csv"),
+         "标签核查_21家断档逐户.csv"),
+        (os.path.join(ROOT, "data", "audit", "官方_取消高企资格_浙江名单.csv"),
+         "官方_取消高企资格_浙江名单.csv"),
+        (os.path.join(ROOT, "data", "audit", "公告清单_浙江宁波7条.json"),
+         "公告清单_浙江宁波7条.json"),
+        (os.path.join(ROOT, "data", "audit", "证据_2026-02第12条_官方更名标注.png"),
+         "证据_2026-02第12条_官方更名标注.png"),
     ]:
         if os.path.exists(src):
             shutil.copy2(src, os.path.join(D_ALG, dst))
@@ -437,7 +465,7 @@ te = df[df.split == 'test']
       % (total, len(ddl_cols)))
     A("| `feature_dictionary.csv` | 29 个注册特征的覆盖率 / 单变量 AUC / 建议 |")
     A("| `dataset_card.md` | 数据集卡片：规模、切分、队列、标签、边界 |")
-    A("| `label_spec.md` | 代理标签说明书（13 节，必读） |")
+    A("| `label_spec.md` | 代理标签说明书（14 节，必读；§13 为官方撤销公告核查） |")
     A("| `baseline_asof_leakage.json` | 泄漏实测：leaky 0.796 → noleak 0.524（**v1.8 旧风险方向，历史留档**） |")
     A("| `multilabel_eval_report.md` | v1.9 多标签测评报告（6 锚点 / 五档 / 循环定义边界） |")
     A("| `credit_direction_asof_report.md` | **P1-续 主报告**：方向纠正后 as-of 训练 / AUC 恒等式 / 分切面与分队列复核 / 重跑 SHAP |")
@@ -446,6 +474,15 @@ te = df[df.split == 'test']
     A("| `shap_legacy_notice.md` | 旧 `shap_global.*` / `shap_top_features.csv` 方向警告，禁止与新产物混用；含前端 4 份 mock 契约的路径基准澄清 |")
     A("| `graph_temporal_contract.md` / `.json` | **评审 §5.2 时序图**：29 帧年度累计切片 / STGNN 输入 SQL / 同源守恒校验 / 产品节点缺口定稿 |")
     A("| `field_gap_decisions.md` / `.json` | **评审 §6 T22**：17 条字段级 NULL 定稿 + 10 条替代特征 + 主宽表 8 列现场核对 |")
+    A("| `official_cancel_check.md` / `.json` | **issue ① 实证闭合 + issue ② 新证据**：7 份公告 287 家全覆盖、三层 0 命中、7 家改名假象、14 家官方零命中；A 轴完整事件集合与 E 档塌陷（**未改库**） |")
+    A("| `axis_a_judicial_report.md` / `.json` | **v2.0 并列层主报告**：司法违约 34 条 / 6 户、主要人员清洗后 2079 人 / 490 户、三类金额口径禁止混加、复合负面事件 6 家 / 3 家新增 E 候选；含口径隔离与禁止清单（**未改已发布标签与五档**） |")
+    A("| `标签核查_21家断档逐户.csv` / `官方_取消高企资格_浙江名单.csv` / `公告清单_浙江宁波7条.json` / `证据_2026-02第12条_官方更名标注.png` | 上报告的原始证据快照（287 家名单 + 官方更名标注单页），供接收方独立复核 |")
+    A("")
+    A("> **入口优先级**：新代码一律从 `v_model_train_ready_credit` 取标签（1=正例·好企业），")
+    A("> 结果对照看 `credit_direction_asof_report.md`；`baseline_asof_leakage.json` 与")
+    A("> `outputs/shap_global.*` 属 v1.8 风险预警方向留档，语义相反，**不可混用**。")
+    A("> 按评审报告 §7.1(3)，负例 21 家、置换噪声地板约 0.5，AUC / 准确率绝对值")
+    A("> 不得写成性能结论。")
     A("")
     A("## 30 秒上手\n")
     A("""```python
@@ -1080,6 +1117,19 @@ def build_doc(con, alg, fe):
     A("`ads_label.label_value` / `v_model_train_ready.label` 保留风险预警方向（1=断档）以兼容已发布契约；"
       "**新实验一律用 `v_model_train_ready_credit`**，逐企业对照见 `v_label_direction`。")
     A("21 个负例只够验证方法论，**不够支撑性能结论**。汇报时别写单一 AUC。\n")
+    A("> **官方核查（2026-11-11，issue ①）**：已核对「取消高企资格公告」栏目浙江省及宁波市 "
+      "7 份公告、287 家全覆盖，500 家样本 / 21 家断档经含别名比对**均 0 命中**；其中 7 家为"
+      "别名归一后的改名假象，审计断档率 14/307 = 4.56%。标签定性为**资质再申报行为**，"
+      "保留为多标签评级里 6 个锚点之一，**不废弃、不原地改写**。"
+      "⚠️ 14/307 是审计结论，库内仍为 21/307、`DEFINITION_VER` 未升版，两者禁止混用。"
+      "详见 `official_cancel_check.md`。\n")
+    A("> **v2.0 A 轴并列层（2026-11-11）**：新增 `ods_qcc_judicial`（34 条 / 6 户）、"
+      "`ods_qcc_person`（清洗后 2079 人 / 490 户）、`ods_qcc_axis_a_snapshot`（500 行原始快照）"
+      "与 4 个并列视图；库结构变为 **37 表 / 33 视图 / 997 列**（数据字典同步）。"
+      "复合负面事件共 6 家，其中 3 家原不在 E 预警档，是 issue ② 的第一批样本内事件；"
+      "但五档事件率 A→E **不单调**（D 档为 0），只能证明「数据已就位」，"
+      "**不能宣称评级有效**。复合事件是并列候选，正式标签 / 五档 / 训练入口 / "
+      "`DEFINITION_VER` 一律未改。详见 `01_算法端/axis_a_judicial_report.md`。\n")
     A("**3. 企业 ID 格式。**")
     A("`ENT` + 12 位 hex、共 15 字符。传 `CN-330100-0001` 不会 500，"
       "会返回 `code=NOT_FOUND` 且 `meta.detail` 写明正确格式；"
@@ -1088,8 +1138,10 @@ def build_doc(con, alg, fe):
     A("## 六、还没做的\n")
     A("| 项 | 影响 | 难度 |")
     A("|---|---|---|")
-    A("| P1-续：用 `v_model_train_ready_credit` 重跑 as-of 训练 / SHAP，分队列与分 as_of_policy 复核多标签测评 | 方向翻转后 AUC 应互为 1−AUC；检验分档结论稳定性 | **零采集，本地可做** |")
-    A("| P2：补独立于公示名单的 A 轴结果标签（撤销公告 / 异常名录） | 当前 6 个锚点里 4 个是状态量，且分档复用形成循环定义，做不了真正的外部效度 | 需采集，**非 P1 前置** |")
+    A("| P2：把复合负面事件正式纳入评级 / 做跨源效度 | v2.0 已落地样本内司法违约 6 户（3 家新增 E 候选），但仍是**并列候选视图**；6 个锚点里 4 个是状态量、分档复用形成循环定义 | 需另一次升版拍板（改 `DEFINITION_VER` / `DATASET_VER` → 重建矩阵与五档 → 重跑训练 / SHAP / 测评） |")
+    A("| 扩母池或补采更多司法 / 失信名录 | 样本内复合事件仅 6 家（1.20%），五档事件率不单调且置信区间极宽 | 需采集；287 家官方撤销名单已全覆盖但样本内 0 交集 |")
+    A("| issue ① 后续：导师书面口径、287 家名单入库、母池 21,968 口径落库 | 路径 (a) 证据链已完全闭合（7 份公告 287 家全覆盖、三层 0 命中）；`DEFINITION_VER` v0.1 未升版 | 需拍板 + 落库 |")
+    A("| 升版 v0.2：别名归一后重建 `ads_label` 与训练入口 | 7 家改名假象目前全被压在 D 观察档；改库会连锁影响守卫、AUC / SHAP / 多标签结论 | **待拍板，本次未做** |")
     A("| 扩样本池（500 → 5,000） | 只增加同类共线标签的**数量**，不增加标签**维度**，已从 P1 移出 | 需拍板的可选采集项 |")
     A("| 训练一个可验证模型 | `score.value` 恒为 null，只能给 `proxy_score` | 依赖独立结果标签 |")
     A("| 旧契约目录 %d 个假数据尚未删除 | 已用 `outputs/contracts/` 的 12 个真契约替代，"
@@ -1098,7 +1150,18 @@ def build_doc(con, alg, fe):
     A("| 行业切片 | `qcc_industry_mid` 覆盖率不足 | 依赖补采 |")
     A("")
     A("**本轮已闭合**：12 个 `CONTRACT_PENDING` 接口全部产出真实契约；"
-      "2 个导入接口完成字段级校验与 staging 落库；`explain/local` 改为按企业动态生成。")
+      "2 个导入接口完成字段级校验与 staging 落库；`explain/local` 改为按企业动态生成；"
+      "**issue ① 已由官方撤销公告实证闭合**——7 份公告 287 家全覆盖（含 5 份扫描件逐页读图），"
+      "500 家样本 / 307 家已标注 / 21 家断档含别名比对均 0 命中，其中 7 家为改名假象；"
+      "标签定性为「资质再申报行为」并保留为多标签之一；**issue ② 取得 287 家完整行政决定集合**"
+      "（样本内 0 交集，E 档仍塌陷）。就这项核查本身而言**未改库、未升版**，"
+      "见 `official_cancel_check.md`。")
+    A("**其后两轮本地升版（均为并列层，不动已发布口径）**：P1-续 已用 "
+      "`v_model_train_ready_credit` 重跑 as-of 训练 / SHAP，验证方向翻转后 AUC 互为 1−AUC、"
+      "并完成分队列与分 `as_of_policy` 复核；**v2.0** 接入企查查司法违约与主要人员，"
+      "库结构 34/29/912 → **37 表 / 33 视图 / 997 列**，数据字典同步重生成，"
+      "复合负面事件 6 家 / 3 家新增 E 候选。两轮都逐项保留 `ads_label` 307/21/286、"
+      "多标签五档、`DEFINITION_VER` 与 `ASOF_VER`。")
     A("")
     A("## 七、复现\n")
     A("```bash")
@@ -1106,6 +1169,9 @@ def build_doc(con, alg, fe):
     A("python -m src.data.export_data_dictionary   # 字段字典 %d 列" % st["n_cols"])
     A("python -m src.data.export_label_spec         # 标签说明书")
     A("python -m src.data.export_field_gap_registry # 缺口登记册")
+    A("python -m src.data.export_official_cancel_check # issue ① 官方撤销公告核查报告（只读，不改库）")
+    A("python -m src.data.apply_v2_0_axis_a          # v2.0 A 轴司法/人员并列层（幂等；--check 只读）")
+    A("python -m src.data.export_axis_a_judicial_report # v2.0 A 轴接入报告（只读）")
     A("python -m src.data.apply_funding_provenance  # A7 融资事件行级溯源回填（幂等）")
     A("python -m src.data.export_db_bundle         # 05_数据库 快照 + Release 附件")
     A("python -m src.data.export_delivery --zip     # 本交付包三个 + zip")
@@ -1134,11 +1200,16 @@ def build_doc(con, alg, fe):
     A("python tests/test_graph_temporal_contract.py # 15 项 时序图同源 / 守恒 / 查询性能闸门守卫")
     A("python tests/test_shap_direction_notice.py  # 8 项 SHAP 方向语义 / 契约路径基准守卫")
     A("python tests/test_field_gap_decisions.py    # 11 项 缺口定稿落地 / 交付散文件同源守卫")
+    A("python tests/test_official_cancel_check.py  # 10 项 官方核查证据链 / 口径隔离 / 未改库守卫")
+    A("python tests/test_axis_a_judicial.py       # 12 项 v2.0 A 轴结构 / 清洗 / 口径隔离 / 字典同源守卫")
     A("```")
-    A("合计 **276 项**，全绿（24 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **298 项**，全绿（26 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-09 更新）**：`tests/` 下 24 个 `test_*.py` **全部纳入交付守卫**。"
+    A("**测试文件范围（2026-11-11 更新）**：`tests/` 下 26 个 `test_*.py` **全部纳入交付守卫**，"
+      "新增 `test_official_cancel_check.py`（10 项：官方公告证据链、21 家逐户判定、口径隔离与未改库）"
+      "与 `test_axis_a_judicial.py`（12 项：v2.0 三表四视图、490 行表头脏行剔除、三类金额分列、"
+      "复合事件候选与已发布标签未动、997 列字典与交付散文件同源）。"
       "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
       "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
       "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"
@@ -1294,7 +1365,7 @@ def build_data_bundle(con):
     A("| **数据字典** | `数据字典.md` | %d 列逐列说明 | 人读：查某个字段是什么意思、空多少 |"
       % dd_rows)
     A("| **数据字典**（机器读） | `数据字典.csv` | %d 行 | 灌进元数据系统 / 写代码时查 |" % dd_rows)
-    A("| **代理标签说明书** | `代理标签说明书.md` | 13 节 | 标签怎么造、阈值、陷阱、争议点 |")
+    A("| **代理标签说明书** | `代理标签说明书.md` | 14 节 | 标签怎么造、阈值、陷阱、争议点；§13 官方撤销公告核查（287 家全覆盖） |")
     A("| **字段缺口登记册** | `字段缺口登记册.md` | %d 空字段 + %d 替身 + %d 陷阱 | 哪个字段是空、为什么空、能不能补 |"
       % (reg_n_items, reg_n_sub, reg_n_traps))
     A("| **数据集** | `数据集/` | 3 个 CSV | 直接训练 + 全量面板 + 企业名单 |")

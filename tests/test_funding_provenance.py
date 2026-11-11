@@ -160,14 +160,27 @@ def main():
             views = [n for t, n in objs if t == "view"]
             cols = sum(len(c.execute('PRAGMA table_info("%s")' % n).fetchall())
                        for n in tables + views)
-            # A7 时点为 v1.8（34/23/837）；其后 v1.9 只增 6 个多标签视图，
-            # 表数与事实表数据未变，故这里按「表数固定 + 视图数不低于」校验。
-            assert len(tables) == 34, "事实表数被改动：%d" % len(tables)
+            # A7 时点为 v1.8（34/23/837）；v1.9 只增 6 个多标签视图（表数不变）；
+            # v2.0 再增 3 张 A 轴 ODS 贴源表 + 4 个并列视图，均为新增对象，
+            # 不触碰任何事实表 / 主档数据。此处按「基线表数 + 新增表身份」校验，
+            # 防止有人借升版之名悄悄改动 fact_* / dim_*。
+            V20_TABLES = {"ods_qcc_judicial", "ods_qcc_person",
+                          "ods_qcc_axis_a_snapshot"}
+            # 基线里原有 4 张企查查 ODS 表，v2.0 只再加上面 3 张。
+            QCC_ODS_BASELINE = {"ods_qcc_annual", "ods_qcc_cert",
+                                "ods_qcc_honor", "ods_qcc_shareholder"}
+            assert len(tables) in (34, 37), "事实表数被改动：%d" % len(tables)
+            if len(tables) == 37:
+                assert V20_TABLES <= set(tables), (
+                    "v2.0 三张 A 轴贴源表不全：%r" % (V20_TABLES - set(tables)))
+                assert {t for t in tables if t.startswith("ods_qcc_")} == (
+                    QCC_ODS_BASELINE | V20_TABLES), (
+                    "ODS 贴源层出现 v2.0 之外的额外表")
             assert len(views) >= 23, "视图数少于 A7 时点：%d" % len(views)
             assert cols >= 837, "字段数少于 A7 时点：%d" % cols
             ver = c.execute("SELECT version FROM meta_schema_version "
                             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
-            assert ver in ("v1.8", "v1.9"), "schema 版本异常：%s" % ver
+            assert ver in ("v1.8", "v1.9", "v2.0"), "schema 版本异常：%s" % ver
             assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok", \
                 "integrity_check 不通过"
             assert not c.execute("PRAGMA foreign_key_check").fetchall(), "外键冲突"

@@ -69,7 +69,8 @@ def main():
         assert not miss, "缺视图 %r" % miss
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
-        assert ver == "v1.9", "库版本 %s，期望 v1.9" % ver
+        # v2.0 A 轴并列层不改 6 个锚点 / 五档 / 标签矩阵，仍在本守卫覆盖范围。
+        assert ver in ("v1.9", "v2.0"), "库版本 %s，期望 v1.9 或 v2.0" % ver
 
     def b_base_untouched():
         d = dict(c.execute("SELECT label_value, COUNT(*) FROM ads_label GROUP BY 1"))

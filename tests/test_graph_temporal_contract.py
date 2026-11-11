@@ -73,8 +73,8 @@ def main():
             "AND name NOT LIKE 'sqlite_%'").fetchone()[0]
         n_view = cur.execute(
             "SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-        assert n_tab == 34, "表数 %d（本次修订不得增删表）" % n_tab
-        assert n_view == 29, "视图数 %d（本次修订不得增删视图）" % n_view
+        assert n_tab == 37, "表数 %d（v2.0 新增 3 张 A 轴表后应为 37）" % n_tab
+        assert n_view == 33, "视图数 %d（v2.0 新增 4 个 A 轴视图后应为 33）" % n_view
 
     def t_bottom_tables_untouched():
         for t in ("ads_graph_node", "ads_graph_edge"):
@@ -240,7 +240,7 @@ def main():
 
     for name, fn in [
         ("年度切片视图以物理图为唯一边源", t_views_same_source),
-        ("结构未增删：34 表 / 29 视图", t_structure_unchanged),
+        ("当前结构：37 表 / 33 视图（v2.0 A 轴并列层后）", t_structure_unchanged),
         ("物理底表 time_slice 未被 UPDATE", t_bottom_tables_untouched),
         ("年度切片 29 帧（1992–2026）", t_years),
         ("末年三类边 + patent 节点守恒", t_last_year_conservation),

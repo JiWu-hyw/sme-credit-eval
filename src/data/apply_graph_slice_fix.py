@@ -7,9 +7,9 @@
 图与静态图对不上。
 
 本脚本只 DROP/CREATE 两个**已存在**的视图：
-  * 不新增表或视图（仍 34 表 / 29 视图）
+  * 不新增表或视图（v1.9 基线 34 表 / 29 视图；v2.0 A 轴并列层后 37 / 33）
   * 不 UPDATE 任何底表行（time_slice 全 0 保持不变）
-  * 不升 schema 版本号（仍是 v1.9，属视图逻辑修订）
+  * 不升 schema 版本号（属视图逻辑修订）
   * 同步 src/data/schema.sql 的 DDL 单一事实源
 
 用法：
@@ -80,10 +80,18 @@ def check(con: sqlite3.Connection) -> list[str]:
         "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
     ).fetchone()[0]
     n_view = con.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-    if n_tab != 34:
-        bad.append("表数变为 %d（应为 34，本修订不得增删表）" % n_tab)
-    if n_view != 29:
-        bad.append("视图数变为 %d（应为 29，本修订不得增删视图）" % n_view)
+    # 本修订只 DROP/CREATE 两个已存在的视图，不得增删表或视图。
+    # 允许两种基线：v1.9（34/29）与 v2.0 A 轴并列层之后（37/33 = 基线 +3 表 +4 视图）。
+    # 差值必须严格等于 v2.0 新增的 3 张 ODS 表 + 4 个并列视图，不接受任意漂移。
+    if (n_tab, n_view) not in ((34, 29), (37, 33)):
+        bad.append("结构变为 %d 表 / %d 视图（允许 34/29 或 37/33；"
+                   "本修订不得增删表或视图）" % (n_tab, n_view))
+    if (n_tab, n_view) == (37, 33):
+        v20 = {r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' "
+            "AND name IN ('ods_qcc_judicial','ods_qcc_person','ods_qcc_axis_a_snapshot')")}
+        if len(v20) != 3:
+            bad.append("37 表基线不是 v2.0 A 轴并列层（3 张 ODS 表不全）")
 
     # 物理底表未被改写：time_slice 仍全为 0
     for t in ("ads_graph_node", "ads_graph_edge"):

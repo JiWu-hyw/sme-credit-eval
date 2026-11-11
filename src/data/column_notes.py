@@ -838,3 +838,88 @@ def view_note_for(view: str, column: str) -> str:
 
 def view_comment(view: str) -> str:
     return VIEW_COMMENTS.get(view, "")
+
+# ---------------------------------------------------------------------------
+# v2.0 A 轴司法违约 + 主要人员（2026-11-11 新增并列层）
+# 纪律：本次只新增对象，不改任何已发布视图；复合事件是「候选锚点」而非正式标签。
+# ---------------------------------------------------------------------------
+TABLE_COMMENTS.update({
+    "ods_qcc_judicial": "企查查回传司法违约明细（一行一条）：失信被执行人 / 被执行人 / 终本案件，"
+                        "34 条 / 6 户。三类金额语义不同，分列 + amount_kind 标注，禁止无条件相加；"
+                        "1 条 '-' 日期已清洗为 NULL，1 户企业名经别名归一映射到库内登记名",
+    "ods_qcc_person": "企查查回传主要人员明细（一行一人），清洗后 2079 人 / 490 户。"
+                      "原始 2569 行含 490 行「每户表头」脏行（姓名='姓名'、职务='职务'）已剔除；"
+                      "用户主表「高管_人数」仍是未清洗口径，见 ods_qcc_axis_a_snapshot",
+    "ods_qcc_axis_a_snapshot": "用户《合并_500家_企业主表》本轮新增 17 列的原始快照（500 行），"
+                               "保留未清洗口径仅供追溯与对照。⚠️ n_person_raw 每户多计 1 人；"
+                               "amount_wan_raw 把涉案金额 / 执行标的 / 未履行金额三类混加，"
+                               "禁止当单一「未履行金额」字段使用",
+})
+
+VIEW_COMMENTS.update({
+    "v_axis_a_judicial": "A 轴司法违约企业层聚合（500 行，LEFT JOIN 无事件补 0）："
+                         "三类事件条数、三类金额分列、法院数、首末事件日。"
+                         "独立于公示名单的行政/司法记录，是 issue ② 复合负面事件的新原料",
+    "v_enterprise_person_summary": "主要人员企业层汇总（500 行）：清洗口径人数 + 职务计数，"
+                                   "并与主表原始口径对照给出每户剔除的表头脏行数；"
+                                   "10 户无人员数据标 source_missing，不造值",
+    "v_axis_a_compound_event": "A 轴复合负面事件【并列候选】（500 行）："
+                               "司法违约 ∪ v1 硬结果（严重失信 / 经营异常 / 非开业）。"
+                               "1=无事件(好) / 0=有事件(坏) / NULL=不可判定。"
+                               "⚠️ 未替换 v_enterprise_label_matrix.y_hard_outcome，"
+                               "未改五档；正式切换需另一次升版拍板",
+    "v_axis_a_grade_cross": "复合事件 × 多标签五档交叉表（5 行）：各档事件数、可观测分母、事件率、"
+                            "纯司法命中数、v1 硬结果数、新增 E 档候选数。"
+                            "用于检验「A→E 事件率单调递增」；实测 D 档为 0 不单调，"
+                            "且总事件仅 6 家、置信区间极宽，禁止当性能结论",
+})
+
+VIEW_NOTES.update({
+    "v_axis_a_judicial": {
+        "n_dishonest": "失信被执行事件条数（本轮 1 条）",
+        "n_executed": "被执行事件条数（本轮 1 条）",
+        "n_terminal": "终本案件条数（本轮 32 条）",
+        "n_case_total": "司法事件总条数；>0 即 has_judicial_event=1",
+        "amount_dishonest_yuan": "失信类「涉案金额」合计（元），与另两类口径不同",
+        "amount_executed_yuan": "被执行类「执行标的」合计（元），本轮全为 0",
+        "amount_unperformed_yuan": "终本类「未履行金额」合计（元），是三类里唯一语义为未履行的",
+        "n_court": "涉及执行法院去重数",
+        "first_event_date": "最早事件日期（发布日期 / 立案日期 / 终本日期，三类语义不同）",
+        "last_event_date": "最晚事件日期",
+        "has_judicial_event": "是否有司法违约事件（1/0）",
+        "event_ver": "事件口径版本 judicial_qcc_v1；无事件企业为 NULL",
+        "amount_note": "常量警示：三类金额语义不同，禁止无条件相加",
+    },
+    "v_enterprise_person_summary": {
+        "legal_rep": "库内法定代表人（dim_enterprise.legal_rep）",
+        "n_person_clean": "清洗口径主要人员数（剔除表头脏行）",
+        "n_legal_rep_in_list": "主要人员名单里与法定代表人同名的人数",
+        "n_chairman": "职务含「董事长」人数（子串匹配，与「董事」会重复计数）",
+        "n_director": "职务含「董事」人数",
+        "n_supervisor": "职务含「监事」人数",
+        "n_person_raw": "用户主表未清洗口径人数（每户多计 1 行表头）",
+        "n_header_rows_dropped": "本户剔除的表头脏行数（有人员数据的户恒为 1）",
+        "coverage_state": "qcc_person_v1=有数据 / source_missing=源未回传（10 户），不造值",
+    },
+    "v_axis_a_compound_event": {
+        "y_hard_outcome_v1": "v1.9 正式硬结果锚点（原样引用，未改动）",
+        "n_case_total": "司法事件条数（来自 v_axis_a_judicial）",
+        "has_judicial_event": "是否有司法事件（1/0）",
+        "y_compound_v2": "复合候选锚点：司法事件或 v1 硬结果任一命中即 0(坏)；"
+                         "v1 为 NULL 且无司法事件时仍为 NULL(不可判定)",
+        "n_event_sources": "命中的独立来源数（司法 / v1 硬结果，0–2）",
+        "event_sources": "命中的来源名，空格分隔",
+        "scope_note": "常量警示：并列候选，未替换正式标签",
+    },
+    "v_axis_a_grade_cross": {
+        "grade_v1": "v1.9 正式多标签档次（A–E），本视图未改动分档",
+        "n_enterprise": "该档企业数",
+        "n_compound_adverse": "该档复合负面事件数（y_compound_v2=0）",
+        "n_observable": "可观测分母（排除 y_compound_v2 IS NULL）",
+        "adverse_rate": "事件率 = n_compound_adverse / n_observable；"
+                        "总事件仅 6 家，每档置信区间极宽，禁止当性能结论",
+        "n_judicial_only": "该档纯司法命中数",
+        "n_hard_v1": "该档 v1 硬结果命中数",
+        "n_new_e_candidate": "该档因复合事件而应升为 E 预警的候选数（原档非 E）",
+    },
+})
