@@ -1,6 +1,6 @@
 {
   "meta": {
-    "version": "v4",
+    "version": "v5",
     "updated_at": "2026-11-12",
     "owner": "施汶邑（几梦）",
     "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
@@ -700,7 +700,7 @@
       "forbid": "禁止把涉案金额 / 执行标的 / 未履行金额三类相加；禁止把用户主表「高管_人数」（含 490 行表头脏行）当清洗后人数；禁止把 v_axis_a_compound_event.y_compound_v2 当已发布标签或据此改写 ads_label / 五档 / 训练入口；禁止用 6 家事件宣称评级有效（五档事件率 A→E 不单调、D 档为 0、置信区间极宽）。",
       "candidate_only": "复合负面事件 = 司法违约 ∪ v1 硬结果，坏 6 / 好 458 / 不可判定 36；其中 3 家原不在 E 预警档。属并列候选锚点，正式纳入评级需改 DEFINITION_VER / DATASET_VER 并重建矩阵、五档、训练、SHAP、多标签测评与全量守卫，本次不拍板、不执行。",
       "untouched": "ads_label 307 / 21 断档 / 286 续存、多标签五档 A81 B176 C157 D83 E3、v_enterprise_label_matrix.y_hard_outcome、v_model_train_ready*、29 列主宽表、dim_enterprise、ASOF_VER、DEFINITION_VER 逐项未改。",
-      "release_caveat": "企查查回传数据的服务条款与公开分发范围待确认，Release 附件发布前需单独拍板。",
+      "release_caveat": "已定稿（2026-11-12）：见 policies.data_distribution。用户拍板「数据全部都上传公开」，司法/人员并列层随完整库原样**全部公开**、不做去标识化；随包附来源与使用声明，平台服务条款风险已在声明 §6 明示。",
       "contract": "outputs/axis_a_judicial_report.md / .json",
       "check": "python -m src.data.apply_v2_0_axis_a --check && python tests/test_axis_a_judicial.py",
       "decided_at": "2026-11-11",
@@ -711,9 +711,21 @@
       "forbid": "禁止把 45 个尼斯类全算产品节点（35–39、41–45 共 10 个服务类虽实际有 1902 条商标，但按用户口径不作节点）；禁止把尼斯类别粒度写成 SKU 级产品；禁止宣称「立项六类实体已完整覆盖」；禁止把产品节点插入 ads_graph_node 而不同步重建 29 帧时序切面守恒；禁止把主表「商标_品牌数」与库内 n_brand_exact 混用（68 家口径差异，归一规则未反推）；禁止把用户 xlsx 的「人员 2569 节点」当清洗后人数或图节点数。",
       "candidate_only": "产品节点覆盖 433 户 / 86.6%，v_product_grade_cross 只是并列观察量，未进入标签定义与分档规则；A→E 平均产品类数不构成评级有效性证据。G-GRAPH-01 由 source_missing 改判 partial_closed，仅指类别粒度、并列层闭合；SKU 级仍缺。",
       "untouched": "ads_graph_node / ads_graph_edge / v_graph_slice_annual*（29 帧）、ads_label 307 / 21 / 286、多标签五档 A81 B176 C157 D83 E3、v_model_train_ready*、29 列主宽表、dim_enterprise、ASOF_VER、DEFINITION_VER 逐项未改。",
-      "release_caveat": "商标回传与 v2.0 司法/人员同属企查查批量查询结果，服务条款与公开分发范围待确认，Release 附件发布前需单独拍板。",
+      "release_caveat": "已定稿（2026-11-12）：见 policies.data_distribution。商标回传与 v2.0 司法/人员同属企查查批量查询结果，一并随完整库原样全部公开；原始回传 CSV 仍不进交付包，随包来源与风险说明见 DATA_PROVENANCE.md。",
       "contract": "outputs/product_node_report.md / .json",
       "check": "python -m src.data.apply_v2_1_product_node --check && python tests/test_product_node.py",
+      "decided_at": "2026-11-12",
+      "decided_by": "施汶邑（几梦）"
+    },
+    "data_distribution": {
+      "rule": "2026-11-12 用户最终拍板「数据全部都上传公开」：完整库原样随 GitHub Release 附件全部公开，包含 04_数据字典与数据集 与 05_数据库；export_db_bundle.py 保持纯 VACUUM INTO、RELEASE_PARTS = ['04_数据字典与数据集', '05_数据库']，禁止加入任何去标识化步骤；交付快照与工作库字段值逐列一致；不撤下历史附件、不私下交付、不设下载门槛。此前一轮「去标识 + 学术声明 + 从 Release 撤下」的中间方案已作废。",
+      "source": "政府公示名单、CNIPA 专利公告、企查查公开页面登录态批量查询（s14_qcc_login / s15_qcc_cookie / s16_qcc_cdp_crawl 等），以及用户补充的企查查回传 CSV。**非官方 API 采购**：¥3,000 商采议题已由用户关闭，本项目不存在商业数据授权。",
+      "public_scope": "公开范围：40 表 / 37 视图 / 1068 列完整库、7 张 ods_qcc_* 原始采集层、全部派生数据集与文档。自然人可识别字段 ods_qcc_person.person_name（2079 行）、ods_qcc_judicial.applicant（34 行）、ods_qcc_axis_a_snapshot.person_names_raw（490 行）与 case_sample_raw（6 行）**原样公开、不脱敏**；企业名称 / case_no / reg_no / trademark_name 同步保留。企查查回传原始 CSV 仍只存仓库外 _data_collect/out/，不进交付包。",
+      "forbid": "禁止商用、转售、转授权、并入商业数据服务；禁止用于真实征信 / 授信 / 投资决策 / 人事评价等对个人权益有实质影响的场景；禁止把自然人字段与第三方人员库 / 征信库拼接用于重识别或画像；禁止把本项目数据与另一套样本混用或把并列观察量当评级有效性证据；禁止移除 DATA_PROVENANCE.md / DATA_LICENSE.md。允许科研教学用途下的下载、引用、转发与再分发。",
+      "history": "历史 v1.0.0 / v1.3.0 / v1.4.0 Release 上已公开的含库附件**保持不动**（add-new-no-overwrite）；本地 9 个历史 zip 原地留档，不删不覆盖；本轮不重打包、不上传，等用户明确说「全部弄完 / 打包」再一次性重打并出 MANIFEST / SHA-256。",
+      "residual_risk": "登录态批量查询可能违反第三方平台用户协议，属采集方与平台之间的合同风险，项目方未取得书面授权；用户已知悉并决定公开，本声明不能使采集行为合规，如平台提出异议应停止分发并删除。完整库含未脱敏自然人姓名，接收方须按《个人信息保护法》在合理范围内处理；公开后无法追溯已发生的下载。",
+      "contract": "deliverables/DATA_PROVENANCE.md / DATA_LICENSE.md / 05_数据库/README.md",
+      "check": "python -m src.data.export_data_provenance && python -m src.data.export_db_bundle --no-zip && python tests/test_data_distribution.py",
       "decided_at": "2026-11-12",
       "decided_by": "施汶邑（几梦）"
     }

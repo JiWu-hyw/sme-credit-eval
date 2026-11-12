@@ -225,7 +225,7 @@ def register_meta(con: sqlite3.Connection, built_at: str, stat: dict) -> None:
          "企查查批量查询回传·商标明细（尼斯分类 1–45 类）",
          "market_api", "_data_collect/out/商标明细.csv + 产品节点_尼斯分类.csv",
          "commercial", "manual", 0.0,
-         "2026-11-12 回传；本轮零新增采购，服务条款与公开分发范围待确认",
+         "2026-11-12 回传；本轮零新增采购；分发口径 2026-11-12 定稿为全部公开，随完整库原样发布",
          "施汶邑", "商标 8004 条 / 444 家；产品类节点 35 个 / 433 户",
          "2026-11-12", "2026-11-12", 1))
     for lid, target, rows_in, rows_ok, rows_bad, msg in (

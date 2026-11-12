@@ -487,6 +487,7 @@ te = df[df.split == 'test']
     A("| `axis_a_judicial_report.md` / `.json` | **v2.0 并列层主报告**：司法违约 34 条 / 6 户、主要人员清洗后 2079 人 / 490 户、三类金额口径禁止混加、复合负面事件 6 家 / 3 家新增 E 候选；含口径隔离与禁止清单（**未改已发布标签与五档**） |")
     A("| `product_node_report.md` / `.json` | **v2.1 并列层主报告**：商标 8004 条 / 444 家、尼斯 45 类（35 产品 + 10 服务）、桥接 1418 行 / 433 户；三处口径纠正（45→35、2569→2079、品牌数 68 家差异）、六类实体覆盖现场回算、与五档交叉仅为并列观察量（**未并入主图、未改标签**） |")
     A("| `标签核查_21家断档逐户.csv` / `官方_取消高企资格_浙江名单.csv` / `公告清单_浙江宁波7条.json` / `证据_2026-02第12条_官方更名标注.png` | 上报告的原始证据快照（287 家名单 + 官方更名标注单页），供接收方独立复核 |")
+    A("| `../DATA_PROVENANCE.md` / `../DATA_LICENSE.md` | **上级目录，接收方必读**：数据来源与使用声明、数据使用条款（2026-11-12 最终定稿「全部公开」） |")
     A("")
     A("> **入口优先级**：新代码一律从 `v_model_train_ready_credit` 取标签（1=正例·好企业），")
     A("> 结果对照看 `credit_direction_asof_report.md`；`baseline_asof_leakage.json` 与")
@@ -1153,7 +1154,33 @@ def build_doc(con, alg, fe):
       "会返回 `code=NOT_FOUND` 且 `meta.detail` 写明正确格式；"
       "前端应渲染成「未找到」而非「系统错误」。\n")
 
-    A("## 六、还没做的\n")
+    A("## 六、企查查数据分发口径（2026-11-12 最终定稿：全部公开）\n")
+    A("用户拍板「**数据全部都上传公开**」。此前一轮「发布版去标识化 + Release 不挂库 + "
+      "撤下历史附件 + 私下交付」的中间方案**已作废**，以下为最终口径。\n")
+    A("| 项 | 结论 |")
+    A("|---|---|")
+    A("| 数据来源 | 政府公示名单 + CNIPA 专利公告 + **企查查公开页面登录态批量查询**"
+      "（非官方 API 采购；¥3,000 商采议题已关闭，**无商业数据授权**） |")
+    A("| 公开范围 | **完整库原样公开**：40 表 / 37 视图 / 1068 列、7 张 `ods_qcc_*` "
+      "原始采集层、全部派生数据集与文档，随 `zjtech_credit_data.zip` 走 GitHub Release |")
+    A("| 自然人字段 | `person_name`（2079 行）、`applicant`（34 行）、"
+      "`person_names_raw`（490 行）、`case_sample_raw`（6 行）**原样保留、不做去标识化**；"
+      "企业名称 / `case_no` / `reg_no` / `trademark_name` 同步保留 |")
+    A("| 交付快照 | `05_数据库/zjtech_credit.db` 是工作库的 `VACUUM INTO` 一致性副本，"
+      "字段值逐列相同；`RELEASE_PARTS = ['04_数据字典与数据集', '05_数据库']` |")
+    A("| 历史附件 | v1.0.0 / v1.3.0 / v1.4.0 上已公开的含库附件**保持不动**；"
+      "本地 9 个历史 zip 不删不覆盖（add-new-no-overwrite） |")
+    A("| 随包说明 | `DATA_PROVENANCE.md`（来源、公开范围、风险）与 `DATA_LICENSE.md`"
+      "（建议用途与禁止事项），接收方必读 |")
+    A("| 残余风险 | 登录态批量查询可能违反平台服务条款，项目方未取得书面授权；"
+      "用户已知悉并决定公开，声明不能使采集行为合规。**公开后无法追溯已发生的下载** |")
+    A("")
+    A("**允许**科研 / 教学 / 方法复现，以及保留声明前提下的转发与再分发；"
+      "**禁止**商用、转售、并入商业数据服务、用于真实征信 / 授信 / 人事决策、"
+      "把自然人字段与第三方人员库拼接用于重识别。完整条款见 `DATA_LICENSE.md`，"
+      "来源与风险详见 `DATA_PROVENANCE.md`。登记册口径：`policies.data_distribution`（v5）。")
+    A("")
+    A("## 七、还没做的\n")
     A("| 项 | 影响 | 难度 |")
     A("|---|---|---|")
     A("| P2：把复合负面事件正式纳入评级 / 做跨源效度 | v2.0 已落地样本内司法违约 6 户（3 家新增 E 候选），但仍是**并列候选视图**；6 个锚点里 4 个是状态量、分档复用形成循环定义 | 需另一次升版拍板（改 `DEFINITION_VER` / `DATASET_VER` → 重建矩阵与五档 → 重跑训练 / SHAP / 测评） |")
@@ -1167,6 +1194,8 @@ def build_doc(con, alg, fe):
       "API 不再读旧目录；但目录还在，误拷会覆盖 | 低 |" % fe["n_bad"])
     A("| `grant_date` / 引文库 / CAGR / 财务序列 | 结构性缺口，源数据没有 | 无解（已登记） |")
     A("| 行业切片 | `qcc_industry_mid` 覆盖率不足 | 依赖补采 |")
+    A("| 企查查平台书面授权 | 登录态批量采集的服务条款风险仍在，用户已知悉并决定全部公开；"
+      "`DATA_PROVENANCE.md` §6 已明示，本声明不能使采集行为合规 | 需平台侧书面确认，非改库可解 |")
     A("")
     A("**本轮已闭合**：12 个 `CONTRACT_PENDING` 接口全部产出真实契约；"
       "2 个导入接口完成字段级校验与 staging 落库；`explain/local` 改为按企业动态生成；"
@@ -1183,7 +1212,7 @@ def build_doc(con, alg, fe):
       "数据字典逐轮同步重生成，产品节点未并入主图。三轮都逐项保留 `ads_label` 307/21/286、"
       "多标签五档、29 帧时序切面、`DEFINITION_VER` 与 `ASOF_VER`。")
     A("")
-    A("## 七、复现\n")
+    A("## 八、复现\n")
     A("```bash")
     A("python -m src.data.build_contracts          # 12 个契约 → outputs/contracts/")
     A("python -m src.data.export_data_dictionary   # 字段字典 %d 列" % st["n_cols"])
@@ -1195,8 +1224,9 @@ def build_doc(con, alg, fe):
     A("python -m src.data.apply_v2_1_product_node    # v2.1 商标/产品节点并列层（幂等；--check 只读）")
     A("python -m src.data.export_product_node_report # v2.1 接入报告（只读）")
     A("python -m src.data.export_graph_temporal_contract # 时序契约 §6 六类实体覆盖")
+    A("python -m src.data.export_data_provenance    # DATA_PROVENANCE / DATA_LICENSE（全部公开口径）")
     A("python -m src.data.apply_funding_provenance  # A7 融资事件行级溯源回填（幂等）")
-    A("python -m src.data.export_db_bundle --no-zip # 05_数据库 快照（冻结期不重打附件）")
+    A("python -m src.data.export_db_bundle --no-zip # 05_数据库 完整库一致性快照·未脱敏（冻结期不重打附件）")
     A("python -m src.data.export_delivery          # 本交付包散文件（冻结期不带 --zip）")
     A("")
     A("python tests/test_train_ready.py             # 8 项 训练集守卫")
@@ -1226,16 +1256,19 @@ def build_doc(con, alg, fe):
     A("python tests/test_official_cancel_check.py  # 10 项 官方核查证据链 / 口径隔离 / 未改库守卫")
     A("python tests/test_axis_a_judicial.py       # 12 项 v2.0 A 轴结构 / 清洗 / 口径隔离 / 字典同源守卫")
     A("python tests/test_product_node.py          # 14 项 v2.1 产品节点 / 口径纠正 / 未入主图 / 散文件同源守卫")
+    A("python tests/test_data_distribution.py     # 10 项 数据全部公开口径 / 完整库未脱敏 / 散文件同源守卫")
     A("```")
-    A("合计 **312 项**，全绿（27 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **322 项**，全绿（28 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
-    A("**测试文件范围（2026-11-12 更新）**：`tests/` 下 27 个 `test_*.py` **全部纳入交付守卫**，"
+    A("**测试文件范围（2026-11-12 更新）**：`tests/` 下 28 个 `test_*.py` **全部纳入交付守卫**，"
       "新增 `test_official_cancel_check.py`（10 项：官方公告证据链、21 家逐户判定、口径隔离与未改库）、"
       "`test_axis_a_judicial.py`（12 项：v2.0 三表四视图、490 行表头脏行剔除、三类金额分列、"
-      "复合事件候选与已发布标签未动、997 列字典与交付散文件同源）与 "
+      "复合事件候选与已发布标签未动、1068 列字典与交付散文件同源）、"
       "`test_product_node.py`（14 项：v2.1 三表四视图、35/10 类二分、日期清洗、"
-      "三处口径纠正、主图未动、1068 列字典与交付散文件同源）。"
+      "三处口径纠正、主图未动、1068 列字典与交付散文件同源）与 "
+      "`test_data_distribution.py`（10 项：登记册 v5 全部公开口径、完整库未脱敏、"
+      "工作库与快照一致、RELEASE_PARTS 含数据库、两份声明齐备）。"
       "其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期 A 套 27 表"
       "链路自测，已于 11-09 适配 B 套 v1.8：IPC 改校验 A–H 八个部类齐全（全量字典 11,616 行）、"
       "桥表改按本次插入的 patent_id 定点校验、覆盖度视图改断言「基线 500 + 本次 1 家」；"

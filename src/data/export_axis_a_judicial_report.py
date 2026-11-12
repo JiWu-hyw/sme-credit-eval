@@ -147,7 +147,7 @@ def gather() -> dict:
             "不得把复合事件 v2 当成已发布标签，或据此改写 ads_label / 五档",
             "样本内复合事件仅 6 家，五档事件率置信区间极宽，且 D 档为 0 不单调，禁止当性能结论",
             "A 轴循环定义未解除：分档判据仍复用 y_hard_outcome / y_survival，不得宣称外部效度",
-            "企查查回传数据的服务条款与公开分发范围待确认，Release 附件发布前需单独拍板",
+            "企查查回传数据已定稿「全部公开」：完整库原样随 Release 发布、不做去标识化；随包来源与风险见 DATA_PROVENANCE.md，仍禁止商用与真实征信 / 授信 / 人事用途",
         ],
         "reproduce": [
             "python -m src.data.apply_v2_0_axis_a",

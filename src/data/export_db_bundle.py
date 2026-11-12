@@ -18,6 +18,12 @@ DB = os.path.join(ROOT, "data", "db", "zjtech_credit.db")
 OUT = os.path.join(ROOT, "deliverables", "05_数据库")
 SNAPSHOT = os.path.join(OUT, "zjtech_credit.db")
 
+# 2026-11-12 分发口径最终定稿（用户拍板）：**数据全部公开**。
+# 完整库原样随 Release 附件发布，不做去标识化、不撤下历史附件、不私下交付；
+# 自然人字段（person_name / applicant / person_names_raw / case_sample_raw）
+# 保持与工作库完全一致。不要再往本脚本加脱敏逻辑，来源与风险由
+# DATA_PROVENANCE.md / DATA_LICENSE.md 随包说明。
+#
 # Release 附件：文件名是 README 里的下载链接，不能改。
 # 04_数据字典与数据集 + 05_数据库 = 11 个文件，加 MANIFEST.txt 共 12 项。
 RELEASE_ZIP = os.path.join(ROOT, "deliverables", "zjtech_credit_data.zip")

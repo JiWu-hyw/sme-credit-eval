@@ -215,7 +215,7 @@ def gather() -> dict:
             "禁止把 v_product_grade_cross 的并列观察量当评级因子或外部效度证据。",
             "禁止把主表「商标_品牌数」与库内 n_brand_exact 混用（归一规则未反推，存在差异）。",
             "禁止把用户 xlsx 的「人员 2569 节点」当清洗后人数或图节点数。",
-            "禁止把企查查回传商标数据公开分发，服务条款与分发范围待单独拍板。",
+            "企查查回传商标数据已定稿「全部公开」：完整库原样随 Release 发布、不脱敏；随包来源与风险见 DATA_PROVENANCE.md，仍禁止商用与真实征信 / 授信 / 人事用途。",
         ],
         "reproduce": [
             "python -m src.data.apply_v2_1_product_node --check   # 只读校验迁移",
@@ -367,8 +367,11 @@ def build_md(d: dict) -> str:
         A(x)
     A("```")
     A("")
-    A("原始回传 CSV 只存于仓库外 `_data_collect/out/`，未纳入交付包；"
-      "公开分发范围待单独拍板。")
+    A("原始回传 CSV 只存于仓库外 `_data_collect/out/`，未纳入交付包。"
+      "分发口径已于 2026-11-12 最终定稿为**全部公开**：完整库（含本并列层）"
+      "原样随 GitHub Release 附件发布、不做去标识化，历史附件保持不动。"
+      "随包来源清单、建议用途、禁止事项与平台服务条款残余风险见 "
+      "`DATA_PROVENANCE.md` / `DATA_LICENSE.md`；公开后无法追溯已发生的下载。")
     return "\n".join(L) + "\n"
 
 

@@ -260,7 +260,7 @@ def j_published_untouched():
 
 def k_registry_policy():
     r = json.loads(read(REG))
-    assert r["meta"]["version"] == "v4"
+    assert r["meta"]["version"] == "v5"
     assert "partial_closed" in r["meta"]["status_enum"]
     g1 = next(g for g in r["graph_gaps"] if g["id"] == "G-GRAPH-01")
     assert g1["status"] == "partial_closed", "产品节点缺口状态未改判"
@@ -325,7 +325,7 @@ def n_delivery_same_source():
         assert all(r["对象说明"].strip() for r in g), "%s 对象说明为空" % name
     for path, kws in (
         (ROOT / "src" / "data" / "export_delivery.py",
-         ("product_node_report.md", "312 项", "27 个测试文件")),
+         ("product_node_report.md", "322 项", "28 个测试文件")),
         (ROOT / "src" / "data" / "apply_v2_1_product_node.py",
          ("ods_qcc_trademark", "--check", "V21PRODUCT")),
         (ROOT / "src" / "data" / "export_product_node_report.py",
@@ -337,11 +337,11 @@ def n_delivery_same_source():
         for k in kws:
             assert k in t, "%s 缺 %r" % (path.name, k)
     n = len(list((ROOT / "tests").glob("test_*.py")))
-    assert n == 27, "tests/ 下应为 27 个守卫文件，实得 %d" % n
+    assert n == 28, "tests/ 下应为 28 个守卫文件，实得 %d" % n
     for p in (ROOT / "README.md", D_ALG.parent / "00_先看这个.md",
               ROOT / "deliverables" / "03_交付说明" / "delivery_spec.md",
               ROOT / "deliverables" / "RELEASE_v1.5.0.md"):
-        assert "312 项" in read(p), "%s 守卫项数未同步" % p.name
+        assert "322 项" in read(p), "%s 守卫项数未同步" % p.name
 
 
 def main():
@@ -362,7 +362,7 @@ def main():
         ("登记册 G-GRAPH-01 改判 partial_closed、v2.1 policy 齐备", k_registry_policy),
         ("时序契约 §6 与 JSON 并列层口径同步", l_graph_contract),
         ("接入报告 md/json 与库现场回算一致", m_report_matches_db),
-        ("交付散文件同源、字典 1068 列、生成源可复现、基线 27 文件 312 项", n_delivery_same_source),
+        ("交付散文件同源、字典 1068 列、生成源可复现、基线 28 文件 322 项", n_delivery_same_source),
     ]:
         check(name, fn)
     print("=" * 68)

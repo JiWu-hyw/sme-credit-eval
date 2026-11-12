@@ -260,7 +260,7 @@ def l_delivery_same_source_and_repro():
         assert md5(dst) == md5(src), "交付份与源份不同源：%s" % dst.name
     for path, kws in (
         (ROOT / "src" / "data" / "export_delivery.py",
-         ("axis_a_judicial_report.md", "312 项", "27 个测试文件")),
+         ("axis_a_judicial_report.md", "322 项", "28 个测试文件")),
         (ROOT / "src" / "data" / "apply_v2_0_axis_a.py",
          ("ods_qcc_judicial", "ods_qcc_person", "--check")),
         (ROOT / "src" / "data" / "export_axis_a_judicial_report.py",
@@ -270,11 +270,11 @@ def l_delivery_same_source_and_repro():
         for k in kws:
             assert k in t, "%s 缺 %r" % (path.name, k)
     n = len(list((ROOT / "tests").glob("test_*.py")))
-    assert n == 27, "tests/ 下应为 27 个守卫文件，实得 %d" % n
+    assert n == 28, "tests/ 下应为 28 个守卫文件，实得 %d" % n
     for p in (ROOT / "README.md", D_ALG.parent / "00_先看这个.md",
               ROOT / "deliverables" / "03_交付说明" / "delivery_spec.md",
               ROOT / "deliverables" / "RELEASE_v1.5.0.md"):
-        assert "312 项" in read(p), "%s 守卫项数未同步" % p.name
+        assert "322 项" in read(p), "%s 守卫项数未同步" % p.name
 
 
 def main():
@@ -293,7 +293,7 @@ def main():
         ("已发布标签 / 五档 / 主表 / DEFINITION_VER 未动", i_published_untouched),
         ("报告 md/json 与库现场回算一致", j_report_matches_db),
         ("数据字典 1068 列、新对象说明 100% 覆盖", k_data_dictionary),
-        ("交付散文件同源、生成源可复现、基线 27 文件 312 项", l_delivery_same_source_and_repro),
+        ("交付散文件同源、生成源可复现、基线 28 文件 322 项", l_delivery_same_source_and_repro),
     ]:
         check(name, fn)
     print("=" * 68)

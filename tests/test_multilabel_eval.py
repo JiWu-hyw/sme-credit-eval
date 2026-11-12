@@ -210,8 +210,8 @@ def main():
     def n_registry():
         r = json.loads(read(REG))
         # v3 = 方向纠正定稿；v4 = G-GRAPH-01 改判 partial_closed 并加 v2.1 policy。
-        assert r["meta"]["version"] in ("v3", "v4"), "登记册未升 v3/v4"
-        if r["meta"]["version"] == "v4":
+        assert r["meta"]["version"] in ("v3", "v4", "v5"), "登记册未升 v3/v4/v5"
+        if r["meta"]["version"] in ("v4", "v5"):
             assert "v2_1_product_node" in r["policies"], "v4 缺 v2.1 并列层策略"
         t = r["label_tasks"]["tasks"][0]
         assert (t["positive"], t["negative"]) == (286, 21), \
@@ -244,7 +244,7 @@ def main():
         ("交叉测评汇总口径", k_eval_summary),
         ("迁移脚本 --check 通过", l_migration_check),
         ("schema.sql 与迁移 DDL 一致", m_ddl_synced),
-        ("缺口登记册 v3/v4 方向正确", n_registry),
+        ("缺口登记册 v3/v4/v5 方向正确", n_registry),
         ("测评报告含纠偏与循环定义警示", o_report),
         ("主文档注入方向声明", p_notice_injected),
     ]:
