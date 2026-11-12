@@ -47,6 +47,9 @@ NOTES = {
     "ods_qcc_judicial": "**v2.0 新增** 司法违约明细 34 条 / 6 户；`amount_kind` 区分涉案金额 / 执行标的 / 未履行金额，**三类禁止相加**",
     "ods_qcc_person": "**v2.0 新增** 主要人员清洗后 2079 人 / 490 户；原始 2569 行含 490 行表头脏行已剔除",
     "ods_qcc_axis_a_snapshot": "**v2.0 新增** 用户主表本轮 17 个新增列的原始快照 500 行；`高管_人数` 为未清洗口径，仅供对照",
+    "ods_qcc_trademark": "**v2.1 新增** 商标贴源明细 8004 条 / 444 家 / 尼斯 1–45 类；`is_registered` 合计 5257 与主表守恒，1 条申请日期与 2245 条公告日期 `-` 已清洗为 NULL",
+    "dim_product_nice_class": "**v2.1 新增** 尼斯分类维表 45 行＝35 产品类 + 10 服务类；⚠️ 服务类不作产品节点，粒度是类别不是 SKU",
+    "bridge_enterprise_product": "**v2.1 新增** 企业—产品类桥接 1418 行 / 433 户 / 6102 条；只含 35 个产品类，产品节点**未并入 ads_graph_node 主图**",
     "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是续存样本）",
     "ads_feature_asof": "长表形态的 as-of 特征（feature_name/feature_value）",
     "ads_graph_node": "异质图节点（企业/专利/IPC/发明人/投资机构 5 类）",
@@ -121,6 +124,23 @@ VIEW_NOTES = {
     "v_axis_a_grade_cross": (
         "**v2.0 新增** 五档 × 复合事件率交叉 5 行；A→E **不单调**（D 档为 0）、"
         "事件仅 6 家，禁止当评级有效性结论"
+    ),
+    "v_product_node": (
+        "**v2.1 新增** 产品节点 35 行（只含产品类）；`covered_firms_actual` 现场重算并与"
+        "用户 CSV 的 `covered_firms_stated` 逐类比对；⚠️ 尼斯类别粒度、非 SKU、未并入主图"
+    ),
+    "v_enterprise_trademark_summary": (
+        "**v2.1 新增** 企业层商标汇总 500 行；`n_brand_exact` 与主表「商标_品牌数」"
+        "有 68 家口径差异，禁止混用"
+    ),
+    "v_six_entity_coverage": (
+        "**v2.1 新增** 立项六类实体覆盖 6 行；现场纠正用户汇总表两处口径："
+        "产品 45→35 节点 / 类别粒度部分闭合（图节点 0）、人员 2569→2079 来源行"
+        "（图内人员＝发明人 inventor 15955）"
+    ),
+    "v_product_grade_cross": (
+        "**v2.1 新增** 产品覆盖 × 已发布五档交叉 5 行；**并列观察量**，"
+        "未进入标签定义与分档规则，禁止当评级有效性证据"
     ),
 }
 
@@ -224,7 +244,7 @@ def build(db_path: str = DB) -> dict:
         A("| `%s` | %s | %s |" % (name, format(rows[name], ","),
                                   VIEW_NOTES.get(name, "—")))
     A("")
-    A("## 五条使用红线\n")
+    A("## 六条使用红线\n")
     A("1. **训练只认 `v_model_train_ready`**。它已经挡掉三个坑：193 行假续存样本、"
       "伪重复（一家两行）、4 个常量特征。研究企业好坏方向时用 `v_model_train_ready_credit`。")
     A("2. **专利数用 `COUNT(DISTINCT app_no)`**。`COUNT(*)` 得 32,969，实际 30,103 件，虚高 9%。")
@@ -234,6 +254,10 @@ def build(db_path: str = DB) -> dict:
     A("5. **v2.0 A 轴层不得混用口径**。三类司法金额按 `amount_kind` 分列、禁止相加；"
       "`高管_人数`（快照表）含表头脏行，取数一律走 `v_enterprise_person_summary`；"
       "`v_axis_a_compound_event` 是并列候选，不是已发布标签，也不构成评级有效性证据。")
+    A("6. **v2.1 产品节点不得当「六类实体已补齐」**。35 个尼斯类别节点在并列层、"
+      "主图 `ads_graph_node` 仍是 5 类且 29 帧时序切面未变；10 个服务类不作产品节点；"
+      "`v_product_grade_cross` 只是并列观察量；`n_brand_exact` 与主表"
+      "「商标_品牌数」有 68 家差异，取数一律以贴源明细重算。")
     A("")
     A("字段逐列含义见上级目录 `04_数据字典与数据集/数据字典.md`（%d 列全覆盖）。" % n_cols)
     A("")

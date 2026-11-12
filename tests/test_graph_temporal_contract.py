@@ -73,8 +73,17 @@ def main():
             "AND name NOT LIKE 'sqlite_%'").fetchone()[0]
         n_view = cur.execute(
             "SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-        assert n_tab == 37, "表数 %d（v2.0 新增 3 张 A 轴表后应为 37）" % n_tab
-        assert n_view == 33, "视图数 %d（v2.0 新增 4 个 A 轴视图后应为 33）" % n_view
+        # 本守卫只看「两个年度切片视图仍以物理图为唯一边源」，
+        # 结构基线随并列层升版：v2.0 37/33 → v2.1 40/37（新增 3 表 4 视图）。
+        # 差值必须严格等于 v2.1 产品节点并列层，不得借升版改动物理图。
+        assert (n_tab, n_view) in ((37, 33), (40, 37)), (
+            "结构漂移 %d 表 / %d 视图（允许 37/33 或 40/37）" % (n_tab, n_view))
+        if (n_tab, n_view) == (40, 37):
+            obj = {r[0] for r in cur.execute(
+                "SELECT name FROM sqlite_master WHERE type IN ('table','view') "
+                "AND name IN ('ods_qcc_trademark','dim_product_nice_class',"
+                "'bridge_enterprise_product','v_product_node')")}
+            assert len(obj) == 4, "40/37 基线不是 v2.1 产品节点并列层：%r" % obj
 
     def t_bottom_tables_untouched():
         for t in ("ads_graph_node", "ads_graph_edge"):
@@ -185,10 +194,25 @@ def main():
         assert "graph_temporal" in r["policies"], "policies 缺 graph_temporal"
         assert r["policies"]["graph_temporal"]["check"].endswith("--check"), (
             "graph_temporal.check 未指向只读校验命令")
-        # 产品节点必须被标注为禁止伪造
+        # 产品节点缺口：v1.9 定稿「保持缺失、禁止伪造」；
+        # 2026-11-12 商标数据到位后改判 partial_closed（类别粒度并列层部分闭合），
+        # 但「不并入主图 / 不宣称六类完整覆盖 / 禁止伪造 SKU 节点」红线继续有效。
         g1 = next(g for g in r["graph_gaps"] if g["id"] == "G-GRAPH-01")
-        assert g1["status"] == "source_missing" and "禁止" in g1["fallback"], (
-            "产品节点缺口未按「保持缺失、禁止伪造」定稿")
+        assert g1["status"] in ("source_missing", "partial_closed"), (
+            "产品节点缺口状态异常：%s" % g1["status"])
+        assert "禁止" in g1["fallback"], "产品节点缺口丢了「禁止伪造」红线"
+        if g1["status"] == "source_missing":
+            assert "禁止" in g1["fallback"], (
+                "产品节点缺口未按「保持缺失、禁止伪造」定稿")
+        else:
+            assert "SKU" in g1["reason"] and "不并入主图" in g1["decision"], (
+                "partial_closed 未写明 SKU 仍缺 / 不并入主图")
+            assert "六类完整覆盖" in g1["decision"], (
+                "partial_closed 未保留「禁止宣称六类完整覆盖」")
+            assert "source_missing" in g1["history"], "改判未留原定稿"
+            p = r["policies"]["v2_1_product_node"]
+            assert "29 帧" in p["untouched"] and "test_product_node.py" in p["check"], (
+                "v2_1_product_node policy 未锁定 29 帧时序切面 / 守卫入口")
 
     def t_report_exists_and_numbers():
         for p in (REPORT, REPORT_JSON, BACKUP):
@@ -240,7 +264,7 @@ def main():
 
     for name, fn in [
         ("年度切片视图以物理图为唯一边源", t_views_same_source),
-        ("当前结构：37 表 / 33 视图（v2.0 A 轴并列层后）", t_structure_unchanged),
+        ("当前结构：40 表 / 37 视图（含 v2.0 / v2.1 并列层）", t_structure_unchanged),
         ("物理底表 time_slice 未被 UPDATE", t_bottom_tables_untouched),
         ("年度切片 29 帧（1992–2026）", t_years),
         ("末年三类边 + patent 节点守恒", t_last_year_conservation),

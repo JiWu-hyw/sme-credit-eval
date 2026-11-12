@@ -161,26 +161,42 @@ def main():
             cols = sum(len(c.execute('PRAGMA table_info("%s")' % n).fetchall())
                        for n in tables + views)
             # A7 时点为 v1.8（34/23/837）；v1.9 只增 6 个多标签视图（表数不变）；
-            # v2.0 再增 3 张 A 轴 ODS 贴源表 + 4 个并列视图，均为新增对象，
+            # v2.0 再增 3 张 A 轴 ODS 贴源表 + 4 个并列视图，
+            # v2.1 再增商标/尼斯分类/桥接 3 表 + 4 视图，均为新增对象，
             # 不触碰任何事实表 / 主档数据。此处按「基线表数 + 新增表身份」校验，
             # 防止有人借升版之名悄悄改动 fact_* / dim_*。
             V20_TABLES = {"ods_qcc_judicial", "ods_qcc_person",
                           "ods_qcc_axis_a_snapshot"}
-            # 基线里原有 4 张企查查 ODS 表，v2.0 只再加上面 3 张。
+            # v2.1 产品节点并列层再加 3 张表（1 张 ODS + 1 维表 + 1 桥表）。
+            V21_TABLES = {"ods_qcc_trademark", "dim_product_nice_class",
+                          "bridge_enterprise_product"}
+            # 基线里原有 4 张企查查 ODS 表。
             QCC_ODS_BASELINE = {"ods_qcc_annual", "ods_qcc_cert",
                                 "ods_qcc_honor", "ods_qcc_shareholder"}
-            assert len(tables) in (34, 37), "事实表数被改动：%d" % len(tables)
+            assert len(tables) in (34, 37, 40), "事实表数被改动：%d" % len(tables)
             if len(tables) == 37:
                 assert V20_TABLES <= set(tables), (
                     "v2.0 三张 A 轴贴源表不全：%r" % (V20_TABLES - set(tables)))
                 assert {t for t in tables if t.startswith("ods_qcc_")} == (
                     QCC_ODS_BASELINE | V20_TABLES), (
                     "ODS 贴源层出现 v2.0 之外的额外表")
+            if len(tables) == 40:
+                assert V20_TABLES | V21_TABLES <= set(tables), (
+                    "v2.1 产品节点三张表不全：%r" % (V21_TABLES - set(tables)))
+                assert {t for t in tables if t.startswith("ods_qcc_")} == (
+                    QCC_ODS_BASELINE | V20_TABLES | {"ods_qcc_trademark"}), (
+                    "ODS 贴源层出现 v2.1 之外的额外表")
+                v21v = {r[0] for r in c.execute(
+                    "SELECT name FROM sqlite_master WHERE type='view' AND name IN "
+                    "('v_product_node','v_enterprise_trademark_summary',"
+                    "'v_six_entity_coverage','v_product_grade_cross')")}
+                assert len(v21v) == 4, "v2.1 四个并列视图不全：%r" % v21v
             assert len(views) >= 23, "视图数少于 A7 时点：%d" % len(views)
             assert cols >= 837, "字段数少于 A7 时点：%d" % cols
             ver = c.execute("SELECT version FROM meta_schema_version "
                             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
-            assert ver in ("v1.8", "v1.9", "v2.0"), "schema 版本异常：%s" % ver
+            assert ver in ("v1.8", "v1.9", "v2.0", "v2.1"), (
+                "schema 版本异常：%s" % ver)
             assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok", \
                 "integrity_check 不通过"
             assert not c.execute("PRAGMA foreign_key_check").fetchall(), "外键冲突"

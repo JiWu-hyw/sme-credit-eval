@@ -923,3 +923,102 @@ VIEW_NOTES.update({
         "n_new_e_candidate": "该档因复合事件而应升为 E 预警的候选数（原档非 E）",
     },
 })
+
+# ---------------------------------------------------------------------------
+# v2.1 商标明细 + 产品节点（2026-11-12 新增并列层）
+# 纪律：产品节点是「尼斯核定类别」粒度，**未并入 ads_graph_node 主图**；
+#       29 帧时序切面 / 图结构契约 / 标签与五档逐项不动。
+#       立项六类实体只能写「类别粒度部分闭合，SKU 级仍缺」。
+# ---------------------------------------------------------------------------
+TABLE_NOTES.update({
+    "bridge_enterprise_product": {
+        "bridge_id": "桥接行自增主键（一行＝一家企业命中一个产品类）",
+        "product_id": "产品节点 ID，外键 → dim_product_nice_class.product_id；只指向 35 个产品类",
+    },
+    "dim_product_nice_class": {
+        "class_kind": "product=产品类（35 个，可作节点）/ service=服务类（10 个，不作节点）",
+    },
+})
+
+TABLE_COMMENTS.update({
+    "ods_qcc_trademark": "企查查回传商标贴源明细（一行一条商标）：8004 条 / 444 家 / "
+                         "尼斯 1–45 类。状态 39 种保留原文，另给 is_registered"
+                         "（以「已注册」开头，合计 5257，与主表「商标_有效件数」守恒）；"
+                         "1 条申请日期 '-'、2245 条注册公告日期 '-' 已清洗为 NULL；"
+                         "企业名经主表 QCC 现用名/曾用名桥接，444 家 100% 命中",
+    "dim_product_nice_class": "尼斯分类维表 / 产品节点候选（45 行）：1–34 + 40 共 35 个产品类"
+                              " is_product_node=1；35–39、41–45 共 10 个服务类虽实际有"
+                              " 1902 条商标，但按用户口径不作产品节点。"
+                              "⚠️ 粒度是「类别」不是 SKU 产品，也不是商标名称",
+    "bridge_enterprise_product": "企业—产品类桥接表（1418 行 / 433 户 / 6102 条产品类商标），"
+                                 "只保留 35 个产品类的 (enterprise_id, product_id) 组合，"
+                                 "服务类一律不进。产品节点在并列层，未插入 ads_graph_node",
+})
+
+VIEW_COMMENTS.update({
+    "v_product_node": "产品节点视图（35 行，只含产品类）：covered_firms_actual 由桥接表现场重算，"
+                      "与用户 CSV 的 covered_firms_stated 逐类比对（stated_match 全 1）。"
+                      "⚠️ 尼斯类别粒度、非 SKU；并列层，未并入主图",
+    "v_enterprise_trademark_summary": "企业层商标汇总（500 行，无商标企业补 0）：一律以贴源明细重算。"
+                                      "⚠️ n_brand_exact 为精确去重口径，与用户主表「商标_品牌数」"
+                                      "存在 68 家差异（归一规则未反推），两者禁止混用",
+    "v_six_entity_coverage": "立项六类实体覆盖（6 行），现场纠正用户 xlsx 两处口径："
+                             "人员来源明细清洗后 2079 人 / 490 户（原写 2569 含 490 行表头脏行，"
+                             "且它不是图节点，图内人员＝发明人 inventor 15955）；"
+                             "产品为 35 个类别节点 / 433 户 / 86.6%，图节点数 0，"
+                             "状态「类别粒度部分闭合」，禁止宣称六类已完整覆盖",
+    "v_product_grade_cross": "产品类覆盖 × 已发布多标签五档交叉（5 行，并列观察量）："
+                             "各档有商标户数、有产品节点户数、平均产品类数、多类企业数。"
+                             "⚠️ 未进入标签定义与分档规则，不得当评级有效性证据",
+})
+
+VIEW_NOTES.update({
+    "v_product_node": {
+        "product_id": "产品节点 ID（PRD001…PRD045 中 is_product_node=1 的 35 个）",
+        "product_name": "节点名，如「7类机械设备」；是类别名不是 SKU 产品名",
+        "nice_class": "尼斯分类号 1–45（产品类实际为 1–34 与 40）",
+        "class_name": "类别名，如「机械设备」",
+        "covered_firms_stated": "用户《产品节点_尼斯分类.csv》给出的覆盖企业数；服务类写 0 是有意口径",
+        "covered_firms_actual": "由 bridge_enterprise_product 现场重算的覆盖企业数",
+        "n_trademark": "该类下企业商标条数合计（仅产品类，合计 6102）",
+        "n_registered": "其中状态以「已注册」开头的条数",
+        "first_apply_date": "该类下最早商标申请日期",
+        "stated_match": "1=用户 CSV 覆盖数与实际重算一致；本轮 35 行应全为 1",
+        "is_product_node": "常量 1；服务类不进本视图",
+        "node_note": "常量警示：尼斯类别粒度、非 SKU、未并入 ads_graph_node 主图",
+    },
+    "v_enterprise_trademark_summary": {
+        "enterprise_id": "企业代理键（dim_enterprise）",
+        "name_display": "库内登记企业名（非回传原文）",
+        "n_trademark": "该企业商标条数（贴源明细重算，500 户合计 8004）",
+        "n_registered": "其中「已注册」条数（合计 5257，与主表「商标_有效件数」守恒）",
+        "n_brand_exact": "商标名精确去重数（排除 ''/'-'/'图形'）；⚠️ 与主表「商标_品牌数」有 68 家差异，禁止混用",
+        "n_product_class": "命中的产品类（尼斯 35 类）去重数",
+        "n_service_class": "命中的服务类（尼斯 10 类）去重数；服务类不作产品节点",
+        "n_product_link": "该企业—产品类桥接行数",
+        "n_product_trademark": "桥接覆盖的产品类商标条数",
+        "first_apply_date": "最早商标申请日期（NULL 日期已排除）",
+        "first_apply_year": "最早申请年份，由 first_apply_date 截取",
+        "has_trademark": "1=有商标（444 家）/ 0=无商标（56 家）",
+        "brand_note": "常量警示：品牌数口径与主表不同，禁止混用",
+    },
+    "v_six_entity_coverage": {
+        "entity_type": "立项六类实体：企业 / 专利 / 投资机构 / 人员 / 领域 / 产品",
+        "node_type": "对应 ads_graph_node.node_type；产品为「（未入主图）」",
+        "n_in_graph": "实际入图节点数（现场取自 ads_graph_node）；产品恒为 0",
+        "n_source_rows": "来源明细/维表行数；人员为清洗后 2079，产品为 35 个类别",
+        "n_covered_firms": "覆盖企业户数；产品为 433",
+        "coverage_rate": "覆盖率；产品 433/500=0.866",
+        "coverage_state": "完整入图 / 类别粒度部分闭合；产品不得写成「完整」",
+        "note": "口径说明与警示：人员数≠图节点数、SKU 级产品仍缺、禁止宣称六类已完整覆盖",
+    },
+    "v_product_grade_cross": {
+        "grade_multilabel": "v1.9 正式多标签档次 A–E（本视图未改动分档）",
+        "n_enterprise": "该档企业数（A81 / B176 / C157 / D83 / E3）",
+        "n_with_trademark": "该档有商标的企业数",
+        "n_with_product_node": "该档命中至少一个产品类节点的企业数",
+        "avg_product_class": "该档平均产品类数（并列观察量，不是评级因子）",
+        "n_multi_class": "该档产品类数 >=3 的企业数",
+        "cross_note": "常量警示：并列观察量，未进入标签定义与分档规则",
+    },
+})

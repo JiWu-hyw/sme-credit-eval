@@ -1,13 +1,15 @@
 {
   "meta": {
-    "version": "v3",
-    "updated_at": "2026-11-11",
+    "version": "v4",
+    "updated_at": "2026-11-12",
     "owner": "施汶邑（几梦）",
     "policy": "NULL 也是一种口径。能算才算，算不出就留空并在此登记；禁止为凑覆盖率估算回填、禁止冒用指标名。",
     "status_enum": {
       "null_by_design": "已决策保持 NULL（数据源不足，填了就是造假）",
       "source_missing": "依赖的外部数据源未采购/未接入，按设计留空",
-      "partial_insufficient": "有少量值但覆盖率过低，不足以建模，仅留档"
+      "partial_insufficient": "有少量值但覆盖率过低，不足以建模，仅留档",
+      "partial_closed": "外部源已接入但只闭合了较粗粒度或并列层，主口径仍缺；禁止写成完整闭合",
+      "fixed": "已修复并纳入正式口径"
     },
     "traps": [
       "SQLite 会把 COUNT(\"不存在的列\") 里的双引号当字符串字面量，返回总行数 → 覆盖率假性 100%。统计前必须先用 PRAGMA 确认列存在。",
@@ -588,23 +590,26 @@
   "graph_gaps": [
     {
       "id": "G-GRAPH-01",
-      "scope": "ads_graph_node / 立项六类实体",
-      "gap": "产品节点缺失",
-      "status": "source_missing",
+      "scope": "ads_graph_node / 立项六类实体 / v2.1 并列层产品节点",
+      "gap": "产品节点缺失（SKU 级仍缺）",
+      "status": "partial_closed",
       "priority": "P2",
-      "decision": "A 保持缺失，禁止伪造",
-      "decided_at": "2026-11-09",
-      "decided_by": "WorkBuddy(施汶邑)",
-      "reason": "库内 34 张表没有任何产品 / 商标 / 经营范围 / 招投标源表；用专利标题聚类或 IPC 小组冒充产品节点会造出伪实体，与 v1.9 已禁止的伪多源 / 循环定义同类。",
+      "decision": "B 接入真实商标源，建类别粒度并列层；不并入主图，禁止宣称六类完整覆盖",
+      "decided_at": "2026-11-12",
+      "decided_by": "施汶邑（几梦）确认数据到位 + WorkBuddy",
+      "reason": "2026-11-12 企查查回传商标明细 8004 条 / 444 家，按尼斯分类建 35 个产品类节点、覆盖 433 户（86.6%），原定稿前提「库内无任何产品/商标源表」已不成立。但节点粒度是商标核定类别而非 SKU 级产品实体，且按用户选定的并列层方案未插入 ads_graph_node，29 帧时序切面与图结构契约保持不变；「禁止用专利标题或 IPC 聚类伪造产品节点」红线继续有效。",
       "evidence": [
-        "ads_graph_node.node_type 实测 5 类：enterprise 500 / patent 32969 / inventor 15955 / ipc 11588 / investor 572",
-        "立项六类：企业 / 专利 / 投资机构 / 人员 / 领域 / 产品，仅缺产品",
-        "人员与投资机构已于 v1.2 入图，评审报告 §5.2(2) 的「3 类节点」为旧快照"
+        "ods_qcc_trademark 8004 条 / 444 家 / 尼斯 1–45 类；dim_product_nice_class 45 行＝35 产品类 + 10 服务类；bridge_enterprise_product 1418 行 / 433 户 / 6102 条产品类商标",
+        "ads_graph_node.node_type 实测仍是 5 类：enterprise 500 / patent 32969 / inventor 15955 / ipc 11588 / investor 572；无 product 节点",
+        "v_six_entity_coverage 产品行：图节点 0 / 来源行 35 / 覆盖 433 户 / 86.6% / 类别粒度部分闭合",
+        "v1.9 时点证据（历史）：立项六类仅缺产品；人员与投资机构已于 v1.2 入图，评审报告 §5.2(2) 的「3 类节点」为旧快照"
       ],
-      "remedy": "接入工商经营范围、商标、产品或招投标目录，并建立产品—企业归属映射。",
-      "remedy_cost": "外部采集（非本轮零采集范围）",
-      "impact": "当前技术域语义由 ipc 节点承担；异质图缺一类实体，GAT/STGNN 不得宣称覆盖立项六类。",
-      "fallback": "无（禁止用 IPC / 专利标题构造替代节点）"
+      "remedy": "已落地：商标明细 + 尼斯分类维表 + 企业—产品桥接 + 4 个并列视图。剩余：SKU 级产品 / 经营范围 / 招投标目录，以及是否把类别节点并入主图（会动 29 帧守恒与图契约，须另一次升版拍板）。",
+      "remedy_cost": "已发生的商标回传为零新增采购；SKU 级产品目录仍需外部采集",
+      "impact": "技术域语义仍由 ipc 节点承担；异质图主图仍缺一类实体，GAT/STGNN 不得宣称覆盖立项六类。产品类覆盖可作为并列观察量，不得当评级因子或外部效度凭证。",
+      "fallback": "禁止用 IPC / 专利标题 / 商标名称构造 SKU 级伪产品节点；禁止把 45 个尼斯类全算产品节点（10 个服务类不作节点）；禁止把 2569 行未清洗主要人员数当图节点数",
+      "source_contract": "outputs/product_node_report.md / .json；configs/field_gap_registry.json policies.v2_1_product_node",
+      "history": "2026-11-09 定稿为 source_missing / 决策 A 保持缺失禁止伪造；2026-11-12 数据到位后改为 partial_closed，原决策留档于本字段。"
     },
     {
       "id": "G-GRAPH-02",
@@ -699,6 +704,17 @@
       "contract": "outputs/axis_a_judicial_report.md / .json",
       "check": "python -m src.data.apply_v2_0_axis_a --check && python tests/test_axis_a_judicial.py",
       "decided_at": "2026-11-11",
+      "decided_by": "施汶邑（几梦）"
+    },
+    "v2_1_product_node": {
+      "rule": "用户补充的商标明细（8004 条 / 444 家 / 尼斯 1–45 类）与产品节点表以「新增并列层」接入：ods_qcc_trademark、dim_product_nice_class（45 行＝35 产品类 + 10 服务类）、bridge_enterprise_product（1418 行 / 433 户 / 6102 条产品类商标）三表，加 v_product_node / v_enterprise_trademark_summary / v_six_entity_coverage / v_product_grade_cross 四视图。库结构 37/33/997 → 40 表 / 37 视图 / 1068 列。",
+      "forbid": "禁止把 45 个尼斯类全算产品节点（35–39、41–45 共 10 个服务类虽实际有 1902 条商标，但按用户口径不作节点）；禁止把尼斯类别粒度写成 SKU 级产品；禁止宣称「立项六类实体已完整覆盖」；禁止把产品节点插入 ads_graph_node 而不同步重建 29 帧时序切面守恒；禁止把主表「商标_品牌数」与库内 n_brand_exact 混用（68 家口径差异，归一规则未反推）；禁止把用户 xlsx 的「人员 2569 节点」当清洗后人数或图节点数。",
+      "candidate_only": "产品节点覆盖 433 户 / 86.6%，v_product_grade_cross 只是并列观察量，未进入标签定义与分档规则；A→E 平均产品类数不构成评级有效性证据。G-GRAPH-01 由 source_missing 改判 partial_closed，仅指类别粒度、并列层闭合；SKU 级仍缺。",
+      "untouched": "ads_graph_node / ads_graph_edge / v_graph_slice_annual*（29 帧）、ads_label 307 / 21 / 286、多标签五档 A81 B176 C157 D83 E3、v_model_train_ready*、29 列主宽表、dim_enterprise、ASOF_VER、DEFINITION_VER 逐项未改。",
+      "release_caveat": "商标回传与 v2.0 司法/人员同属企查查批量查询结果，服务条款与公开分发范围待确认，Release 附件发布前需单独拍板。",
+      "contract": "outputs/product_node_report.md / .json",
+      "check": "python -m src.data.apply_v2_1_product_node --check && python tests/test_product_node.py",
+      "decided_at": "2026-11-12",
       "decided_by": "施汶邑（几梦）"
     }
   }

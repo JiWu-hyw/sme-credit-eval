@@ -72,11 +72,13 @@ def a_structure():
     n_tab = c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
                       "AND name NOT LIKE 'sqlite_%'").fetchone()[0]
     n_view = c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-    assert (n_tab, n_view) == (37, 33), "结构漂移：%d 表 / %d 视图" % (n_tab, n_view)
+    # v2.1 产品节点并列层又加 3 表 4 视图，未动 v2.0 的 A 轴对象。
+    assert (n_tab, n_view) in ((37, 33), (40, 37)), (
+        "结构漂移：%d 表 / %d 视图" % (n_tab, n_view))
     assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
     assert not c.execute("PRAGMA foreign_key_check").fetchall(), "存在外键冲突"
     assert c.execute("SELECT version FROM meta_schema_version "
-                     "ORDER BY rowid DESC LIMIT 1").fetchone()[0] == "v2.0"
+                     "ORDER BY rowid DESC LIMIT 1").fetchone()[0] in ("v2.0", "v2.1")
     assert c.execute("SELECT COUNT(*) FROM meta_data_source WHERE "
                      "source_id='qcc_judicial_person'").fetchone()[0] == 1
     assert c.execute("SELECT COUNT(*) FROM meta_ingest_log WHERE "
@@ -217,8 +219,9 @@ def i_published_untouched():
 def j_report_matches_db():
     p = json.loads(read(REPORT_JSON))
     c = con()
-    assert p["schema_version"] == "v2.0"
-    assert p["structure"]["tables"] == 37 and p["structure"]["views"] == 33
+    # 报告是 v2.0 接入时点的快照；升 v2.1 后不重跑，接受两种历史/当前结构。
+    assert p["schema_version"] in ("v2.0", "v2.1")
+    assert p["structure"]["tables"] in (37, 40) and p["structure"]["views"] in (33, 37)
     assert p["judicial"]["rows"] == c.execute(
         "SELECT COUNT(*) FROM ods_qcc_judicial").fetchone()[0]
     assert p["judicial"]["firms"] == c.execute(
@@ -239,7 +242,8 @@ def j_report_matches_db():
 def k_data_dictionary():
     rows = list(csv.DictReader((OUT / "data_dictionary.csv").open(
         encoding="utf-8-sig", newline="")))
-    assert len(rows) == 997, "数据字典字段数应为 997，实得 %d" % len(rows)
+    # v2.1 产品节点并列层 +71 列：997 → 1068。
+    assert len(rows) == 1068, "数据字典字段数应为 1068，实得 %d" % len(rows)
     for name in ("ods_qcc_judicial", "ods_qcc_person", "ods_qcc_axis_a_snapshot",
                  "v_axis_a_judicial", "v_enterprise_person_summary",
                  "v_axis_a_compound_event", "v_axis_a_grade_cross"):
@@ -256,7 +260,7 @@ def l_delivery_same_source_and_repro():
         assert md5(dst) == md5(src), "交付份与源份不同源：%s" % dst.name
     for path, kws in (
         (ROOT / "src" / "data" / "export_delivery.py",
-         ("axis_a_judicial_report.md", "298 项", "26 个测试文件")),
+         ("axis_a_judicial_report.md", "312 项", "27 个测试文件")),
         (ROOT / "src" / "data" / "apply_v2_0_axis_a.py",
          ("ods_qcc_judicial", "ods_qcc_person", "--check")),
         (ROOT / "src" / "data" / "export_axis_a_judicial_report.py",
@@ -266,11 +270,11 @@ def l_delivery_same_source_and_repro():
         for k in kws:
             assert k in t, "%s 缺 %r" % (path.name, k)
     n = len(list((ROOT / "tests").glob("test_*.py")))
-    assert n == 26, "tests/ 下应为 26 个守卫文件，实得 %d" % n
+    assert n == 27, "tests/ 下应为 27 个守卫文件，实得 %d" % n
     for p in (ROOT / "README.md", D_ALG.parent / "00_先看这个.md",
               ROOT / "deliverables" / "03_交付说明" / "delivery_spec.md",
               ROOT / "deliverables" / "RELEASE_v1.5.0.md"):
-        assert "298 项" in read(p), "%s 守卫项数未同步" % p.name
+        assert "312 项" in read(p), "%s 守卫项数未同步" % p.name
 
 
 def main():
@@ -278,7 +282,7 @@ def main():
     print("  v2.0 A 轴司法违约 + 主要人员接入守卫")
     print("=" * 68)
     for name, fn in [
-        ("v2.0 结构 37 表 / 33 视图、完整性与 meta 登记", a_structure),
+        ("v2.0/v2.1 结构 37/33 或 40/37、完整性与 meta 登记", a_structure),
         ("3 张新表行数 34 / 2079 / 500", b_new_tables),
         ("司法明细：类别 / 金额口径 / 日期 / 别名清洗", c_judicial_cleaning),
         ("人员明细：490 脏行剔除 / 490 户 / 10 户缺失", d_person_cleaning),
@@ -288,8 +292,8 @@ def main():
         ("五档交叉：事件率不单调、禁止当性能结论", h_cross_not_monotonic),
         ("已发布标签 / 五档 / 主表 / DEFINITION_VER 未动", i_published_untouched),
         ("报告 md/json 与库现场回算一致", j_report_matches_db),
-        ("数据字典 997 列、新对象说明 100% 覆盖", k_data_dictionary),
-        ("交付散文件同源、生成源可复现、基线 26 文件 298 项", l_delivery_same_source_and_repro),
+        ("数据字典 1068 列、新对象说明 100% 覆盖", k_data_dictionary),
+        ("交付散文件同源、生成源可复现、基线 27 文件 312 项", l_delivery_same_source_and_repro),
     ]:
         check(name, fn)
     print("=" * 68)

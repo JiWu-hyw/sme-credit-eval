@@ -69,8 +69,9 @@ def main():
         assert not miss, "缺视图 %r" % miss
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
-        # v2.0 A 轴并列层不改 6 个锚点 / 五档 / 标签矩阵，仍在本守卫覆盖范围。
-        assert ver in ("v1.9", "v2.0"), "库版本 %s，期望 v1.9 或 v2.0" % ver
+        # v2.0 A 轴 / v2.1 产品节点并列层均不改 6 个锚点 / 五档 / 标签矩阵。
+        assert ver in ("v1.9", "v2.0", "v2.1"), (
+            "库版本 %s，期望 v1.9 或更高" % ver)
 
     def b_base_untouched():
         d = dict(c.execute("SELECT label_value, COUNT(*) FROM ads_label GROUP BY 1"))
@@ -208,7 +209,10 @@ def main():
 
     def n_registry():
         r = json.loads(read(REG))
-        assert r["meta"]["version"] == "v3", "登记册未升 v3"
+        # v3 = 方向纠正定稿；v4 = G-GRAPH-01 改判 partial_closed 并加 v2.1 policy。
+        assert r["meta"]["version"] in ("v3", "v4"), "登记册未升 v3/v4"
+        if r["meta"]["version"] == "v4":
+            assert "v2_1_product_node" in r["policies"], "v4 缺 v2.1 并列层策略"
         t = r["label_tasks"]["tasks"][0]
         assert (t["positive"], t["negative"]) == (286, 21), \
             "登记册方向未纠正：%r" % ((t["positive"], t["negative"]),)
@@ -240,7 +244,7 @@ def main():
         ("交叉测评汇总口径", k_eval_summary),
         ("迁移脚本 --check 通过", l_migration_check),
         ("schema.sql 与迁移 DDL 一致", m_ddl_synced),
-        ("缺口登记册 v3 方向正确", n_registry),
+        ("缺口登记册 v3/v4 方向正确", n_registry),
         ("测评报告含纠偏与循环定义警示", o_report),
         ("主文档注入方向声明", p_notice_injected),
     ]:

@@ -78,11 +78,12 @@ def main():
 
     # ---------------- A. 库口径 ----------------
     def a_ver():
-        # v2.0 只新增 A 轴司法/人员三表四视图（并列候选层），
-        # 未改 ads_label / 方向映射视图 / 训练入口，故 v1.9 与 v2.0 都合规。
+        # v2.0 A 轴司法/人员、v2.1 商标/产品节点都只新增并列层，
+        # 未改 ads_label / 方向映射视图 / 训练入口，故 v1.9 起的版本都合规。
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC LIMIT 1")
-        assert ver in ("v1.9", "v2.0"), "库版本 %s 不在方向纠正后的允许范围" % ver
+        assert ver in ("v1.9", "v2.0", "v2.1"), (
+            "库版本 %s 不在方向纠正后的允许范围" % ver)
         assert one("SELECT COUNT(*) FROM v_model_train_ready_credit") == 307, "训练视图不是 307 行"
 
     def a_complement():

@@ -250,16 +250,16 @@ def j_reproducible():
     delivery = read(ROOT / "src" / "data" / "export_delivery.py")
     for kw in ("official_cancel_check.md", "标签核查_21家断档逐户.csv",
                "证据_2026-02第12条_官方更名标注.png", "287 家",
-               "298 项", "26 个测试文件"):
+               "312 项", "27 个测试文件"):
         assert kw in delivery, "export_delivery.py 未同步 %r" % kw
     for p in (ROOT / "README.md",
               ROOT / "deliverables" / "03_交付说明" / "delivery_spec.md",
               ROOT / "deliverables" / "RELEASE_v1.5.0.md",
               ROOT / "deliverables" / "00_先看这个.md",
               ROOT / "tests" / "test_funding_join_contract.py"):
-        assert "298 项" in read(p), "%s 守卫项数未同步为 286" % p.relative_to(ROOT)
+        assert "312 项" in read(p), "%s 守卫项数未同步为 312" % p.relative_to(ROOT)
     n = len(list((ROOT / "tests").glob("test_*.py")))
-    assert n == 26, "tests/ 下应为 25 个守卫文件，实得 %d" % n
+    assert n == 27, "tests/ 下应为 27 个守卫文件，实得 %d" % n
 
 
 def main():
@@ -276,7 +276,7 @@ def main():
         ("交付目录与 outputs / audit 字节同源", g_delivery_same_source),
         ("库未改、DEFINITION_VER 未升版", h_db_untouched),
         ("口径隔离写入各交付文档与缺口登记册", i_isolation_in_docs),
-        ("生成源可复现、守卫数字同步 26 文件 298 项", j_reproducible),
+        ("生成源可复现、守卫数字同步 27 文件 312 项", j_reproducible),
     ]:
         check(name, fn)
     print("=" * 68)

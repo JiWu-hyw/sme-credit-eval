@@ -98,12 +98,40 @@ def build() -> dict:
             "max": w[-1] if w else None,
             "n_ge_0_3": sum(1 for x in w if x >= 0.3),
         }
+        # v2.1 并列层：真实商标源已接入，但产品节点不进主图，29 帧切面不动
+        product_parallel = {"available": False}
+        if c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
+                     "AND name='dim_product_nice_class'").fetchone()[0]:
+            product_parallel = {
+                "available": True,
+                "n_trademark": c.execute(
+                    "SELECT COUNT(*) FROM ods_qcc_trademark").fetchone()[0],
+                "n_nice_class": c.execute(
+                    "SELECT COUNT(*) FROM dim_product_nice_class").fetchone()[0],
+                "n_product_node": c.execute(
+                    "SELECT COUNT(*) FROM dim_product_nice_class "
+                    "WHERE is_product_node=1").fetchone()[0],
+                "n_service_class": c.execute(
+                    "SELECT COUNT(*) FROM dim_product_nice_class "
+                    "WHERE is_service=1").fetchone()[0],
+                "n_covered_firms": c.execute(
+                    "SELECT COUNT(DISTINCT enterprise_id) "
+                    "FROM bridge_enterprise_product").fetchone()[0],
+                "n_bridge_rows": c.execute(
+                    "SELECT COUNT(*) FROM bridge_enterprise_product").fetchone()[0],
+                "in_main_graph": False,
+                "status": "类别粒度部分闭合（SKU 级产品仍缺，未并入主图）",
+            }
+        current_db_ver = c.execute(
+            "SELECT version FROM meta_schema_version "
+            "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
     finally:
         c.close()
 
     return {
         "generated_by": "src/data/export_graph_temporal_contract.py",
         "schema_version": "v1.9",
+        "current_db_version": current_db_ver,
         "revision": "2026-11-09 年度切片同源修订（V191GRAPHFIX）",
         "review_item": "数据交付包评审报告-算法端-v1.0 §5.2(1) 无时序图",
         "physical_graph": {
@@ -155,8 +183,9 @@ def build() -> dict:
                 "领域": node_types.get("ipc"),
             },
             "missing": {
-                "产品": "库内无产品/商标/经营范围源表；禁止用专利标题或 IPC 聚类伪造产品节点",
+                "产品": "SKU 级产品实体仍缺；v2.1 已建尼斯 35 类并列层节点，但未并入主图",
             },
+            "parallel_layer_v2_1": product_parallel,
         },
     }
 
@@ -288,29 +317,52 @@ def write_md(R: dict) -> str:
     L.append("这两类边在物理静态图里照常可用，但**禁止据此宣称「全边时序化」**。"
              "要真正纳入时序，需 P2 外部采集或重建融资事件—机构 ID 映射。\n")
 
-    L.append("\n## 6. 六类实体：产品节点仍缺（定稿为外部依赖）\n")
+    L.append("\n## 6. 六类实体：产品节点并列层（类别粒度部分闭合）\n")
     E = R["six_entity_types"]
-    L.append("立项书写六类：%s。当前入图 5 类：\n" % " / ".join(E["defined_in_proposal"]))
+    P = E.get("parallel_layer_v2_1", {})
+    L.append("立项书写六类：%s。**入图仍是 5 类**：\n" % " / ".join(E["defined_in_proposal"]))
     L.append("| 实体 | 节点数 | 对应 node_type |\n|---|---|---|")
     mapping = {"企业": "enterprise", "专利": "patent", "投资机构": "investor",
                "人员": "inventor", "领域": "ipc"}
     for cn, n in E["in_graph"].items():
         L.append("| %s | %s | `%s` |" % (cn, format(n, ","), mapping[cn]))
-    L.append("| **产品** | **缺** | %s |\n" % E["missing"]["产品"])
-    L.append("库内 34 张表**没有任何产品 / 商标 / 经营范围源表**。用专利标题聚类或 "
-             "IPC 小组冒充「产品节点」会造出伪实体，与 v1.9 已明令禁止的"
-             "「伪多源 / 循环定义」同类问题。该缺口在 "
-             "`configs/field_gap_registry.json` 定稿为 `source_missing`，"
-             "归属 P2 外部采集，**不是本次零采集能闭合的项**；"
-             "当前技术域语义由 `ipc` 节点承担。\n")
+    if P.get("available"):
+        L.append("| **产品** | **0（未入主图）** | 并列层 %d 个类别节点 / %d 户（%.1f%%） |\n"
+                 % (P["n_product_node"], P["n_covered_firms"],
+                    100.0 * P["n_covered_firms"] / 500))
+        L.append("**v2.1（2026-11-12）商标明细已接入并列层**：`ods_qcc_trademark` "
+                 "%d 条 / 444 家、尼斯 %d 类（产品类 %d + 服务类 %d）、"
+                 "`bridge_enterprise_product` %d 行 / %d 户。产品节点是**商标核定"
+                 "类别**粒度，不是 SKU 级产品，也不是商标名称；35–39、41–45 共 10 个"
+                 "服务类虽有 1902 条商标，按用户口径**不作产品节点**。\n"
+                 % (P["n_trademark"], P["n_nice_class"], P["n_product_node"],
+                    P["n_service_class"], P["n_bridge_rows"], P["n_covered_firms"]))
+        L.append("⚠️ **产品节点未插入 `ads_graph_node`**，图内 `node_type` 仍是 5 类，"
+                 "本报告 §1–§5 的 29 帧年度切面、边数与守恒校验**逐项未变**。"
+                 "`G-GRAPH-01` 已由 `source_missing` 改判 `partial_closed`，只表示"
+                 "「类别粒度 + 并列层」闭合；**SKU 级产品仍缺，禁止宣称立项六类实体"
+                 "已完整覆盖**，GAT/STGNN 仍不得声称覆盖六类。当前技术域语义继续由 "
+                 "`ipc` 节点承担，产品类覆盖只是 `v_product_grade_cross` 里的并列观察量。\n")
+        L.append("顺带用 `v_six_entity_coverage` 现场纠正用户汇总表两处口径：企查查主要"
+                 "人员清洗后是 **2079 人 / 490 户**（原写 2569 含 490 行表头脏行，且它不是"
+                 "图节点，图内人员＝发明人 inventor %s）；产品是 **35 个类别节点 / 433 户 "
+                 "/ 86.6%%**，不是 45 个节点。\n"
+                 % format(E["in_graph"]["人员"], ","))
+    else:
+        L.append("| **产品** | **缺** | %s |\n" % E["missing"]["产品"])
+        L.append("库内无产品 / 商标 / 经营范围源表；禁止用专利标题或 IPC 聚类伪造产品节点。\n")
 
     L.append("\n## 7. 口径边界（写给引用本报告的人）\n")
     L.append("1. 本报告只描述**图结构与时序切面**，不涉及模型性能；"
              "按评审 §7.1(3)，负例 21 家、置换噪声地板约 0.5，"
              "AUC / 准确率绝对值不得写成性能结论。\n")
-    L.append("2. 本次修订**未 UPDATE 物理表任何行、未增删表/视图/列、未升 schema 版本号**，"
-             "仍是 v1.9 / 34 表 / 29 视图；只重定义两个视图 + 新建两个查询索引，"
-             "`graph_structure.json` 等契约数字不变。\n")
+    L.append("2. 本条描述的是 **v1.9.1 修订时点**：那次未 UPDATE 物理表任何行、"
+             "未增删表/视图/列、未升 schema 版本号，仍是 v1.9 / 34 表 / 29 视图；"
+             "只重定义两个视图 + 新建两个查询索引，`graph_structure.json` 等契约数字不变。"
+             "此后库已升至 **%s**（v2.0 A 轴并列层 → v2.1 商标/产品节点并列层，"
+             "40 表 / 37 视图 / 1068 列），但本切面的 29 帧结构、边数与守恒数字"
+             "**逐项未变**，故本报告 §1–§5 结论继续有效；产品节点见 §6。\n"
+             % R.get("current_db_version", "v1.9"))
     L.append("3. `v_graph_slice_annual` 的 `n_node_patent` 来自 `fact_patent.app_year`，"
              "与物理 patent 节点数相等；但 enterprise / inventor / ipc / investor "
              "节点**没有首次出现年份**，故年度切面只覆盖 3 类专利相关边 + 专利节点，"

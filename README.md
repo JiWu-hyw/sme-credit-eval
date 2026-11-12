@@ -90,7 +90,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（298 项守卫，26 文件）
+├── tests/                    单元测试 / 集成测试（312 项守卫，27 文件）
 │                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -114,10 +114,12 @@
     └── 2026-10-28/           第二批：前端旧目录、旧版答复文档
 ```
 
-**测试文件范围（2026-11-11 更新）**：`tests/` 下 26 个 `test_*.py` **全部纳入交付守卫，
-共 298 项全绿**。新增 `test_official_cancel_check.py`（10 项）守卫官方撤销公告证据链、
+**测试文件范围（2026-11-12 更新）**：`tests/` 下 27 个 `test_*.py` **全部纳入交付守卫，
+共 312 项全绿**。新增 `test_official_cancel_check.py`（10 项）守卫官方撤销公告证据链、
 21 家逐户判定与口径隔离；`test_axis_a_judicial.py`（12 项）守卫 v2.0 A 轴三表四视图、
-490 行表头脏行剔除、三类金额分列、复合事件候选与已发布标签未动、997 列字典与交付散文件同源；
+490 行表头脏行剔除、三类金额分列、复合事件候选与已发布标签未动；
+`test_product_node.py`（14 项）守卫 v2.1 三表四视图、35/10 类二分、三处口径纠正、
+产品节点未入主图与 1068 列字典同源；
 `test_credit_direction.py`（20 项）守卫 P1-续 的 AUC 方向恒等式、
 双方向打分对称性、分切面 / 分队列复核与重跑 SHAP；纯净检出缺 `outputs/` 产物时按项目
 约定显式 SKIP，不误报失败。其中 `test_schema.py`（38 项）与 `test_collect_pool.py`（16 项）源自早期
@@ -432,7 +434,7 @@ SELECT * FROM v_feature_coverage_effective
 
 ### 6.6 数据获取
 
-数据库 153 MB（当前工作库 **v2.0：37 表 / 33 视图 / 997 列**；VACUUM 交付快照 131 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 153 MB（当前工作库 **v2.1：40 表 / 37 视图 / 1068 列**；VACUUM 交付快照 133 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -449,19 +451,26 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 `MANIFEST.txt` 的 sha256 清单，说明见 `deliverables/RELEASE_v1.4.0.md`。
 **本地工作库版本沿革**：v1.9（34 表 / 29 视图 / 912 列）新增 6 个视图做标签方向纠正
 与多标签测评（P1，零采集），未改任何事实表数据、未改主宽表 29 特征结构；
-**v2.0（当前，37 表 / 33 视图 / 997 列）** 接入企查查回传的失信被执行人 / 被执行人 /
+**v2.0（37 表 / 33 视图 / 997 列）** 接入企查查回传的失信被执行人 / 被执行人 /
 终本案件 / 主要人员，新增 `ods_qcc_judicial`（34 条 / 6 户）、`ods_qcc_person`
 （清洗后 2079 人 / 490 户）、`ods_qcc_axis_a_snapshot`（500 行）三表与
 `v_axis_a_judicial` / `v_enterprise_person_summary` / `v_axis_a_compound_event` /
 `v_axis_a_grade_cross` 四视图；数据字典 912 → 997 列同步重生成，报告见
 `deliverables/01_算法端/axis_a_judicial_report.md`。复合负面事件 6 家（3 家新增 E 候选）
 是**并列候选锚点**，`ads_label`、多标签五档、训练入口、`DEFINITION_VER` 逐项未改。
+**v2.1（当前，40 表 / 37 视图 / 1068 列）** 接入商标明细 8004 条 / 444 家，
+新增 `ods_qcc_trademark` / `dim_product_nice_class` / `bridge_enterprise_product` 三表与
+`v_product_node` / `v_enterprise_trademark_summary` / `v_six_entity_coverage` /
+`v_product_grade_cross` 四视图；产品节点是**尼斯 35 类 / 433 户（86.6%）**、
+**未并入 `ads_graph_node` 主图**，29 帧时序切面与图契约数字未变，
+`G-GRAPH-01` 只改判 `partial_closed`（SKU 级仍缺）；数据字典 997 → 1068 列，
+报告见 `deliverables/01_算法端/product_node_report.md`。
 算法端要拿到新库需另发 **v1.5.0** Release（附件同名 `zjtech_credit_data.zip`，
 **不覆盖 v1.4.0**），说明见 `deliverables/RELEASE_v1.5.0.md`。
 历史：v1.7 新增五档视图与标签任务登记；v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
 
 > **打包节奏（约定）**：`deliverables/` 里的**散文件随时整合到最新**——目前 01/03/04/05
-> 目录与数据字典、说明书、报告、数据库一致性快照均已同步到 v2.0；
+> 目录与数据字典、说明书、报告、数据库一致性快照均已同步到 v2.1；
 > **zip 与上传冻结**：9 个历史 zip 与 `zjtech_credit_data.zip` 未重打、SHA-256 未变，
 > GitHub Release 附件仍是 v1.9 快照。待全部改完确认后，才一次性重打包并上传。
 
