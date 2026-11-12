@@ -829,7 +829,9 @@ def build_frontend(con):
     A("| 目录 | 谁在读 | 内容 |")
     A("|---|---|---|")
     A("| `outputs/contracts/` | **API 正在读** | 现共 12 个（v1.8 新增 `enterprise_grade.json`），全部带 `provenance` |")
-    A("| `frontend_v2/source/outputs/contracts/` | 没人读 | 旧的 %d 个，其中 7 个是假数据 |"
+    A("| `frontend_v2/source/outputs/contracts/` | 没人读 | 现存 %d 个（真实 / 由实测锚点重建）；"
+      "7 个 placeholder / 合成假数据已于 2026-11-12 移出归档至 "
+      "`_archive/legacy_fake_contracts_20261112/` |"
       % len(truth))
     A("")
     A("### 旧目录（`frontend_v2/…/contracts/`）逐文件判定\n")
@@ -1113,9 +1115,12 @@ def build_doc(con, alg, fe):
           "`unavailable` 显示「无数据源」。\n")
     else:
         A("仍有 **%d 个**占位，明细见 `02_前端/api_checklist.md`。\n" % fe["n_pend"])
-    A("旧契约目录 `frontend_v2/source/outputs/contracts/` 里有 **%d 个** placeholder / "
-      "合成数据（API 不读它），**不要搬进 `outputs/contracts/`**，否则会覆盖真契约。\n"
-      % fe["n_bad"])
+    A("旧契约目录 `frontend_v2/source/outputs/contracts/` 已于 **2026-11-12 清理**："
+      "7 个 placeholder / 合成假数据移出并归档到 `_archive/legacy_fake_contracts_20261112/`"
+      "（清理前 13 个文件的完整留档在 `_archive/legacy_contracts_20261112_full/`）；"
+      "现存 %d 个真实 / 重建契约、假数据 **%d 个**。API 不读该目录，"
+      "**仍不要整体搬进 `outputs/contracts/`**。\n"
+      % (fe["n_contract"], fe["n_bad"]))
 
     A("## 五、三件必须转达的事\n")
     A("**1. 有两套数据，别混。**")
@@ -1190,8 +1195,8 @@ def build_doc(con, alg, fe):
     A("| 升版 v0.2：别名归一后重建 `ads_label` 与训练入口 | 7 家改名假象目前全被压在 D 观察档；改库会连锁影响守卫、AUC / SHAP / 多标签结论 | **待拍板，本次未做** |")
     A("| 扩样本池（500 → 5,000） | 只增加同类共线标签的**数量**，不增加标签**维度**，已从 P1 移出 | 需拍板的可选采集项 |")
     A("| 训练一个可验证模型 | `score.value` 恒为 null，只能给 `proxy_score` | 依赖独立结果标签 |")
-    A("| 旧契约目录 %d 个假数据尚未删除 | 已用 `outputs/contracts/` 的 12 个真契约替代，"
-      "API 不再读旧目录；但目录还在，误拷会覆盖 | 低 |" % fe["n_bad"])
+    A("| 业务侧 4 点回执（五档语义标签 / 占比 / 线性映射 / 逾期覆盖） | `configs/risk_bands_v1.0.yaml` 已建但 `active: false`，阈值不得启用 | 需袁雪茹 / 张丽晶书面确认，非改库可解 |")
+    A("| P0-1 映射键（userid → 统一信用代码） | `configs/entity_mapping.json` 已建但为空映射，前端仍显示匿名编号 | 需对外数据获取，零采集不可解 |")
     A("| `grant_date` / 引文库 / CAGR / 财务序列 | 结构性缺口，源数据没有 | 无解（已登记） |")
     A("| 行业切片 | `qcc_industry_mid` 覆盖率不足 | 依赖补采 |")
     A("| 企查查平台书面授权 | 登录态批量采集的服务条款风险仍在，用户已知悉并决定全部公开；"
@@ -1203,7 +1208,16 @@ def build_doc(con, alg, fe):
       "500 家样本 / 307 家已标注 / 21 家断档含别名比对均 0 命中，其中 7 家为改名假象；"
       "标签定性为「资质再申报行为」并保留为多标签之一；**issue ② 取得 287 家完整行政决定集合**"
       "（样本内 0 交集，E 档仍塌陷）。就这项核查本身而言**未改库、未升版**，"
-      "见 `official_cancel_check.md`。")
+      "见 `official_cancel_check.md`。"
+      "**2026-11-12 零采集清理（同样未动库、未升版）**：旧契约目录 7 个 placeholder / "
+      "合成假数据已移出并归档到 `_archive/legacy_fake_contracts_20261112/`，"
+      "清理前 13 个文件的完整留档在 `_archive/legacy_contracts_20261112_full/`，"
+      "该目录现存 6 个真实 / 重建契约、假数据 0 个；"
+      "新建 `configs/paths.yaml`（唯一路径字典）、`scripts/build_outputs_manifest.py` "
+      "（产物索引生成，带 --check）与 `outputs/manifest.json`；"
+      "并为仍需业务侧 / 对外数据回执的 `configs/entity_mapping.json`、"
+      "`configs/risk_bands_v1.0.yaml` 建立**显式 pending 骨架**——"
+      "映射为空、阈值 `active: false`，不编造业务值、不接入 API。")
     A("**其后三轮本地升版（均为并列层，不动已发布口径）**：P1-续 已用 "
       "`v_model_train_ready_credit` 重跑 as-of 训练 / SHAP，验证方向翻转后 AUC 互为 1−AUC、"
       "并完成分队列与分 `as_of_policy` 复核；**v2.0** 接入企查查司法违约与主要人员，"
@@ -1227,6 +1241,7 @@ def build_doc(con, alg, fe):
     A("python -m src.data.export_data_provenance    # DATA_PROVENANCE / DATA_LICENSE（全部公开口径）")
     A("python -m src.data.apply_funding_provenance  # A7 融资事件行级溯源回填（幂等）")
     A("python -m src.data.export_db_bundle --no-zip # 05_数据库 完整库一致性快照·未脱敏（冻结期不重打附件）")
+    A("python scripts/build_outputs_manifest.py    # outputs/manifest.json 产物索引（--check 只读）")
     A("python -m src.data.export_delivery          # 本交付包散文件（冻结期不带 --zip）")
     A("")
     A("python tests/test_train_ready.py             # 8 项 训练集守卫")

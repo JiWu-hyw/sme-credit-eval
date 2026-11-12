@@ -1,0 +1,38 @@
+# configs/paths.yaml —— 产物路径唯一字典
+#
+# 来源：《后端完整答复-归集所有待确认项》v2.0 第二章第 2 条「outputs/ 统一管理」。
+# 阶段：1 / 3 —— 只建立路径字典与产物索引，**未迁移现有产物、未接管任何脚本写入点**。
+#       不宣称「outputs/ 已统一收口」；outputs/reports/ 与 outputs/work/ 是规划目录，尚未创建。
+# 机器消费方：scripts/build_outputs_manifest.py（零外部依赖，自带极简解析，只认本文件的固定结构）。
+# 变更规则：改路径先改本文件 → 重跑 build_outputs_manifest.py → 通知下游；禁止在脚本里硬编码路径。
+# 解析约定：顶层段名行无缩进且以冒号结尾；段内键值缩进 2 空格；scan 子项键值缩进 4 空格。
+
+meta:
+  version: v1.0
+  updated_at: 2026-11-12
+  owner: 吕键（后端 / 数据管道与系统）
+  status: stage1_index_only
+  stage_note: 仅路径字典 + 产物索引；未迁移产物、未接管写入点、未创建 reports/work 目录。
+  caveat: 后端答复承诺的 src/common/paths.py 的 out_path() / register_artifact() 与 4 个写入点改造尚未执行，不得把本文件当作已落地契约。
+
+roots:
+  outputs: outputs
+  contracts: outputs/contracts
+  reports: outputs/reports
+  work: outputs/work
+  deliverables: deliverables
+  manifest: outputs/manifest.json
+
+scan:
+  contracts:
+    dir: outputs/contracts
+    pattern: "*.json"
+    status: contract
+    producer: src/data/build_contracts.py
+    contract_ver: v2.0
+  reports:
+    dir: outputs
+    names: "label_spec.md,data_dictionary.md,data_dictionary.csv,field_gap_registry.md,field_gap_decisions.md,product_node_report.md,axis_a_judicial_report.md,official_cancel_check.md,graph_temporal_contract.md,credit_direction_asof_report.md,multilabel_eval_report.md"
+    status: report
+    producer: src/data/export_*.py
+    contract_ver: v2.1

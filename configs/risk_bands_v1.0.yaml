@@ -1,0 +1,72 @@
+# configs/risk_bands_v1.0.yaml —— 五档风险语义与阈值（**建议稿，未生效**）
+#
+# 来源：《后端完整答复-归集所有待确认项》v2.0 第二章第 3 条 / §四 #1。
+# 状态：pending_business_signoff —— 4 点待业务侧（袁雪茹 / 张丽晶）书面回执，
+#       在此之前 active: false，任何 API / 脚本 / 前端都不得把本文件当作已生效契约。
+# 本轮只补齐「配置外置」这一工程形态，不代替业务侧拍板，也不改动任何现有接口行为。
+
+meta:
+  version: v1.0
+  created_at: 2026-11-12
+  status: pending_business_signoff
+  active: false
+  owner: 业务侧（袁雪茹 / 张丽晶）
+  maintainer: 吕键（后端 / 数据管道与系统）
+  rule: 先定 P0-3 label 口径，再定五档阈值；口径未定前 /api/enterprise 与 /api/model/* 维持 LABEL_PENDING。
+  activation: 4 点回执齐全 → 业务侧书面确认 → active 改 true → 升 v1.1 → 通知前端与报告侧。
+
+# 待业务侧书面确认的 4 点（原文照录，未替业务侧选择）
+pending_signoff:
+  - 语义标签是否照用「优良 / 较好 / 关注 / 预警 / 高风险」，还是改为监管五级「正常 / 关注 / 次级 / 可疑 / 损失」
+  - 各档目标占比是否接受 15 / 25 / 30 / 20 / 10
+  - 信用分映射是否保持线性 100 − 100 × PD
+  - 是否采纳「逾期天数锚点强制覆盖模型分」规则
+
+# 监管锚点：《商业银行金融资产风险分类办法》（2023 年第 1 号，2023-07-01 施行）第 10–13 条
+regulatory_anchor:
+  2: 本金或利息逾期即至少关注（操作性 / 技术性 7 天内短期逾期除外）
+  3: 逾期 > 90 天，或已发生信用减值
+  4: 逾期 > 270 天
+  5: 逾期 > 360 天，或已进入破产清算
+  hard_rule: 若将来接入逾期数据，逾期天数锚点优先级高于模型分，落在锚点区间的企业直接强制归档，模型分不得上调。
+
+# v1.0 建议值：分位法定档（后端答复 §3.3，仅建议、未启用）
+proposed_v1_quantile:
+  method: quantile
+  basis: 后档取 10% 的依据是留出集实测正例率 10.7%（75 / 698），与样本真实正例率同量级。
+  bands:
+    - { band: 1, label: 优良,   quantile: "前 15%",    target_share: 0.15, color: 绿 }
+    - { band: 2, label: 较好,   quantile: "15%–40%",  target_share: 0.25, color: 浅绿 }
+    - { band: 3, label: 关注,   quantile: "40%–70%",  target_share: 0.30, color: 黄 }
+    - { band: 4, label: 预警,   quantile: "70%–90%",  target_share: 0.20, color: 橙 }
+    - { band: 5, label: 高风险, quantile: "后 10%",   target_share: 0.10, color: 红 }
+
+# v2.0 绝对 PD 阈值：模型校准后方可启用，现不启用
+proposed_v2_calibrated_pd:
+  method: calibrated_pd
+  enabled: false
+  reason: 现有模型 PD 未经校准，真实面板区分度仅略高于噪声地板；按绝对 PD 划档会产生伪精度。
+  bands:
+    - { band: 1, label: 优良,   pd_range: "< 1%" }
+    - { band: 2, label: 较好,   pd_range: "1%–3%" }
+    - { band: 3, label: 关注,   pd_range: "3%–6%" }
+    - { band: 4, label: 预警,   pd_range: "6%–10%" }
+    - { band: 5, label: 高风险, pd_range: ">= 10%" }
+  caveat: 现行 credit_score = 100 − 100 × PD 为线性映射，配绝对阈值会让优良档要求分数 >= 99，高档区间被压得极窄；需业务侧在「保留线性仅分位定档」与「改非线性映射」之间拍板。
+
+# 契约字段（后端负责实现，均外置可配，不得硬编码）
+contract_fields:
+  - risk_band          # 1–5 整数
+  - risk_label         # 中文语义
+  - risk_band_ver      # 如 v1.0
+  - band_rule          # quantile / calibrated_pd / overdue_override
+
+validation_on_generate:
+  - PD 均值随档位单调递增
+  - 每档样本数 n_per_band 不为 0
+  - 阈值版本号随产物一起落盘
+
+compliance:
+  noise_floor: 0.477
+  noise_floor_basis: 置换对照 AUC 行级 LR 0.492 / XGB 0.477，取较低者作最保守零信号基线。
+  statement: 当前版本 PD 未校准、真实面板区分度弱（行级 AUC 约 0.59；无后视口径 XGB 0.524），仅用于原型系统演示与教学研究，不得用于真实授信决策。该声明必须随前端展示与报告出现。

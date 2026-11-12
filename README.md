@@ -72,7 +72,8 @@
 │                             baseline_results.json / gat_panel_results.json
 │                             shap_global.json / shap_top_features.csv
 │                             shap_global_summary.png
-│                             contracts/   ← 11 个接口契约，API 运行时直读
+│                             contracts/   ← 12 个接口契约，API 运行时直读
+│                             manifest.json ← 产物索引（configs/paths.yaml 生成）
 │
 ├── notebooks/                探索性分析与实验记录（当前待补充）
 │
@@ -217,7 +218,7 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 
 ### 6.2 契约文件
 
-`outputs/contracts/` 下 11 个 JSON，是前端可以直接当 mock 的数据源。
+`outputs/contracts/` 下 12 个 JSON，是前端可以直接当 mock 的数据源；`outputs/manifest.json` 是这 12 个契约与 11 份报告的产物索引（含 SHA-256），由 `python scripts/build_outputs_manifest.py` 按 `configs/paths.yaml` 生成，`--check` 可只读校验是否漂移。
 
 **每个文件顶层强制带 `provenance`，缺了这个字段生成脚本会直接抛错拒绝写出。** 等级决定展示口径：
 

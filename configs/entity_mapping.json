@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "version": "v1.0",
+    "created_at": "2026-11-12",
+    "status": "awaiting_external_data",
+    "active": false,
+    "owner": "负责人（对外对接）",
+    "source": "《后端完整答复-归集所有待确认项》v2.0 §3.2 P0-1 / §四 #6",
+    "contract": "{ \"<userid>\": { \"enterprise_id\": \"ENT+12hex\", \"credit_code\": \"统一社会信用代码\", \"name\": \"企业原文名\" } }",
+    "enterprise_id_rule": "dim_enterprise.enterprise_id = 'ENT' + md5(name_norm)[:12]，大写；禁止用名称做外键",
+    "fallback": "映射到位前，前端 P7 显匿名编号（已实现）；后端 name / credit_code / region_code / region_name 一律返回 null，mapping_conflict = false。",
+    "caveat": "本文件只建立结构与状态骨架，mappings 故意为空。统一社会信用代码属对外数据获取，零采集不可解；严禁填入推测值、占位值或由企业名反推的伪代码。任何写入前必须先取得权威映射源并逐条核验。",
+    "activation": "取得权威映射 → 逐条核验 credit_code 唯一性 → 冲突置 null + mapping_conflict=true → 业务/负责人书面确认 → active 改 true 并升 v1.1 → 通知前端。当前 active=false，API 不得读取本文件。"
+  },
+  "mappings": {}
+}
