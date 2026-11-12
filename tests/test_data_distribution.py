@@ -209,7 +209,7 @@ def h_structure_identical():
             c.close()
     x, y = snap(DB_WORK), snap(DB_PUB)
     assert x[0] == y[0], "交付快照对象清单与工作库不一致"
-    assert x[1] == y[1] == 1068, "字段数漂移：%d / %d" % (x[1], y[1])
+    assert x[1] == y[1] == 1081, "字段数漂移：%d / %d" % (x[1], y[1])
     assert x[2] == y[2], "交付快照表行数与工作库不一致"
 
 

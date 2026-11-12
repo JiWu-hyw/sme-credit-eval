@@ -82,13 +82,14 @@ def check(con: sqlite3.Connection) -> list[str]:
     ).fetchone()[0]
     n_view = con.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
     # 本修订只 DROP/CREATE 两个已存在的视图，不得增删表或视图。
-    # 允许三种基线：v1.9（34/29）、v2.0 A 轴并列层之后（37/33）、
-    # v2.1 产品节点并列层之后（40/37 = 37/33 再 +3 表 +4 视图）。
+    # 允许四种基线：v1.9（34/29）、v2.0 A 轴并列层之后（37/33）、
+    # v2.1 产品节点并列层之后（40/37 = 37/33 再 +3 表 +4 视图）、
+    # v2.2 时序图并列层之后（42/37 = 40/37 再 +2 表 0 视图：ads_graph_node_ts / ads_graph_edge_ts）。
     # 差值必须严格等于各次升版新增的并列层对象，不接受任意漂移。
-    if (n_tab, n_view) not in ((34, 29), (37, 33), (40, 37)):
-        bad.append("结构变为 %d 表 / %d 视图（允许 34/29、37/33 或 40/37；"
+    if (n_tab, n_view) not in ((34, 29), (37, 33), (40, 37), (42, 37)):
+        bad.append("结构变为 %d 表 / %d 视图（允许 34/29、37/33、40/37 或 42/37；"
                    "本修订不得增删表或视图）" % (n_tab, n_view))
-    if (n_tab, n_view) in ((37, 33), (40, 37)):
+    if (n_tab, n_view) in ((37, 33), (40, 37), (42, 37)):
         v20 = {r[0] for r in con.execute(
             "SELECT name FROM sqlite_master WHERE type='table' "
             "AND name IN ('ods_qcc_judicial','ods_qcc_person','ods_qcc_axis_a_snapshot')")}
@@ -106,6 +107,12 @@ def check(con: sqlite3.Connection) -> list[str]:
             "'v_six_entity_coverage','v_product_grade_cross')")}
         if len(v21v) != 4:
             bad.append("37 视图基线不是 v2.1 产品节点并列层（4 个新视图不全）")
+    if (n_tab, n_view) == (42, 37):
+        v22t = {r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+            "('ads_graph_node_ts','ads_graph_edge_ts')")}
+        if len(v22t) != 2:
+            bad.append("42 表基线不是 v2.2 时序图并列层（2 张新表不全）")
 
     # 物理底表未被改写：time_slice 仍全为 0
     for t in ("ads_graph_node", "ads_graph_edge"):

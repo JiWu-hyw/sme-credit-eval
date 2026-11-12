@@ -72,13 +72,14 @@ def a_structure():
     n_tab = c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='table' "
                       "AND name NOT LIKE 'sqlite_%'").fetchone()[0]
     n_view = c.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
-    # v2.1 产品节点并列层又加 3 表 4 视图，未动 v2.0 的 A 轴对象。
-    assert (n_tab, n_view) in ((37, 33), (40, 37)), (
+    # v2.1 产品节点并列层又加 3 表 4 视图、v2.2 时序图并列层再加 2 表 0 视图，
+    # 均未动 v2.0 的 A 轴对象。
+    assert (n_tab, n_view) in ((37, 33), (40, 37), (42, 37)), (
         "结构漂移：%d 表 / %d 视图" % (n_tab, n_view))
     assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
     assert not c.execute("PRAGMA foreign_key_check").fetchall(), "存在外键冲突"
     assert c.execute("SELECT version FROM meta_schema_version "
-                     "ORDER BY rowid DESC LIMIT 1").fetchone()[0] in ("v2.0", "v2.1")
+                     "ORDER BY rowid DESC LIMIT 1").fetchone()[0] in ("v2.0", "v2.1", "v2.2")
     assert c.execute("SELECT COUNT(*) FROM meta_data_source WHERE "
                      "source_id='qcc_judicial_person'").fetchone()[0] == 1
     assert c.execute("SELECT COUNT(*) FROM meta_ingest_log WHERE "
@@ -219,8 +220,8 @@ def i_published_untouched():
 def j_report_matches_db():
     p = json.loads(read(REPORT_JSON))
     c = con()
-    # 报告是 v2.0 接入时点的快照；升 v2.1 后不重跑，接受两种历史/当前结构。
-    assert p["schema_version"] in ("v2.0", "v2.1")
+    # 报告是 v2.0 接入时点的快照；升 v2.1/v2.2 后不重跑，接受历史/当前结构。
+    assert p["schema_version"] in ("v2.0", "v2.1", "v2.2")
     assert p["structure"]["tables"] in (37, 40) and p["structure"]["views"] in (33, 37)
     assert p["judicial"]["rows"] == c.execute(
         "SELECT COUNT(*) FROM ods_qcc_judicial").fetchone()[0]
@@ -242,8 +243,8 @@ def j_report_matches_db():
 def k_data_dictionary():
     rows = list(csv.DictReader((OUT / "data_dictionary.csv").open(
         encoding="utf-8-sig", newline="")))
-    # v2.1 产品节点并列层 +71 列：997 → 1068。
-    assert len(rows) == 1068, "数据字典字段数应为 1068，实得 %d" % len(rows)
+    # v2.1 产品节点并列层 +71 列（997 → 1068）、v2.2 时序图并列层 +13 列（1068 → 1081）。
+    assert len(rows) == 1081, "数据字典字段数应为 1081，实得 %d" % len(rows)
     for name in ("ods_qcc_judicial", "ods_qcc_person", "ods_qcc_axis_a_snapshot",
                  "v_axis_a_judicial", "v_enterprise_person_summary",
                  "v_axis_a_compound_event", "v_axis_a_grade_cross"):
@@ -282,7 +283,7 @@ def main():
     print("  v2.0 A 轴司法违约 + 主要人员接入守卫")
     print("=" * 68)
     for name, fn in [
-        ("v2.0/v2.1 结构 37/33 或 40/37、完整性与 meta 登记", a_structure),
+        ("v2.0/v2.1/v2.2 结构 37/33、40/37 或 42/37、完整性与 meta 登记", a_structure),
         ("3 张新表行数 34 / 2079 / 500", b_new_tables),
         ("司法明细：类别 / 金额口径 / 日期 / 别名清洗", c_judicial_cleaning),
         ("人员明细：490 脏行剔除 / 490 户 / 10 户缺失", d_person_cleaning),
@@ -292,7 +293,7 @@ def main():
         ("五档交叉：事件率不单调、禁止当性能结论", h_cross_not_monotonic),
         ("已发布标签 / 五档 / 主表 / DEFINITION_VER 未动", i_published_untouched),
         ("报告 md/json 与库现场回算一致", j_report_matches_db),
-        ("数据字典 1068 列、新对象说明 100% 覆盖", k_data_dictionary),
+        ("数据字典 1081 列、新对象说明 100% 覆盖", k_data_dictionary),
         ("交付散文件同源、生成源可复现、基线 28 文件 322 项", l_delivery_same_source_and_repro),
     ]:
         check(name, fn)

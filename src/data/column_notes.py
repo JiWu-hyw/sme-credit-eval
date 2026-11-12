@@ -67,6 +67,23 @@ TABLE_NOTES = {
         "time_slice": "时间切片。当前全表为 0 = 全期累计；年度切片不物化，按 app_year<=T 自建",
         "weight": "边权（0~1，语义随 edge_type 变化，见 edge_type 说明）",
     },
+    "ads_graph_node_ts": {
+        "node_type": "节点类型（同 ads_graph_node.node_type 的 5 类枚举：enterprise/patent/ipc/inventor/investor）",
+        "node_id": "节点 ID（格式见 ads_graph_node.node_id）",
+        "time_slice": "年度时间切片（1992–2026，29 个取值）；节点按「建元年」归入首现年",
+        "display_name": "展示名（同 ads_graph_node.display_name）",
+        "year_source": "年份溯源标记：patent_app_year（专利申请年）/ edge_min_year（由关联边推最早年）/ establish_year（成立年兜底）/ global_snapshot（全期快照 -1）/ funding_event_year（融资事件年）",
+    },
+    "ads_graph_edge_ts": {
+        "src_type": "起点节点类型（枚举同 ads_graph_node.node_type）",
+        "src_id": "起点节点 ID（格式见 ads_graph_node.node_id）",
+        "dst_type": "终点节点类型（枚举同 ads_graph_node.node_type）",
+        "dst_id": "终点节点 ID（格式见 ads_graph_node.node_id）",
+        "edge_type": "边语义（同 ads_graph_edge.edge_type 的 5 类；tech_similar 标 global_snapshot 全期相似度快照，其余四类均按时点年份时序化）",
+        "time_slice": "年度时间切片（1992–2026），边按其时点年份归入对应年",
+        "weight": "边权（0~1，语义同 ads_graph_edge.weight）",
+        "year_source": "年份溯源标记（global_snapshot=全期相似度快照；其余=专利申请年 / 融资事件年等）",
+    },
     "ads_label": {
         "label_value": "标签值：1=观察窗内未通过复核（正类）/ 0=通过或续存",
         "observation_start": "观察窗起点（首次认定年）",
@@ -304,6 +321,10 @@ TABLE_COMMENTS = {
                     "与 CNIPA 名单口径不同：这里是企业自持证书，资质层级特征取自名单而非本表",
     "ods_qcc_shareholder": "企查查股东原始落地（一行一个股东）。"
                            "用于股权结构与企业关系归集，不参与资质存续标签构造",
+    "ads_graph_node_ts": "时序图节点年度切片：5 类实体（企业/专利/IPC/发明人/投资机构）"
+                         "按建元年归入 1992–2026 共 29 个时间切片，节点时序化率 100%，year_source 可溯源",
+    "ads_graph_edge_ts": "时序图边年度切片：四类关系边（invented_by/belongs_ipc/files_patent/funded_by）"
+                         "按时点年份时序化、tech_similar 标 global_snapshot 全期快照，边时序化率 94.9%",
 }
 
 

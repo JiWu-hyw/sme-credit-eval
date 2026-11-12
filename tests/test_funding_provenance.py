@@ -162,18 +162,21 @@ def main():
                        for n in tables + views)
             # A7 时点为 v1.8（34/23/837）；v1.9 只增 6 个多标签视图（表数不变）；
             # v2.0 再增 3 张 A 轴 ODS 贴源表 + 4 个并列视图，
-            # v2.1 再增商标/尼斯分类/桥接 3 表 + 4 视图，均为新增对象，
-            # 不触碰任何事实表 / 主档数据。此处按「基线表数 + 新增表身份」校验，
+            # v2.1 再增商标/尼斯分类/桥接 3 表 + 4 视图，
+            # v2.2 再增时序图 2 表（ads_graph_node_ts / ads_graph_edge_ts，0 视图），
+            # 均为新增对象，不触碰任何事实表 / 主档数据。此处按「基线表数 + 新增表身份」校验，
             # 防止有人借升版之名悄悄改动 fact_* / dim_*。
             V20_TABLES = {"ods_qcc_judicial", "ods_qcc_person",
                           "ods_qcc_axis_a_snapshot"}
             # v2.1 产品节点并列层再加 3 张表（1 张 ODS + 1 维表 + 1 桥表）。
             V21_TABLES = {"ods_qcc_trademark", "dim_product_nice_class",
                           "bridge_enterprise_product"}
+            # v2.2 时序图并列层再加 2 张表（节点 / 边年度切片）。
+            V22_TABLES = {"ads_graph_node_ts", "ads_graph_edge_ts"}
             # 基线里原有 4 张企查查 ODS 表。
             QCC_ODS_BASELINE = {"ods_qcc_annual", "ods_qcc_cert",
                                 "ods_qcc_honor", "ods_qcc_shareholder"}
-            assert len(tables) in (34, 37, 40), "事实表数被改动：%d" % len(tables)
+            assert len(tables) in (34, 37, 40, 42), "事实表数被改动：%d" % len(tables)
             if len(tables) == 37:
                 assert V20_TABLES <= set(tables), (
                     "v2.0 三张 A 轴贴源表不全：%r" % (V20_TABLES - set(tables)))
@@ -191,11 +194,17 @@ def main():
                     "('v_product_node','v_enterprise_trademark_summary',"
                     "'v_six_entity_coverage','v_product_grade_cross')")}
                 assert len(v21v) == 4, "v2.1 四个并列视图不全：%r" % v21v
+            if len(tables) == 42:
+                assert V20_TABLES | V21_TABLES | V22_TABLES <= set(tables), (
+                    "v2.2 时序图两张表不全：%r" % (V22_TABLES - set(tables)))
+                assert {t for t in tables if t.startswith("ods_qcc_")} == (
+                    QCC_ODS_BASELINE | V20_TABLES | {"ods_qcc_trademark"}), (
+                    "ODS 贴源层出现 v2.2 之外的额外表")
             assert len(views) >= 23, "视图数少于 A7 时点：%d" % len(views)
             assert cols >= 837, "字段数少于 A7 时点：%d" % cols
             ver = c.execute("SELECT version FROM meta_schema_version "
                             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
-            assert ver in ("v1.8", "v1.9", "v2.0", "v2.1"), (
+            assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2"), (
                 "schema 版本异常：%s" % ver)
             assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok", \
                 "integrity_check 不通过"

@@ -69,8 +69,8 @@ def main():
         assert not miss, "缺视图 %r" % miss
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
-        # v2.0 A 轴 / v2.1 产品节点并列层均不改 6 个锚点 / 五档 / 标签矩阵。
-        assert ver in ("v1.9", "v2.0", "v2.1"), (
+        # v2.0 A 轴 / v2.1 产品节点 / v2.2 时序图并列层均不改 6 个锚点 / 五档 / 标签矩阵。
+        assert ver in ("v1.9", "v2.0", "v2.1", "v2.2"), (
             "库版本 %s，期望 v1.9 或更高" % ver)
 
     def b_base_untouched():

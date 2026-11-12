@@ -9,7 +9,8 @@
       "source_missing": "依赖的外部数据源未采购/未接入，按设计留空",
       "partial_insufficient": "有少量值但覆盖率过低，不足以建模，仅留档",
       "partial_closed": "外部源已接入但只闭合了较粗粒度或并列层，主口径仍缺；禁止写成完整闭合",
-      "fixed": "已修复并纳入正式口径"
+      "fixed": "已修复并纳入正式口径",
+      "etl_completed": "时序/派生 ETL 已物化落库（特指 v2.2 时序图等由 ETL 跑出来的对象），区别于 fixed 的通用修复"
     },
     "traps": [
       "SQLite 会把 COUNT(\"不存在的列\") 里的双引号当字符串字面量，返回总行数 → 覆盖率假性 100%。统计前必须先用 PRAGMA 确认列存在。",
@@ -614,21 +615,23 @@
     {
       "id": "G-GRAPH-02",
       "scope": "v_graph_slice_annual_edge / 年度时序切面",
-      "gap": "funded_by 与 tech_similar 两类边不进时序切面",
-      "status": "null_by_design",
+      "gap": "funded_by 与 tech_similar 两类边不进时序切面（原定稿）",
+      "status": "etl_completed",
       "priority": "P2",
-      "decision": "A 静态边保持静态，不做伪时序切分",
-      "decided_at": "2026-11-09",
+      "decision": "funded_by 已按融资事件年时序化（583/583，year_source=funding_event_year）；tech_similar 维持 global_snapshot 全期快照（物理无年时序含义）",
+      "decided_at": "2026-11-12",
       "decided_by": "WorkBuddy(施汶邑)",
-      "reason": "funded_by 缺「边—融资事件年份」的可靠映射（investor_names 为 JSON 名称串，与 investor 节点 ID 需二次匹配）；tech_similar 是全期静态余弦相似度，按年切分没有物理含义。",
+      "reason": "v2.2 时序 ETL 已重建融资事件—投资机构 ID 映射并落 event_year，funded_by 583 条全部带时点年份、不再依赖 investor_names 的 JSON 名称串二次匹配；tech_similar 是全期静态余弦相似度，按年切分没有物理含义，仍标 global_snapshot。",
       "evidence": [
-        "funded_by 583 条 / tech_similar 8749 条，物理表 time_slice 全为 0",
-        "年度切片仅覆盖 files_patent 32203 / belongs_ipc 51776 / invented_by 77899"
+        "ads_graph_edge_ts 中 funded_by 583 条全部 time_slice<>0、year_source=funding_event_year",
+        "tech_similar 8749 条 time_slice=-1、year_source=global_snapshot（全期快照）",
+        "边时序化率 94.9% = (171210-8749)/171210；节点时序化率 100%"
       ],
-      "remedy": "重建融资事件—投资机构 ID 映射并落 event_year；tech_similar 若需时序化，须按 as-of 年份重算相似度。",
-      "remedy_cost": "中（可复用现有 fact_funding_event，但需名称消歧）",
-      "impact": "年度切面不等于全边时序化；STGNN 报告须写明覆盖 3 类边。",
-      "fallback": "静态边在物理图中照常可用，见 graph_structure.json"
+      "remedy": "tech_similar 若需时序化，须按 as-of 年份重算相似度（当前不必须）。",
+      "remedy_cost": "低（funded_by 映射已落地，无新增采购）",
+      "impact": "年度切面现已覆盖四类边（files_patent/belongs_ipc/invented_by/funded_by）+ tech_similar 全期快照；STGNN 报告须写明 tech_similar 为全期快照、不计入年时序覆盖。",
+      "fallback": "tech_similar 仍标 global_snapshot，不按年切分；静态边在物理图中照常可用，见 graph_structure.json",
+      "history": "2026-11-09 定稿为 null_by_design / 决策 A 静态边保持静态；2026-11-12 v2.2 时序 ETL 落地后改为 etl_completed（funded_by 已时序化），原 decision A 留档于本字段。"
     },
     {
       "id": "G-GRAPH-03",

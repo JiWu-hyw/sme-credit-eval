@@ -92,8 +92,8 @@ def b_views_and_version():
     ver = one("SELECT version FROM meta_schema_version "
               "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
     # v1.9 只增多标签视图、v2.0 只增 A 轴司法/人员并列层、
-    # v2.1 只增商标/产品节点并列层；v1.8 的三视图与物理口径始终未动。
-    assert ver in ("v1.8", "v1.9", "v2.0", "v2.1"), (
+    # v2.1 只增商标/产品节点并列层、v2.2 只增时序图并列层；v1.8 的三视图与物理口径始终未动。
+    assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2"), (
         "库版本 %s，期望 v1.8 或更高" % ver)
     assert os.path.exists(BACKUP), "升级前回滚点缺失：%s" % BACKUP
 

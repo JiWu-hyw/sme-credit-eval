@@ -74,16 +74,22 @@ def main():
         n_view = cur.execute(
             "SELECT COUNT(*) FROM sqlite_master WHERE type='view'").fetchone()[0]
         # 本守卫只看「两个年度切片视图仍以物理图为唯一边源」，
-        # 结构基线随并列层升版：v2.0 37/33 → v2.1 40/37（新增 3 表 4 视图）。
-        # 差值必须严格等于 v2.1 产品节点并列层，不得借升版改动物理图。
-        assert (n_tab, n_view) in ((37, 33), (40, 37)), (
-            "结构漂移 %d 表 / %d 视图（允许 37/33 或 40/37）" % (n_tab, n_view))
+        # 结构基线随并列层升版：v2.0 37/33 → v2.1 40/37（新增 3 表 4 视图）
+        # → v2.2 42/37（新增 2 表 0 视图：ads_graph_node_ts / ads_graph_edge_ts 时序图并列层）。
+        # 差值必须严格等于对应并列层，不得借升版改动物理图。
+        assert (n_tab, n_view) in ((37, 33), (40, 37), (42, 37)), (
+            "结构漂移 %d 表 / %d 视图（允许 37/33、40/37 或 42/37）" % (n_tab, n_view))
         if (n_tab, n_view) == (40, 37):
             obj = {r[0] for r in cur.execute(
                 "SELECT name FROM sqlite_master WHERE type IN ('table','view') "
                 "AND name IN ('ods_qcc_trademark','dim_product_nice_class',"
                 "'bridge_enterprise_product','v_product_node')")}
             assert len(obj) == 4, "40/37 基线不是 v2.1 产品节点并列层：%r" % obj
+        elif (n_tab, n_view) == (42, 37):
+            obj = {r[0] for r in cur.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' "
+                "AND name IN ('ads_graph_node_ts','ads_graph_edge_ts')")}
+            assert len(obj) == 2, "42/37 基线不是 v2.2 时序图并列层：%r" % obj
 
     def t_bottom_tables_untouched():
         for t in ("ads_graph_node", "ads_graph_edge"):
@@ -213,6 +219,16 @@ def main():
             p = r["policies"]["v2_1_product_node"]
             assert "29 帧" in p["untouched"] and "test_product_node.py" in p["check"], (
                 "v2_1_product_node policy 未锁定 29 帧时序切面 / 守卫入口")
+        # G-GRAPH-02：原定稿「funded_by 与 tech_similar 两类边不进时序切面」
+        # （status=null_by_design）。v2.2 时序 ETL 已把 funded_by 583/583 全部按
+        # 融资事件年时序化（year_source=funding_event_year），该缺口已修复；
+        # 仅 tech_similar 仍标 global_snapshot 全期快照（物理无年时序含义），须保留红线。
+        g2 = next(g for g in r["graph_gaps"] if g["id"] == "G-GRAPH-02")
+        assert g2["status"] == "etl_completed", (
+            "G-GRAPH-02 时序化缺口应已修复（funded_by 583/583 全部时序化），实得 %s"
+            % g2["status"])
+        assert "global_snapshot" in (g2.get("fallback") or ""), (
+            "G-GRAPH-02 须保留 tech_similar 标 global_snapshot 全期快照的红线")
 
     def t_report_exists_and_numbers():
         for p in (REPORT, REPORT_JSON, BACKUP):
@@ -264,7 +280,7 @@ def main():
 
     for name, fn in [
         ("年度切片视图以物理图为唯一边源", t_views_same_source),
-        ("当前结构：40 表 / 37 视图（含 v2.0 / v2.1 并列层）", t_structure_unchanged),
+        ("当前结构：42 表 / 37 视图（含 v2.0 / v2.1 / v2.2 并列层）", t_structure_unchanged),
         ("物理底表 time_slice 未被 UPDATE", t_bottom_tables_untouched),
         ("年度切片 29 帧（1992–2026）", t_years),
         ("末年三类边 + patent 节点守恒", t_last_year_conservation),

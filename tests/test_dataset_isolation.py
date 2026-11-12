@@ -133,8 +133,9 @@ def h_grade_contract_matches_db():
     assert r["code"] == 0, "分档端点未就绪：%s" % r["code"]
     d = contract("enterprise_grade.json")
     assert d["provenance"]["kind"] == "measured"
-    assert d["provenance"]["schema_version"] in ("v1.8", "unknown") or \
-        d["provenance"]["schema_version"].startswith("v1."), (
+    assert d["provenance"]["schema_version"] in (
+        "v1.8", "v1.9", "v2.0", "v2.1", "v2.2", "unknown") or \
+        d["provenance"]["schema_version"].startswith(("v1.", "v2.")), (
         "契约 schema_version 未回填：%r" % d["provenance"]["schema_version"])
     c = con()
     try:

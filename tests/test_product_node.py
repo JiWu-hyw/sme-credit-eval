@@ -2,7 +2,7 @@
 """v2.1 商标明细 + 产品节点并列层接入守卫（14 项，只读）。
 
 守的是四件事：
-  1. 结构：40 表 / 37 视图 / 1068 列、v2.1 版本登记、integrity / 外键；
+  1. 结构：42 表 / 37 视图 / 1081 列（v2.2 时序图并列层 +2 表 +13 列）、v2.1/v2.2 版本登记、integrity / 外键；
   2. 清洗与守恒：8004 条明细、'-' 日期归 NULL、is_registered 5257 与主表守恒、
      35 产品类 / 10 服务类二分、桥接 1418 行 / 433 户；
   3. 口径隔离：产品节点**未并入 ads_graph_node 主图**、29 帧时序切面未动、
@@ -79,8 +79,8 @@ def a_structure():
             "AND name NOT LIKE 'sqlite_%'").fetchall()]
         cols = sum(c.execute("SELECT COUNT(*) FROM pragma_table_info('%s')" % n)
                    .fetchone()[0] for n in objs)
-        assert (t, v, cols) == (40, 37, 1068), (
-            "结构 %r，期望 (40, 37, 1068)" % ((t, v, cols),))
+        assert (t, v, cols) == (42, 37, 1081), (
+            "结构 %r，期望 (42, 37, 1081)" % ((t, v, cols),))
         assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         assert not c.execute("PRAGMA foreign_key_check").fetchall(), "外键冲突"
         for n in TABLES:
@@ -90,7 +90,7 @@ def a_structure():
             assert c.execute("SELECT 1 FROM sqlite_master WHERE type='view' AND name=?",
                              (n,)).fetchone(), "缺视图 %s" % n
         assert c.execute("SELECT version FROM meta_schema_version "
-                         "ORDER BY rowid DESC LIMIT 1").fetchone()[0] == "v2.1"
+                         "ORDER BY rowid DESC LIMIT 1").fetchone()[0] in ("v2.1", "v2.2")
         assert c.execute("SELECT COUNT(*) FROM meta_data_source WHERE source_id="
                          "'qcc_trademark'").fetchone()[0] == 1
     finally:
@@ -317,7 +317,7 @@ def n_delivery_same_source():
         assert md5(dst) == md5(src), "交付份与源份不同源：%s" % dst.name
     rows = list(csv.DictReader((OUT / "data_dictionary.csv").open(
         encoding="utf-8-sig", newline="")))
-    assert len(rows) == 1068, "数据字典字段数 %d（应 1068）" % len(rows)
+    assert len(rows) == 1081, "数据字典字段数 %d（应 1081）" % len(rows)
     for name in TABLES + VIEWS:
         g = [r for r in rows if r["对象名"] == name]
         assert g, "字典缺对象 %s" % name
@@ -349,7 +349,7 @@ def main():
     print("  v2.1 商标明细 + 产品节点并列层接入守卫")
     print("=" * 68)
     for name, fn in [
-        ("v2.1 结构 40 表 / 37 视图 / 1068 列、完整性与 meta 登记", a_structure),
+        ("v2.1/v2.2 结构 42 表 / 37 视图 / 1081 列、完整性与 meta 登记", a_structure),
         ("商标明细 8004 条 / 444 家、日期与状态清洗", b_trademark_cleaning),
         ("is_registered 5257 与主表「商标_有效件数」守恒", c_registered_conservation),
         ("尼斯 45 类＝35 产品 + 10 服务、服务类 1902 条不作节点", d_class_split),
@@ -362,7 +362,7 @@ def main():
         ("登记册 G-GRAPH-01 改判 partial_closed、v2.1 policy 齐备", k_registry_policy),
         ("时序契约 §6 与 JSON 并列层口径同步", l_graph_contract),
         ("接入报告 md/json 与库现场回算一致", m_report_matches_db),
-        ("交付散文件同源、字典 1068 列、生成源可复现、基线 28 文件 322 项", n_delivery_same_source),
+        ("交付散文件同源、字典 1081 列、生成源可复现、基线 28 文件 322 项", n_delivery_same_source),
     ]:
         check(name, fn)
     print("=" * 68)
