@@ -191,9 +191,23 @@ def t_feature_tree_matches_view():
             claimed - set(feat_cols), set(feat_cols) - claimed)
     s = d["summary"]
     assert s["n_in_train_ready"] == 11, "进训练的应为 11 个特征，实得 %s" % s["n_in_train_ready"]
-    assert s["n_discriminative"] == 5, \
-        "有判别力特征应为 5 个（已知 4 负 1 正），实得 %s" % s["n_discriminative"]
-    assert s["reference"]["n_pos"] == 21, "参考集断档样本应为 21"
+    # v3.0 扩样后单变量 AUC 重算，11 个训练特征全部达到判别力阈值（不再是旧的 4 负 1 正）。
+    # 守卫意图是「判别力计数与明细自洽」，故动态对账而非写死数字。
+    n_disc = len([f for f in d["features"] if f["discriminative"]])
+    assert n_disc > 0, "没有任何判别力特征，特征树失去判别意义"
+    assert s["n_discriminative"] == n_disc, (
+        "判别力特征计数 %s != 明细里标 discriminative 的 %s"
+        % (s["n_discriminative"], n_disc))
+    for f in d["features"]:
+        if f["discriminative"]:
+            assert f["in_train_ready"] and f["univariate_auc"] is not None, (
+                "判别力特征 %s 未进训练视图或无单变量 AUC" % f["id"])
+            assert abs(f["univariate_auc"] - 0.5) >= s["auc_threshold"], (
+                "判别力特征 %s 的 AUC=%s 未达阈值" % (f["id"], f["univariate_auc"]))
+    # 参考集正样本数同样动态对账（v3.0 由 21 变为库内实测值，写死会误报）
+    ref = db_views._ref()
+    assert s["reference"]["n_pos"] == ref["n_pos"], (
+        "参考集正样本数 %s != 库内实测 %s" % (s["reference"]["n_pos"], ref["n_pos"]))
 
 
 def t_graph_structure_exact():
@@ -210,8 +224,10 @@ def t_graph_structure_exact():
     assert d["summary"]["n_edges"] == n_edge, "边数 %s != %s" % (d["summary"]["n_edges"], n_edge)
     for nt in d["node_types"]:
         assert nt["n"] == types[nt["type"]], "%s 节点数不符" % nt["type"]
-    # 真图：企业 500、专利 3 万级、IPC 1 万级 —— 数量级不对说明是合成图
-    assert types.get("enterprise") == 500, "企业节点应为 500，实得 %s" % types.get("enterprise")
+    # 真图：v3.0 企业 3000（扩样 500→3000）、专利 14 万级、IPC 1 万级 ——
+    # 数量级不对说明是合成图。其余节点数已由上面 node_types 循环与库内严格对齐。
+    assert types.get("enterprise") == 3000, \
+        "v3.0 企业节点应为 3000，实得 %s" % types.get("enterprise")
     assert (types.get("patent") or 0) > 30000, "专利节点应为 3 万级，实得 %s" % types.get("patent")
 
 
@@ -442,7 +458,8 @@ def t_enterprise_grade_matches_db():
         con.close()
     got = {x["grade"]: x["n"] for x in d["grade_dist"]}
     assert got == want, "五档家数与库内不符：%r vs %r" % (got, want)
-    assert d["n_enterprise"] == total == 500
+    assert d["n_enterprise"] == total == 3000, (
+        "v3.0 企业总数应为 3000，实得契约 %s / 库内 %s" % (d["n_enterprise"], total))
     assert d["provenance"]["kind"] == "measured"
     assert sum(x["n"] for x in d["hit_rule_dist"]) == total, "命中规则分布未闭合"
 

@@ -1273,7 +1273,7 @@ def build_doc(con, alg, fe):
     A("python tests/test_product_node.py          # 14 项 v2.1 产品节点 / 口径纠正 / 未入主图 / 散文件同源守卫")
     A("python tests/test_data_distribution.py     # 10 项 数据全部公开口径 / 完整库未脱敏 / 散文件同源守卫")
     A("```")
-    A("合计 **322 项**，全绿（28 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
+    A("合计 **314 项**，全绿（28 个测试文件）。`test_contracts.py` 的重点是**反向比对**："
       "把契约里的数拿回 SQLite 现场算一遍，对不上就失败 —— 防的是「为了有图可画而编数据」。")
     A("")
     A("**测试文件范围（2026-11-12 更新）**：`tests/` 下 28 个 `test_*.py` **全部纳入交付守卫**，"

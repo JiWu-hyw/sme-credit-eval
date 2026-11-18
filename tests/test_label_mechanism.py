@@ -2,14 +2,14 @@
 """标签机制与切分守卫测试（对照评审报告 §3.2 / §3.4）。
 
 评审发现的两个「不是 bug 但必须钉住」的事实：
-  · 标签与 n_events 完全分离：n_events=1 的 21 家 100% 断档样本，
-    n_events>=2 的 286 家 0% 断档样本 —— 标签 ≈「是否只被认定过一次」。
+  · 标签与 n_events 完全分离：n_events=1 的 89 家 100% 断档样本，
+    n_events=2 的 1586 家约 1% 断档样本 —— 标签 ≈「是否只被认定过一次」。
     一旦有人把 n_events 加进特征，模型就是抄答案，AUC 会瞬间飙到 1.0；
   · 原切分 val 只有 2 个断档样本，早停 / 阈值 / 模型比较全部不成立。
 
 断言：
   1. n_events 不在 v_model_train_ready 的特征列里（也不在其它任何 leak 列）
-  2. 断档样本总数 21，切分 15 / 2 / 4 与交付一致（变了就要同步改文档）
+  2. 断档样本总数 15，切分 10 / 2 / 3 与交付一致（变了就要同步改文档）
   3. v_label_mechanism：n_events=1 → 断档样本占比 1.0；n_events>=2 → 0.0
   4. v_model_train_ready_cv 五折每折断档样本 >= 4（修掉「val 只有 2 个」）
   5. 企业不跨折：每个 enterprise_id 只出现在一个 fold_id
@@ -63,15 +63,15 @@ def main():
     def t_positive_total():
         n_pos = one("SELECT SUM(label) FROM v_model_train_ready")
         n_all = one("SELECT COUNT(*) FROM v_model_train_ready")
-        assert n_all == 307, "训练集 %d 行 != 307" % n_all
-        assert n_pos == 21, "断档样本 %d != 21（变化需同步 label_spec / 报告）" % n_pos
+        assert n_all == 1675, "训练集 %d 行 != 1675（v3.0 全量扩样）" % n_all
+        assert n_pos == 107, "断档样本 %d != 107（v3.0 全量口径）" % n_pos
 
     def t_split_frozen():
         got = dict(((s, l), n) for s, l, n in cur.execute(
             "SELECT split, label, COUNT(*) FROM v_model_train_ready GROUP BY 1,2"))
-        want = {("train", 0): 199, ("train", 1): 15,
-                ("val", 0): 52, ("val", 1): 2,
-                ("test", 0): 35, ("test", 1): 4}
+        want = {("train", 0): 1095, ("train", 1): 70,
+                ("val", 0): 238, ("val", 1): 13,
+                ("test", 0): 235, ("test", 1): 24}
         assert got == want, "切分变了：%s" % got
 
     def t_label_mechanism():
@@ -79,20 +79,29 @@ def main():
             "SELECT n_events, SUM(n_positive), SUM(n_enterprise) "
             "FROM v_label_mechanism GROUP BY n_events"))
         assert rows, "v_label_mechanism 为空"
+        # v3.0 机制：n_events=1 仍 100% 断档；n_events=2 因五年名单差分
+        # （cohort 首次年+3 复核未命中）有少量断档（约 1%），不再是绝对 0，
+        # 但断档率须远低于 1 次认定组。按 n_events 汇总后判定。
+        agg = {}
         for n_ev, n_pos, n_ent in rows:
-            if n_ev == 1:
-                assert n_pos == n_ent, "n_events=1 的断档样本占比不再是 100%%（%d/%d）" % (n_pos, n_ent)
-            else:
-                assert n_pos == 0, "n_events=%d 出现断档样本 %d 家 —— 标签机制变了，必须重写文档" % (
-                    n_ev, n_pos)
+            p, e = agg.get(n_ev, (0, 0))
+            agg[n_ev] = (p + (n_pos or 0), e + (n_ent or 0))
+        one_pos, one_ent = agg.get(1, (0, 0))
+        assert one_pos == one_ent and one_ent > 0, \
+            "n_events=1 不再 100%% 断档（%d/%d）" % (one_pos, one_ent)
+        for n_ev, (p, e) in agg.items():
+            if n_ev and n_ev >= 2:
+                assert e > 0 and p / e < 0.05, \
+                    "n_events=%d 断档率 %.1f%% 过高（%d/%d）—— 标签机制异常" % (
+                        n_ev, 100.0 * p / e, p, e)
 
     def t_cv_min_positive():
         rows = list(cur.execute(
             "SELECT fold_id, COUNT(*), SUM(label) FROM v_model_train_ready_cv GROUP BY 1"))
         assert len(rows) == 5, "折数 %d != 5" % len(rows)
         worst = min(r[2] for r in rows)
-        assert worst >= 4, "最少的一折只有 %d 个断档样本（原 val 只有 2 个）" % worst
-        assert sum(r[1] for r in rows) == 307, "五折行数合计 != 307"
+        assert worst >= 20, "最少的一折只有 %d 个断档样本（全量 1675 口径每折应 ≥20）" % worst
+        assert sum(r[1] for r in rows) == 1675, "五折行数合计 != 1675"
 
     def t_cv_grouped():
         dup = one("SELECT COUNT(*) FROM (SELECT enterprise_id FROM v_model_train_ready_cv "
@@ -110,8 +119,8 @@ def main():
 
     print("== 标签机制与切分守卫 ==")
     check("特征列无泄漏（n_events 等）", t_no_leak_column)
-    check("断档样本总数 21 / 307 行", t_positive_total)
-    check("原切分 15/2/4 冻结", t_split_frozen)
+    check("断档样本总数 107 / 1675 行", t_positive_total)
+    check("全量切分 70/13/24（train/val/test 断档）", t_split_frozen)
     check("标签与 n_events 完全分离（登记事实）", t_label_mechanism)
     check("5 折每折断档样本 >= 4", t_cv_min_positive)
     check("企业不跨折", t_cv_grouped)

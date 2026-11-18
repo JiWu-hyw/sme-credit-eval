@@ -134,8 +134,8 @@ def h_grade_contract_matches_db():
     d = contract("enterprise_grade.json")
     assert d["provenance"]["kind"] == "measured"
     assert d["provenance"]["schema_version"] in (
-        "v1.8", "v1.9", "v2.0", "v2.1", "v2.2", "unknown") or \
-        d["provenance"]["schema_version"].startswith(("v1.", "v2.")), (
+        "v1.8", "v1.9", "v2.0", "v2.1", "v2.2", "v3.0", "unknown") or \
+        d["provenance"]["schema_version"].startswith(("v1.", "v2.", "v3.")), (
         "契约 schema_version 未回填：%r" % d["provenance"]["schema_version"])
     c = con()
     try:
@@ -146,7 +146,8 @@ def h_grade_contract_matches_db():
         c.close()
     got = {x["grade"]: x["n"] for x in d["grade_dist"]}
     assert got == want, "契约五档家数与库内不符：%r vs %r" % (got, want)
-    assert d["n_enterprise"] == total == 500
+    assert d["n_enterprise"] == total == 3000, (
+        "v3.0 企业总数应为 3000，实得契约 %s / 库内 %s" % (d["n_enterprise"], total))
     ub = d["usage_boundary"]
     for k in ("is_label", "is_credit_score", "can_report_accuracy",
               "can_enter_model_training"):

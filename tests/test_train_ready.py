@@ -44,8 +44,8 @@ FEAT_COLS = ["n_patent_app", "n_patent_invention", "n_patent_grant",
              "grant_rate", "core_staff_stability", "n_inventor"]
 EXPECT_COLS = ID_COLS + FEAT_COLS
 
-EXPECT_ROWS = 307
-EXPECT_POS = 21
+EXPECT_ROWS = 1675  # v3.0 全量扩样：训练表扩到 3000 行（1675 可标注 + 1325 excluded），视图自然跟随
+EXPECT_POS = 107
 
 PASS, FAIL = [], []
 

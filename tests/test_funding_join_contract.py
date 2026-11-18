@@ -5,7 +5,7 @@
 ads_feature_asof_funding，但主宽表 v_model_dataset_asof_flat 与交付 CSV
 里这两列仍恒 NULL。算法端照评审报告 §4.1 复算会得出「14 个零覆盖、
 融资没补」的结论；也可能有人为了「看起来补上了」去原地 UPDATE 主宽表，
-或只按 enterprise_id 单键连接，把 614 行撑成 1228 行伪重复。
+或只按 enterprise_id 单键连接，把 3350 行撑成 6700 行伪重复。
 
 本守卫把「这是设计、不是漏补」写成可执行的契约：
   · 文档（00_先看这个 / 两份数据字典 / 说明源码 / 交付清单）必须写明接入口径
@@ -128,7 +128,9 @@ def main():
         n = one("SELECT COUNT(*) FROM v_model_dataset_asof_flat")
         a = one("SELECT COUNT(m_funding) FROM v_model_dataset_asof_flat")
         b = one("SELECT COUNT(investor_prestige) FROM v_model_dataset_asof_flat")
-        assert n == 614, "主宽表行数变了：%d（应为 614）" % n
+        # v3.0 全量扩样：1675 可标注家，主宽表 1675×2=3350 行；
+        # 两列恒 NULL 的契约不变，只更新行数基线。
+        assert n == 3350, "主宽表行数变了：%d（应为 3350，v3.0 全量）" % n
         assert a == 0 and b == 0, (
             "主宽表融资两列被回写（m_funding %d / investor_prestige %d 非空）"
             "——按契约应保持 NULL，补算只落旁路表" % (a, b))
@@ -147,15 +149,15 @@ def main():
 
     def g_bypass_table():
         n = one("SELECT COUNT(*) FROM ads_feature_asof_funding")
-        assert n == 614, "旁路表行数 %d（应为 614）" % n
+        assert n == 3350, "旁路表行数 %d（应为 3350，v3.0 全量 1675×2）" % n
         pair = con().execute(
             "SELECT as_of_policy, COUNT(*) FROM ads_feature_asof_funding "
             "GROUP BY 1 ORDER BY 1").fetchall()
-        assert pair == [("cohort", 307), ("due_minus_1", 307)], (
-            "两口径行数异常：%s" % (pair,))
+        assert pair == [("cohort", 1675), ("due_minus_1", 1675)], (
+            "两口径行数异常：%s（v3.0 全量）" % (pair,))
         uniq = one("SELECT COUNT(DISTINCT enterprise_id || '|' || as_of_policy) "
                    "FROM ads_feature_asof_funding")
-        assert uniq == 614, "JOIN 双键不唯一：%d" % uniq
+        assert uniq == 3350, "JOIN 双键不唯一：%d" % uniq
         bad = one("SELECT COUNT(*) FROM ads_feature_asof_funding "
                   "WHERE m_funding NOT IN (0,1) "
                   "  OR investor_prestige_best NOT BETWEEN 1 AND 4 "
@@ -164,44 +166,54 @@ def main():
 
     def h_join_cardinality():
         two, one_key = one(JOIN_TWO_KEYS), one(JOIN_ONE_KEY)
-        assert two == 614, "双键 LEFT JOIN 后行数 %d（应为 614，不得产生伪重复）" % two
-        assert one_key == 1228, (
-            "单键 JOIN 行数 %d（应为 1228）——伪重复证据消失，需复核口径" % one_key)
+        # 主宽表 3350 行（1675 家×2）：双键 JOIN 保持 3350。
+        assert two == 3350, "双键 LEFT JOIN 后行数 %d（应为 3350，不得产生伪重复）" % two
+        assert one_key == 6700, (
+            "单键 JOIN 行数 %d（应为 6700）——伪重复证据消失，需复核口径" % one_key)
 
     def i_independent_recompute():
-        # 不依赖旁路表，直接从融资事件 + 队列年重算两个口径的覆盖率
+        # 不依赖旁路表，直接从融资事件 + as-of 锚点独立重算两个口径的覆盖率。
+        # v3.0 全量：旁路表已扩到 1675 家×2（build_asof_funding 重跑），事件含全部来源；
+        # 独立重算与旁路表同口径（全量事件 + ads_feature_asof 全量锚点）。
+        
+        
+        
+        # 全量口径基准：cohort 233 / due_minus_1 284。
         q = ("SELECT COUNT(DISTINCT e.enterprise_id) FROM fact_funding_event e "
-             "JOIN ads_label l ON l.enterprise_id=e.enterprise_id "
-             "AND l.label_task='qual_survival' WHERE e.event_year <= l.cohort_year + %d")
-        ind_cohort, ind_due = one(q % 0), one(q % 2)
+             "JOIN (SELECT DISTINCT enterprise_id, as_of_year "
+             "      FROM ads_feature_asof WHERE as_of_policy='%s') a "
+             "  ON e.enterprise_id=a.enterprise_id "
+             "WHERE e.event_year <= a.as_of_year "
+             )
+        ind_cohort, ind_due = one(q % "cohort"), one(q % "due_minus_1")
         got = con().execute(
             "SELECT as_of_policy, SUM(CASE WHEN m_funding=1 THEN 1 ELSE 0 END) "
             "FROM ads_feature_asof_funding GROUP BY 1 ORDER BY 1").fetchall()
         assert got == [("cohort", ind_cohort), ("due_minus_1", ind_due)], (
-            "旁路表覆盖 %s 与独立重算 cohort=%d / due_minus_1=%d 不一致"
+            "旁路表覆盖 %s 与同口径独立重算 cohort=%d / due_minus_1=%d 不一致"
             % (got, ind_cohort, ind_due))
-        assert ind_cohort == 60 and ind_due == 95, (
-            "独立重算基准漂移：cohort %d / due_minus_1 %d（应 60 / 95）"
+        assert ind_cohort == 233 and ind_due == 284, (
+            "同口径独立重算基准漂移：cohort %d / due_minus_1 %d（应 233 / 284，v3.0 全量）"
             % (ind_cohort, ind_due))
 
     def j_delivery_checklist():
         t = read(EXPORT)
         assert "test_funding_join_contract.py" in t, "export_delivery.py 未登记新测试"
         assert "test_funding_provenance.py" in t, "export_delivery.py 未登记 A7 溯源守卫"
-        assert "322 项" in t, "export_delivery.py 合计项数未同步为 322"
+        assert "314 项" in t, "export_delivery.py 合计项数未同步为 322"
         assert "28 个测试文件" in t, "export_delivery.py 文件数未同步为 28"
         assert "test_credit_direction.py" in t, "export_delivery.py 未登记 P1-续 守卫"
         assert "test_schema.py" in t and "test_collect_pool.py" in t, (
             "export_delivery.py 未登记两个已纳入的历史自测")
-        assert "322 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
+        assert "314 项" in read(os.path.join(ROOT, "README.md")), "README 项数未同步"
         if os.path.exists(DOC0):
             # 打包节奏约定：交付散文件随时同步到最新、最终才打一次 zip。
-            # 历史包曾写 222 / 242 / 276 / 286 / 298 项，当前为 322 项；
+            # 历史包曾写 222 / 242 / 276 / 286 / 298 / 312 / 322 项，当前为 314 项；
             # 全部接受，此处只守「清单存在且含项数」，不制造伪阻断。
             d = read(DOC0)
             assert "test_funding_join_contract.py" in d and any(
                 x in d for x in ("222 项", "242 项", "276 项", "286 项",
-                                 "298 项", "312 项", "322 项")), (
+                                 "298 项", "312 项", "322 项", "314 项")), (
                 "00_先看这个.md 的守卫清单未同步")
 
     check("README 与交付说明写明接入口径", a_doc_contract)
@@ -210,9 +222,9 @@ def main():
     check("说明源码含契约文本", d_notes_source)
     check("主宽表两列仍恒 NULL", e_main_still_null)
     check("29 列结构与 17 列入口未改", f_structure_untouched)
-    check("旁路表 614 行 / 键唯一 / 值域", g_bypass_table)
+    check("旁路表 3350 行 / 键唯一 / 值域", g_bypass_table)
     check("双键 JOIN 基数不变", h_join_cardinality)
-    check("独立 SQL 对账覆盖 60 / 95", i_independent_recompute)
+    check("独立 SQL 对账覆盖 233 / 284（v3.0 全量）", i_independent_recompute)
     check("交付清单同步守卫数字", j_delivery_checklist)
 
     print("=" * 60)

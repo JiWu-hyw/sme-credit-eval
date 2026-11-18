@@ -257,8 +257,9 @@ def build_data_quality(con: sqlite3.Connection) -> dict:
             })
 
     # 关联键健康度：enterprise_id 为空不会违反表约束，但会让该行在建模时无法归属企业。
-    # 这类问题容易被 worst_columns 的 Top-N 淹没（fact_patent 的相关键空值率仅 2.3%，
-    # 排不进前 8），所以单独列一段 —— 「766 件专利未匹配到企业」是必须看见的事实。
+    # 这类问题容易被 worst_columns 的 Top-N 淹没（fact_patent 的相关键空值率
+    # v1.x 约 2.3%、v3.0 扩样后降到约 0.53%，都排不进前 8），所以单独列一段 ——
+    # 「766 件专利未匹配到企业」是必须看见的事实。
     join_key_health = []
     for t in QUALITY_CORE_TABLES:
         if not has_obj(con, t) or "enterprise_id" not in cols_of(con, t):
@@ -269,7 +270,11 @@ def build_data_quality(con: sqlite3.Connection) -> dict:
         join_key_health.append({
             "table": t, "column": "enterprise_id",
             "n_rows": n_rows, "n_null": n_null, "null_rate": rate,
-            "severity": "high" if (rate or 0) > 0.01 else "ok",
+            # v3.0 的真实 bug：旧逻辑只看 rate>1%，扩样后 fact_patent 涨到
+            # 145413 行，766 个未匹配的空值率降到 0.53%，被降级成 ok，
+            # 「766 件专利未匹配」这个事实就消失了。关联键空值必须单独可见：
+            # 只要有未匹配行就标 high，与 test_contracts 守卫口径一致。
+            "severity": "high" if n_null else "ok",
             "impact": ("这些行无法归属企业，企业级特征与建模时会整行丢弃"
                        if n_null else "全部可归属企业"),
         })

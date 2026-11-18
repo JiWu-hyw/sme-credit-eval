@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""v1.7 企业「技术与资质梯队分档」L0 视图守卫。
+"""v3.0 全量口径 企业「技术与资质梯队分档」L0 视图守卫。
 
 防的是这类事故：判据被悄悄改动（比如把「风险负面」调低优先级、把
-admin_penalty_cnt 塞进来凑覆盖、把未打标的 193 家当续存样本），视图仍然
+admin_penalty_cnt 塞进来凑覆盖、把未打标的 1325 家当续存样本），视图仍然
 查得通、家数也凑得齐，但分档语义已经变了。
 
 关键一条是「独立对账」：用方案 §4.2 的原始 SQL 现场重算一遍，逐企业
@@ -22,7 +22,8 @@ DB = os.path.join(ROOT, "data", "db", "zjtech_credit.db")
 SCHEMA = os.path.join(ROOT, "src", "data", "schema.sql")
 MIGRATION = os.path.join(ROOT, "src", "data", "migrations", "v1_7_grade.sql")
 
-EXPECT = {"A 引领": 44, "B 优质": 95, "C 稳健": 275, "D 观察": 83, "E 预警": 3}
+# v3.0 全量 3000 家分布基线（dim 500→3000 扩样后重算）
+EXPECT = {"A 引领": 167, "B 优质": 470, "C 稳健": 2155, "D 观察": 154, "E 预警": 54}
 
 # 方案 §4.2 原文 SQL（不含 GROUP BY），独立重算用
 INDEPENDENT = """
@@ -85,7 +86,7 @@ def _create_view(text: str) -> str:
 def main() -> int:
     con = sqlite3.connect("file:%s?mode=ro" % DB.replace("\\", "/"), uri=True)
     try:
-        print("L0 分档视图守卫（v1.7）")
+        print("L0 分档视图守卫（v3.0 全量）")
 
         def a_exists():
             row = con.execute(
@@ -98,14 +99,14 @@ def main() -> int:
             n = con.execute("SELECT COUNT(*) FROM v_enterprise_grade_l0").fetchone()[0]
             nd = con.execute(
                 "SELECT COUNT(DISTINCT enterprise_id) FROM v_enterprise_grade_l0").fetchone()[0]
-            _assert(n == n_ent == nd == 500,
+            _assert(n == n_ent == nd == 3000,
                     "视图 %d / 去重 %d / 企业 %d" % (n, nd, n_ent))
 
         def c_distribution():
             got = dict(con.execute(
                 "SELECT grade, COUNT(*) FROM v_enterprise_grade_l0 GROUP BY grade").fetchall())
             _assert(got == EXPECT, "实得 %r ≠ 方案 %r" % (got, EXPECT))
-            _assert(sum(got.values()) == 500, "家数未闭合：%d" % sum(got.values()))
+            _assert(sum(got.values()) == 3000, "家数未闭合：%d" % sum(got.values()))
 
         def d_hard_constraint():
             leak = con.execute(
@@ -125,7 +126,7 @@ def main() -> int:
             _assert(wrong == 0, "D 档优先于 A/B 的规则被破坏：%d 家" % wrong)
 
         def f_unlabeled():
-            # -1 = 未打标 193 家，不得被当成「资质断档信号」
+            # -1 = 未打标 1325 家（可标注 1675 家），不得被当成「资质断档信号」
             mis = con.execute(
                 "SELECT COUNT(*) FROM v_enterprise_grade_l0 "
                 "WHERE label_value_qual_survival = -1 "
@@ -134,7 +135,7 @@ def main() -> int:
             n = con.execute(
                 "SELECT COUNT(*) FROM v_enterprise_grade_l0 "
                 "WHERE label_value_qual_survival = -1").fetchone()[0]
-            _assert(n == 193, "未打标企业数应为 193，实得 %d" % n)
+            _assert(n == 1325, "未打标企业数应为 1325，实得 %d" % n)
 
         def g_excluded_field():
             cols = [r[1] for r in con.execute(
@@ -199,7 +200,7 @@ def main() -> int:
 
         for name, fn in [
             ("视图存在", a_exists),
-            ("500 家企业一行一家", b_coverage),
+            ("3000 家企业一行一家", b_coverage),
             ("五档家数与方案一致且闭合", c_distribution),
             ("E 档硬约束一票定档", d_hard_constraint),
             ("D 档优先于 A/B", e_priority),

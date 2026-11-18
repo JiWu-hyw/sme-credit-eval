@@ -1,19 +1,19 @@
 {
   "capability": "descriptive_only",
   "funding_activity": {
-    "n_events": 506,
-    "n_enterprises_with_funding": 182,
-    "n_enterprises_total": 500,
-    "funded_share": 0.364,
+    "n_events": 1982,
+    "n_enterprises_with_funding": 574,
+    "n_enterprises_total": 3000,
+    "funded_share": 0.1913,
     "year_range": [
-      2019,
+      2001,
       2026
     ],
     "by_type": [
       {
         "event_type": "private_placement",
-        "n": 352,
-        "amount_sum_cny": null
+        "n": 1828,
+        "amount_sum_cny": 24641844465.0
       },
       {
         "event_type": "seasoned_equity",
@@ -28,65 +28,174 @@
     ],
     "by_year": [
       {
-        "year": 2019,
+        "year": 2001,
         "n_events": 1,
         "n_enterprises": 1
+      },
+      {
+        "year": 2006,
+        "n_events": 1,
+        "n_enterprises": 1
+      },
+      {
+        "year": 2008,
+        "n_events": 2,
+        "n_enterprises": 2
+      },
+      {
+        "year": 2009,
+        "n_events": 3,
+        "n_enterprises": 3
+      },
+      {
+        "year": 2010,
+        "n_events": 5,
+        "n_enterprises": 4
+      },
+      {
+        "year": 2011,
+        "n_events": 8,
+        "n_enterprises": 6
+      },
+      {
+        "year": 2012,
+        "n_events": 8,
+        "n_enterprises": 8
+      },
+      {
+        "year": 2013,
+        "n_events": 9,
+        "n_enterprises": 9
+      },
+      {
+        "year": 2014,
+        "n_events": 21,
+        "n_enterprises": 19
+      },
+      {
+        "year": 2015,
+        "n_events": 54,
+        "n_enterprises": 45
+      },
+      {
+        "year": 2016,
+        "n_events": 67,
+        "n_enterprises": 58
+      },
+      {
+        "year": 2017,
+        "n_events": 93,
+        "n_enterprises": 79
+      },
+      {
+        "year": 2018,
+        "n_events": 99,
+        "n_enterprises": 84
+      },
+      {
+        "year": 2019,
+        "n_events": 104,
+        "n_enterprises": 86
       },
       {
         "year": 2020,
-        "n_events": 69,
-        "n_enterprises": 51
+        "n_events": 209,
+        "n_enterprises": 141
       },
       {
         "year": 2021,
-        "n_events": 79,
-        "n_enterprises": 53
+        "n_events": 283,
+        "n_enterprises": 179
       },
       {
         "year": 2022,
-        "n_events": 74,
-        "n_enterprises": 54
+        "n_events": 257,
+        "n_enterprises": 169
       },
       {
         "year": 2023,
-        "n_events": 120,
-        "n_enterprises": 63
+        "n_events": 291,
+        "n_enterprises": 173
       },
       {
         "year": 2024,
-        "n_events": 94,
-        "n_enterprises": 66
+        "n_events": 215,
+        "n_enterprises": 153
       },
       {
         "year": 2025,
-        "n_events": 68,
-        "n_enterprises": 42
+        "n_events": 160,
+        "n_enterprises": 104
       },
       {
         "year": 2026,
-        "n_events": 1,
-        "n_enterprises": 1
+        "n_events": 92,
+        "n_enterprises": 67
       }
     ],
     "by_round": [
       {
+        "round_label": "A轮",
+        "n": 440
+      },
+      {
         "round_label": "新增机构",
         "n": 352
+      },
+      {
+        "round_label": "天使轮",
+        "n": 221
+      },
+      {
+        "round_label": "B轮",
+        "n": 157
+      },
+      {
+        "round_label": "A+轮",
+        "n": 149
       },
       {
         "round_label": "增资型",
         "n": 145
       },
       {
-        "round_label": "IPO上市",
-        "n": 7
+        "round_label": "股权融资",
+        "n": 140
       },
       {
-        "round_label": "上市",
-        "n": 2
+        "round_label": "Pre-A轮",
+        "n": 93
+      },
+      {
+        "round_label": "C轮",
+        "n": 56
+      },
+      {
+        "round_label": "B+轮",
+        "n": 49
+      },
+      {
+        "round_label": "战略融资",
+        "n": 40
+      },
+      {
+        "round_label": "C+轮",
+        "n": 31
+      },
+      {
+        "round_label": "Pre-A+轮",
+        "n": 24
+      },
+      {
+        "round_label": "天使+轮",
+        "n": 20
+      },
+      {
+        "round_label": "种子轮",
+        "n": 14
       }
     ],
-    "n_distinct_investors_approx": 349
+    "n_distinct_investors_approx": 1729
   },
   "financial_coverage": {
     "latest_rev_wan": {
@@ -162,8 +271,8 @@
     "displayable": true,
     "source": "fact_funding_event（506 条 / 182 家）+ dws_growth_feature（500 行）",
     "method": "融资活动为事实统计；financial_coverage 逐列算真实覆盖率；不产出任何预测值",
-    "generated_at": "2026-11-09 15:25:49",
-    "schema_version": "v1.9",
+    "generated_at": "2026-11-18 21:25:04",
+    "schema_version": "v3.0",
     "missing_dimensions": [
       "连续财务序列",
       "未融资对照口径",

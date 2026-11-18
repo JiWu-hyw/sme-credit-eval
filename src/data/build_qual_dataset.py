@@ -73,8 +73,12 @@ QUAL_TYPE = "high_tech"
 VALID_YEARS = 3
 OBS_END = 2025                       # 名单覆盖的最后一个认定年度
 
-DEFINITION_VER = "qual_survival_proxy_v0.1"
-DATASET_VER = "ds_v0.1_provisional"
+# v3.0（2026-11-18）：标签改由 apply_v3_0_labels 用五年完整名单重算并覆盖 1675 家；
+# 本常量作为全工程定义版本源，与库内 ads_label.definition_ver 对齐。
+# 注意：本脚本 build_labels_and_dataset() 仍是旧口径（high_tech 493 家），
+# 全量口径下不要直接重跑它生成标签，改用 apply_v3_0_labels。
+DEFINITION_VER = "qual_survival_proxy_v3.0"
+DATASET_VER = "ds_v3.0_3000"
 LABEL_TASK = "qual_survival"
 LABEL_NAME = "高企资格到期未见重新认定（弱标签）"
 

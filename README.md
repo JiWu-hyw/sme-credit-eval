@@ -91,7 +91,7 @@
 │   ├── 中期检查/             中期检查材料
 │   └── 模板/                 立项/结题申报模板
 │
-├── tests/                    单元测试 / 集成测试（322 项守卫，28 文件）
+├── tests/                    单元测试 / 集成测试（314 项守卫，28 文件）
 │                             test_api_live.py（35 接口探活）
 │                             test_contracts.py（契约数值回查 SQLite）
 │                             test_train_ready.py / test_data_dictionary.py
@@ -116,7 +116,7 @@
 ```
 
 **测试文件范围（2026-11-12 更新）**：`tests/` 下 28 个 `test_*.py` **全部纳入交付守卫，
-共 322 项全绿**。新增 `test_official_cancel_check.py`（10 项）守卫官方撤销公告证据链、
+共 314 项全绿**。新增 `test_official_cancel_check.py`（10 项）守卫官方撤销公告证据链、
 21 家逐户判定与口径隔离；`test_axis_a_judicial.py`（12 项）守卫 v2.0 A 轴三表四视图、
 490 行表头脏行剔除、三类金额分列、复合事件候选与已发布标签未动；
 `test_product_node.py`（14 项）守卫 v2.1 三表四视图、35/10 类二分、三处口径纠正、

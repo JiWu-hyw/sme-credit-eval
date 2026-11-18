@@ -4,7 +4,8 @@
   1. 证据链：21 家逐户核查表、287 家官方名单、7 条公告清单（含 5 份扫描件读图、
      官方更名标注单页证据）与三层 0 命中比对的数字自洽；
   2. 口径隔离：审计断档率 14/307 与库内 21/307 不得混用，文档必须同时出现两者；
-  3. 未改库：ads_label 仍是 307/21/286，DEFINITION_VER 仍是 v0.1。
+  3. v3.0 口径已落地：ads_label 1675/107/1568，DEFINITION_VER v3.0；
+     官方撤销核查仍只作证据快照、未改标签定义方法。
 
 同时核对交付目录与 outputs / data/audit 字节同源，防止「只改了一份、
 另一份还是旧口径」这类历史踩过的坑。
@@ -185,24 +186,27 @@ def g_delivery_same_source():
 
 
 def h_db_untouched():
+    """v3.0：官方撤销核查结论仍是证据快照、未改标签定义方法；
+    但全量扩样把 ads_label 从 307 扩到 1675、五档扩到 3000、版本升 v3.0，
+    这是用户拍板的 v3.0 口径变更，故本项改为确认 v3.0 口径已落地。"""
     con = sqlite3.connect("file:data/db/zjtech_credit.db?mode=ro", uri=True)
     c = con.cursor()
     d = c.execute("SELECT COUNT(*), SUM(label_value=1), SUM(label_value=0) "
                   "FROM ads_label").fetchone()
-    assert tuple(d) == (307, 21, 286), "ads_label 被改动：%r" % (tuple(d),)
+    assert tuple(d) == (1675, 107, 1568), "ads_label v3.0 口径漂移：%r" % (tuple(d),)
     direction = dict(c.execute(
         "SELECT credit_label, COUNT(*) FROM v_label_direction GROUP BY 1").fetchall())
-    assert direction == {0: 21, 1: 286}, "方向视图分布漂移：%r" % direction
+    assert direction == {0: 107, 1: 1568}, "方向视图分布漂移：%r" % direction
     grades = dict(c.execute(
         "SELECT grade_multilabel, COUNT(*) FROM v_enterprise_multilabel_grade "
         "GROUP BY 1").fetchall())
-    assert grades == {"A 引领": 81, "B 优质": 176, "C 稳健": 157,
-                      "D 观察": 83, "E 预警": 3}, "多标签分档被改动：%r" % grades
+    assert grades == {"A 引领": 368, "B 优质": 1021, "C 稳健": 1403,
+                      "D 观察": 154, "E 预警": 54}, "多标签分档 v3.0 漂移：%r" % grades
     con.close()
     sys.path.insert(0, str(ROOT))
     from src.data.build_qual_dataset import DEFINITION_VER
-    assert DEFINITION_VER == "qual_survival_proxy_v0.1", (
-        "DEFINITION_VER 已升版，本守卫与报告口径需同步：%s" % DEFINITION_VER)
+    assert DEFINITION_VER == "qual_survival_proxy_v3.0", (
+        "DEFINITION_VER 应为 v3.0：%s" % DEFINITION_VER)
 
 
 def i_isolation_in_docs():
@@ -250,14 +254,14 @@ def j_reproducible():
     delivery = read(ROOT / "src" / "data" / "export_delivery.py")
     for kw in ("official_cancel_check.md", "标签核查_21家断档逐户.csv",
                "证据_2026-02第12条_官方更名标注.png", "287 家",
-               "322 项", "28 个测试文件"):
+               "314 项", "28 个测试文件"):
         assert kw in delivery, "export_delivery.py 未同步 %r" % kw
     for p in (ROOT / "README.md",
               ROOT / "deliverables" / "03_交付说明" / "delivery_spec.md",
               ROOT / "deliverables" / "RELEASE_v1.5.0.md",
               ROOT / "deliverables" / "00_先看这个.md",
               ROOT / "tests" / "test_funding_join_contract.py"):
-        assert "322 项" in read(p), "%s 守卫项数未同步为 322" % p.relative_to(ROOT)
+        assert "314 项" in read(p), "%s 守卫项数未同步为 322" % p.relative_to(ROOT)
     n = len(list((ROOT / "tests").glob("test_*.py")))
     assert n == 28, "tests/ 下应为 28 个守卫文件，实得 %d" % n
 
@@ -274,9 +278,9 @@ def main():
         ("报告含结论、双断档率、三层 0 命中与口径隔离", e_report_numbers),
         ("JSON 结论、287 家覆盖与 issue ② 定位一致", f_report_json),
         ("交付目录与 outputs / audit 字节同源", g_delivery_same_source),
-        ("库未改、DEFINITION_VER 未升版", h_db_untouched),
+        ("v3.0 口径已落地、核查仅作证据快照", h_db_untouched),
         ("口径隔离写入各交付文档与缺口登记册", i_isolation_in_docs),
-        ("生成源可复现、守卫数字同步 28 文件 322 项", j_reproducible),
+        ("生成源可复现、守卫数字同步 28 文件 314 项", j_reproducible),
     ]:
         check(name, fn)
     print("=" * 68)

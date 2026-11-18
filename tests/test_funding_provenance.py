@@ -5,7 +5,12 @@
   1. 只填了一部分行，或填了没在 meta_data_source 登记的来源；
   2. 借回填之机改了金额 / 估值 / 机构等级等业务列（SHA-256 前后指纹对账）；
   3. 借回填之机升了 schema、改了表/视图结构，或往 meta_ingest_log 塞非法 stage；
-  4. 只改了库却没改 ETL 源码，下次重跑 load_500family.py 又变回 0/506。
+  4. 只改了库却没改 ETL 源码，下次重跑 load_500family.py 又变回 0/来源断链。
+
+v3.0 全量口径（dim 500→3000）：融资事实表 1982 行 =
+  506(zj_500family) + 1476(qcc_funding_3000)，source_id 全部非空；post_valuation
+  全 NULL（v1.8 设计性口径保持）。A7/v1.8 回填凭证里的 506 行、单源、SHA-256
+  指纹均为历史基线，故 a/c/d/e 只把它当历史事实校验，不再拿它约束当前快照。
 
 八项断言，全部来自库内确定性 SQL / 文件读取，不依赖模型或运行时推断。
 
@@ -31,7 +36,11 @@ sys.path.insert(0, ROOT)
 from src.data.apply_funding_provenance import check as backfill_check  # noqa: E402
 
 SOURCE_ID = "zj_500family"
+# A7 / v1.8 历史基线：d、e 仍校验回填凭证与 parse 日志中的 506/506（历史事实，勿改为 1982）。
 EXPECT_ROWS = 506
+# v3.0 全量口径：dim 500→3000，融资事实表 1982 行 = 506(zj_500family) + 1476(qcc_funding_3000)。
+FULL_ROWS = 1982
+VALID_SOURCES = ("qcc_funding_3000", "zj_500family")
 # 故意独立写一遍，不复用脚本里的常量，避免「自己验自己」
 BUSINESS_COLS = (
     "event_id", "enterprise_id", "event_date", "event_year", "event_type",
@@ -97,26 +106,51 @@ def main():
             bad = backfill_check(c)
         finally:
             c.close()
-        assert not bad, "回填脚本只读校验失败：%s" % bad
+        # v3.0 全量扩样后，A7(v1.8) 历史脚本 check() 里写死的 506 基线会报「历史基线不符」，
+        # 属预期：行数 506→1982、来源单源→双源、源 CSV 行数、业务指纹随扩样改变。
+        # 这里只放行这四类已知的口径漂移；若 check() 报出其它问题（source_id 未回填、
+        # 来源未登记、parse 证据链断裂、凭证缺失等）仍判失败，保证校验依然有意义。
+        KNOWN_BASELINE_DRIFT = (
+            "融资事件行数",
+            "source_id 取值不唯一",
+            "源 CSV",
+            "业务列指纹与凭证",
+        )
+        unexpected = [m for m in bad if not m.startswith(KNOWN_BASELINE_DRIFT)]
+        assert not unexpected, "回填脚本只读校验出现预期外问题：%s" % unexpected
+        if bad:
+            print("    （A7 历史脚本 check 报 %d 条 v3.0 基线漂移，属预期）" % len(bad))
 
     def b_full_coverage():
-        assert one("SELECT COUNT(*) FROM fact_funding_event") == EXPECT_ROWS, \
-            "融资事件行数不是 506"
-        assert one("SELECT COUNT(source_id) FROM fact_funding_event") == EXPECT_ROWS, \
+        assert one("SELECT COUNT(*) FROM fact_funding_event") == FULL_ROWS, \
+            "融资事件行数不是 %d" % FULL_ROWS
+        assert one("SELECT COUNT(source_id) FROM fact_funding_event") == FULL_ROWS, \
             "source_id 仍有 NULL"
+        assert one("SELECT COUNT(*) FROM fact_funding_event WHERE source_id IS NULL") == 0, \
+            "source_id 存在 NULL 行"
         got = [r[0] for r in con().execute(
             "SELECT DISTINCT source_id FROM fact_funding_event ORDER BY 1")]
-        assert got == [SOURCE_ID], "source_id 取值不唯一：%r" % got
+        assert tuple(got) == VALID_SOURCES, \
+            "source_id 取值集合不符：%r，期望 %r" % (got, VALID_SOURCES)
 
     def c_business_unchanged():
+        # v3.0 扩样（dim 500→3000）改变了融资事实表本身的业务数据：1982 行 =
+        # 506(zj_500family) + 1476(qcc_funding_3000)，amount / round / investor 等业务列
+        # 随新增行变化。因此凭证里的 SHA-256 是「A7 / v1.8 回填时点」的历史基线，
+        # 无法与当前快照精确对账——按任务要求跳过精确比对，改为记录性说明，
+        # 并校验当前快照的两个关键口径：source_id 全非空、post_valuation 全 NULL
+        # （v1.8 设计性 NULL 口径在 v3.0 保持不变）。
         rep = load_report()
         fp = local_fingerprint()
-        assert rep["business_columns_fingerprint_before"] == fp, \
-            "业务列与回填前指纹不一致（金额/估值等被改动）"
-        assert rep["business_columns_fingerprint_after"] == fp, \
-            "业务列与回填后指纹不一致"
-        assert rep["business_columns_fingerprint_before"] == \
-            rep["business_columns_fingerprint_after"], "凭证内前后指纹不相等"
+        print("    （历史 v1.8 业务指纹 %s...；v3.0 当前快照指纹 %s...，精确对账已跳过）"
+              % (rep.get("business_columns_fingerprint_before", "")[:12], fp[:12]))
+        assert rep.get("business_columns_fingerprint_before") == \
+            rep.get("business_columns_fingerprint_after"), \
+            "历史凭证内部前后指纹不相等（凭证本身被篡改）"
+        assert one("SELECT COUNT(source_id) FROM fact_funding_event") == FULL_ROWS, \
+            "当前快照 source_id 未全非空"
+        assert one("SELECT COUNT(post_valuation) FROM fact_funding_event") == 0, \
+            "当前快照 post_valuation 不再是全 NULL（v1.8 设计性 NULL 口径被破坏）"
 
     def d_report_complete():
         rep = load_report()
@@ -176,6 +210,7 @@ def main():
             # 基线里原有 4 张企查查 ODS 表。
             QCC_ODS_BASELINE = {"ods_qcc_annual", "ods_qcc_cert",
                                 "ods_qcc_honor", "ods_qcc_shareholder"}
+            # v3.0 全量扩样：42 表 / 38 视图，均为扩样新增对象，不触碰事实表 / 主档结构。
             assert len(tables) in (34, 37, 40, 42), "事实表数被改动：%d" % len(tables)
             if len(tables) == 37:
                 assert V20_TABLES <= set(tables), (
@@ -204,7 +239,7 @@ def main():
             assert cols >= 837, "字段数少于 A7 时点：%d" % cols
             ver = c.execute("SELECT version FROM meta_schema_version "
                             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
-            assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2"), (
+            assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2", "v3.0"), (
                 "schema 版本异常：%s" % ver)
             assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok", \
                 "integrity_check 不通过"
@@ -232,21 +267,22 @@ def main():
             rows = [r for r in csv.DictReader(f)
                     if r["对象名"] == "fact_funding_event" and r["字段名"] == "source_id"]
         assert len(rows) == 1, "数据字典里没有 fact_funding_event.source_id 这一行"
-        assert rows[0]["非空行数"] == "506" and float(rows[0]["非空率%"]) == 100.0, \
-            "字典非空率未随回填重生成：非空 %s / %s%%" % (
-                rows[0]["非空行数"], rows[0]["非空率%"])
+        assert rows[0]["非空行数"] == str(FULL_ROWS) and \
+            float(rows[0]["非空率%"]) == 100.0, \
+            "字典非空率未随 v3.0 全量口径重生成：非空 %s / %s%%（期望 %d / 100%%）" % (
+                rows[0]["非空行数"], rows[0]["非空率%"], FULL_ROWS)
         assert "血缘" in rows[0]["字段说明"] or "zj_500family" in rows[0]["字段说明"], \
             "字典未说明该列是行级血缘"
 
     for name, fn in [
-        ("回填脚本自身校验通过", a_script_check),
-        ("506 行全覆盖且来源唯一", b_full_coverage),
-        ("业务列 SHA-256 指纹未变", c_business_unchanged),
-        ("变更凭证字段完整", d_report_complete),
+        ("回填脚本自身校验通过（历史基线漂移已放行）", a_script_check),
+        ("1982 行全覆盖且来源双合法、无 NULL", b_full_coverage),
+        ("业务指纹历史基线说明 + 当前快照口径校验", c_business_unchanged),
+        ("变更凭证字段完整（A7/v1.8 历史基线）", d_report_complete),
         ("证据链：登记册 + parse 日志 + 合法 stage", e_evidence_chain),
         ("schema 结构 / 版本 / 完整性未动", f_structure_untouched),
         ("ETL 源码已修，重跑不再断链", g_etl_source_fixed),
-        ("字典与字段说明同步为 100%", h_dictionary_synced),
+        ("字典与字段说明同步为 1982 / 100%", h_dictionary_synced),
     ]:
         check(name, fn)
 

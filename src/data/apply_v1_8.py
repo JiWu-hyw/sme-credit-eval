@@ -69,11 +69,13 @@ def expected_cum(con: sqlite3.Connection) -> dict:
         "n_edge_invented_by": phy.get("invented_by", 0),
     }
 # 旁路表实测非空家数（cohort / due_minus_1），用于有效覆盖对账
+# v3.0 全量：旁路表已扩到 1675 家 × 2 口径。m_funding 对全部锚点可判（有事件=1，
+# 无事件=0），故覆盖=1675；investor_prestige 依赖 500 家专属机构分级，只覆盖部分家。
 EXPECT_SIDE = {
-    ("cohort", "m_funding"): 307,
-    ("due_minus_1", "m_funding"): 307,
-    ("cohort", "investor_prestige"): 59,
-    ("due_minus_1", "investor_prestige"): 75,
+    ("cohort", "m_funding"): 1675,
+    ("due_minus_1", "m_funding"): 1675,
+    ("cohort", "investor_prestige"): 60,
+    ("due_minus_1", "investor_prestige"): 76,
 }
 VIEWS = ("v_feature_coverage_effective", "v_graph_slice_annual",
          "v_graph_slice_annual_edge")
@@ -143,8 +145,8 @@ def check(con: sqlite3.Connection) -> list[str]:
     # ④ 年度切片台账：29 年 × 4 指标，累计单调，末年和独立基准一致
     n_y = con.execute("SELECT COUNT(DISTINCT time_slice) FROM v_graph_slice_annual").fetchone()[0]
     n_m = con.execute("SELECT COUNT(DISTINCT metric) FROM v_graph_slice_annual").fetchone()[0]
-    if (n_y, n_m) != (29, 4):
-        bad.append("台账维度不符：%d 年 / %d 指标，期望 29 / 4" % (n_y, n_m))
+    if (n_y, n_m) != (32, 4):
+        bad.append("台账维度不符：%d 年 / %d 指标，期望 32 / 4（v3.0）" % (n_y, n_m))
     tmax = con.execute("SELECT MAX(time_slice) FROM v_graph_slice_annual").fetchone()[0]
     cum = dict(con.execute(
         "SELECT metric, n_cumulative FROM v_graph_slice_annual WHERE time_slice=?",

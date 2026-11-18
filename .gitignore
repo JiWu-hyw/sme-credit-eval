@@ -69,3 +69,6 @@ desktop.ini
 .env
 .env.*
 !.env.example
+
+# 本地临时区：后台任务日志、改库前的 .pre_* 备份副本，均不入库
+.tmp/

@@ -90,8 +90,8 @@
       "group": "规模产出",
       "cn": "专利申请数",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.3905,
+      "coverage_asof": 0.9699,
+      "univariate_auc": 0.4279,
       "discriminative": true
     },
     {
@@ -100,8 +100,8 @@
       "group": "规模产出",
       "cn": "发明专利数",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.5102,
+      "coverage_asof": 0.9699,
+      "univariate_auc": 0.4563,
       "discriminative": false
     },
     {
@@ -110,8 +110,8 @@
       "group": "规模产出",
       "cn": "专利授权数",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.2788,
+      "coverage_asof": 0.9699,
+      "univariate_auc": 0.3521,
       "discriminative": true
     },
     {
@@ -120,9 +120,9 @@
       "group": "产出质量",
       "cn": "发明占比",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.6185,
-      "discriminative": true
+      "coverage_asof": 0.9699,
+      "univariate_auc": 0.4985,
+      "discriminative": false
     },
     {
       "id": "grant_rate",
@@ -130,8 +130,8 @@
       "group": "产出质量",
       "cn": "授权率（as-of）",
       "in_train_ready": true,
-      "coverage_asof": 0.93,
-      "univariate_auc": 0.5185,
+      "coverage_asof": 0.8884,
+      "univariate_auc": 0.5035,
       "discriminative": false
     },
     {
@@ -140,8 +140,8 @@
       "group": "产出质量",
       "cn": "技术转化率",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.2956,
+      "coverage_asof": 0.1812,
+      "univariate_auc": 0.3332,
       "discriminative": true
     },
     {
@@ -150,9 +150,9 @@
       "group": "技术广度",
       "cn": "IPC 小类数",
       "in_train_ready": true,
-      "coverage_asof": 0.9788,
-      "univariate_auc": 0.4868,
-      "discriminative": false
+      "coverage_asof": 0.1794,
+      "univariate_auc": 0.427,
+      "discriminative": true
     },
     {
       "id": "tech_breadth_entropy",
@@ -160,9 +160,9 @@
       "group": "技术广度",
       "cn": "技术广度熵",
       "in_train_ready": true,
-      "coverage_asof": 0.9788,
-      "univariate_auc": 0.4817,
-      "discriminative": false
+      "coverage_asof": 0.1794,
+      "univariate_auc": 0.4489,
+      "discriminative": true
     },
     {
       "id": "tech_breadth_ipc_class",
@@ -170,9 +170,9 @@
       "group": "技术广度",
       "cn": "技术广度（大类）",
       "in_train_ready": true,
-      "coverage_asof": 0.9788,
-      "univariate_auc": 0.4868,
-      "discriminative": false
+      "coverage_asof": 0.1794,
+      "univariate_auc": 0.427,
+      "discriminative": true
     },
     {
       "id": "n_inventor",
@@ -180,8 +180,8 @@
       "group": "团队稳定",
       "cn": "发明人数",
       "in_train_ready": true,
-      "coverage_asof": 0.9886,
-      "univariate_auc": 0.3825,
+      "coverage_asof": 0.1812,
+      "univariate_auc": 0.2249,
       "discriminative": true
     },
     {
@@ -190,9 +190,9 @@
       "group": "团队稳定",
       "cn": "核心人员稳定性",
       "in_train_ready": true,
-      "coverage_asof": 0.8339,
-      "univariate_auc": 0.5227,
-      "discriminative": false
+      "coverage_asof": 0.1531,
+      "univariate_auc": 0.6224,
+      "discriminative": true
     },
     {
       "id": "m_cert",
@@ -210,7 +210,7 @@
       "group": "资质等级",
       "cn": "qual_rank",
       "in_train_ready": false,
-      "coverage_asof": 1.0,
+      "coverage_asof": 0.4475,
       "univariate_auc": null,
       "discriminative": false
     },
@@ -220,7 +220,7 @@
       "group": "资质等级",
       "cn": "qual_rank_delta",
       "in_train_ready": false,
-      "coverage_asof": 1.0,
+      "coverage_asof": 0.4475,
       "univariate_auc": null,
       "discriminative": false
     },
@@ -230,7 +230,7 @@
       "group": "资质等级",
       "cn": "qual_upgrade_cum",
       "in_train_ready": false,
-      "coverage_asof": 1.0,
+      "coverage_asof": 0.4475,
       "univariate_auc": null,
       "discriminative": false
     },
@@ -378,12 +378,12 @@
   "summary": {
     "n_features_total": 29,
     "n_in_train_ready": 11,
-    "n_discriminative": 5,
+    "n_discriminative": 8,
     "reference": {
       "view": "v_model_train_ready",
-      "n": 307,
-      "n_pos": 21,
-      "n_neg": 286
+      "n": 1675,
+      "n_pos": 107,
+      "n_neg": 1568
     },
     "auc_threshold": 0.05
   },
@@ -393,7 +393,7 @@
     "displayable": true,
     "source": "v_model_train_ready（307 行 21 断档样本）+ v_model_dataset_asof_flat（614 行）",
     "method": "单变量 AUC 用 Mann-Whitney 秩公式；覆盖率 = COUNT(col)/总行数；分组为人工按列口径定义，非聚类结果",
-    "generated_at": "2026-11-09 15:25:48",
-    "schema_version": "v1.9"
+    "generated_at": "2026-11-18 21:25:01",
+    "schema_version": "v3.0"
   }
 }

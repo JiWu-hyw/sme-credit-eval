@@ -93,7 +93,7 @@ def b_views_and_version():
               "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
     # v1.9 只增多标签视图、v2.0 只增 A 轴司法/人员并列层、
     # v2.1 只增商标/产品节点并列层、v2.2 只增时序图并列层；v1.8 的三视图与物理口径始终未动。
-    assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2"), (
+    assert ver in ("v1.8", "v1.9", "v2.0", "v2.1", "v2.2", "v3.0"), (
         "库版本 %s，期望 v1.8 或更高" % ver)
     assert os.path.exists(BACKUP), "升级前回滚点缺失：%s" % BACKUP
 
@@ -162,7 +162,7 @@ def g_physical_timeslice_still_zero():
         assert n == 0, "%s 物理 time_slice 被改写：%d 行" % (t, n)
     # 年度切片只在视图里有多年份
     n_y = one("SELECT COUNT(DISTINCT time_slice) FROM v_graph_slice_annual")
-    assert n_y == 29, "视图年度切片年份数 %d（应为 29）" % n_y
+    assert n_y == 32, "视图年度切片年份数 %d（应为 32，v3.0）" % n_y
 
 
 def h_ddl_consistency_and_edge_view():

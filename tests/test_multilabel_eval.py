@@ -70,29 +70,29 @@ def main():
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC, rowid DESC LIMIT 1")
         # v2.0 A 轴 / v2.1 产品节点 / v2.2 时序图并列层均不改 6 个锚点 / 五档 / 标签矩阵。
-        assert ver in ("v1.9", "v2.0", "v2.1", "v2.2"), (
+        assert ver in ("v1.9", "v2.0", "v2.1", "v2.2", "v3.0"), (
             "库版本 %s，期望 v1.9 或更高" % ver)
 
     def b_base_untouched():
         d = dict(c.execute("SELECT label_value, COUNT(*) FROM ads_label GROUP BY 1"))
-        assert d == {0: 286, 1: 21}, "ads_label 被原地 UPDATE：%r" % d
+        assert d == {0: 1568, 1: 107}, "ads_label 口径漂移：%r（v3.0 全量）" % d
         d2 = dict(c.execute("SELECT label, COUNT(*) FROM v_model_train_ready GROUP BY 1"))
-        assert d2 == {0: 286, 1: 21}, "旧训练入口被改动：%r" % d2
+        assert d2 == {0: 1568, 1: 107}, "训练入口口径漂移：%r（v3.0 全量）" % d2
         assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         assert not c.execute("PRAGMA foreign_key_check").fetchall()
 
     def c_direction_mapping():
         n = one("SELECT COUNT(*) FROM v_label_direction")
-        assert n == 307, "方向对照行数 %d，期望 307" % n
+        assert n == 1675, "方向对照行数 %d，期望 1675（v3.0 全量）" % n
         bad = one("SELECT COUNT(*) FROM v_label_direction "
                   "WHERE credit_label <> 1 - risk_label")
         assert bad == 0, "方向映射不自洽：%d 行" % bad
         d = dict(c.execute("SELECT credit_label, COUNT(*) "
                            "FROM v_label_direction GROUP BY 1"))
-        assert d == {1: 286, 0: 21}, "信用方向分布 %r，期望 286 正例 / 21 负例" % d
+        assert d == {1: 1568, 0: 107}, "信用方向分布 %r（v3.0）" % d
         cls = dict(c.execute("SELECT credit_class, COUNT(*) "
                              "FROM v_label_direction GROUP BY 1"))
-        assert cls == {"positive": 286, "negative": 21}, "类名标注错：%r" % cls
+        assert cls == {"positive": 1568, "negative": 107}, "类名标注错：%r（v3.0）" % cls
         row = c.execute("SELECT positive_definition, negative_definition "
                         "FROM v_label_direction LIMIT 1").fetchone()
         assert "好企业" in row[0] and "坏企业" in row[1], "正负例定义文案缺失"
@@ -103,7 +103,7 @@ def main():
             "训练入口列结构不符：%r" % cols
         d = dict(c.execute("SELECT label, COUNT(*) "
                            "FROM v_model_train_ready_credit GROUP BY 1"))
-        assert d == {1: 286, 0: 21}, "训练入口方向未翻转：%r" % d
+        assert d == {1: 1568, 0: 107}, "训练入口方向未翻转：%r（v3.0 全量）" % d
         bad = one("SELECT COUNT(*) FROM v_model_train_ready a "
                   "JOIN v_model_train_ready_credit b USING (enterprise_id) "
                   "WHERE a.label + b.label <> 1")
@@ -119,7 +119,7 @@ def main():
     def e_mechanism_credit():
         p, n = c.execute("SELECT SUM(n_positive), SUM(n_negative) "
                          "FROM v_label_mechanism_credit").fetchone()
-        assert (p, n) == (286, 21), "机制台账合计 %r" % ((p, n),)
+        assert (p, n) == (1568, 107), "机制台账合计 %r（v3.0）" % ((p, n),)
         # 与旧台账逐组互补
         bad = one(
             "SELECT COUNT(*) FROM v_label_mechanism o "
@@ -129,7 +129,7 @@ def main():
         assert bad == 0, "新旧台账不互补：%d 组" % bad
 
     def f_matrix_shape():
-        assert one("SELECT COUNT(*) FROM v_enterprise_label_matrix") == 500
+        assert one("SELECT COUNT(*) FROM v_enterprise_label_matrix") == 3000
         for col in BINARY:
             bad = one('SELECT COUNT(*) FROM v_enterprise_label_matrix '
                       'WHERE "%s" IS NOT NULL AND "%s" NOT IN (0,1)' % (col, col))
@@ -140,8 +140,8 @@ def main():
                      "WHERE y_survival IS NULL")
         n_hard = one("SELECT COUNT(*) FROM v_enterprise_label_matrix "
                      "WHERE y_hard_outcome IS NULL")
-        assert (n_surv, n_hard) == (193, 37), \
-            "NULL 语义被破坏：未打标 %d / 硬结果缺失 %d" % (n_surv, n_hard)
+        assert (n_surv, n_hard) == (1325, 37), \
+            "NULL 语义被破坏：未打标 %d / 硬结果缺失 %d（v3.0 全量）" % (n_surv, n_hard)
         bad = one("SELECT COUNT(*) FROM v_enterprise_label_matrix "
                   "WHERE n_good + n_bad <> n_labels_observed "
                   "   OR n_labels_observed NOT BETWEEN 4 AND 6 "
@@ -157,22 +157,22 @@ def main():
             "SELECT 'ladder', COUNT(*) FROM v_enterprise_label_matrix WHERE y_qual_ladder_good=1 "
             "UNION ALL SELECT 'credit', COUNT(*) FROM v_enterprise_label_matrix WHERE y_qcc_credit_good=1 "
             "UNION ALL SELECT 'tech', COUNT(*) FROM v_enterprise_label_matrix WHERE y_qcc_tech_good=1"))
-        assert d == {"ladder": 45, "credit": 382, "tech": 157}, \
-            "阈值口径与实测分布不符：%r" % d
+        assert d == {"ladder": 150, "credit": 2068, "tech": 708}, \
+            "阈值口径与实测分布不符：%r（v3.0 全量 3000）" % d
         # 阈值写死在 DDL 里，可审计
         sql = read(MIG)
         for kw in ("y_qual_ladder >= 3", "y_qcc_credit >= 11", "y_qcc_tech >= 4"):
             assert kw in sql, "DDL 缺阈值 %s" % kw
 
     def i_grades():
-        assert one("SELECT COUNT(*) FROM v_enterprise_multilabel_grade") == 500
+        assert one("SELECT COUNT(*) FROM v_enterprise_multilabel_grade") == 3000
         d = dict(c.execute("SELECT grade_multilabel, COUNT(*) "
                            "FROM v_enterprise_multilabel_grade GROUP BY 1"))
-        assert d == {"A 引领": 81, "B 优质": 176, "C 稳健": 157,
-                     "D 观察": 83, "E 预警": 3}, "五档家数不符：%r" % d
+        assert d == {"A 引领": 368, "B 优质": 1021, "C 稳健": 1403,
+                     "D 观察": 154, "E 预警": 54}, "五档家数不符：%r（v3.0）" % d
         same = one("SELECT SUM(is_consistent_with_l0) "
                    "FROM v_enterprise_multilabel_grade")
-        assert same == 294, "与 L0 同档家数 %d，期望 294" % same
+        assert same == 1884, "与 L0 同档家数 %d，期望 1884（v3.0）" % same
         assert one("SELECT COUNT(*) FROM v_enterprise_multilabel_grade "
                    "WHERE grade_l0 IS NULL") == 0, "L0 对照缺失"
 
@@ -190,7 +190,7 @@ def main():
         # 覆盖率行：未打标企业不得计入正例分母
         row = c.execute("SELECT n_observed, n_positive FROM v_multilabel_eval_summary "
                         "WHERE metric='标签锚点覆盖率'").fetchone()
-        assert tuple(row) == (500, 307), "锚点覆盖率口径错：%r" % (tuple(row),)
+        assert tuple(row) == (3000, 1675), "锚点覆盖率口径错：%r（v3.0）" % (tuple(row),)
         sql = read(MIG)
         assert "循环定义" in sql, "DDL 未写明循环定义边界"
 

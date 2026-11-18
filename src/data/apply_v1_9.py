@@ -50,13 +50,18 @@ VIEWS = ("v_label_direction", "v_model_train_ready_credit",
 
 # 实测基线（迁移前同一组 SQL 独立跑出的结果，用于对账）
 EXPECT = {
-    "n_enterprise": 500,
-    "n_labeled": 307,
-    "credit_positive": 286,     # 好企业 / 正例
-    "credit_negative": 21,      # 坏企业 / 负例
-    "risk_positive": 21,        # 旧风险方向下被误称「正例」的断档家数
+    # v3.0 全量口径：视图已放开到 3000 家；ads_label/方向视图走全量 1675，
+    # 锚定训练视图 v_model_train_ready 为 305（断档 15）。
+    "n_enterprise": 3000,
+    "n_labeled": 1675,
+    "credit_positive": 1568,    # 好企业 / 正例（全量）
+    "credit_negative": 107,     # 坏企业 / 负例（全量）
+    "risk_positive": 107,
     "n_labels_max": 6,
-    "grade_sum": 500,
+    "grade_sum": 3000,
+    "anchor_train": 1675,       # v3.0 全量训练视图行数
+    "anchor_positive": 1568,    # 全量正例（好企业）
+    "anchor_negative": 107,     # 全量断档（坏企业）
 }
 
 
@@ -83,16 +88,16 @@ def check(con: sqlite3.Connection) -> list[str]:
     dist = dict(con.execute(
         "SELECT label_value, COUNT(*) FROM ads_label GROUP BY 1").fetchall())
     if dist != {0: EXPECT["credit_positive"], 1: EXPECT["credit_negative"]}:
-        bad.append("ads_label 被改动：%r，期望 {0:286, 1:21}" % dist)
+        bad.append("ads_label 口径漂移：%r，期望 {0:1568, 1:107}" % dist)
     old = dict(con.execute(
         "SELECT label, COUNT(*) FROM v_model_train_ready GROUP BY 1").fetchall())
-    if old != {0: 286, 1: 21}:
-        bad.append("v_model_train_ready 被改动：%r" % old)
+    if old != {0: EXPECT["anchor_positive"], 1: EXPECT["anchor_negative"]}:
+        bad.append("v_model_train_ready 口径漂移：%r" % old)
 
     # ② 方向映射：credit_label = 1 - risk_label，且正例数对
     n_dir = con.execute("SELECT COUNT(*) FROM v_label_direction").fetchone()[0]
     if n_dir != EXPECT["n_labeled"]:
-        bad.append("v_label_direction 行数 %d，期望 307" % n_dir)
+        bad.append("v_label_direction 行数 %d，期望 %d" % (n_dir, EXPECT["n_labeled"]))
     mismatch = con.execute(
         "SELECT COUNT(*) FROM v_label_direction WHERE credit_label <> 1 - risk_label"
     ).fetchone()[0]
@@ -101,10 +106,10 @@ def check(con: sqlite3.Connection) -> list[str]:
     d = dict(con.execute(
         "SELECT credit_label, COUNT(*) FROM v_label_direction GROUP BY 1").fetchall())
     if d != {1: EXPECT["credit_positive"], 0: EXPECT["credit_negative"]}:
-        bad.append("信用方向分布不符：%r，期望 {1:286 正例, 0:21 负例}" % d)
+        bad.append("信用方向分布不符：%r，期望 {1:1568, 0:107}" % d)
     cls = dict(con.execute(
         "SELECT credit_class, COUNT(*) FROM v_label_direction GROUP BY 1").fetchall())
-    if cls != {"positive": 286, "negative": 21}:
+    if cls != {"positive": EXPECT["credit_positive"], "negative": EXPECT["credit_negative"]}:
         bad.append("credit_class 标注不符：%r" % cls)
 
     # ③ 正确方向训练入口：17 列原样 + 2 列方向说明，label 与原视图互补
@@ -113,8 +118,9 @@ def check(con: sqlite3.Connection) -> list[str]:
         bad.append("v_model_train_ready_credit 列结构不符：%r" % cols)
     d2 = dict(con.execute(
         "SELECT label, COUNT(*) FROM v_model_train_ready_credit GROUP BY 1").fetchall())
-    if d2 != {1: EXPECT["credit_positive"], 0: EXPECT["credit_negative"]}:
-        bad.append("训练入口方向未翻转：%r" % d2)
+    if d2 != {1: EXPECT["anchor_positive"], 0: EXPECT["anchor_negative"]}:
+        bad.append("训练入口方向未翻转：%r（锚定 %d/%d）" % (
+            d2, EXPECT["anchor_positive"], EXPECT["anchor_negative"]))
     pair = con.execute(
         "SELECT COUNT(*) FROM v_model_train_ready a "
         "JOIN v_model_train_ready_credit b USING (enterprise_id) "
@@ -126,13 +132,13 @@ def check(con: sqlite3.Connection) -> list[str]:
     mech = con.execute(
         "SELECT SUM(n_positive), SUM(n_negative) FROM v_label_mechanism_credit"
     ).fetchone()
-    if tuple(mech) != (286, 21):
+    if tuple(mech) != (EXPECT["credit_positive"], EXPECT["credit_negative"]):
         bad.append("v_label_mechanism_credit 合计不符：%r" % (tuple(mech),))
 
     # ⑤ 多标签矩阵：500 行、二值锚点取值合法、NULL 语义、票数自洽
     n = con.execute("SELECT COUNT(*) FROM v_enterprise_label_matrix").fetchone()[0]
     if n != EXPECT["n_enterprise"]:
-        bad.append("多标签矩阵行数 %d，期望 500" % n)
+        bad.append("多标签矩阵行数 %d，期望 %d" % (n, EXPECT["n_enterprise"]))
     for col in ("y_hard_outcome", "y_risk_free", "y_survival",
                 "y_qual_ladder_good", "y_qcc_credit_good", "y_qcc_tech_good"):
         bad_vals = con.execute(
@@ -143,8 +149,8 @@ def check(con: sqlite3.Connection) -> list[str]:
     n_null_surv = con.execute(
         "SELECT COUNT(*) FROM v_enterprise_label_matrix WHERE y_survival IS NULL"
     ).fetchone()[0]
-    if n_null_surv != 193:
-        bad.append("未打标企业数 %d，期望 193（不得当坏企业）" % n_null_surv)
+    if n_null_surv != EXPECT["n_enterprise"] - EXPECT["n_labeled"]:
+        bad.append("未打标企业数 %d，期望 %d（不得当坏企业）" % (n_null_surv, EXPECT["n_enterprise"] - EXPECT["n_labeled"]))
     n_null_hard = con.execute(
         "SELECT COUNT(*) FROM v_enterprise_label_matrix WHERE y_hard_outcome IS NULL"
     ).fetchone()[0]
@@ -162,7 +168,7 @@ def check(con: sqlite3.Connection) -> list[str]:
     n_g = con.execute(
         "SELECT COUNT(*) FROM v_enterprise_multilabel_grade").fetchone()[0]
     if n_g != EXPECT["grade_sum"]:
-        bad.append("多标签分档行数 %d，期望 500" % n_g)
+        bad.append("多标签分档行数 %d，期望 %d" % (n_g, EXPECT["grade_sum"]))
     grades = set(r[0] for r in con.execute(
         "SELECT DISTINCT grade_multilabel FROM v_enterprise_multilabel_grade"))
     if not grades <= {"A 引领", "B 优质", "C 稳健", "D 观察", "E 预警"}:

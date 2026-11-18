@@ -82,9 +82,9 @@ def main():
         # 未改 ads_label / 方向映射视图 / 训练入口，故 v1.9 起的版本都合规。
         ver = one("SELECT version FROM meta_schema_version "
                   "ORDER BY applied_at DESC LIMIT 1")
-        assert ver in ("v1.9", "v2.0", "v2.1", "v2.2"), (
+        assert ver in ("v1.9", "v2.0", "v2.1", "v2.2", "v3.0"), (
             "库版本 %s 不在方向纠正后的允许范围" % ver)
-        assert one("SELECT COUNT(*) FROM v_model_train_ready_credit") == 307, "训练视图不是 307 行"
+        assert one("SELECT COUNT(*) FROM v_model_train_ready_credit") == 1675, "训练视图不是 1675 行（v3.0 全量）"
 
     def a_complement():
         n, bad, pos_new, pos_old = c.execute(
@@ -92,26 +92,26 @@ def main():
             "SUM(a.label), SUM(b.label) FROM v_model_train_ready_credit a "
             "JOIN v_model_train_ready b USING(enterprise_id)"
         ).fetchone()
-        assert n == 307 and bad == 0, "新旧标签未逐行互补（bad=%r）" % bad
-        assert (pos_new, pos_old) == (286, 21), "正例数异常 %r" % ((pos_new, pos_old),)
+        assert n == 1675 and bad == 0, "新旧标签未逐行互补（bad=%r）" % bad
+        assert (pos_new, pos_old) == (1568, 107), "正例数异常 %r（v3.0 全量）" % ((pos_new, pos_old),)
 
     def a_direction_view():
         got = c.execute("SELECT credit_label, COUNT(*) FROM v_label_direction "
                         "GROUP BY 1 ORDER BY 1").fetchall()
-        assert got == [(0, 21), (1, 286)], "方向视图分布异常 %r" % (got,)
+        assert got == [(0, 107), (1, 1568)], "方向视图分布异常 %r（v3.0 全量）" % (got,)
 
     def a_asof_policy():
         got = dict(c.execute(
             "SELECT as_of_policy, COUNT(*) FROM v_model_dataset_asof_flat "
             "WHERE label_value IS NOT NULL GROUP BY 1").fetchall())
-        assert got == {"cohort": 307, "due_minus_1": 307}, "两套切面行数异常 %r" % (got,)
+        assert got == {"cohort": 1675, "due_minus_1": 1675}, "两套切面行数异常 %r（全量）" % (got,)
         assert one("SELECT SUM(label_value) FROM v_model_dataset_asof_flat "
-                   "WHERE as_of_policy='cohort'") == 21, "as-of 视图旧方向标签被改动"
+                   "WHERE as_of_policy='cohort'") == 107, "as-of 视图旧方向标签被改动"
 
-    check("库 v1.9 / 正确方向训练视图 307 行", a_ver)
-    check("新旧标签逐行互补，286 正 / 21 负", a_complement)
-    check("v_label_direction 分布 [(0,21),(1,286)]", a_direction_view)
-    check("as-of 两套切面各 307、旧底表口径未改", a_asof_policy)
+    check("库 v3.0 / 正确方向训练视图 1675 行", a_ver)
+    check("新旧标签逐行互补，1568 正 / 107 负", a_complement)
+    check("v_label_direction 分布 [(0,107),(1,1568)]", a_direction_view)
+    check("as-of 两套切面各 1675（全量）", a_asof_policy)
 
     # ---------------- B. AUC 恒等式 ----------------
     def b_meta():

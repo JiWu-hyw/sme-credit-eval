@@ -28,7 +28,6 @@ from pathlib import Path
 
 from src.data.build_qual_dataset import (
     DATASET_VER,
-    DEFINITION_VER,
     LABEL_NAME,
     LABEL_NOTE,
     LABEL_TASK,
@@ -36,6 +35,8 @@ from src.data.build_qual_dataset import (
     SPLIT_PROTOCOL,
     VALID_YEARS,
 )
+# v3.0：标签已由 apply_v3_0_labels 用五年名单重算，定义版本以新口径为准
+from src.data.apply_v3_0_labels import DEFINITION_VER
 
 DB = Path("data/db/zjtech_credit.db")
 OUT = Path("outputs/label_spec.md")

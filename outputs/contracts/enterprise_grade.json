@@ -4,78 +4,82 @@
     "displayable": true,
     "source": "v_enterprise_grade_l0（库内视图）",
     "method": "按 grade / hit_rule 直接 GROUP BY 计数；无插值、无补零、无外部评分",
-    "generated_at": "2026-11-09 15:25:46",
-    "schema_version": "v1.9"
+    "generated_at": "2026-11-18 21:24:49",
+    "schema_version": "v3.0"
   },
   "grade_ver": "l0_v1.0",
-  "n_enterprise": 500,
+  "n_enterprise": 3000,
   "grade_dist": [
     {
       "grade": "A 引领",
       "grade_code": "A",
-      "n": 44,
-      "share": 0.088
+      "n": 167,
+      "share": 0.0557
     },
     {
       "grade": "B 优质",
       "grade_code": "B",
-      "n": 95,
-      "share": 0.19
+      "n": 470,
+      "share": 0.1567
     },
     {
       "grade": "C 稳健",
       "grade_code": "C",
-      "n": 275,
-      "share": 0.55
+      "n": 2155,
+      "share": 0.7183
     },
     {
       "grade": "D 观察",
       "grade_code": "D",
-      "n": 83,
-      "share": 0.166
+      "n": 154,
+      "share": 0.0513
     },
     {
       "grade": "E 预警",
       "grade_code": "E",
-      "n": 3,
-      "share": 0.006
+      "n": 54,
+      "share": 0.018
     }
   ],
   "hit_rule_dist": [
     {
       "hit_rule": "C:兜底",
-      "n": 275
+      "n": 2155
     },
     {
       "hit_rule": "B:技术优秀且信用等级>=11",
-      "n": 95
-    },
-    {
-      "hit_rule": "D:风险负面",
-      "n": 64
+      "n": 470
     },
     {
       "hit_rule": "A:小巨人",
-      "n": 42
+      "n": 156
     },
     {
       "hit_rule": "D:资质断档信号",
-      "n": 16
+      "n": 87
     },
     {
-      "hit_rule": "D:风险负面+资质断档",
-      "n": 3
-    },
-    {
-      "hit_rule": "A:技术等级卓越",
-      "n": 2
-    },
-    {
-      "hit_rule": "E:严重失信",
-      "n": 2
+      "hit_rule": "D:风险负面",
+      "n": 65
     },
     {
       "hit_rule": "E:经营异常",
+      "n": 42
+    },
+    {
+      "hit_rule": "A:技术等级卓越",
+      "n": 11
+    },
+    {
+      "hit_rule": "E:严重失信",
+      "n": 11
+    },
+    {
+      "hit_rule": "D:风险负面+资质断档",
+      "n": 2
+    },
+    {
+      "hit_rule": "E:非开业",
       "n": 1
     }
   ],

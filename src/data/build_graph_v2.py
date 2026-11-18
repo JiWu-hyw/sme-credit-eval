@@ -283,6 +283,10 @@ def rebuild(conn: sqlite3.Connection, verbose: bool = True) -> dict:
         "CREATE INDEX IF NOT EXISTS idx_gedge_src ON ads_graph_edge(src_type, src_id, time_slice)",
         "CREATE INDEX IF NOT EXISTS idx_gedge_dst ON ads_graph_edge(dst_type, dst_id, time_slice)",
         "CREATE INDEX IF NOT EXISTS idx_gedge_typ ON ads_graph_edge(edge_type, time_slice)",
+        # v1.9.1 切片视图 v_graph_slice_annual(_edge) 用 INDEXED BY 强依赖这两个复合索引；
+        # v3.0 重图必须一并重建，否则视图解析报 "no such index"。
+        "CREATE INDEX IF NOT EXISTS idx_gedge_dst_typ ON ads_graph_edge(dst_id, edge_type)",
+        "CREATE INDEX IF NOT EXISTS idx_gedge_src_typ ON ads_graph_edge(src_id, edge_type)",
     ):
         cur.execute(sql)
     for _, sql in dep_views:

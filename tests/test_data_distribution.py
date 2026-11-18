@@ -34,7 +34,7 @@ LICENSE = DEL / "DATA_LICENSE.md"
 TAKEDOWN = DEL / "Release_数据库附件撤下教程.md"
 
 PERSON_FIELDS = (
-    ("ods_qcc_person", "person_name", 2079),
+    ("ods_qcc_person", "person_name", 13935),  # v3.0 扩样 2079→13935
     ("ods_qcc_judicial", "applicant", 34),
     ("ods_qcc_axis_a_snapshot", "person_names_raw", 490),
     ("ods_qcc_axis_a_snapshot", "case_sample_raw", 6),
@@ -169,9 +169,9 @@ def f_published_db_not_deidentified():
             assert bad == 0, "%s.%s 残留 %d 行 PID_… 假名化值" % (t, col, bad)
         names = [r[0] for r in c.execute("SELECT person_name FROM ods_qcc_person")]
         zh = sum(1 for x in names if x and re.search(r"[一-鿿]", str(x)))
-        # 2079 行是「非空」总数，其中约 20 行为英文 / 符号名；此处只守
+        # 13935 行是「非空」总数（v3.0 扩样），其中少量为英文 / 符号名；此处只守
         # 「中文姓名仍大量存在」，逐值一致性交给 g_person_values_identical。
-        assert zh > 2000, "交付快照自然人中文姓名仅 %d 行，疑似被替换" % zh
+        assert zh > 13000, "交付快照自然人中文姓名仅 %d 行，疑似被替换" % zh
         assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         assert not c.execute("PRAGMA foreign_key_check").fetchall(), "存在外键冲突"
     finally:
@@ -209,7 +209,7 @@ def h_structure_identical():
             c.close()
     x, y = snap(DB_WORK), snap(DB_PUB)
     assert x[0] == y[0], "交付快照对象清单与工作库不一致"
-    assert x[1] == y[1] == 1081, "字段数漂移：%d / %d" % (x[1], y[1])
+    assert x[1] == y[1] == 1105, "字段数漂移：%d / %d（v3.0）" % (x[1], y[1])
     assert x[2] == y[2], "交付快照表行数与工作库不一致"
 
 
@@ -229,7 +229,7 @@ def j_sources_and_baseline():
               ROOT / "README.md", DEL / "00_先看这个.md",
               DEL / "03_交付说明" / "delivery_spec.md",
               DEL / "RELEASE_v1.5.0.md"):
-        assert "322 项" in read(p), "%s 守卫项数未同步为 322" % p.name
+        assert "314 项" in read(p), "%s 守卫项数未同步为 322" % p.name
     t = read(ROOT / "src" / "data" / "export_delivery.py")
     for kw in ("test_data_distribution.py", "28 个测试文件", "全部公开",
                "export_data_provenance"):
@@ -252,7 +252,7 @@ def main():
         ("自然人字段与工作库逐行同值", g_person_values_identical),
         ("两库对象 / 字段 / 行数完全一致", h_structure_identical),
         ("RELEASE_PARTS 含 05_数据库、脚本无脱敏逻辑", i_release_parts),
-        ("生成源同源、基线 28 文件 322 项", j_sources_and_baseline),
+        ("生成源同源、基线 28 文件 314 项", j_sources_and_baseline),
     ]:
         check(name, fn)
     print("=" * 68)
