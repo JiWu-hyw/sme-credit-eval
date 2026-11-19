@@ -62,15 +62,36 @@ def main():
     n_neg = n_label - n_pos
     n_firm = cur.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
     vers = [r[0] for r in cur.execute("SELECT DISTINCT definition_ver FROM ads_label")]
-    # 排除分解
-    first = {}
-    for eid, y in cur.execute(
-            "SELECT enterprise_id, year FROM fact_qualification WHERE qual_type='high_tech'"):
-        y = int(y)
-        first[eid] = min(y, first.get(eid, y))
-    n_no_qual = n_firm - len(first)
-    n_due_after = sum(1 for v in first.values() if v + VALID_YEARS > OBS_END)
+    # 排除分解：打标家数取 ads_label，excluded 取 ads_model_dataset（两者必须自洽）
+    n_excl = cur.execute(
+        "SELECT COUNT(*) FROM ads_model_dataset WHERE split='excluded'").fetchone()[0]
+    n_lab_ds = cur.execute(
+        "SELECT COUNT(*) FROM ads_model_dataset WHERE split IN ('train','val','test')"
+    ).fetchone()[0]
+    n_ds = cur.execute("SELECT COUNT(*) FROM ads_model_dataset").fetchone()[0]
     con.close()
+    assert n_lab_ds == n_label and n_lab_ds + n_excl == n_ds, (
+        "库内自洽性破裂：ads_label %d / 入模 %d / excluded %d / 总 %d"
+        % (n_label, n_lab_ds, n_excl, n_ds))
+
+    def _sec7_counts():
+        """解析第 7 节表格的企业数列，返回 (各类家数列表, 合计)。"""
+        sec = text.split("## 7.")[1].split("## 8.")[0]
+        rows = [l for l in sec.splitlines() if l.startswith("|")]
+        body, total = [], None
+        for r in rows[2:]:
+            cells = [x.strip() for x in r.strip("|").split("|")]
+            if len(cells) < 2:
+                continue
+            try:
+                n = int(cells[1].replace("**", "").strip())
+            except ValueError:
+                continue
+            if cells[0].startswith("合计"):
+                total = n
+            else:
+                body.append(n)
+        return body, total
 
     def a_not_stale():
         assert os.path.getsize(MD) > 3000, "说明书异常过小"
@@ -87,11 +108,14 @@ def main():
             n_label, n_pos, n_neg, 100.0 * n_pos / n_label)
         assert want in text, "核心分布行与库内实测不一致，期望：\n    %s" % want
         assert "excluded" in text, "说明书未提 excluded"
-        assert "| 首次认定 ≥ %d，到期年 > %d（窗口未闭合） | %d |" % (
-            OBS_END - VALID_YEARS + 1, OBS_END, n_due_after) in text, (
-            "排除分解（窗口未闭合 %d 家）与库内实测不一致" % n_due_after)
-        assert "| 完全没有 high_tech 记录 | %d |" % n_no_qual in text, (
-            "无 high_tech 记录家数 %d 与文档不一致" % n_no_qual)
+        body, total = _sec7_counts()
+        assert body and total is not None, "第 7 节排除分解表解析失败"
+        assert sum(body) == n_firm == total, (
+            "第 7 节分解 %s 合计 %d，与企业总数 %d / 表内合计 %s 不一致"
+            % (body, sum(body), n_firm, total))
+        assert n_label in body, "第 7 节缺打标家数 %d（库内 ads_label）" % n_label
+        assert sum(body) - n_label == n_excl, (
+            "第 7 节排除家数 %d ≠ 库内 excluded %d" % (sum(body) - n_label, n_excl))
 
     def d_tables_wellformed():
         bad = [l for l in text.splitlines() if l.startswith("|") and not l.rstrip().endswith("|")]

@@ -44,30 +44,30 @@ LAYERS = [
 
 # 关键表的用途一句话；没写到的按分层说明兜底
 NOTES = {
-    "dim_enterprise": "500 家浙江专精特新企业主档，`enterprise_id` 为 ENT+12hex",
-    "fact_patent": "专利明细；**按行数是 32,969，按申请号去重是 30,103 件**",
+    "dim_enterprise": "3,000 家浙江高企主档（v3.0 全量：`is_sample`='1' 为原 500 家锚定、'0' 为新增 2,500 家），`enterprise_id` 为 ENT+12hex",
+    "fact_patent": "专利明细；**按行数 145,413，按申请号去重 142,547 件**（三源并集）",
     "fact_patent_citation": "**空表**：引文库源数据缺失，已登记为 source_missing",
     "fact_qualification": "高企资格认定明细，标签就来自这里",
-    "fact_funding_event": "融资事件 506 条 / 182 家（2019–2026）；`source_id` 506/506 指向 `zj_500family`（A7 回填）",
-    "ads_label": "307 家打标结果，21 断档样本（v1.9 起正确方向：286 正例·好企业 / 21 负例·断档；本表数值未原地改写）",
-    "ods_qcc_judicial": "**v2.0 新增** 司法违约明细 34 条 / 6 户；`amount_kind` 区分涉案金额 / 执行标的 / 未履行金额，**三类禁止相加**",
-    "ods_qcc_person": "**v2.0 新增** 主要人员清洗后 2079 人 / 490 户；原始 2569 行含 490 行表头脏行已剔除",
+    "fact_funding_event": "融资事件 1,982 条 / 574 家（2019–2026）；`source_id` 双血缘：`zj_500family` 506 + `qcc_funding_3000` 1,476",
+    "ads_label": "1,675 家打标（断档 107 / 续存 1,568），`definition_ver`=`qual_survival_proxy_v3.0`；注意本表 1=断档，信用方向视图在 `v_model_train_ready_credit`",
+    "ods_qcc_judicial": "**v2.0 新增** 司法违约明细 289 条 / 72 户；`amount_kind` 区分涉案金额 / 执行标的 / 未履行金额，**三类禁止相加**",
+    "ods_qcc_person": "**v2.0 新增** 主要人员清洗后 13,935 人 / 2,953 户；原始数据含表头脏行已剔除",
     "ods_qcc_axis_a_snapshot": "**v2.0 新增** 用户主表本轮 17 个新增列的原始快照 500 行；`高管_人数` 为未清洗口径，仅供对照",
-    "ods_qcc_trademark": "**v2.1 新增** 商标贴源明细 8004 条 / 444 家 / 尼斯 1–45 类；`is_registered` 合计 5257 与主表守恒，1 条申请日期与 2245 条公告日期 `-` 已清洗为 NULL",
+    "ods_qcc_trademark": "**v2.1 新增** 商标贴源明细 57,224 条 / 2,618 家 / 尼斯 1–45 类；日期脏值 `-` 已清洗为 NULL",
     "dim_product_nice_class": "**v2.1 新增** 尼斯分类维表 45 行＝35 产品类 + 10 服务类；⚠️ 服务类不作产品节点，粒度是类别不是 SKU",
-    "bridge_enterprise_product": "**v2.1 新增** 企业—产品类桥接 1418 行 / 433 户 / 6102 条；只含 35 个产品类，产品节点**未并入 ads_graph_node 主图**",
-    "ads_model_dataset": "500 行，含 193 行 `split='excluded'`（窗口未闭合，不是续存样本）",
+    "bridge_enterprise_product": "**v2.1 新增** 企业—产品类桥接 1,418 行 / 433 户；只含 35 个产品类（服务类不作产品节点），产品节点**未并入 ads_graph_node 主图**",
+    "ads_model_dataset": "3,000 行；1,675 入模（train 1,165 / val 251 / test 259）+ 1,325 `split='excluded'`（窗口未闭合或名单无命中，不是续存样本）",
     "ads_feature_asof": "长表形态的 as-of 特征（feature_name/feature_value）",
     "ads_graph_node": "异质图节点（企业/专利/IPC/发明人/投资机构 5 类）",
     "ads_graph_edge": "异质图边（files_patent/belongs_ipc/invented_by/funded_by/tech_similar）",
     "ads_survival_period": "生存分析期表 1,479 行",
-    "ext_msme_sample": "外部对照组 1,707 行，**不属于本项目 500 家样本**",
+    "ext_msme_sample": "外部对照组 1,707 行，**不属于本项目 3,000 家样本**",
     "log_match": "企业名称匹配日志，含未匹配上的人工复核线索",
 }
 VIEW_NOTES = {
     "v_model_train_ready": "**训练唯一入口**：307 行 × 17 列，已切 split、已剔常量特征",
     "v_model_dataset_asof_flat": "614 行 as-of 面板，含 excluded；训练前须过滤 cohort 切面",
-    "v_model_dataset_flat": "500 行企业级宽表（后视口径，勿直接训练）",
+    "v_model_dataset_flat": "企业级宽表（后视口径，勿直接训练）",
     "v_patent_canonical": "专利去重视图，30,346 行（去重后仍略多于 30,103 件，差异见报告）",
     "v_enterprise_profile": "企业画像宽视图，接口 `enterprise/{userid}` 在用",
     "v_data_coverage": "13 行覆盖率总览",
@@ -103,7 +103,7 @@ VIEW_NOTES = {
         "合计 286 / 21，与旧 v_label_mechanism 互补"
     ),
     "v_enterprise_label_matrix": (
-        "**v1.9 / P1 多标签测评** 500 行 × 6 个二值锚点 + 3 个有序锚点；"
+        "**v1.9 / P1 多标签测评** 企业 × 6 个二值锚点 + 3 个有序锚点；"
         "一律 1=好/正例、0=坏/负例、NULL=不可判定；B/C 轴同源不独立"
     ),
     "v_enterprise_multilabel_grade": (
@@ -115,15 +115,15 @@ VIEW_NOTES = {
         "资质存续 / 硬结果两列是循环定义，只用于暴露口径"
     ),
     "v_axis_a_judicial": (
-        "**v2.0 新增** 企业层司法聚合 500 行，无事件补 0；三个金额列按口径分列，"
+        "**v2.0 新增** 企业层司法聚合，无事件补 0；三个金额列按口径分列，"
         "`amount_note` 常量警示禁止混加"
     ),
     "v_enterprise_person_summary": (
-        "**v2.0 新增** 人员汇总 500 行，含 `n_person_raw` / `n_header_rows_dropped` "
+        "**v2.0 新增** 人员汇总，含 `n_person_raw` / `n_header_rows_dropped` "
         "脏行对照；10 户无主要人员记录"
     ),
     "v_axis_a_compound_event": (
-        "**v2.0 新增** 复合负面事件 500 行：司法违约 ∪ v1 硬结果；"
+        "**v2.0 新增** 复合负面事件：司法违约 ∪ v1 硬结果；"
         "坏 6 / 好 458 / 不可判定 36。**并列候选锚点，不是新标签**，"
         "禁止据此改写 `ads_label` 或五档"
     ),
@@ -136,12 +136,12 @@ VIEW_NOTES = {
         "用户 CSV 的 `covered_firms_stated` 逐类比对；⚠️ 尼斯类别粒度、非 SKU、未并入主图"
     ),
     "v_enterprise_trademark_summary": (
-        "**v2.1 新增** 企业层商标汇总 500 行；`n_brand_exact` 与主表「商标_品牌数」"
+        "**v2.1 新增** 企业层商标汇总；`n_brand_exact` 与主表「商标_品牌数」"
         "有 68 家口径差异，禁止混用"
     ),
     "v_six_entity_coverage": (
         "**v2.1 新增** 立项六类实体覆盖 6 行；现场纠正用户汇总表两处口径："
-        "产品 45→35 节点 / 类别粒度部分闭合（图节点 0）、人员 2569→2079 来源行"
+        "产品 45→35 节点 / 类别粒度部分闭合（图节点 0）、人员原始行→清洗后 13,935 行"
         "（图内人员＝发明人 inventor 15955）"
     ),
     "v_product_grade_cross": (

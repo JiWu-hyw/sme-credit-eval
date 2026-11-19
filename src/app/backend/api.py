@@ -318,7 +318,7 @@ def overview_summary():
         con = db_views.connect(DB_PATH)
         try:
             kpi = db_views.kpi(con)
-            registry = db_views.pipeline(con).get("registry")
+            registry = db_views.registry_summary()
         finally:
             con.close()
     except Exception as e:
@@ -329,7 +329,8 @@ def overview_summary():
         "kpi": kpi,
         "datasets": {
             "B_primary": {
-                "name": "浙江 500 家高企（本项目主数据）",
+                "name": "浙江高企（本项目主数据，v3.0 全量 %s 家）"
+                        % ((kpi or {}).get("n_enterprise") or "—"),
                 "n_enterprise": (kpi or {}).get("n_enterprise"),
                 "n_labeled": (kpi or {}).get("n_labeled"),
                 "n_positive": (kpi or {}).get("n_positive"),

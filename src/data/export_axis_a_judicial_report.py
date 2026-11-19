@@ -96,13 +96,15 @@ def gather() -> dict:
                             "FROM v_enterprise_multilabel_grade GROUP BY 1"))
     integrity = c.execute("PRAGMA integrity_check").fetchone()[0]
     fk = len(c.execute("PRAGMA foreign_key_check").fetchall())
+    # 分母改用库内实际企业数（v3.0 为 3,000），不再写死 500；写死会算出 >100% 的覆盖率
+    n_firm = c.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
     con.close()
-
     rates = [r["adverse_rate"] for r in cross if r["adverse_rate"] is not None]
     monotonic = all(rates[i] <= rates[i + 1] for i in range(len(rates) - 1))
     return {
         "generated_at": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "schema_version": version,
+        "n_firm_total": n_firm,
         "structure": {"tables": n_tab, "views": n_view,
                       "integrity": integrity, "foreign_key_violations": fk},
         "source_files": {
@@ -118,20 +120,21 @@ def gather() -> dict:
             "person_header_rows_dropped": person_dirty,
             "judicial_date_dash_cleaned": sum(
                 1 for r in jud if r["日期"].strip() in ("-", "", "NAN")),
-            "amount_kinds": list(jud_amount.keys()),
+            "amount_kinds": [k for k in jud_amount.keys() if k],
             "amount_kinds_note": "涉案金额 / 执行标的 / 未履行金额三类语义不同，分列保存，禁止无条件相加",
             "alias_mapped_firm": "浙江九州未来信息科技有限公司 → 浙江九州云信息科技有限公司",
-            "snapshot_rows": 500,
+            "snapshot_rows": n_firm,
+            "snapshot_rows_note": "分母取 dim_enterprise 实测（v3.0 = 3,000 家）",
         },
         "judicial": {"rows": jud_rows, "firms": jud_firms,
                      "by_type": jud_by_type,
                      "amount_by_kind_yuan": jud_amount,
-                     "event_rate": round(100.0 * jud_firms / 500, 2),
+                     "event_rate": round(100.0 * jud_firms / n_firm, 2),
                      "firms_detail": jud_firms_rows},
         "person": {"rows_clean": person_clean, "firms": person_firms,
                    "firms_missing": person_missing,
                    "legal_rep_in_list_firms": legal_in_list,
-                   "coverage": round(100.0 * person_firms / 500, 2)},
+                   "coverage": round(100.0 * person_firms / n_firm, 2)},
         "compound_event": {"adverse": compound.get("adverse", 0),
                            "good": compound.get("good", 0),
                            "unknown": compound.get("unknown", 0),
@@ -175,13 +178,15 @@ def build_md(d: dict) -> str:
 
     # 1
     A("## 1. 一句话结论\n")
-    A("用户回传的 4 类企查查数据已全部入库：**司法违约 %d 条 / %d 户（占 500 家 %.2f%%）**，"
-      "**主要人员清洗后 %d 人 / %d 户（覆盖 %.2f%%）**。三类司法事件与既有硬结果合并后，"
+    A("用户回传的 4 类企查查数据已全部入库：**司法违约 %d 条 / %d 户（占全量 %s 家的 %.2f%%）**，"
+      "**主要人员清洗后 %s 人 / %s 户（覆盖 %s 家中的 %.2f%%）**。三类司法事件与既有硬结果合并后，"
       "复合负面事件共 **%d 家**，其中 **%d 家原本不在 E 预警档** —— 这是 issue ② "
       "「叠加独立负面事件」的第一批真实样本。但事件数仍是个位数，"
       "**五档事件率不单调递增，不能宣称评级有效**。\n"
-      % (j["rows"], j["firms"], j["event_rate"], p["rows_clean"], p["firms"],
-         p["coverage"], cp["adverse"], cp["new_e_candidates"]))
+      % (j["rows"], j["firms"], format(d["n_firm_total"], ","), j["event_rate"],
+         format(p["rows_clean"], ","), format(p["firms"], ","),
+         format(d["n_firm_total"], ","), p["coverage"],
+         cp["adverse"], cp["new_e_candidates"]))
 
     # 2
     A("## 2. 数据来源与范围\n")
@@ -213,7 +218,7 @@ def build_md(d: dict) -> str:
          cl["person_rows_clean"], p["firms"]))
     A("| ② | 三类金额语义不同 | 用户主表 `A轴_未履行金额_万元` 把三者相加 | "
       "按 `amount_kind` 分列：%s；`v_axis_a_judicial` 给三个独立金额列 + 常量警示 |"
-      % " / ".join(cl["amount_kinds"]))
+      % " / ".join(str(k) for k in cl["amount_kinds"] if k))
     A("| ③ | 名称与日期脏值 | 1 户企业名是曾用名，1 条日期为 `-` | "
       "别名归一映射 `%s`；日期清洗为 NULL，`company_name` 保留回传原文 |"
       % cl["alias_mapped_firm"])
@@ -235,13 +240,13 @@ def build_md(d: dict) -> str:
     A("| 视图 | `v_axis_a_grade_cross` | 5 | 五档事件率交叉 |")
     A("")
     A("库结构：%d 表 / %d 视图，`integrity=%s`、外键冲突 %d；数据字典字段数 "
-      "**912 → 997**（新对象 %d 列，字段说明覆盖 100%%）。\n"
+      "**997 → 1,105**（v2.0 新增对象 %d 列；v3.0 全量扩样后字典 1,105 列，字段说明覆盖 100%%）。\n"
       % (st["tables"], st["views"], st["integrity"],
          st["foreign_key_violations"], 997 - 912))
     A("**司法事件分布**：%s；金额按口径分列（元）：%s。\n"
       % (" / ".join("%s %d 条" % (k, v) for k, v in j["by_type"].items()),
-         " / ".join("%s %s" % (k, format(v, ",.2f"))
-                    for k, v in j["amount_by_kind_yuan"].items())))
+         " / ".join("%s %s" % (k, format(v, ",.2f") if v is not None else "—")
+                    for k, v in j["amount_by_kind_yuan"].items() if k)))
     A("| 6 户违约企业 | 失信 | 被执行 | 终本 | 合计 | 执行法院数 |")
     A("|---|---|---|---|---|---|")
     for r in j["firms_detail"]:
@@ -300,7 +305,7 @@ def build_md(d: dict) -> str:
     # 7
     A("## 7. 与 issue ① / ② 的关系\n")
     A("- **issue ①（官方撤销公告）**：287 家官方撤销名单是独立行政决定集合，"
-      "但与 500 家样本**交集为 0**，对本样本可用正例仍为 0。")
+      "但与当前 3,000 家样本**交集为 0**，可用正例仍为 0；v3.0 的 107 家断档同样 0 命中。")
     A("- **issue ②（A 轴）**：本轮司法违约是**样本内**第一批独立负面事件（%d 户），"
       "与公示名单差分不同源，可与 287 家合并成「行政撤销 ∪ 司法违约」的完整 A 轴事件池。"
       % j["firms"])

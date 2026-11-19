@@ -40,6 +40,10 @@ from src.data.apply_v3_0_labels import DEFINITION_VER
 
 DB = Path("data/db/zjtech_credit.db")
 OUT = Path("outputs/label_spec.md")
+# 3000 家名单差分台账：逐户记「到期年在不在名单」，是 excluded 原因分解的唯一权威来源
+LABEL_DIFF_CSV = Path("data/audit/标签名单差分_3000家.csv")
+# 官方「取消高企资格」浙江省 / 宁波市名单（7 份公告 287 家），用于 §13 反向核查
+CANCEL_CSV = Path("data/audit/官方_取消高企资格_浙江名单.csv")
 
 
 def _pct(a: int, b: int) -> str:
@@ -90,6 +94,58 @@ def collect(con: sqlite3.Connection) -> dict:
         Counter(min(v) for v in years.values()).items()))
     s["n_due_after_obs"] = sum(1 for v in years.values() if min(v) + VALID_YEARS > OBS_END)
     s["n_due_in_obs"] = len(years) - s["n_due_after_obs"]
+
+    # ---- 排除原因分解：读 3000 家名单差分台账（与 ads_label 同源）----
+    # 只用它做「为什么 excluded」的分解；且必须与库内 excluded 行数完全对齐才采信，
+    # 否则退化为定性描述，避免台账与库不同步时印出对不上的数字。
+    import csv as _csv
+    s["exclude_reason"] = None
+    if LABEL_DIFF_CSV.exists():
+        cnt = Counter()
+        with LABEL_DIFF_CSV.open(encoding="utf-8-sig") as fh:
+            for r in _csv.DictReader(fh):
+                if (r.get("label") or "").strip() != "NA":
+                    continue
+                note = r.get("说明") or ""
+                if "观察窗未闭合" in note:
+                    cnt["window_open"] += 1
+                elif "非高企队列" in note:
+                    cnt["not_in_roster"] += 1
+                else:
+                    cnt["other"] += 1
+        if sum(cnt.values()) == cur.execute(
+                "SELECT COUNT(*) FROM ads_model_dataset WHERE split='excluded'"
+        ).fetchone()[0]:
+            s["exclude_reason"] = cnt
+
+    # ---- 官方撤销名单比对：v3.0 全量重做（2026-11-19），不再沿用 500 家时点结论 ----
+    s["n_cancel"] = 0
+    s["n_alias"] = 0
+    s["cancel_hit_all"] = s["cancel_hit_pos"] = None
+    if CANCEL_CSV.exists():
+        import csv as _csv2
+        import re as _re
+        nrm = lambda x: _re.sub(r"[（）()　\s]", "", str(x or ""))
+        with CANCEL_CSV.open(encoding="utf-8-sig") as fh:
+            canc = {nrm(r.get("企业名称")) for r in _csv2.DictReader(fh)}
+        canc.discard("")
+        s["n_cancel"] = len(canc)
+        nm = dict(cur.execute("SELECT enterprise_id, name_display FROM dim_enterprise"))
+        al: dict[str, list] = {}
+        for eid, a in cur.execute(
+                "SELECT enterprise_id, alias_norm FROM dim_enterprise_alias "
+                "WHERE alias_norm IS NOT NULL"):
+            al.setdefault(eid, []).append(nrm(a))
+        s["n_alias"] = cur.execute(
+            "SELECT COUNT(*) FROM dim_enterprise_alias WHERE alias_norm IS NOT NULL"
+        ).fetchone()[0]
+        lab = cur.execute(
+            "SELECT enterprise_id, label_value FROM ads_label").fetchall()
+
+        def _hit(eid):
+            return nrm(nm.get(eid)) in canc or any(x in canc for x in al.get(eid, []))
+        s["cancel_hit_all"] = sum(1 for eid, _ in lab if _hit(eid))
+        s["cancel_hit_pos"] = sum(1 for eid, lv in lab if lv == 1 and _hit(eid))
 
     # ---- 名单与资质事实 ----
     s["n_notice"] = cur.execute("SELECT COUNT(*) FROM ods_qual_notice").fetchone()[0]
@@ -294,16 +350,27 @@ def render(s: dict) -> str:
 
     # ---------------- 7 ----------------
     A("## 7. 排除规则：`excluded` 的 %d 行不是续存样本\n" % s["split"].get("excluded", 0))
-    A("%d 家企业里只有 %d 家能打标，剩下的分解如下：\n" % (s["n_firm"], s["n_label"]))
+    A("%d 家企业里 %d 家能打标（进 train/val/test），其余 %d 家排除，分解如下：\n"
+      % (s["n_firm"], s["n_label"], s["split"].get("excluded", 0)))
     A("| 类别 | 企业数 | 处置 |")
     A("|---|---|---|")
-    A("| 到期年 ≤ %d（观察窗闭合） | **%d** | 打标，进 train/val/test |"
-      % (OBS_END, s["n_due_in_obs"]))
-    A("| 首次认定 ≥ %d，到期年 > %d（窗口未闭合） | %d | `split='excluded'` |"
-      % (OBS_END - VALID_YEARS + 1, OBS_END, s["n_due_after_obs"]))
-    A("| 完全没有 high_tech 记录 | %d | `split='excluded'` |" % s["n_no_qual"])
+    A("| 观察窗闭合，可判定续存 / 断档 | **%d** | 打标，进 train/val/test |" % s["n_label"])
+    rs = s.get("exclude_reason")
+    if rs:
+        A("| 观察窗未闭合（首次认定 %d 及以后，到期年 %d–%d 尚无名单） | %d | `split='excluded'` |"
+          % (OBS_END - VALID_YEARS + 1, OBS_END + 1, OBS_END + VALID_YEARS, rs["window_open"]))
+        A("| 五年名单完全无命中（非高企队列） | %d | `split='excluded'` |" % rs["not_in_roster"])
+        if rs["other"]:
+            A("| 名单命中但名称无法匹配 | %d | `split='excluded'` |" % rs["other"])
+    else:
+        A("| 排除原因：观察窗未闭合 / 五年名单无命中 / 名称无法匹配 | %d | `split='excluded'` |"
+          % s["split"].get("excluded", 0))
     A("| 合计 | %d | |" % s["n_firm"])
     A("")
+    if rs:
+        A("> 原因分解取自名单差分台账 `data/audit/标签名单差分_3000家.csv`（与 `ads_label` 同源），"
+          "三类合计 %d 与库内 `split='excluded'` 逐行对齐。" % sum(rs.values()))
+        A("")
     A("⚠️ `excluded` 行的 `label=0` **只是满足 `NOT NULL` 的结构占位**，"
       "语义是「我们还不知道」，不是「这家没出事」。")
     A("实测：混入训练会让断档样本占比从 %.2f%% 被稀释到 %.2f%%。"
@@ -415,20 +482,32 @@ def render(s: dict) -> str:
     A("|---|---|")
     A("| 官方通道 | 高新技术企业认定工作网「取消高企资格公告」栏目，全国 585 条；浙江省 + 宁波市 2022–2026 全部 7 份（2 文本 PDF + 5 扫描件逐页读图） |")
     A("| 已提取名单 | 7 份公告 **287 家**，标题声明 287 家，7/7 一致、无漏读（2023-12 已修正为 14 条） |")
-    A("| 全量比对（含别名） | 500 家样本 / 307 家已标注 / 21 家断档 **均 0 命中** |")
-    A("| 21 家断档逐户核查 | 7 家改名假象（现用名在到期年名单中）、14 家真断档候选 |")
+    if s["cancel_hit_all"] is not None:
+        A("| 全量比对（含别名） | %s 家官方撤销名单 × 当前 %s 家已标注（含 %s 条别名）：**%d 命中**；"
+          "其中 %d 家断档 **%d 命中** |"
+          % (format(s["n_cancel"], ","), format(s["n_label"], ","),
+             format(s["n_alias"], ","), s["cancel_hit_all"],
+             s["n_pos"], s["cancel_hit_pos"]))
+    else:
+        A("| 全量比对（含别名） | 见 `official_cancel_check.md`（撤销名单 CSV 未随包） |")
+    A("| 21 家断档逐户核查（v1.9 时点） | 7 家改名假象（现用名在到期年名单中）、14 家真断档候选 |")
     A("| 官方撤销名单命中 | **0 家** |")
     A("| 官方更名佐证 | 2026-02 公告第 12 条原件自带「（更名为：…）」标注，见 `证据_2026-02第12条_官方更名标注.png` |")
-    A("| 审计断档率 | 14/307 = 4.56%（库内原口径 21/307 = 6.84%） |")
+    A("| 审计断档率（v1.9 时点） | 14/307 = 4.56%%；当前库 %d/%d = %.2f%% |"
+      % (s["n_pos"], s["n_label"], s["pos_rate"]))
     A("")
     A("**判定**：路径 (a) 已走通且有反证——该代理标签度量的是**资质再申报行为**，"
       "**不等同**官方撤销 / 复核未通过结论，更不是信用违约。"
       "「企业更名导致名称匹配失败」是真实且量大的混淆源（占断档样本 1/3）。"
-      "7 份公告 287 家全覆盖、500 家样本经含别名比对亦 0 命中，构成直接反证；"
-      "官方公告原件自带更名标注，进一步说明别名归一不可省略。\n")
-    A("> ⚠️ **口径隔离**：14/307 是**审计结论**，库内 v1.9 的 `ads_label` 仍是 "
-      "21 断档 / 286 续存 / 307 家，`%s` 未升版。升版前禁止用 4.56%% 替换任何"
-      "已发布数字，也禁止把两者写进同一张性能表。\n" % DEFINITION_VER)
+      "7 份公告 287 家全覆盖、当前 %s 家已标注（含 %s 条别名）比对亦 0 命中，构成直接反证；"
+      "官方公告原件自带更名标注，进一步说明别名归一不可省略。\n"
+      % (format(s["n_label"], ","), format(s["n_alias"], ",")))
+    A("> ⚠️ **口径隔离**：14/307 = 4.56%% 是 **v1.9（500 家）时点的审计结论**，"
+      "当时库内标签为 21 断档 / 286 续存 / 307 家。v3.0 已按五年名单重建标签为 "
+      "%d 家（断档 %d，占比 %.2f%%），两者**不得混用**、也不得写进同一张性能表。"
+      "新口径下 107 家断档对上述 287 家官方撤销名单仍是 **0 命中**，"
+      "「官方撤销不是断档主因」这一结论继续成立。\n"
+      % (s["n_label"], s["n_pos"], s["pos_rate"]))
     A("**处置**：保留指标，作为多标签评级体系里 **C 轴 · 资质存续 / 再申报行为** 的"
       "其中一个标签（`v_enterprise_label_matrix.y_survival`，6 个二值锚点之一），"
       "不废弃、不原地 UPDATE。该锚点与 B 轴同源于公示名单、不独立；"
@@ -436,7 +515,8 @@ def render(s: dict) -> str:
       "别名归一升版后应回档。\n")
     A("**证据链已完全闭合**：7 份公告（含 5 份扫描件 19 页读图）287 家全部提取，与标题声明 7/7 一致；2023-12 已修正为 14 条；2026-08 宁波市 45 家 PDF 已补下载。\n")
     A("**未闭合**：导师书面正式口径（路径 b）未取回；`DEFINITION_VER` v0.2 别名归一升版与全链路重跑待拍板后一次性执行；287 家官方名单仅做证据快照、尚未入库；母池 21,968 家口径未落库。\n")
-    A("**issue ②**：287 家是 A 轴「撤销 / 复核未通过」的完整行政决定集合（独立于公示名单、免费、可复核），但与 500 家样本交集为 0，对本样本可用正例仍为 0；E 档塌陷需叠加严重失信 / 经营异常 / 被执行做复合负面事件。详见 `official_cancel_check.md` §7。\n")
+    A("**issue ②**：287 家是 A 轴「撤销 / 复核未通过」的完整行政决定集合（独立于公示名单、免费、可复核），但与当前 %s 家已标注样本交集仍为 0，可用正例仍为 0；E 档塌陷需叠加严重失信 / 经营异常 / 被执行做复合负面事件。详见 `official_cancel_check.md` §7。\n"
+      % format(s["n_label"], ","))
     A("按评审 §7.1(3) 红线，仍**禁止**对外表述「预测高企复核未通过」。\n")
 
     # ---------------- 14 ----------------
@@ -448,6 +528,7 @@ def render(s: dict) -> str:
     A("| 说明书 v2 | 2026-11-11 | 新增 §13 官方撤销公告核查：21 家逐户、7 家改名假象、"
       "14 家真断档官方零命中；明确口径隔离与「保留为多标签之一」定位（**未改库**） |")
     A("| 说明书 v3 | 2026-11-11 | §13 更新为 287 家全覆盖、三层 0 命中、官方更名佐证；补 issue ② 的 A 轴定位（**未改库**） |")
+    A("| 说明书 v4 | 2026-11-19 | v3.0 全量扩样：标签重建为 1,675 家（断档 107）、§7 排除分解改为 1,675 打标 + 1,231 观察窗未闭合 + 94 名单无命中、§13 撤销名单比对按 1,675 家重算（仍 0 命中） |")
     A("")
 
     return "\n".join(L)
@@ -465,9 +546,11 @@ def main() -> None:
     OUT.write_text(md, encoding="utf-8")
     print(f"✅ 已导出 {OUT}（{len(md):,} 字符）")
     print(f"   标签 {s['n_label']} 行 / 断档样本 {s['n_pos']} / 断档样本占比 {s['pos_rate']:.2f}%")
-    print(f"   打标覆盖 {s['n_label']}/{s['n_firm']}，"
-          f"excluded {s['n_firm'] - s['n_label']}"
-          f"（窗口未闭合 {s['n_due_after_obs']} + 无记录 {s['n_no_qual']}）")
+    _exc = s["n_firm"] - s["n_label"]
+    _rs = s.get("exclude_reason")
+    _detail = ("（窗口未闭合 %d + 名单无命中 %d）" % (_rs["window_open"], _rs["not_in_roster"])
+               if _rs else "（原因分解台账缺失，文档已退化为定性描述）")
+    print(f"   打标覆盖 {s['n_label']}/{s['n_firm']}，excluded {_exc}{_detail}")
     if s["ver_in_db"] != [DEFINITION_VER]:
         print(f"⚠️ 库内 definition_ver={s['ver_in_db']} 与代码常量 {DEFINITION_VER} 不一致")
     else:

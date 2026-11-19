@@ -304,7 +304,7 @@ def build_algorithm(con):
     A("> 生成时间：%s　｜　库版本：%s　｜　视图：`v_model_train_ready`\n"
       % (datetime.now().strftime("%Y-%m-%d %H:%M"), _db_ver(con)))
     A("## 1. 一句话\n")
-    A("浙江 500 家专精特新企业里的 **%d 家**，每家一行、一行 17 列，" % total)
+    A("浙江 3,000 家高企候选池里的 **%d 家**，每家一行、一行 17 列，" % total)
     A("用于预测「高企资格到期后是否通过复核」。**这是一套小样本代理标签数据集**，")
     A("够验证方法与跑通链路，不够支撑性能结论。\n")
 
@@ -358,19 +358,18 @@ def build_algorithm(con):
       "（断档），**不等于官方「复核未通过」**，也不是违约 / 经营异常 / 严重失信。"
       "它是从 14 份年度认定名单差分反推的**代理标签**：企业可能经营恶化，也可能只是没再申报，"
       "两者在现有数据里无法区分。混淆来源与偏误方向见 `label_spec.md`。\n")
-    A("> **方向（v1.9）**：上面这个 `label` 是**风险预警方向**（1=断档）。本项目研究企业好坏 / "
-      "信用评价，**正例 = 好企业 = 资质存续（286 家，label_value=0）**，"
-      "**负例 = 坏企业 = 资质断档（21 家，label_value=1）**。"
-      "新代码一律从 `v_model_train_ready_credit` 取标签，逐企业对照见 `v_label_direction`；"
-      "本 CSV 为兼容已发布契约保留原数值，未原地改写。\n")
-    A("> **官方核查（2026-11-11，issue ①）**：已核对「取消高企资格公告」栏目浙江省及宁波市 "
-      "7 份公告、287 家全覆盖（含 5 份扫描件逐页读图），500 家样本 / 307 家已标注 / "
-      "21 家断档经含别名比对**均 0 命中**；其中 7 家经别名归一"
-      "确认资格持续有效（改名假象），审计断档率 14/307 = 4.56%。"
-      "**口径隔离**：14/307 是审计结论，本 CSV 与库内 `ads_label` 仍为 21/307 = 6.84%，"
-      "`DEFINITION_VER` 未升版，两者禁止混用。处置是保留该指标、作为多标签评级里 "
-      "6 个锚点之一（C 轴 · 资质再申报行为），不废弃、不原地改写。"
-      "详见 `official_cancel_check.md`。\n")
+    A("> **方向（v3.0）**：上面这个 `label` 是**风险预警方向**（1 = 断档 107 家）。"
+      "本项目研究企业好坏 / 信用评价，**正例 = 好企业 = 资质存续 1,568 家**、"
+      "**负例 = 坏企业 = 资质断档 107 家**。`v_model_train_ready_credit` 已把方向翻正"
+      "（label=1 为好企业 1,568 行、label=0 为断档 107 行），新代码一律从该视图取标签，"
+      "逐企业对照见 `v_label_direction`；本 CSV 沿用 `v_model_train_ready` 原方向以兼容既有契约。\n")
+    A("> **官方核查（2026-11-11 首核，2026-11-19 v3.0 复算）**：已核对「取消高企资格公告」"
+      "栏目浙江省及宁波市 7 份公告、287 家全覆盖（含 5 份扫描件逐页读图）。对当前 1,675 家"
+      "已标注企业（含 394 条别名）比对**命中 0 家**，其中 107 家断档**命中 0 家**。"
+      "原 v1.9 的 21 家断档逐户核查结论保留（7 家改名假象 / 14 家真断档候选），"
+      "审计断档率 14/307 = 4.56% 是**v1.9 时点**结论，当前库为 107/1,675 = 6.39%，两者禁止混用。"
+      "处置是保留该指标、作为多标签评级里 6 个锚点之一（C 轴 · 资质再申报行为），"
+      "不废弃、不原地改写。详见 `official_cancel_check.md`。\n")
     A("> **v2.0 A 轴并列层（2026-11-11）**：企查查回传的失信被执行人 / 被执行人 / 终本案件 "
       "与主要人员已入库为 3 张 ODS 贴源表 + 4 个并列视图（`ods_qcc_judicial` 34 条 / 6 户、"
       "`ods_qcc_person` 清洗后 2079 人 / 490 户）。三类金额语义不同（涉案金额 / 执行标的 / "
@@ -685,7 +684,7 @@ def build_frontend(con):
             if row[1] == "/api/company/{company_id}/explanation" and row[2] == "有数据":
                 row[4] = "规则分解（model_based=false），**不是 SHAP**，勿与 explain/global 对比"
             if row[1] == "/api/batch-evaluate" and row[2] == "有数据":
-                row[4] = "同步跑完即 done；不传 userids 跑全库 500 家（约 0.1s）"
+                row[4] = "同步跑完即 done；不传 userids 跑全库 3,000 家"
             if row[1] == "/api/batch/upload" and row[2] in ("需文件", "有数据"):
                 row[4] = ("上传 CSV/XLSX 名单 → 解析企业 ID → **真正跑完评估**并返回 job_id；"
                           "实测 5 家 ID 全部评分成功，坏 ID 逐条列出")
@@ -759,7 +758,7 @@ def build_frontend(con):
     for row in api_rows:
         p = row[1]
         if p.startswith(B_PREFIX) or p in B_PATHS:
-            row.append("B 浙江高企（500 家）")
+            row.append("B 浙江高企（3,000 家）")
         elif p in A_PATHS:
             row.append("A 信贷面板（1714 家）")
         else:
@@ -782,7 +781,7 @@ def build_frontend(con):
       % (len(api_rows), n_data, n_hollow, n_pend, n_file, n_err))
     n_b = sum(1 for r in api_rows if r[5].startswith("B") and r[2] == "有数据")
     n_a = sum(1 for r in api_rows if r[5].startswith("A") and r[2] == "有数据")
-    A("其中**属于本项目（浙江 500 家高企 / B 套）的有数据接口 %d 个**，" % n_b)
+    A("其中**属于本项目（浙江 3,000 家高企 / B 套）的有数据接口 %d 个**，" % n_b)
     A("另一套信贷面板（A 套）%d 个 —— 两者样本、特征、标签都不同，不能合并看。" % n_a)
     if n_pend == 0:
         A("**占位 0 个**：12 个原先返回 `CONTRACT_PENDING` 的接口已全部由 "
@@ -816,13 +815,13 @@ def build_frontend(con):
     A("| 企业数 | 1,714 | 500 |")
     A("| 样本 | 3,465 行 | 307 家打标 |")
     A("| 特征 | `x1`–`x200` 匿名 | 29 个有名字的特征 |")
-    A("| 断档样本 | 75 | 21 |")
+    A("| 断档样本 | 75 | 107 |")
     A("| 落在 | `baseline_results.json`、`shap_global.json`、`noise_floor.json` | "
       "`v_model_train_ready`、`ads_graph_node/edge` |")
     A("")
     A("`/api/model/benchmark`、`/api/model/noise-floor`、`/api/explain/global` 返回的是 **A 套**，")
     A("`/api/tech-graph/*` 返回的是 **B 套**。同一个页面里同时展示会自相矛盾")
-    A("（概览说 1,714 家、图谱说 500 家）。**上线前必须二选一或分开标注。**\n")
+    A("（概览说 1,714 家、图谱说 3,000 家）。**上线前必须二选一或分开标注。**\n")
 
     A("## 契约文件真实性\n")
     A("**现在有两处契约目录，别混：**\n")
@@ -984,7 +983,7 @@ def build_frontend(con):
     A("## 能直接联调的接口（实测 code=0 且 data 非空）\n")
     A("**图谱/检索**")
     A("```\nGET /api/tech-graph/summary                        %s 节点 / %s 边\n"
-      "GET /api/tech-graph/enterprises?q=&limit=          500 家企业，含 similar_cnt\n"
+      "GET /api/tech-graph/enterprises?q=&limit=          企业清单（分页，含 similar_cnt）\n"
       "GET /api/tech-graph/enterprise/{id}/profile        专利数 / IPC 分布\n"
       "GET /api/tech-graph/enterprise/{id}/neighborhood   技术相似企业\n```\n"
       % (gst["node_str"], gst["edge_str"]))
@@ -1124,7 +1123,7 @@ def build_doc(con, alg, fe):
 
     A("## 五、三件必须转达的事\n")
     A("**1. 有两套数据，别混。**")
-    A("本项目是 500 家企业（浙江高企）；另有早期一套 1,714 家企业的信贷面板（`x1–x200` 匿名特征）。")
+    A("本项目是 3,000 家浙江高企（原 500 家锚定 + 2,500 家 v3.0 扩样）；另有早期一套 1,714 家企业的信贷面板（`x1–x200` 匿名特征）。")
     A("`/api/model/benchmark`、`/api/model/noise-floor`、`/api/explain/global` 返回的是**后者**，")
     A("`/api/tech-graph/*` 返回的是**前者**。同页面展示会自相矛盾。\n")
     A("**2. 标签是代理标签，且方向已纠正（v1.9）。**")
@@ -1134,7 +1133,7 @@ def build_doc(con, alg, fe):
       "**新实验一律用 `v_model_train_ready_credit`**，逐企业对照见 `v_label_direction`。")
     A("21 个负例只够验证方法论，**不够支撑性能结论**。汇报时别写单一 AUC。\n")
     A("> **官方核查（2026-11-11，issue ①）**：已核对「取消高企资格公告」栏目浙江省及宁波市 "
-      "7 份公告、287 家全覆盖，500 家样本 / 21 家断档经含别名比对**均 0 命中**；其中 7 家为"
+      "7 份公告、287 家全覆盖，1,675 家已标注 / 107 家断档经含别名比对**均 0 命中**；其中 7 家为"
       "别名归一后的改名假象，审计断档率 14/307 = 4.56%。标签定性为**资质再申报行为**，"
       "保留为多标签评级里 6 个锚点之一，**不废弃、不原地改写**。"
       "⚠️ 14/307 是审计结论，库内仍为 21/307、`DEFINITION_VER` 未升版，两者禁止混用。"
@@ -1205,7 +1204,7 @@ def build_doc(con, alg, fe):
     A("**本轮已闭合**：12 个 `CONTRACT_PENDING` 接口全部产出真实契约；"
       "2 个导入接口完成字段级校验与 staging 落库；`explain/local` 改为按企业动态生成；"
       "**issue ① 已由官方撤销公告实证闭合**——7 份公告 287 家全覆盖（含 5 份扫描件逐页读图），"
-      "500 家样本 / 307 家已标注 / 21 家断档含别名比对均 0 命中，其中 7 家为改名假象；"
+      "1,675 家已标注 / 107 家断档含别名比对均 0 命中，其中 7 家为改名假象（v1.9 时点逐户核查）；"
       "标签定性为「资质再申报行为」并保留为多标签之一；**issue ② 取得 287 家完整行政决定集合**"
       "（样本内 0 交集，E 档仍塌陷）。就这项核查本身而言**未改库、未升版**，"
       "见 `official_cancel_check.md`。"
@@ -1386,7 +1385,7 @@ def build_data_bundle(con):
       % n_tr)
     A("| `dataset_asof_flat.csv` | **%d × %d** | 全量 as-of 面板，含 `excluded` | ❌ 含假续存样本，勿直接训 |"
       % (n_all, len(flat_cols)))
-    A("| `enterprise_roster.csv` | **%d × %d** | 企业主档（500 家名单） | ❌ 无标签，仅供关联 |"
+    A("| `enterprise_roster.csv` | **%d × %d** | 企业主档（3,000 家名单） | ❌ 无标签，仅供关联 |"
       % (len(roster), len(roster_cols)))
     A("")
     A("## model_train_ready.csv（主数据）\n")
