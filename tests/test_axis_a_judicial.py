@@ -268,8 +268,8 @@ def j_report_matches_db():
 def k_data_dictionary():
     rows = list(csv.DictReader((OUT / "data_dictionary.csv").open(
         encoding="utf-8-sig", newline="")))
-    # v3.0 全量扩样后数据字典 1105 列。
-    assert len(rows) == 1105, "数据字典字段数应为 1105，实得 %d" % len(rows)
+    # v3.0 全量扩样 1105 列；v3.0 高企证书4列落库后 1109 列。
+    assert len(rows) in (1105, 1109), "数据字典字段数应为 1105 或 1109，实得 %d" % len(rows)
     for name in ("ods_qcc_judicial", "ods_qcc_person", "ods_qcc_axis_a_snapshot",
                  "v_axis_a_judicial", "v_enterprise_person_summary",
                  "v_axis_a_compound_event", "v_axis_a_grade_cross"):

@@ -83,9 +83,10 @@ def a_structure():
             "AND name NOT LIKE 'sqlite_%'").fetchall()]
         cols = sum(c.execute("SELECT COUNT(*) FROM pragma_table_info('%s')" % n)
                    .fetchone()[0] for n in objs)
-        # 结构白名单：v2.1/v2.2 (42,37,1081) 与 v3.0 全量扩样 (42,38,1105)
-        assert (t, v, cols) in ((42, 37, 1081), (42, 38, 1105)), (
-            "结构 %r，期望 (42,37,1081) 或 (42,38,1105)" % ((t, v, cols),))
+        # 结构白名单：v2.1/v2.2 (42,37,1081)、v3.0 全量扩样 (42,38,1105)、
+        # v3.0 高企证书4列落库 (42,38,1109)
+        assert (t, v, cols) in ((42, 37, 1081), (42, 38, 1105), (42, 38, 1109)), (
+            "结构 %r，期望 (42,37,1081) / (42,38,1105) / (42,38,1109)" % ((t, v, cols),))
         assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
         assert not c.execute("PRAGMA foreign_key_check").fetchall(), "外键冲突"
         for n in TABLES:
@@ -321,7 +322,7 @@ def m_report_matches_db():
     R = json.loads(read(REPORT_JSON))
     assert R["schema_version"] in ("v2.1", "v2.2", "v3.0")
     st = R["structure"]
-    assert (st["tables"], st["views"], st["columns"]) in ((42, 37, 1081), (42, 38, 1105)), (
+    assert (st["tables"], st["views"], st["columns"]) in ((42, 37, 1081), (42, 38, 1105), (42, 38, 1109)), (
         "报告结构与库口径不符 %r" % st)
     assert (R["source"]["trademark_rows"], R["source"]["trademark_firms"],
             R["source"]["product_nodes"], R["source"]["service_classes"]) == (
@@ -367,8 +368,8 @@ def n_delivery_same_source():
     rows = list(csv.DictReader((OUT / "data_dictionary.csv").open(
         encoding="utf-8-sig", newline="")))
     n_cols = json.loads(read(REPORT_JSON))["structure"]["columns"]
-    assert len(rows) == n_cols == 1105, (
-        "数据字典字段数 %d（v3.0 应 1105，且与库/报告一致）" % len(rows))
+    assert len(rows) == n_cols and n_cols in (1105, 1109), (
+        "数据字典字段数 %d / 报告 %d（v3.0 应 1105 或 1109，且与库/报告一致）" % (len(rows), n_cols))
     for name in TABLES + VIEWS:
         g = [r for r in rows if r["对象名"] == name]
         assert g, "字典缺对象 %s" % name
