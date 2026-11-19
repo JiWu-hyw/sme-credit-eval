@@ -120,7 +120,7 @@
 21 家逐户判定与口径隔离；`test_axis_a_judicial.py`（12 项）守卫 v2.0 A 轴三表四视图、
 490 行表头脏行剔除、三类金额分列、复合事件候选与已发布标签未动；
 `test_product_node.py`（14 项）守卫 v2.1 三表四视图、35/10 类二分、三处口径纠正、
-产品节点未入主图与 1068 列字典同源；`test_data_distribution.py`（10 项）守卫
+产品节点未入主图与 1,105 列字典同源；`test_data_distribution.py`（10 项）守卫
 数据全部公开口径、完整库未脱敏与两份来源声明齐备；
 `test_credit_direction.py`（20 项）守卫 P1-续 的 AUC 方向恒等式、
 双方向打分对称性、分切面 / 分队列复核与重跑 SHAP；纯净检出缺 `outputs/` 产物时按项目
@@ -238,7 +238,7 @@ cd src/app/frontend && unzip frontend-source-2026-10-28.zip -d . \
 |---|---|---|
 | 1 | 不要引用单一 AUC / 准确率 | 只有 21 个断档样本，`val` 集只有 2 个，只够验证方法论 |
 | 2 | `score.value` 恒为 `null` 是设计 | 无可验证模型，只提供 `proxy_score`（`validated: false`），前端不得渲染成「信用分」 |
-| 3 | 两套数据不要混看 | A 信贷面板（1,714 家匿名 / 3,465 行）与 B 浙江高企（500 家 / 307 打标）样本、特征、标签都不同，只是共用同一套 API |
+| 3 | 两套数据不要混看 | A 信贷面板（1,714 家匿名 / 3,465 行）与 B 浙江高企（3,000 家，其中原 500 家为锚定样本 / 1,675 家打标）样本、特征、标签都不同，只是共用同一套 API |
 
 ### 6.4 四个已知坑
 
@@ -383,8 +383,8 @@ LEFT JOIN v_feature_asof_funding f
 ### 6.5.3 企业技术与资质梯队分档 L0（v1.7 新增）
 
 方案见 `docs/论文/企业分档多标签体系方案-v1.0.md`。视图 `v_enterprise_grade_l0`
-把 500 家企业按字典序分层规则划成五档：E 预警 → D 观察 → A 引领 → B 优质 → C 稳健，
-实测 **3 / 83 / 44 / 95 / 275** 家（合计 500）。每行带 `hit_rule` 与 8 个判据中间量，
+把 3,000 家企业按字典序分层规则划成五档：E 预警 → D 观察 → A 引领 → B 优质 → C 稳健，
+实测 **54 / 154 / 167 / 470 / 2,155** 家（合计 3,000；v3.0 扩样前 500 家口径为 3 / 83 / 44 / 95 / 275）。每行带 `hit_rule` 与 8 个判据中间量，
 可逐企业审计；`grade_ver = l0_v1.0`，判据或口径变更必须升版。
 
 ```sql
@@ -420,7 +420,7 @@ SELECT * FROM v_feature_coverage_effective
 **A/B 两套数据隔离**：`/api/data/pipeline?dataset=A_credit_panel|B_proxy_label_500`
 只返回对应数据块，默认 `all` 保持向后兼容；`/api/data/datasets` 给两套数据的登记台账。
 任何取值都带 `meta.allow_cross_join=false`。A 是 10 月信贷面板
-（1,714 家 / 匿名 x1–x200 / 75 个违约样本），B 是本项目 500 家高企（资质存续弱标签），
+（1,714 家 / 匿名 x1–x200 / 75 个违约样本），B 是本项目 3,000 家高企（原 500 家锚定 + 2,500 家扩样，资质存续弱标签），
 禁止跨集合并排序或共用同一 AUC 坐标。`/api/model/benchmark` 标
 `dataset_scope=A_credit_panel`，`/api/factors/importance` 标
 `mixed_in_one_response=true`（同一响应内并列展示，仍不得合并排序）。
@@ -436,7 +436,7 @@ SELECT * FROM v_feature_coverage_effective
 
 ### 6.6 数据获取
 
-数据库 153 MB（当前工作库 **v2.1：40 表 / 37 视图 / 1068 列**；VACUUM 交付快照 133 MB），含 500 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
+数据库 315 MB（当前工作库 **v3.0：42 表 / 38 视图 / 1,105 列**；VACUUM 交付快照 304 MB），含 3,000 家真实企业明细，不入 Git 历史，走 **[Releases](../../releases/latest)** 附件：
 
 ```bash
 curl -L -O https://github.com/JiWu-hyw/sme-credit-eval/releases/latest/download/zjtech_credit_data.zip
@@ -468,19 +468,32 @@ mkdir -p data/db && cp 05_数据库/zjtech_credit.db data/db/
 `v_axis_a_grade_cross` 四视图；数据字典 912 → 997 列同步重生成，报告见
 `deliverables/01_算法端/axis_a_judicial_report.md`。复合负面事件 6 家（3 家新增 E 候选）
 是**并列候选锚点**，`ads_label`、多标签五档、训练入口、`DEFINITION_VER` 逐项未改。
-**v2.1（当前，40 表 / 37 视图 / 1068 列）** 接入商标明细 8004 条 / 444 家，
+**v2.1（40 表 / 37 视图 / 1068 列）** 接入商标明细 8004 条 / 444 家，
 新增 `ods_qcc_trademark` / `dim_product_nice_class` / `bridge_enterprise_product` 三表与
 `v_product_node` / `v_enterprise_trademark_summary` / `v_six_entity_coverage` /
 `v_product_grade_cross` 四视图；产品节点是**尼斯 35 类 / 433 户（86.6%）**、
 **未并入 `ads_graph_node` 主图**，29 帧时序切面与图契约数字未变，
 `G-GRAPH-01` 只改判 `partial_closed`（SKU 级仍缺）；数据字典 997 → 1068 列，
 报告见 `deliverables/01_算法端/product_node_report.md`。
+**v3.0（当前，42 表 / 38 视图 / 1,105 列）** 全量扩样：样本 500 → **3,000 家**
+（`dim_enterprise.is_sample` = '1' 为原 500 家、'0' 为新增 2,500 家），标签并表到 **1,675 家**
+（资质存续 1,568 / 断档 107，`definition_ver = qual_survival_proxy_v3.0`）。训练主表
+`ads_model_dataset` 物理扩到 3,000 行，其中 1,675 家入模（train 1,165 / val 251 / test 259，
+excluded 1,325）；as-of 宽表与融资旁路各 3,350 行；异质图 177,840 节点 / 285,043 边、
+32 帧年度切片；融资血缘 1,982 笔全覆盖（`zj_500family` 506 + `qcc_funding_3000` 1,476）；
+五档 A 167 / B 470 / C 2,155 / D 154 / E 54。
+**按设计留空的 6 类锚定字段**（IPC 技术广度、网络足迹 8 列、信用浙江风险合规 4 列、
+上市关联明细、融资深度、高企证书编号）对新增 2,500 家保持 NULL、不插补，只服务原 500 家锚定视图。
+判别力如实记录：`inv_patent_ratio` 全量 AUC 由 500 家口径的 0.576 降到 **0.4985**（≈随机），
+两个队列 0.5334 / 0.4716，源于专精特新候选池本身的同质化，不是数据缺陷；
+报告见 `data/docs/标签分布与五档分档检验报告_v3.0.docx` 与
+`data/docs/数据现状说明_有什么与缺什么.docx`。
 算法端要拿到新库需另发 **v1.5.0** Release（附件同名 `zjtech_credit_data.zip`，
 **不覆盖 v1.4.0**），说明见 `deliverables/RELEASE_v1.5.0.md`。
 历史：v1.7 新增五档视图与标签任务登记；v1.8 新增 3 个口径一致性视图、分档端点与 A/B 隔离。
 
 > **打包节奏（约定）**：`deliverables/` 里的**散文件随时整合到最新**——目前 01/03/04/05
-> 目录与数据字典、说明书、报告、数据库一致性快照均已同步到 v2.1；
+> 目录与数据字典、说明书、报告、数据库一致性快照均已同步到 v3.0；
 > **zip 与上传冻结**：9 个历史 zip 与 `zjtech_credit_data.zip` 未重打、SHA-256 未变，
 > GitHub Release 附件仍是 v1.9 快照。待全部改完确认后，才一次性重打包并上传。
 
