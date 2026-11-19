@@ -267,8 +267,14 @@ def build(db_path: str = DB) -> dict:
     A("")
     A("字段逐列含义见上级目录 `04_数据字典与数据集/数据字典.md`（%d 列全覆盖）。" % n_cols)
     A("")
-    with open(os.path.join(OUT, "README.md"), "w", encoding="utf-8") as f:
+    readme_path = os.path.join(OUT, "README.md")
+    with open(readme_path, "w", encoding="utf-8") as f:
         f.write("\n".join(L))
+
+    # README 每次由本脚本重写，会冲掉 inject_direction_notice.py 注入的
+    # 「标签方向声明」。生成后立刻幂等补回，避免交付件/包内反复丢声明块。
+    from src.data.inject_direction_notice import inject as _inject_direction
+    _inject_direction(readme_path)
 
     return {"path": SNAPSHOT, "mb": round(size_mb, 1), "secs": round(secs, 1),
             "tables": len(tables), "views": len(views), "cols": n_cols,
