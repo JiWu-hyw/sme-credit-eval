@@ -303,14 +303,18 @@ def k_registry_policy():
 
 def l_graph_contract():
     R = json.loads(read(OUT / "graph_temporal_contract.json"))
-    assert R["current_db_version"] == "v2.1"
+    # 契约随库升版重生成：v2.1 首版 → v3.0 全量扩样重算（切面 29→32 帧）
+    assert R["current_db_version"] in ("v2.1", "v2.2", "v3.0"), (
+        "时序契约版本号与库不符：%r" % R["current_db_version"])
+    assert R["annual_slice"]["n_years"] == 32, "v3.0 起切面应为 32 帧"
     P = R["six_entity_types"]["parallel_layer_v2_1"]
     assert P["available"] and P["in_main_graph"] is False
     assert (P["n_product_node"], P["n_service_class"], P["n_covered_firms"]) == (35, 10, 433)
     md = read(OUT / "graph_temporal_contract.md")
-    for k in ("产品节点并列层", "类别粒度部分闭合", "未入主图", "SKU 级", "29 帧"):
+    for k in ("产品节点并列层", "类别粒度部分闭合", "未入主图", "SKU 级", "32 帧"):
         assert k in md, "时序契约 §6 缺 %r" % k
     assert "已完整覆盖" in md and "禁止" in md
+    assert "旧 29 帧 / 161,878 的数字一律作废" in md, "契约未声明旧帧数作废"
 
 
 def m_report_matches_db():

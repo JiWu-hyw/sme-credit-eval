@@ -14,6 +14,7 @@ import json
 import os
 import sqlite3
 import sys
+import time
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB = os.path.join(ROOT, "data", "db", "zjtech_credit.db")
@@ -125,15 +126,38 @@ def build() -> dict:
         current_db_ver = c.execute(
             "SELECT version FROM meta_schema_version "
             "ORDER BY applied_at DESC LIMIT 1").fetchone()[0]
+        scope = {
+            "n_enterprise_total": c.execute(
+                "SELECT COUNT(*) FROM dim_enterprise").fetchone()[0],
+            "n_trademark_firms": c.execute(
+                "SELECT COUNT(DISTINCT enterprise_id) FROM ods_qcc_trademark").fetchone()[0],
+            "n_person_rows": c.execute(
+                "SELECT COUNT(*) FROM ods_qcc_person").fetchone()[0],
+            "n_person_firms": c.execute(
+                "SELECT COUNT(DISTINCT enterprise_id) FROM ods_qcc_person").fetchone()[0],
+            "funded_by_year_source": dict(c.execute(
+                "SELECT year_source, COUNT(*) FROM ads_graph_edge_ts "
+                "WHERE edge_type='funded_by' GROUP BY 1").fetchall()),
+        }
+        # 性能实测（本机、只读），写进报告供引用
+        t0 = time.perf_counter()
+        c.execute("SELECT COUNT(*) FROM v_graph_slice_annual_edge").fetchone()
+        t_all = time.perf_counter() - t0
+        t0 = time.perf_counter()
+        c.execute("SELECT COUNT(*) FROM v_graph_slice_annual_edge "
+                  "WHERE time_slice=?", (ymax,)).fetchone()
+        t_one = time.perf_counter() - t0
+        scope["perf_seconds"] = {"full_scan": round(t_all, 3), "one_frame": round(t_one, 3)}
     finally:
         c.close()
 
     return {
         "generated_by": "src/data/export_graph_temporal_contract.py",
-        "schema_version": "v1.9",
+        "schema_version": current_db_ver,
         "current_db_version": current_db_ver,
-        "revision": "2026-11-09 年度切片同源修订（V191GRAPHFIX）",
+        "revision": "2026-11-18 v3.0 全量扩样重算（专利 500→3000 家，切面 29→%d 帧）" % len(years),
         "review_item": "数据交付包评审报告-算法端-v1.0 §5.2(1) 无时序图",
+        "scope": scope,
         "physical_graph": {
             "n_nodes": n_node,
             "n_edges": n_edge,
@@ -193,6 +217,7 @@ def build() -> dict:
 def write_md(R: dict) -> str:
     P, A = R["physical_graph"], R["annual_slice"]
     C, B = R["conservation"], R["before_fix"]
+    S_scope = R.get("scope", {})
     L = []
     L.append("# 时序图切面与 STGNN 输入契约\n")
     L.append("> 生成：`src/data/export_graph_temporal_contract.py`（全部数字只读现算自 "
@@ -209,9 +234,10 @@ def write_md(R: dict) -> str:
                  A["year_min"], A["year_max"], A["n_years"], A["year_max"],
                  format(sum(A["last_year_by_edge_type"].values()), ",")))
 
-    L.append("\n## 1. 修订前后：同源性 bug（实测）\n")
+    L.append("\n## 1. 修订前后：同源性 bug（v1.9 修订时点实测）\n")
     L.append("旧视图从 `fact_patent JOIN bridge_patent_ipc` 现算 IPC 边，与物理图 "
-             "`ads_graph_edge` 不是同一套边集：\n")
+             "`ads_graph_edge` 不是同一套边集。下表是 **v1.9 修订当时**的实测对照"
+             "（旧视图口径此后已废弃，历史数值仅作留档）：\n")
     L.append("| 口径 | belongs_ipc 末年累计 |\n|---|---|")
     L.append("| 旧 `v_graph_slice_annual` | %s |" % format(B["belongs_ipc_cumulative"], ","))
     L.append("| 物理图 `ads_graph_edge` | %s |" % format(B["physical_belongs_ipc"], ","))
@@ -278,14 +304,20 @@ def write_md(R: dict) -> str:
              "或 `as_of_policy` 规定时点；用 2026 全量快照训练再回测 2021 队列就是后视泄漏，"
              "与 `v_model_dataset_asof_flat` 的约束一致。\n")
     L.append("**性能约束**：视图用 `CROSS JOIN` + `INDEXED BY` 强制 "
-             "「年份（29 行）→ `fact_patent` 年份范围索引 → `ads_graph_edge` 端点索引」"
-             "的连接顺序，并新增 `%s` 两个查询索引。实测全表 `COUNT(*)` "
-             "（%s 行）约 0.9s、`WHERE time_slice=2026` 约 0.2s；"
-             "若改成普通 JOIN 或 CTE，SQLite 会改用 17 万行边表驱动并重复构造年份协程，"
+             "「年份（%d 行）→ `fact_patent` 年份范围索引 → `ads_graph_edge` 端点索引」"
+             "的连接顺序，并新增查询索引 `%s`。本次实测全表 `COUNT(*)` "
+             "（%s 行）约 %.2fs、`WHERE time_slice=%d` 约 %.2fs；"
+             "若改成普通 JOIN 或 CTE，SQLite 会改用 %s 行边表驱动并重复构造年份协程，"
              "同一查询劣化到 **>170s**，会卡死数据字典导出与 API。"
-             "守卫 `tests/test_graph_temporal_contract.py` 设了 5 秒闸门。\n" % (
+             "守卫 `tests/test_graph_temporal_contract.py` 设了 20 秒闸门"
+             "（正常 ~11s，索引劣化时才会触发）。\n" % (
+                 A["n_years"],
                  "` / `".join(P["query_indexes_added"]),
-                 format(A["by_year"][-1]["n_edges_cumulative"], ",")))
+                 format(A["by_year"][-1]["n_edges_cumulative"], ","),
+                 S_scope.get("perf_seconds", {}).get("full_scan", 0.0),
+                 A["year_max"],
+                 S_scope.get("perf_seconds", {}).get("one_frame", 0.0),
+                 format(P["n_edges"], ",")))
 
     L.append("\n## 4. 逐年摘要\n")
     L.append("| 年份 | 累计边数 | 新增专利节点 | 累计 files_patent | 累计 belongs_ipc | 累计 invented_by |")
@@ -302,11 +334,26 @@ def write_md(R: dict) -> str:
     L.append("\n## 5. 边界：哪些边不进时序切面\n")
     S = R["static_edges"]
     L.append("| 边类型 | 条数 | 为什么不做时序 |\n|---|---|---|")
-    L.append("| `funded_by` | %s | 缺「边—融资事件年份」的可靠映射：`fact_funding_event.investor_names` "
-             "是 JSON 名称串，与 `investor` 节点 ID 需二次匹配；靠企业首次融资年近似会把同一年"
-             "之前的关系提前暴露，制造伪时序 |" % format(S["counts"].get("funded_by", 0), ","))
+    L.append("| `funded_by` | %s | 年度切面视图**不覆盖**：`fact_funding_event.investor_names` "
+             "是 JSON 名称串，与 `investor` 节点 ID 需二次匹配，只有 %s 条补到了融资事件年，"
+             "其余 %s 条无事件年；靠企业首次融资年近似会把同一年之前的关系提前暴露，制造伪时序 |"
+             % (format(S["counts"].get("funded_by", 0), ","),
+                format(S_scope.get("funded_by_year_source", {}).get("funding_event_year", 0), ","),
+                format(S_scope.get("funded_by_year_source", {}).get("global_snapshot", 0), ",")))
     L.append("| `tech_similar` | %s | 全期静态余弦相似度，按年切分没有物理含义 |"
              % format(S["counts"].get("tech_similar", 0), ","))
+    L.append("\n**时序边表的真实构成（必须按这个口径引用）**：`ads_graph_edge_ts` 共 %s 行 = "
+             "按专利年份真实时序化 %s 条（files_patent / belongs_ipc / invented_by）"
+             " + 标 `global_snapshot` 的 %s 条（tech_similar + 无事件年的 funded_by）"
+             " + 按融资事件年 %s 条（funded_by）。**不是「全边时序化 100%%」**——"
+             "真正带时点语义的是前 %s 条，占 %.1f%%。\n" % (
+                 format(P["n_edges"], ","),
+                 format(sum(A["last_year_by_edge_type"].values()), ","),
+                 format(S_scope.get("funded_by_year_source", {}).get("global_snapshot", 0) + 
+                        S["counts"].get("tech_similar", 0), ","),
+                 format(S_scope.get("funded_by_year_source", {}).get("funding_event_year", 0), ","),
+                 format(sum(A["last_year_by_edge_type"].values()), ","),
+                 100.0 * sum(A["last_year_by_edge_type"].values()) / max(P["n_edges"], 1)))
     W = S["tech_similar_weight"]
     L.append("\n`tech_similar` 权重区分度已达标（守卫 `tests/test_graph_v2.py` 要求 "
              "p50≥0.20 / p90≥0.35 / ≥0.3 的边≥2000）：实测 n=%s，min=%.4f，"
@@ -327,27 +374,37 @@ def write_md(R: dict) -> str:
     for cn, n in E["in_graph"].items():
         L.append("| %s | %s | `%s` |" % (cn, format(n, ","), mapping[cn]))
     if P.get("available"):
-        L.append("| **产品** | **0（未入主图）** | 并列层 %d 个类别节点 / %d 户（%.1f%%） |\n"
+        total_firm = max(S_scope.get("n_enterprise_total", 0), 1)
+        L.append("| **产品** | **0（未入主图）** | 并列层 %d 个类别节点 / %d 户（%.1f%% of %s） |\n"
                  % (P["n_product_node"], P["n_covered_firms"],
-                    100.0 * P["n_covered_firms"] / 500))
-        L.append("**v2.1（2026-11-12）商标明细已接入并列层**：`ods_qcc_trademark` "
-                 "%d 条 / 444 家、尼斯 %d 类（产品类 %d + 服务类 %d）、"
-                 "`bridge_enterprise_product` %d 行 / %d 户。产品节点是**商标核定"
+                    100.0 * P["n_covered_firms"] / total_firm, format(total_firm, ",")))
+        L.append("**v2.1（2026-11-12）商标明细已接入并列层，v3.0 扩到全量**：`ods_qcc_trademark` "
+                 "%s 条 / %s 家、尼斯 %d 类（产品类 %d + 服务类 %d）、"
+                 "`bridge_enterprise_product` %s 行 / %d 户。产品节点是**商标核定"
                  "类别**粒度，不是 SKU 级产品，也不是商标名称；35–39、41–45 共 10 个"
-                 "服务类虽有 1902 条商标，按用户口径**不作产品节点**。\n"
-                 % (P["n_trademark"], P["n_nice_class"], P["n_product_node"],
-                    P["n_service_class"], P["n_bridge_rows"], P["n_covered_firms"]))
-        L.append("⚠️ **产品节点未插入 `ads_graph_node`**，图内 `node_type` 仍是 5 类，"
-                 "本报告 §1–§5 的 29 帧年度切面、边数与守恒校验**逐项未变**。"
+                 "服务类虽有商标，按用户口径**不作产品节点**。\n"
+                 % (format(P["n_trademark"], ","),
+                    format(S_scope.get("n_trademark_firms", 0), ","),
+                    P["n_nice_class"], P["n_product_node"],
+                    P["n_service_class"], format(P["n_bridge_rows"], ","),
+                    P["n_covered_firms"]))
+        L.append("⚠️ **产品节点未插入 `ads_graph_node`**，图内 `node_type` 仍是 5 类；"
+                 "本报告 §1–§5 的 **%d 帧**年度切面、边数与守恒校验已按本次（%s）实测重算，"
+                 "不再沿用 v1.9 的 29 帧 / 161,878 边。"
                  "`G-GRAPH-01` 已由 `source_missing` 改判 `partial_closed`，只表示"
                  "「类别粒度 + 并列层」闭合；**SKU 级产品仍缺，禁止宣称立项六类实体"
                  "已完整覆盖**，GAT/STGNN 仍不得声称覆盖六类。当前技术域语义继续由 "
-                 "`ipc` 节点承担，产品类覆盖只是 `v_product_grade_cross` 里的并列观察量。\n")
+                 "`ipc` 节点承担，产品类覆盖只是 `v_product_grade_cross` 里的并列观察量。\n"
+                 % (A["n_years"], R.get("current_db_version", "")))
         L.append("顺带用 `v_six_entity_coverage` 现场纠正用户汇总表两处口径：企查查主要"
-                 "人员清洗后是 **2079 人 / 490 户**（原写 2569 含 490 行表头脏行，且它不是"
-                 "图节点，图内人员＝发明人 inventor %s）；产品是 **35 个类别节点 / 433 户 "
-                 "/ 86.6%%**，不是 45 个节点。\n"
-                 % format(E["in_graph"]["人员"], ","))
+                 "人员清洗后是 **%s 人 / %s 户**（v2.0 时点为 2079 人 / 490 户，含 490 行表头"
+                 "脏行已剔除；它不是图节点，图内人员＝发明人 inventor %s）；产品是 "
+                 "**%d 个类别节点 / %d 户 / %.1f%%**，不是 45 个节点。\n"
+                 % (format(S_scope.get("n_person_rows", 0), ","),
+                    format(S_scope.get("n_person_firms", 0), ","),
+                    format(E["in_graph"]["人员"], ","),
+                    P["n_product_node"], P["n_covered_firms"],
+                    100.0 * P["n_covered_firms"] / total_firm))
     else:
         L.append("| **产品** | **缺** | %s |\n" % E["missing"]["产品"])
         L.append("库内无产品 / 商标 / 经营范围源表；禁止用专利标题或 IPC 聚类伪造产品节点。\n")
@@ -356,13 +413,15 @@ def write_md(R: dict) -> str:
     L.append("1. 本报告只描述**图结构与时序切面**，不涉及模型性能；"
              "按评审 §7.1(3)，负例 21 家、置换噪声地板约 0.5，"
              "AUC / 准确率绝对值不得写成性能结论。\n")
-    L.append("2. 本条描述的是 **v1.9.1 修订时点**：那次未 UPDATE 物理表任何行、"
-             "未增删表/视图/列、未升 schema 版本号，仍是 v1.9 / 34 表 / 29 视图；"
-             "只重定义两个视图 + 新建两个查询索引，`graph_structure.json` 等契约数字不变。"
-             "此后库已升至 **%s**（v2.0 A 轴并列层 → v2.1 商标/产品节点并列层，"
-             "40 表 / 37 视图 / 1068 列），但本切面的 29 帧结构、边数与守恒数字"
-             "**逐项未变**，故本报告 §1–§5 结论继续有效；产品节点见 §6。\n"
-             % R.get("current_db_version", "v1.9"))
+    L.append("2. 版本沿革：本条最早写于 **v1.9.1 修订时点**（那次未 UPDATE 物理表任何行、"
+             "只重定义两个视图 + 新建查询索引）。此后 v2.0 A 轴、v2.1 商标/产品节点均为并列层，"
+             "切面数字未变；**v3.0（2026-11-18）名单扩样把专利从 500 家扩到 3,000 家，"
+             "切面由 29 帧扩至 %d 帧、末年累计边由 161,878 增至 %s 条**，"
+             "本报告已按 %s 实库重算，**旧 29 帧 / 161,878 的数字一律作废**，"
+             "引用请以本文件为准。产品节点见 §6。\n"
+             % (A["n_years"],
+                format(A["by_year"][-1]["n_edges_cumulative"], ","),
+                R.get("current_db_version", "")))
     L.append("3. `v_graph_slice_annual` 的 `n_node_patent` 来自 `fact_patent.app_year`，"
              "与物理 patent 节点数相等；但 enterprise / inventor / ipc / investor "
              "节点**没有首次出现年份**，故年度切面只覆盖 3 类专利相关边 + 专利节点，"

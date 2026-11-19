@@ -334,7 +334,7 @@
       "remedy": "接入含估值口径的融资数据库（清科私募通 / IT桔子 / CVSource）按 event_date + 轮次匹配合并；仅有估值区间时须拆成 val_low / val_high 两列，不得取中值冒充精确值。",
       "remedy_cost": "数据采购；匹配后仍需人工抽检轮次对应关系",
       "impact": "G4 恒空；融资维度只能做「有没有融过、融了几轮、谁投的」，不能做估值倍数、不能做溢价率。T51 融资力预测降级为二分类。",
-      "fallback": "funded_by 边（583 条，企业→投资机构）已入图，提供资本关系拓扑；prestige_rank（352/506）可作投资方质量代理，但语义不等同于估值。"
+      "fallback": "funded_by 边（v2.2 时 583 条、v3.0 扩样后 1,972 条，其中 1,389 条无事件年；企业→投资机构）已入图，提供资本关系拓扑；prestige_rank（352/506）可作投资方质量代理，但语义不等同于估值。"
     },
     {
       "table": "fact_funding_event",
@@ -618,20 +618,20 @@
       "gap": "funded_by 与 tech_similar 两类边不进时序切面（原定稿）",
       "status": "etl_completed",
       "priority": "P2",
-      "decision": "funded_by 已按融资事件年时序化（583/583，year_source=funding_event_year）；tech_similar 维持 global_snapshot 全期快照（物理无年时序含义）",
+      "decision": "v2.2 的 funded_by 583 条已全部按融资事件年时序化（583/583）；v3.0 扩样后 funded_by 增至 1,972 条，其中 583 条有事件年、1,389 条无事件年回退 global_snapshot。年度切面视图 v_graph_slice_annual_edge 仍只覆盖 3 类专利相关边（files_patent / belongs_ipc / invented_by），funded_by 未进视图；tech_similar 维持 global_snapshot 全期快照（物理无年时序含义）",
       "decided_at": "2026-11-12",
       "decided_by": "WorkBuddy(施汶邑)",
-      "reason": "v2.2 时序 ETL 已重建融资事件—投资机构 ID 映射并落 event_year，funded_by 583 条全部带时点年份、不再依赖 investor_names 的 JSON 名称串二次匹配；tech_similar 是全期静态余弦相似度，按年切分没有物理含义，仍标 global_snapshot。",
+      "reason": "v2.2 时序 ETL 已重建融资事件—投资机构 ID 映射并落 event_year，当时 funded_by 583 条全部带时点年份、不再依赖 investor_names 的 JSON 名称串二次匹配；v3.0 扩样新增 qcc_funding_3000 来源的 1,389 条 funded_by 没有可用的融资事件年，只能按 global_snapshot 回退，因此不能宣称「四类边全部时序化」。tech_similar 是全期静态余弦相似度，按年切分没有物理含义，仍标 global_snapshot。",
       "evidence": [
-        "ads_graph_edge_ts 中 funded_by 583 条全部 time_slice<>0、year_source=funding_event_year",
-        "tech_similar 8749 条 time_slice=-1、year_source=global_snapshot（全期快照）",
-        "边时序化率 94.9% = (171210-8749)/171210；节点时序化率 100%"
+        "ads_graph_edge_ts：285,043 行 = patent_app_year 274,322（files_patent/belongs_ipc/invented_by）+ global_snapshot 10,138（tech_similar 8,749 + funded_by 1,389）+ funding_event_year 583（funded_by）",
+        "funded_by 1,972 条中仅 583 条（29.6%）有融资事件年，其余 1,389 条无年份可落",
+        "v_graph_slice_annual_edge 覆盖 3 类边 / 末年 274,322 条；真正带时点语义的边占 96.2% = 274,322/285,043；节点时序化率 100%"
       ],
       "remedy": "tech_similar 若需时序化，须按 as-of 年份重算相似度（当前不必须）。",
       "remedy_cost": "低（funded_by 映射已落地，无新增采购）",
-      "impact": "年度切面现已覆盖四类边（files_patent/belongs_ipc/invented_by/funded_by）+ tech_similar 全期快照；STGNN 报告须写明 tech_similar 为全期快照、不计入年时序覆盖。",
+      "impact": "年度切面覆盖三类专利相关边（files_patent/belongs_ipc/invented_by，末年累计 274,322 条）；funded_by 仅 583 条有事件年且不进视图，tech_similar 为全期快照。STGNN 报告须写明：年时序覆盖 274,322/285,043 = 96.2%，不得写成「全边时序化」。",
       "fallback": "tech_similar 仍标 global_snapshot，不按年切分；静态边在物理图中照常可用，见 graph_structure.json",
-      "history": "2026-11-09 定稿为 null_by_design / 决策 A 静态边保持静态；2026-11-12 v2.2 时序 ETL 落地后改为 etl_completed（funded_by 已时序化），原 decision A 留档于本字段。"
+      "history": "2026-11-09 定稿为 null_by_design / 决策 A 静态边保持静态；2026-11-12 v2.2 时序 ETL 落地后改为 etl_completed（当时 funded_by 583 条已时序化），原 decision A 留档于本字段；2026-11-18 v3.0 扩样复核：funded_by 增至 1,972 条、实际时序化仍 583 条，视图仍为 3 类边，v2.2 的「四类边全部时序化」表述作废。"
     },
     {
       "id": "G-GRAPH-03",

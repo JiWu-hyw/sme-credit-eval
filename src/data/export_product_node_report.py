@@ -167,13 +167,15 @@ def gather() -> dict:
             "SELECT COUNT(*) FROM ads_graph_node "
             "WHERE node_type LIKE '%product%'").fetchone()[0],
     }
+    n_enterprise_total = c.execute("SELECT COUNT(*) FROM dim_enterprise").fetchone()[0]
     con.close()
 
     return {
         "title": "v2.1 商标明细 + 产品节点并列层接入报告",
         "generated_by": "src/data/export_product_node_report.py",
         "schema_version": version,
-        "structure": {"tables": n_tab, "views": n_view, "columns": n_cols},
+        "structure": {"tables": n_tab, "views": n_view, "columns": n_cols,
+                      "n_enterprise_total": n_enterprise_total},
         "source": {
             "csv_available": have_csv,
             "trademark_rows": n_tm, "trademark_firms": n_firms,
@@ -211,7 +213,7 @@ def gather() -> dict:
             "禁止把 45 个尼斯类全算产品节点；10 个服务类（1902 条商标）不作节点。",
             "禁止把尼斯核定类别写成 SKU 级产品实体，或用商标名称当产品节点。",
             "禁止宣称「立项六类实体已完整覆盖」；主图仍是 5 类，产品节点图内计数为 0。",
-            "禁止把产品节点插入 ads_graph_node 而不同步重建 29 帧时序切面与守恒校验。",
+            "禁止把产品节点插入 ads_graph_node 而不同步重建 32 帧时序切面与守恒校验。",
             "禁止把 v_product_grade_cross 的并列观察量当评级因子或外部效度证据。",
             "禁止把主表「商标_品牌数」与库内 n_brand_exact 混用（归一规则未反推，存在差异）。",
             "禁止把用户 xlsx 的「人员 2569 节点」当清洗后人数或图节点数。",
@@ -252,10 +254,12 @@ def build_md(d: dict) -> str:
     A("本轮按用户选定的**并列层方案**接入商标数据：新增 3 表 4 视图，"
       "库结构 37/33/997 → **%d 表 / %d 视图 / %d 列**。"
       % (d["structure"]["tables"], d["structure"]["views"], d["structure"]["columns"]))
-    A("产品节点是**尼斯核定类别 %d 类 / %d 户（%.1f%%）**，**未并入 "
-      "`ads_graph_node` 主图**；立项六类实体登记为「**类别粒度部分闭合，SKU 级仍缺**」，"
-      "29 帧年度时序切面与守恒校验逐项未变，标签与五档未动。"
-      % (S["product_nodes"], B["firms"], 100.0 * B["firms"] / 500))
+    n_all = max(d["structure"].get("n_enterprise_total", 0), 1)
+    A("产品节点是**尼斯核定类别 %d 类 / %d 户**（原 500 家口径 86.6%%、v3.0 全量 %s 家口径 %.1f%%），"
+      "**未并入 `ads_graph_node` 主图**；立项六类实体登记为「**类别粒度部分闭合，SKU 级仍缺**」，"
+      "32 帧年度时序切面与守恒校验已按 v3.0 扩样重算，标签与五档未动。"
+      % (S["product_nodes"], B["firms"], format(n_all, ","),
+         100.0 * B["firms"] / n_all))
     A("")
 
     A("## 2. 数据来源与验收")

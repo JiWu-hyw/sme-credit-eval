@@ -261,7 +261,7 @@ def build(db_path: str = DB) -> dict:
       "`高管_人数`（快照表）含表头脏行，取数一律走 `v_enterprise_person_summary`；"
       "`v_axis_a_compound_event` 是并列候选，不是已发布标签，也不构成评级有效性证据。")
     A("6. **v2.1 产品节点不得当「六类实体已补齐」**。35 个尼斯类别节点在并列层、"
-      "主图 `ads_graph_node` 仍是 5 类且 29 帧时序切面未变；10 个服务类不作产品节点；"
+      "主图 `ads_graph_node` 仍是 5 类且 32 帧时序切面语义未变；10 个服务类不作产品节点；"
       "`v_product_grade_cross` 只是并列观察量；`n_brand_exact` 与主表"
       "「商标_品牌数」有 68 家差异，取数一律以贴源明细重算。")
     A("")
