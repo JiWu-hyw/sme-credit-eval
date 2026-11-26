@@ -205,6 +205,19 @@ def main() -> None:
     L.append(f"> **结构来源**：`src/data/schema.sql` 注释 + `PRAGMA` 真实结构 + 库内实际统计")
     L.append(f"> **口径依据**：`特征工程字典.md`（15 指标定义）、`configs/db_schema_manifest.json`（v1.0 结构清单）\n")
 
+    # ---------- 0. 怎么读这份字典（可读性导读） ----------
+    L.append("## 0. 怎么读这份字典\n")
+    L.append("**一句话定位**：这份文档描述数据库里每一张表、每个视图、每个字段是什么意思。")
+    L.append("查某个字段的含义 → 在 §3（表）/ §5（视图）里找表名，看「字段明细」表；查库整体规模 → §1。\n")
+    L.append("**表名前缀 = 分层**（数据加工从上游到下游）：")
+    for pre, cn in LAYER_CN.items():
+        L.append(f"- `{pre}_`　→ {cn}")
+    L.append("")
+    L.append("**新手上路三步**：")
+    L.append("1. 想建模型 → 先看 §2.5 核心表索引，从场景对应的表开始；")
+    L.append("2. 判断某字段有没有数据 → 看字段明细表的**非空率**列（0% = 没数据，别用）；")
+    L.append("3. 防算错 → 必读 §6 关键口径，尤其 `is_granted` 与 `is_granted_ever` 的区别。\n")
+
     L.append("## 1. 总览\n")
     L.append("| 项 | 数值 |")
     L.append("|---|---|")
@@ -228,12 +241,62 @@ def main() -> None:
         L.append(f"| {layer_of(t)} | `{t}` | {v['rows']:,} | {len(v['cols'])} | {desc} |")
     L.append("")
 
-    # 逐表字段
+    # ---------- 2.5 核心表索引（按使用场景，可读性改造） ----------
+    SCENE_INDEX = [
+        ("建模训练", "宽表是模型与图谱的唯一数据入口；训练视图已按 split 切分、标签就绪",
+         ["ads_model_dataset", "ads_label", "v_model_train_ready", "v_model_train_ready_credit"]),
+        ("单企业评分/诊断", "后端 API 直接查的几张：企业主表 + 时点特征长表 + 标签",
+         ["dim_enterprise", "ads_feature_asof", "ads_label"]),
+        ("图谱 / GNN", "节点与边的当前表及年度时序版本",
+         ["ads_graph_node", "ads_graph_edge", "ads_graph_node_ts", "ads_graph_edge_ts"]),
+        ("生存分析", "person-period 长表（企业 × 期次，含结局事件）",
+         ["ads_survival_period"]),
+        ("外部对照", "Kaggle MSME 对照样本（1707 家 / 92 列）",
+         ["ext_msme_sample"]),
+    ]
+    L.append("## 2.5 核心表索引（你要干什么，就从哪张表入手）\n")
+    L.append("| 场景 | 说明 | 相关表 / 视图 |")
+    L.append("|---|---|---|")
+    for scene, desc, objs in SCENE_INDEX:
+        cells = "<br>".join(f"`{o}`" for o in objs)
+        L.append(f"| {scene} | {desc} | {cells} |")
+    L.append("")
+
+    # 长警告拆块：标题只留一句话，长口径独立成「口径注意」段落
+    LONG_HINT = {
+        "ads_feature_asof_funding": (
+            "📌 **口径注意**：本表是**旁路表，不回写主宽表** —— `v_model_dataset_asof_flat` 的 "
+            "m_funding / investor_prestige 仍**恒 NULL**（这是设计，不是漏补）。"
+            "取值必须用 (enterprise_id, as_of_policy) **双键** LEFT JOIN v_feature_asof_funding；"
+            "**禁止原地 UPDATE** 主宽表 29 列结构（ASOF_VER 升版规则）。"
+            "覆盖 MNAR：cohort 60/307、due_minus_1 95/307，入模须带「是否披露」的指示意识。"
+        ),
+        "ods_qcc_axis_a_snapshot": (
+            "📌 **口径注意**：保留未清洗口径，仅供追溯与对照。⚠️ `n_person_raw` 每户多计 1 人；"
+            "`amount_wan_raw` 把涉案金额 / 执行标的 / 未履行金额三类混加，"
+            "**禁止**当单一「未履行金额」字段使用。"
+        ),
+        "dim_product_nice_class": (
+            "📌 **口径注意**：粒度是「类别」不是 SKU 产品，也不是商标名称。"
+            "1–34 + 40 共 35 个产品类 is_product_node=1；35–39、41–45 共 10 个服务类"
+            "虽有 1902 条商标，但按口径不作产品节点。"
+        ),
+    }
+
+    # ---------- 3. 表字段明细 ----------
     L.append("## 3. 表字段明细\n")
     for t in sorted(tables, key=lambda x: (layer_of(x), x)):
         v = tables[t]
         d = ddl.get(t, {})
-        L.append(f"### `{t}`　—　{table_comment(t, d.get('comment', '')) or '（DDL 未写表注释）'}")
+        full = table_comment(t, d.get("comment", ""))
+        if t in LONG_HINT:
+            short = full.split("。")[0] if full else "（见下方口径注意）"
+            L.append(f"### `{t}`　—　{short}")
+            L.append("")
+            L.append(LONG_HINT[t])
+            L.append("")
+        else:
+            L.append(f"### `{t}`　—　{full or '（DDL 未写表注释）'}")
         L.append(f"行数 **{v['rows']:,}** ｜ 字段 **{len(v['cols'])}** ｜ 索引 {', '.join('`'+i+'`' for i in v['indexes']) if v['indexes'] else '无'}\n")
         L.append("| # | 字段 | 类型 | 必填 | 主键 | 非空率 | 枚举口径 | 说明 |")
         L.append("|---|---|---|---|---|---|---|---|")
