@@ -232,12 +232,22 @@ def main() -> None:
     L.append("")
 
     # 分层索引
+    def _short_desc(text: str, limit: int = 80) -> str:
+        """清单表说明截短：超长文本截到第一个句号或 limit 字，并提示详见明细段。"""
+        if not text or len(text) <= limit:
+            return text or "—"
+        cut = text[:limit]
+        pos = cut.find("。")
+        if pos > 20:
+            cut = cut[:pos]
+        return cut.rstrip("，；、：") + " …（详见字段明细段）"
+
     L.append("## 2. 表清单（按分层）\n")
     L.append("| 层 | 表名 | 行数 | 列数 | 说明 |")
     L.append("|---|---|---|---|---|")
     for t in sorted(tables, key=lambda x: (layer_of(x), x)):
         v = tables[t]
-        desc = table_comment(t, ddl.get(t, {}).get("comment", "")) or "—"
+        desc = _short_desc(table_comment(t, ddl.get(t, {}).get("comment", "")))
         L.append(f"| {layer_of(t)} | `{t}` | {v['rows']:,} | {len(v['cols'])} | {desc} |")
     L.append("")
 
@@ -313,17 +323,27 @@ def main() -> None:
     L.append("|---|---|---|---|")
     for vw in sorted(views):
         v = views[vw]
-        L.append(f"| `{vw}` | {v['rows']:,} | {len(v['cols'])} | {view_comment(vw) or '—'} |")
+        L.append(f"| `{vw}` | {v['rows']:,} | {len(v['cols'])} | {_short_desc(view_comment(vw))} |")
     L.append("")
     L.append("> 视图是逻辑表，不单独占存储；列类型由底层表达式推断，"
              "因此没有「必填 / 主键 / 枚举约束」这几栏，只保留非空率。")
     L.append("")
 
-    # 逐视图字段
+    # 逐视图字段：长注释标题拆块（标题只留第一句，长口径放正文）
     L.append("## 5. 视图字段明细\n")
     for vw in sorted(views):
         v = views[vw]
-        L.append(f"### `{vw}`　—　{view_comment(vw) or '（未登记视图注释）'}")
+        vc = view_comment(vw)
+        if vc and len(vc) > 120:
+            short = vc.split("。")[0]
+            if len(short) > 90:
+                short = short[:90].rstrip("，；、：") + "…"
+            L.append(f"### `{vw}`　—　{short}")
+            L.append("")
+            L.append(f"📌 **口径注意**：{vc}")
+            L.append("")
+        else:
+            L.append(f"### `{vw}`　—　{vc or '（未登记视图注释）'}")
         L.append(f"行数 **{v['rows']:,}** ｜ 字段 **{len(v['cols'])}**\n")
         L.append("| # | 字段 | 类型 | 非空率 | 说明 |")
         L.append("|---|---|---|---|---|")
